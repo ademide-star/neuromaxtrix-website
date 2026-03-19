@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NeuroMatrix Biosystems — Precision Neuroscience Tools</title>
+  <meta name="description" content="NeuroMatrix Biosystems develops AI-powered neuroscience research tools for African and global research communities." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ── RESET & VARIABLES ─────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold:     #c9a84c;
+      --gold-dim: #c9a84c22;
+      --gold-mid: #c9a84c66;
+      --bg:       #070b16;
+      --surface:  #0a0e1a;
+      --panel:    #0d1428;
+      --border:   #1e2a4a;
+      --text:     #e2e8f0;
+      --muted:    #4a5568;
+      --dim:      #2d3748;
+      --green:    #00f5c4;
+      --red:      #ff6b6b;
+      --blue:     #63b3ed;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'IBM Plex Mono', monospace;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    ::selection { background: var(--gold-mid); color: var(--bg); }
+
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--gold-mid); border-radius: 2px; }
+
+    /* ── GRAIN OVERLAY ─────────────────────────────────────────────────── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: 0.4;
+    }
+
+    /* ── NAV ───────────────────────────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 48px; height: 64px;
+      background: linear-gradient(180deg, #070b16ee 0%, transparent 100%);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-brand {
+      display: flex; align-items: center; gap: 12px;
+      text-decoration: none;
+    }
+
+    .nav-logo {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: linear-gradient(135deg, var(--gold-dim), transparent);
+      border: 1px solid var(--gold-mid);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+    }
+
+    .nav-wordmark {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px; font-weight: 600; letter-spacing: 0.15em;
+      color: var(--gold);
+    }
+
+    .nav-wordmark span { color: var(--text); }
+
+    .nav-links {
+      display: flex; align-items: center; gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--muted); text-decoration: none; transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--gold); }
+
+    .nav-cta {
+      background: var(--gold-dim); border: 1px solid var(--gold-mid);
+      color: var(--gold) !important; padding: 7px 18px; border-radius: 6px;
+      font-size: 10px !important; letter-spacing: 0.1em !important;
+      transition: all 0.2s !important;
+    }
+
+    .nav-cta:hover { background: var(--gold) !important; color: var(--bg) !important; }
+
+    /* ── HERO ──────────────────────────────────────────────────────────── */
+    .hero {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      padding: 120px 48px 80px;
+      position: relative; overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 0%, #c9a84c0a 0%, transparent 70%),
+        radial-gradient(ellipse 40% 40% at 20% 80%, #6c63ff08 0%, transparent 60%),
+        radial-gradient(ellipse 30% 30% at 80% 60%, #00f5c408 0%, transparent 60%);
+    }
+
+    /* Animated grid */
+    .hero-grid {
+      position: absolute; inset: 0; z-index: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 0%, transparent 100%);
+      opacity: 0.3;
+    }
+
+    .hero-content {
+      position: relative; z-index: 1;
+      text-align: center; max-width: 860px;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--gold-dim); border: 1px solid var(--gold-mid);
+      color: var(--gold); font-size: 9px; letter-spacing: 0.2em;
+      text-transform: uppercase; padding: 6px 16px; border-radius: 20px;
+      margin-bottom: 32px;
+      animation: fadeUp 0.8s ease both;
+    }
+
+    .hero-eyebrow::before {
+      content: '';
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 8px var(--green);
+      animation: pulse 2s infinite;
+    }
+
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(52px, 8vw, 96px);
+      font-weight: 300; line-height: 1.0; letter-spacing: -0.02em;
+      color: var(--text); margin-bottom: 24px;
+      animation: fadeUp 0.8s 0.1s ease both;
+    }
+
+    .hero-title em {
+      font-style: italic; color: var(--gold);
+      background: linear-gradient(135deg, var(--gold), #e8c96a);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+
+    .hero-sub {
+      font-size: 13px; color: var(--muted); line-height: 1.8;
+      max-width: 560px; margin: 0 auto 48px;
+      animation: fadeUp 0.8s 0.2s ease both;
+    }
+
+    .hero-actions {
+      display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+      animation: fadeUp 0.8s 0.3s ease both;
+    }
+
+    .btn-primary {
+      background: var(--gold); color: var(--bg);
+      padding: 12px 28px; border-radius: 8px; border: none;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.1em;
+      cursor: pointer; text-decoration: none; transition: all 0.2s;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+
+    .btn-primary:hover {
+      background: #e8c96a; transform: translateY(-2px);
+      box-shadow: 0 8px 24px #c9a84c44;
+    }
+
+    .btn-outline {
+      background: transparent; color: var(--text);
+      padding: 12px 28px; border-radius: 8px;
+      border: 1px solid var(--border);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.1em;
+      cursor: pointer; text-decoration: none; transition: all 0.2s;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+
+    .btn-outline:hover { border-color: var(--gold-mid); color: var(--gold); transform: translateY(-2px); }
+
+    /* Hero stats */
+    .hero-stats {
+      display: flex; gap: 48px; justify-content: center;
+      margin-top: 64px; padding-top: 48px;
+      border-top: 1px solid var(--border);
+      animation: fadeUp 0.8s 0.4s ease both;
+    }
+
+    .hero-stat-value {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 42px; font-weight: 600; color: var(--gold);
+      line-height: 1;
+    }
+
+    .hero-stat-label {
+      font-size: 9px; color: var(--muted);
+      letter-spacing: 0.15em; text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    /* ── SECTION BASE ──────────────────────────────────────────────────── */
+    section {
+      padding: 100px 48px;
+      position: relative; z-index: 1;
+    }
+
+    .section-eyebrow {
+      font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 12px;
+      display: flex; align-items: center; gap: 12px;
+    }
+
+    .section-eyebrow::after {
+      content: ''; flex: 0 0 40px; height: 1px;
+      background: var(--gold-mid);
+    }
+
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(36px, 5vw, 56px);
+      font-weight: 300; line-height: 1.1;
+      color: var(--text); margin-bottom: 16px;
+    }
+
+    .section-title em { font-style: italic; color: var(--gold); }
+
+    .section-sub {
+      font-size: 12px; color: var(--muted);
+      max-width: 500px; line-height: 1.8;
+    }
+
+    /* ── APPS SECTION ──────────────────────────────────────────────────── */
+    #apps { background: var(--surface); }
+
+    .apps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px; margin-top: 56px;
+    }
+
+    .app-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px; padding: 32px;
+      position: relative; overflow: hidden;
+      transition: all 0.3s; cursor: pointer;
+      text-decoration: none; color: inherit;
+      display: block;
+    }
+
+    .app-card::before {
+      content: ''; position: absolute;
+      top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--card-color, var(--gold)), transparent);
+      opacity: 0; transition: opacity 0.3s;
+    }
+
+    .app-card:hover { transform: translateY(-4px); border-color: var(--card-color, var(--gold)); }
+    .app-card:hover::before { opacity: 1; }
+
+    .app-card-icon {
+      width: 52px; height: 52px; border-radius: 12px;
+      background: var(--gold-dim); border: 1px solid var(--gold-mid);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px; margin-bottom: 20px;
+    }
+
+    .app-card-tag {
+      display: inline-block; font-size: 8px; letter-spacing: 0.15em;
+      text-transform: uppercase; padding: 3px 10px; border-radius: 4px;
+      margin-bottom: 16px;
+    }
+
+    .app-card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 26px; font-weight: 600; color: var(--text);
+      margin-bottom: 10px; line-height: 1.2;
+    }
+
+    .app-card-desc {
+      font-size: 11px; color: var(--muted); line-height: 1.8;
+      margin-bottom: 24px;
+    }
+
+    .app-card-features {
+      list-style: none; margin-bottom: 28px;
+    }
+
+    .app-card-features li {
+      font-size: 10px; color: var(--muted);
+      padding: 5px 0; border-bottom: 1px solid var(--dim);
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    .app-card-features li::before {
+      content: '→'; color: var(--card-color, var(--gold));
+      font-size: 10px; flex-shrink: 0;
+    }
+
+    .app-card-link {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 10px; font-weight: 600; letter-spacing: 0.1em;
+      color: var(--card-color, var(--gold));
+      transition: gap 0.2s;
+    }
+
+    .app-card:hover .app-card-link { gap: 12px; }
+
+    .app-card-status {
+      position: absolute; top: 20px; right: 20px;
+      font-size: 8px; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 3px 10px; border-radius: 20px;
+    }
+
+    /* ── PUBLICATIONS ───────────────────────────────────────────────────── */
+    #publications { background: var(--bg); }
+
+    .pub-list { margin-top: 48px; }
+
+    .pub-item {
+      display: grid; grid-template-columns: 80px 1fr auto;
+      gap: 24px; align-items: start;
+      padding: 28px 0; border-bottom: 1px solid var(--border);
+      transition: all 0.2s;
+    }
+
+    .pub-item:hover { padding-left: 8px; }
+
+    .pub-year {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 32px; font-weight: 300; color: var(--gold);
+      line-height: 1;
+    }
+
+    .pub-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px; font-weight: 600; color: var(--text);
+      margin-bottom: 6px; line-height: 1.3;
+    }
+
+    .pub-authors { font-size: 10px; color: var(--muted); margin-bottom: 6px; }
+
+    .pub-journal {
+      font-size: 10px; color: var(--gold);
+      font-style: italic;
+    }
+
+    .pub-badge {
+      font-size: 8px; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 4px 10px; border-radius: 4px; white-space: nowrap;
+      align-self: start;
+    }
+
+    /* ── CONTACT ───────────────────────────────────────────────────────── */
+    #contact { background: var(--surface); }
+
+    .contact-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 64px; margin-top: 56px; align-items: start;
+    }
+
+    .contact-info-item {
+      display: flex; gap: 16px; align-items: flex-start;
+      padding: 20px 0; border-bottom: 1px solid var(--border);
+    }
+
+    .contact-info-icon {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: var(--gold-dim); border: 1px solid var(--gold-mid);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; flex-shrink: 0;
+    }
+
+    .contact-info-label {
+      font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 4px;
+    }
+
+    .contact-info-value {
+      font-size: 12px; color: var(--text);
+    }
+
+    .contact-form { display: flex; flex-direction: column; gap: 16px; }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+
+    .form-label {
+      font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .form-input, .form-textarea, .form-select {
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 8px; padding: 12px 16px;
+      color: var(--text); font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px; outline: none; transition: border-color 0.2s;
+      width: 100%;
+    }
+
+    .form-input:focus, .form-textarea:focus, .form-select:focus {
+      border-color: var(--gold-mid);
+    }
+
+    .form-textarea { resize: vertical; min-height: 120px; }
+
+    .form-select option { background: var(--panel); }
+
+    /* ── NEWSLETTER ────────────────────────────────────────────────────── */
+    #newsletter {
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+    }
+
+    .newsletter-inner {
+      max-width: 640px; margin: 0 auto; text-align: center;
+    }
+
+    .newsletter-form {
+      display: flex; gap: 12px; margin-top: 32px;
+    }
+
+    .newsletter-input {
+      flex: 1; background: var(--panel); border: 1px solid var(--border);
+      border-radius: 8px; padding: 12px 20px;
+      color: var(--text); font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px; outline: none; transition: border-color 0.2s;
+    }
+
+    .newsletter-input:focus { border-color: var(--gold-mid); }
+
+    .newsletter-input::placeholder { color: var(--muted); }
+
+    /* ── FOOTER ────────────────────────────────────────────────────────── */
+    footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 48px;
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 48px;
+    }
+
+    .footer-brand-name {
+      font-size: 13px; font-weight: 600; letter-spacing: 0.15em;
+      color: var(--gold); margin-bottom: 8px;
+    }
+
+    .footer-brand-sub {
+      font-size: 8px; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 16px;
+    }
+
+    .footer-brand-desc {
+      font-size: 10px; color: var(--dim); line-height: 1.8;
+      max-width: 240px;
+    }
+
+    .footer-col-title {
+      font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 16px;
+    }
+
+    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+
+    .footer-links a {
+      font-size: 10px; color: var(--muted); text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--gold); }
+
+    .footer-bottom {
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+      padding: 20px 48px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+
+    .footer-bottom-text {
+      font-size: 9px; color: var(--dim); letter-spacing: 0.05em;
+    }
+
+    /* ── ANIMATIONS ────────────────────────────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.4; }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-8px); }
+    }
+
+    .reveal {
+      opacity: 0; transform: translateY(32px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── DIVIDER ───────────────────────────────────────────────────────── */
+    .gold-divider {
+      display: flex; align-items: center; gap: 12px;
+      margin: 48px 0;
+    }
+
+    .gold-divider::before, .gold-divider::after {
+      content: ''; flex: 1; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold-mid));
+    }
+
+    .gold-divider::after {
+      background: linear-gradient(90deg, var(--gold-mid), transparent);
+    }
+
+    .gold-divider span {
+      font-size: 8px; color: var(--gold); letter-spacing: 4px;
+    }
+
+    /* ── SUCCESS MESSAGE ───────────────────────────────────────────────── */
+    .success-msg {
+      display: none; background: #00f5c411; border: 1px solid #00f5c444;
+      border-radius: 8px; padding: 12px 20px;
+      font-size: 11px; color: var(--green); text-align: center;
+    }
+
+    /* ── RESPONSIVE ────────────────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      section { padding: 60px 20px; }
+      .hero { padding: 100px 20px 60px; }
+      .contact-grid { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+      footer { grid-template-columns: 1fr 1fr; padding: 32px 20px; }
+      .newsletter-form { flex-direction: column; }
+      .hero-stats { gap: 24px; flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAV ── -->
+  <nav>
+    <a href="#" class="nav-brand">
+      <div class="nav-logo">🧠</div>
+      <div class="nav-wordmark">NEURO<span>MATRIX</span> <span style="opacity:0.4;font-weight:300">Biosystems</span></div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#apps">Products</a></li>
+      <li><a href="#publications">Research</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <li><a href="#newsletter" class="nav-cta">Stay Updated</a></li>
+    </ul>
+  </nav>
+
+  <!-- ── HERO ── -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">A Research Unit — GRASP / NIH / DSI Collaborative Program</div>
+      <h1 class="hero-title">
+        Precision Tools for<br /><em>Neuroscience Research</em>
+      </h1>
+      <p class="hero-sub">
+        AI-powered platforms built for African and global research communities —
+        from behavioral analysis to clinical neurohealth prediction.
+      </p>
+      <div class="hero-actions">
+        <a href="#apps" class="btn-primary">🧪 Explore Our Tools</a>
+        <a href="#publications" class="btn-outline">📄 View Research</a>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <div class="hero-stat-value">3</div>
+          <div class="hero-stat-label">Research Platforms</div>
+        </div>
+        <div>
+          <div class="hero-stat-value">86%</div>
+          <div class="hero-stat-label">Model Accuracy</div>
+        </div>
+        <div>
+          <div class="hero-stat-value">2</div>
+          <div class="hero-stat-label">Universities</div>
+        </div>
+        <div>
+          <div class="hero-stat-value">NIH</div>
+          <div class="hero-stat-label">Funded Research</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── APPS ── -->
+  <section id="apps">
+    <div class="section-eyebrow">Our Platforms</div>
+    <h2 class="section-title">Research <em>Tools</em></h2>
+    <p class="section-sub">Three integrated platforms covering behavioral neuroscience, clinical AI, and research education.</p>
+
+    <div class="apps-grid">
+
+      <!-- NeuroTrack Pro -->
+      <a href="https://neurotrack-ten.vercel.app" target="_blank" class="app-card" style="--card-color: #c9a84c;">
+        <div class="app-card-status" style="background:#c9a84c22;color:#c9a84c;border:1px solid #c9a84c44;">● Live</div>
+        <div class="app-card-icon">🏊</div>
+        <div class="app-card-tag" style="background:#c9a84c22;color:#c9a84c;border:1px solid #c9a84c44;">Behavioral Analysis</div>
+        <div class="app-card-title">NeuroTrack Pro</div>
+        <p class="app-card-desc">AI-powered Morris Water Maze, Y-Maze and Open Field Test analysis platform with real-time trajectory tracking and heatmap generation.</p>
+        <ul class="app-card-features">
+          <li>Video upload + auto rat tracking</li>
+          <li>Escape latency & path length metrics</li>
+          <li>Probe trial quadrant analysis</li>
+          <li>Y-Maze spontaneous alternation</li>
+          <li>OFT anxiety index + velocity</li>
+          <li>Desktop .exe + web version</li>
+        </ul>
+        <div class="app-card-link">Launch App →</div>
+      </a>
+
+      <!-- African NeuroHealth -->
+      <a href="https://huggingface.co/spaces/ademideola/african-neurohealth" class="app-card" style="--card-color: #00f5c4;">
+        <div class="app-card-status" style="background:#00f5c422;color:#00f5c4;border:1px solid #00f5c444;">● Live</div>
+        <div class="app-card-icon">🌍</div>
+        <div class="app-card-tag" style="background:#00f5c422;color:#00f5c4;border:1px solid #00f5c444;">Clinical AI</div>
+        <div class="app-card-title">African NeuroHealth AI</div>
+        <p class="app-card-desc">Culturally-attuned stroke and dementia risk prediction platform incorporating lifestyle, environmental and psychosocial factors relevant to African populations.</p>
+        <ul class="app-card-features">
+          <li>Stroke risk prediction (86.7% accuracy)</li>
+          <li>Dementia risk assessment (93.3% accuracy)</li>
+          <li>Memory game cognitive training</li>
+          <li>Nutrition & stress assessment</li>
+          <li>English / French language support</li>
+          <li>PDF downloadable reports</li>
+        </ul>
+        <div class="app-card-link">Launch App →</div>
+      </a>
+
+      <!-- LMS -->
+      <a href="https://huggingface.co/spaces/ademideola/MULTI_LECTURE-DASHBOARD" class="app-card" style="--card-color: #6c63ff;">
+        <div class="app-card-status" style="background:#6c63ff22;color:#6c63ff;border:1px solid #6c63ff44;">◎ Live</div>
+        <div class="app-card-icon">🎓</div>
+        <div class="app-card-tag" style="background:#6c63ff22;color:#6c63ff;border:1px solid #6c63ff44;">Education</div>
+        <div class="app-card-title">NeuroMatrix LMS</div>
+        <p class="app-card-desc">Advanced learning management system for neuroscience research training — designed for African universities and research institutions.</p>
+        <ul class="app-card-features">
+          <li>Neuroscience course modules</li>
+          <li>Interactive research methodology</li>
+          <li>Student progress tracking</li>
+          <li>Research tool tutorials</li>
+          <li>Certificate programs</li>
+          <li>Multi-institution support</li>
+        </ul>
+        <div class="app-card-link">Request Early Access →</div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- ── PUBLICATIONS ── -->
+  <section id="publications">
+    <div class="section-eyebrow">Research Output</div>
+    <h2 class="section-title">Publications & <em>Research</em></h2>
+    <p class="section-sub">Peer-reviewed work from the GRASP/NIH/DSI Collaborative Program at the University of Ilorin.</p>
+
+    <div class="pub-list reveal">
+
+      <div class="pub-item">
+        <div class="pub-year">2026</div>
+        <div>
+          <div class="pub-title">Comprehensive metabolomic and phytochemical profiling of saigon
+cinnamon reveals promise as a functional food and nutraceutical</div>
+          <div class="pub-authors">Adebimpe John Omolola E., Osiboye O.O., Owoyele B.V.</div>
+          <div class="pub-journal">Journal of Food Measurement and Characterization
+https://doi.org/10.1007/s11694-026-04084-5</div>
+        </div>
+        <div class="pub-badge" style="background:#c9a84c22;color:#c9a84c;border:1px solid #c9a84c44;">Published</div>
+      </div>
+
+      <div class="pub-item">
+        <div class="pub-year">2026</div>
+        <div>
+          <div class="pub-title">Neurovascular Toxicity of Diclofenac-Caffeine-Sodium Triad in Hypertensive Rat Model</div>
+          <div class="pub-authors">Adebimpe John Omolola E. et al.</div>
+          <div class="pub-journal">Collaborative Preclinical Neuroscience Study — University of Ilorin</div>
+        </div>
+        <div class="pub-badge" style="background:#6c63ff22;color:#6c63ff;border:1px solid #6c63ff44;">Ongoing</div>
+      </div>
+
+      <div class="pub-item">
+        <div class="pub-year">2025</div>
+        <div>
+          <div class="pub-title">African NeuroHealth AI: Stroke & Dementia Risk Prediction for African Populations</div>
+          <div class="pub-authors">Adebimpe John Omolola E.</div>
+          <div class="pub-journal">GRASP / NIH / DSI Collaborative Program — Technical Report</div>
+        </div>
+        <div class="pub-badge" style="background:#00f5c422;color:#00f5c4;border:1px solid #00f5c444;">Published</div>
+      </div>
+
+      <div class="pub-item">
+        <div class="pub-year">2025</div>
+        <div>
+          <div class="pub-title">NeuroTrack Pro: Open-Source Behavioral Analysis Platform for Preclinical Neuroscience</div>
+          <div class="pub-authors">Adebimpe John Omolola E., NeuroMatrix Biosystems</div>
+          <div class="pub-journal">Software — Available at neuromatrixbiosystems.com</div>
+        </div>
+        <div class="pub-badge" style="background:#00f5c422;color:#00f5c4;border:1px solid #00f5c444;">Released</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── CONTACT ── -->
+  <section id="contact">
+    <div class="section-eyebrow">Get In Touch</div>
+    <h2 class="section-title">Contact <em>Us</em></h2>
+    <p class="section-sub">Reach out for collaborations, research inquiries, or early access to our platforms.</p>
+
+    <div class="contact-grid reveal">
+
+      <!-- Info -->
+      <div>
+        <div class="contact-info-item">
+          <div class="contact-info-icon">🏛️</div>
+          <div>
+            <div class="contact-info-label">Institution</div>
+            <div class="contact-info-value">Department of Physiology<br />University of Ilorin, Nigeria</div>
+          </div>
+        </div>
+        <div class="contact-info-item">
+          <div class="contact-info-icon">🔬</div>
+          <div>
+            <div class="contact-info-label">Research Unit</div>
+            <div class="contact-info-value">Neuroscience & Inflammation Unit<br />GRASP / NIH / DSI Program</div>
+          </div>
+        </div>
+        <div class="contact-info-item">
+          <div class="contact-info-icon">👤</div>
+          <div>
+            <div class="contact-info-label">Principal Researcher</div>
+            <div class="contact-info-value">Adebimpe John Omolola E.<br />PhD Candidate</div>
+          </div>
+        </div>
+        <div class="contact-info-item">
+          <div class="contact-info-icon">🌐</div>
+          <div>
+            <div class="contact-info-label">Supervisors</div>
+            <div class="contact-info-value">Prof. Bamidele Owoyele<br />Prof. Owolabi Mayowa</div>
+          </div>
+        </div>
+        <div class="contact-info-item">
+          <div class="contact-info-icon">💻</div>
+          <div>
+            <div class="contact-info-label">GitHub</div>
+            <div class="contact-info-value">github.com/ademide-star</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <form class="contact-form" onsubmit="handleContact(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">First Name</label>
+            <input class="form-input" type="text" placeholder="John" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Last Name</label>
+            <input class="form-input" type="text" placeholder="Doe" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input class="form-input" type="email" placeholder="researcher@university.edu" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Institution</label>
+          <input class="form-input" type="text" placeholder="University / Research Lab" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Inquiry Type</label>
+          <select class="form-select">
+            <option>Research Collaboration</option>
+            <option>NeuroTrack Pro Support</option>
+            <option>African NeuroHealth AI</option>
+            <option>LMS Early Access</option>
+            <option>General Inquiry</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Message</label>
+          <textarea class="form-textarea" placeholder="Tell us about your research or inquiry..." required></textarea>
+        </div>
+        <button type="submit" class="btn-primary" style="width:100%;justify-content:center;">
+          Send Message →
+        </button>
+        <div class="success-msg" id="contact-success">
+          ✅ Message sent! We'll respond within 48 hours.
+        </div>
+      </form>
+
+    </div>
+  </section>
+
+  <!-- ── NEWSLETTER ── -->
+  <section id="newsletter">
+    <div class="newsletter-inner reveal">
+      <div class="section-eyebrow" style="justify-content:center;">Stay Updated</div>
+      <h2 class="section-title" style="text-align:center;">Research <em>Newsletter</em></h2>
+      <p class="section-sub" style="margin:0 auto;text-align:center;">
+        Get updates on new platform releases, research publications and neuroscience tools from NeuroMatrix Biosystems.
+      </p>
+      <form class="newsletter-form" onsubmit="handleNewsletter(event)">
+        <input class="newsletter-input" type="email" placeholder="your@email.com" required />
+        <button type="submit" class="btn-primary">Subscribe →</button>
+      </form>
+      <div class="success-msg" id="newsletter-success" style="margin-top:16px;">
+        ✅ Subscribed! Welcome to the NeuroMatrix community.
+      </div>
+      <p style="font-size:9px;color:var(--dim);margin-top:16px;text-align:center;">
+        No spam. Research updates only. Unsubscribe anytime.
+      </p>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer>
+    <div>
+      <div class="footer-brand-name">NEUROMATRIX Biosystems</div>
+      <div class="footer-brand-sub">Precision Neuroscience Tools</div>
+      <p class="footer-brand-desc">
+        AI-powered research platforms developed at the University of Ilorin, Nigeria —
+        supported by the GRASP/NIH/DSI Collaborative Program.
+      </p>
+    </div>
+    <div>
+      <div class="footer-col-title">Platforms</div>
+      <ul class="footer-links">
+        <li><a href="https://neurotrack-ten.vercel.app" target="_blank">NeuroTrack Pro</a></li>
+        <li><a href="https://huggingface.co/spaces/ademideola/african-neurohealth" target="_blank">African NeuroHealth AI</a></li>
+        <li><a href="#contact">NeuroMatrix LMS</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Research</div>
+      <ul class="footer-links">
+        <li><a href="#publications">Publications</a></li>
+        <li><a href="https://github.com/ademide-star" target="_blank">GitHub</a></li>
+        <li><a href="https://huggingface.co/ademideola" target="_blank">Hugging Face</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Connect</div>
+      <ul class="footer-links">
+        <li><a href="#contact">Contact</a></li>
+        <li><a href="#newsletter">Newsletter</a></li>
+        <li><a href="https://github.com/ademide-star/neurotrack" target="_blank">Open Source</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <div class="footer-bottom">
+    <span class="footer-bottom-text">© 2026 NeuroMatrix Biosystems — Adebimpe John Omolola E.</span>
+    <span class="footer-bottom-text">neuromatrixbiosystems.com</span>
+    <span class="footer-bottom-text">University of Ilorin · GRASP/NIH/DSI</span>
+  </div>
+
+  <script>
+    // ── Scroll reveal ──
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // ── Contact form ──
+    function handleContact(e) {
+      e.preventDefault();
+      const btn = e.target.querySelector('button[type="submit"]');
+      btn.textContent = 'Sending...'; btn.disabled = true;
+      setTimeout(() => {
+        document.getElementById('contact-success').style.display = 'block';
+        btn.textContent = 'Send Message →'; btn.disabled = false;
+        e.target.reset();
+      }, 1200);
+    }
+
+    // ── Newsletter ──
+    function handleNewsletter(e) {
+      e.preventDefault();
+      const btn = e.target.querySelector('button[type="submit"]');
+      btn.textContent = '...'; btn.disabled = true;
+      setTimeout(() => {
+        document.getElementById('newsletter-success').style.display = 'block';
+        btn.textContent = 'Subscribe →'; btn.disabled = false;
+        e.target.reset();
+      }, 1000);
+    }
+
+    // ── Smooth nav highlight ──
+    const sections = document.querySelectorAll('section[id]');
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(s => { if (window.scrollY >= s.offsetTop - 100) current = s.id; });
+      document.querySelectorAll('.nav-links a').forEach(a => {
+        a.style.color = a.getAttribute('href') === '#' + current ? 'var(--gold)' : '';
+      });
+    });
+  </script>
+</body>
+</html>
