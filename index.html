@@ -846,6 +846,109 @@ https://doi.org/10.1007/s11694-026-04084-5</div>
     </div>
   </section>
 
+
+  <!-- ── GALLERY ── -->
+  <section id="gallery">
+    <div class="section-eyebrow">Behind the Research</div>
+    <h2 class="section-title">Lab, Field & <em>Conference</em></h2>
+    <p class="section-sub">Snapshots from the Neuroscience & Inflammation Unit — fieldwork, conferences and research in action.</p>
+
+    <div class="masonry-grid reveal">
+
+      <!-- Poster 1 -->
+      <div class="masonry-item" onclick="openLightbox('img-poster1','NeuroTrack Pro poster presented at the GRASP/NIH Collaborative Program Annual Symposium, 2025')">
+        <div class="masonry-placeholder">
+          <div class="masonry-placeholder-icon">🪧</div>
+          <div style="font-size:10px;color:var(--muted);text-align:center;">Upload your poster photo<br/>Replace this placeholder</div>
+        </div>
+        <div class="masonry-caption">
+          <div class="masonry-tag" style="background:var(--gold-dim);color:var(--gold);">Poster</div>
+          <div class="masonry-caption-title">GRASP/NIH Annual Symposium 2025</div>
+          <div class="masonry-caption-sub">NeuroTrack Pro — Behavioral Analysis Platform</div>
+        </div>
+      </div>
+
+      <!-- Team photo -->
+      <div class="masonry-item" onclick="openLightbox('img-team1','Neuroscience & Inflammation Unit research team, University of Ilorin')">
+        <div class="masonry-placeholder" style="min-height:200px;">
+          <div class="masonry-placeholder-icon">👥</div>
+          <div style="font-size:10px;color:var(--muted);text-align:center;">Upload team photo<br/>Replace this placeholder</div>
+        </div>
+        <div class="masonry-caption">
+          <div class="masonry-tag" style="background:#6c63ff22;color:#6c63ff;">Team</div>
+          <div class="masonry-caption-title">Research Team — University of Ilorin</div>
+          <div class="masonry-caption-sub">Neuroscience & Inflammation Unit</div>
+        </div>
+      </div>
+
+      <!-- Field work -->
+      <div class="masonry-item" onclick="openLightbox('img-field1','Data collection at University of Ibadan affiliated hospital')">
+        <div class="masonry-placeholder" style="min-height:140px;">
+          <div class="masonry-placeholder-icon">🏥</div>
+          <div style="font-size:10px;color:var(--muted);text-align:center;">Upload field work photo<br/>Replace this placeholder</div>
+        </div>
+        <div class="masonry-caption">
+          <div class="masonry-tag" style="background:#00f5c422;color:#00f5c4;">Field Work</div>
+          <div class="masonry-caption-title">Clinical Data Collection</div>
+          <div class="masonry-caption-sub">University of Ibadan affiliated hospital</div>
+        </div>
+      </div>
+
+      <!-- Poster 2 -->
+      <div class="masonry-item" onclick="openLightbox('img-poster2','African NeuroHealth AI Dashboard poster at DSI Data Science Conference')">
+        <div class="masonry-placeholder" style="min-height:220px;">
+          <div class="masonry-placeholder-icon">🪧</div>
+          <div style="font-size:10px;color:var(--muted);text-align:center;">Upload conference poster<br/>Replace this placeholder</div>
+        </div>
+        <div class="masonry-caption">
+          <div class="masonry-tag" style="background:var(--gold-dim);color:var(--gold);">Poster</div>
+          <div class="masonry-caption-title">DSI Data Science Conference 2025</div>
+          <div class="masonry-caption-sub">African NeuroHealth AI Dashboard</div>
+        </div>
+      </div>
+
+      <!-- Lab work -->
+      <div class="masonry-item" onclick="openLightbox('img-lab1','Morris Water Maze experiment in progress at the Neuroscience & Inflammation Unit')">
+        <div class="masonry-placeholder" style="min-height:180px;">
+          <div class="masonry-placeholder-icon">🐀</div>
+          <div style="font-size:10px;color:var(--muted);text-align:center;">Upload lab work photo<br/>Replace this placeholder</div>
+        </div>
+        <div class="masonry-caption">
+          <div class="masonry-tag" style="background:#ff6b6b22;color:#ff6b6b;">Lab Work</div>
+          <div class="masonry-caption-title">Morris Water Maze Experiment</div>
+          <div class="masonry-caption-sub">Neuroscience & Inflammation Unit, UNILORIN</div>
+        </div>
+      </div>
+
+      <!-- Team 2 -->
+      <div class="masonry-item" onclick="openLightbox('img-team2','Principal researcher with supervisor Prof. Bamidele Owoyele')">
+        <div class="masonry-placeholder" style="min-height:160px;">
+          <div class="masonry-placeholder-icon">🎓</div>
+          <div style="font-size:10px;color:var(--muted);text-align:center;">Upload researcher photo<br/>Replace this placeholder</div>
+        </div>
+        <div class="masonry-caption">
+          <div class="masonry-tag" style="background:#6c63ff22;color:#6c63ff;">Team</div>
+          <div class="masonry-caption-title">With Supervisor Prof. Owoyele</div>
+          <div class="masonry-caption-sub">University of Ilorin, 2025</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="gallery-upload-note">
+      📸 <strong style="color:var(--gold);">How to add your photos:</strong>
+      Upload your images to the GitHub repo as <code style="color:var(--green);">img/gallery/photo-name.jpg</code>
+      then replace the placeholder divs with <code style="color:var(--green);">&lt;img class="masonry-img" src="img/gallery/photo-name.jpg" alt="..."&gt;</code>
+    </div>
+  </section>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+    <button class="lightbox-close" onclick="closeLightbox()">✕ Close</button>
+    <img class="lightbox-img" id="lightbox-img" src="" alt="" />
+    <div class="lightbox-caption" id="lightbox-caption"></div>
+  </div>
+  
   <!-- ── NEWSLETTER ── -->
   <section id="newsletter">
     <div class="newsletter-inner reveal">
