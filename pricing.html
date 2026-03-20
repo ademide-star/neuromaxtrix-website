@@ -616,49 +616,138 @@
     </div>
   </div>
 
-  <!-- ── FAQ ── -->
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAQ - NeuroTrack Pro</title>
+  <style>
+    /* FAQ specific styles */
+    .faq-grid {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+    .faq-section {
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      padding: 1.5rem;
+    }
+    .faq-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 2rem;
+      color: #1e2a3e;
+      border-left: 4px solid var(--gold, #f5b042);
+      padding-left: 1rem;
+    }
+    .faq-item {
+      border-bottom: 1px solid #e2e8f0;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    .faq-item:hover {
+      background: #f8fafc;
+    }
+    .faq-q {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 600;
+      font-size: 1.1rem;
+      padding: 1.2rem 0;
+      color: #0f172a;
+    }
+    .faq-arrow {
+      font-size: 0.9rem;
+      transition: transform 0.3s ease;
+      color: var(--gold, #f5b042);
+    }
+    /* Active state rotates arrow */
+    .faq-item.active .faq-arrow {
+      transform: rotate(180deg);
+    }
+    /* Answer hidden by default */
+    .faq-a {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease-out, padding 0.3s ease;
+      background: #fef9e6;
+      margin: 0;
+      border-radius: 12px;
+      color: #334155;
+      line-height: 1.5;
+      font-size: 0.95rem;
+      padding: 0 1rem;
+    }
+    /* When active, show answer */
+    .faq-item.active .faq-a {
+      max-height: 300px; /* adjust based on content length, can also use 1000px for safety */
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+    /* Optional: smooth transition for background */
+    .faq-a p {
+      margin: 0;
+    }
+    /* Keep gold color variable */
+    :root {
+      --gold: #f5b042;
+    }
+  </style>
+</head>
+<body>
+  <!-- FAQ SECTION (corrected) -->
   <section id="faq">
-    <div class="section-eyebrow">Common Questions</div>
-    <h2 class="section-title">Frequently Asked <em>Questions</em></h2>
-    <p class="section-sub">Everything you need to know about NeuroMatrix Biosystems and our platforms.</p>
-
     <div class="faq-grid reveal">
-  <div class="faq-section">
-    <div class="faq-title">Frequently Asked <em style="font-style:italic;color:var(--gold);">Questions</em></div>
+      <div class="faq-section">
+        <div class="faq-title">Frequently Asked <em style="font-style:italic;color:var(--gold);">Questions</em></div>
 
-    <div class="faq-item" onclick="toggleFaq(this)">
-      <div class="faq-q">What is included in the license? <span class="faq-arrow">▼</span></div>
-      <div class="faq-a">Your license unlocks full access to NeuroTrack Pro web app AND the desktop Windows .exe installer. It covers Morris Water Maze, Y-Maze, and Open Field Test analysis including video upload, auto-tracking, trajectory, heatmap, all metrics, PNG and CSV export.</div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-q">What is included in the license? <span class="faq-arrow">▼</span></div>
+          <div class="faq-a">Your license unlocks full access to NeuroTrack Pro web app AND the desktop Windows .exe installer. It covers Morris Water Maze, Y-Maze, and Open Field Test analysis including video upload, auto-tracking, trajectory, heatmap, all metrics, PNG and CSV export.</div>
+        </div>
+
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-q">How do I receive my license key? <span class="faq-arrow">▼</span></div>
+          <div class="faq-a">After payment via Paystack or bank transfer, your unique license key is emailed to you within 24 hours. For Paystack payments it is usually automated within minutes.</div>
+        </div>
+
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-q">Is this a one-time payment or subscription? <span class="faq-arrow">▼</span></div>
+          <div class="faq-a">100% one-time payment — perpetual license with no recurring fees. Researcher and Institution plans include free upgrades for 1 year and lifetime respectively.</div>
+        </div>
+
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-q">Can I use this for my PhD thesis? <span class="faq-arrow">▼</span></div>
+          <div class="faq-a">Yes! NeuroTrack Pro is designed specifically for academic research. The Researcher plan includes a software citation you can include in your methods section.</div>
+        </div>
+
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-q">How does NeuroTrack Pro compare to ANY-maze? <span class="faq-arrow">▼</span></div>
+          <div class="faq-a">ANY-maze costs $1,000–$5,000+ and requires hardware bundles. NeuroTrack Pro starts at $29, works with any existing camera, runs on any Windows PC, and includes a web version — making it ideal for African research institutions with limited budgets.</div>
+        </div>
+
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-q">What if I need a refund? <span class="faq-arrow">▼</span></div>
+          <div class="faq-a">We offer a 7-day refund policy if the software does not work as described. Contact neuromatrixbiosystem@gmail.com with your license key and reason.</div>
+        </div>
+
+      </div>
     </div>
+  </section>
 
-    <div class="faq-item" onclick="toggleFaq(this)">
-      <div class="faq-q">How do I receive my license key? <span class="faq-arrow">▼</span></div>
-      <div class="faq-a">After payment via Paystack or bank transfer, your unique license key is emailed to you within 24 hours. For Paystack payments it is usually automated within minutes.</div>
-    </div>
-
-    <div class="faq-item" onclick="toggleFaq(this)">
-      <div class="faq-q">Is this a one-time payment or subscription? <span class="faq-arrow">▼</span></div>
-      <div class="faq-a">100% one-time payment — perpetual license with no recurring fees. Researcher and Institution plans include free upgrades for 1 year and lifetime respectively.</div>
-    </div>
-
-    <div class="faq-item" onclick="toggleFaq(this)">
-      <div class="faq-q">Can I use this for my PhD thesis? <span class="faq-arrow">▼</span></div>
-      <div class="faq-a">Yes! NeuroTrack Pro is designed specifically for academic research. The Researcher plan includes a software citation you can include in your methods section.</div>
-    </div>
-
-    <div class="faq-item" onclick="toggleFaq(this)">
-      <div class="faq-q">How does NeuroTrack Pro compare to ANY-maze? <span class="faq-arrow">▼</span></div>
-      <div class="faq-a">ANY-maze costs $1,000–$5,000+ and requires hardware bundles. NeuroTrack Pro starts at $29, works with any existing camera, runs on any Windows PC, and includes a web version — making it ideal for African research institutions with limited budgets.</div>
-    </div>
-
-    <div class="faq-item" onclick="toggleFaq(this)">
-      <div class="faq-q">What if I need a refund? <span class="faq-arrow">▼</span></div>
-      <div class="faq-a">We offer a 7-day refund policy if the software does not work as described. Contact neuromatrixbiosystem@gmail.com with your license key and reason.</div>
-    </div>
-
-  </div>
-
-</div>
+  <script>
+    // Toggle FAQ: adds/removes 'active' class on the clicked .faq-item
+    function toggleFaq(element) {
+      // Toggle the 'active' class on the parent .faq-item container
+      element.classList.toggle('active');
+    }
+  </script>
+</body>
+</html>
 
 <!-- ── PURCHASE MODAL ── -->
 <div class="modal-overlay" id="purchaseModal">
