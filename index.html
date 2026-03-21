@@ -1071,70 +1071,55 @@ https://doi.org/10.1007/s11694-026-04084-5</div>
 </body>
 </html>
   
-  <!-- ── NEWSLETTER ── -->
-  <section id="newsletter">
-    <div class="newsletter-inner reveal">
-      <div class="section-eyebrow" style="justify-content:center;">Stay Updated</div>
-      <h2 class="section-title" style="text-align:center;">Research <em>Newsletter</em></h2>
-      <p class="section-sub" style="margin:0 auto;text-align:center;">
-        Get updates on new platform releases, research publications and neuroscience tools from NeuroMatrix Biosystems.
-      </p>
-      <form class="newsletter-form" onsubmit="handleNewsletter(event)">
-        <input class="newsletter-input" type="email" placeholder="your@email.com" required />
-        <button type="submit" class="btn-primary">Subscribe →</button>
-      </form>
-      <div class="success-msg" id="newsletter-success" style="margin-top:16px;">
-        ✅ Subscribed! Welcome to the NeuroMatrix community.
-      </div>
-      <p style="font-size:9px;color:var(--dim);margin-top:16px;text-align:center;">
-        No spam. Research updates only. Unsubscribe anytime.
-      </p>
-    </div>
-  </section>
-
-  <!-- ── FOOTER ── -->
-  <footer>
-    <div>
-      <div class="footer-brand-name">NEUROMATRIX Biosystems</div>
-      <div class="footer-brand-sub">Precision Neuroscience Tools</div>
-      <p class="footer-brand-desc">
-        AI-powered research platforms developed at the University of Ilorin, Nigeria —
-        supported by the GRASP/NIH/DSI Collaborative Program.
-      </p>
-    </div>
-    <div>
-      <div class="footer-col-title">Platforms</div>
-      <ul class="footer-links">
-        <li><a href="https://neurotrack-ten.vercel.app" target="_blank">NeuroTrack Pro</a></li>
-        <li><a href="https://huggingface.co/spaces/ademideola/african-neurohealth" target="_blank">African NeuroHealth AI</a></li>
-        <li><a href="#contact">NeuroMatrix LMS</a></li>
-      </ul>
-    </div>
-    <div>
-      <div class="footer-col-title">Research</div>
-      <ul class="footer-links">
-        <li><a href="#publications">Publications</a></li>
-        <li><a href="https://github.com/ademide-star" target="_blank">GitHub</a></li>
-        <li><a href="https://huggingface.co/ademideola" target="_blank">Hugging Face</a></li>
-      </ul>
-    </div>
-    <div>
-      <div class="footer-col-title">Connect</div>
-      <ul class="footer-links">
-        <li><a href="#contact">Contact</a></li>
-        <li><a href="#newsletter">Newsletter</a></li>
-        <li><a href="https://github.com/ademide-star/neurotrack" target="_blank">Open Source</a></li>
-      </ul>
-    </div>
-  </footer>
-
-  <div class="footer-bottom">
-    <span class="footer-bottom-text">© 2026 NeuroMatrix Biosystems — Adebimpe John Omolola E.</span>
-    <span class="footer-bottom-text">neuromatrixbiosystems.com</span>
-    <span class="footer-bottom-text">University of Ilorin · GRASP/NIH/DSI</span>
-  </div>
-
   <script>
+    // ── Gallery lightbox ──
+    const galleryData = {};
+
+    function openLightbox(src, caption) {
+      // Accepts either a URL string or an element ID
+      const imgSrc = (typeof src === 'string' && src.startsWith('http') || src.includes('.jpg') || src.includes('.png') || src.includes('.jpeg'))
+        ? src
+        : (document.getElementById(src) ? document.getElementById(src).src : src);
+      document.getElementById('lightbox-img').src = imgSrc;
+      document.getElementById('lightbox-caption').textContent = caption;
+      document.getElementById('lightbox').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox(e) {
+      if (e && e.target !== document.getElementById('lightbox') && !e.target.classList.contains('lightbox-close')) return;
+      document.getElementById('lightbox').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        document.getElementById('lightbox').classList.remove('open');
+        document.body.style.overflow = '';
+      }
+    });
+
+    // ── FAQ toggle ──
+    function toggleFaq(el) {
+      // Close all others first
+      document.querySelectorAll('.faq-item.open').forEach(item => {
+        if (item !== el) item.classList.remove('open');
+      });
+      el.classList.toggle('open');
+    }
+
+    // Also add event delegation as backup
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('.faq-item').forEach(function(item) {
+        item.addEventListener('click', function() {
+          document.querySelectorAll('.faq-item.open').forEach(function(open) {
+            if (open !== item) open.classList.remove('open');
+          });
+          item.classList.toggle('open');
+        });
+      });
+    });
+
     // ── Scroll reveal ──
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
