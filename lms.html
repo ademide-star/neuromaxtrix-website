@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NeuroMatrix LMS — NeuroMatrix Biosystems</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #070b16; color: #e2e8f0; font-family: 'IBM Plex Mono', monospace; min-height: 100vh; display: flex; flex-direction: column; }
+
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 32px; height: 56px;
+      background: #0a0e1a; border-bottom: 1px solid #1e2a4a;
+      position: sticky; top: 0; z-index: 100;
+    }
+
+    .nav-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-brand img { height: 32px; width: 32px; object-fit: contain; border-radius: 6px; }
+    .nav-brand-text { font-size: 12px; font-weight: 600; color: #c9a84c; letter-spacing: 0.1em; }
+    .nav-brand-text span { color: #e2e8f0; }
+
+    .nav-back {
+      display: flex; align-items: center; gap: 6px;
+      text-decoration: none; font-size: 10px; color: #4a5568;
+      letter-spacing: 0.1em; transition: color 0.2s;
+    }
+    .nav-back:hover { color: #6c63ff; }
+
+    .nav-badge {
+      background: #6c63ff22; border: 1px solid #6c63ff44;
+      color: #6c63ff; border-radius: 20px; padding: 3px 12px;
+      font-size: 9px; letter-spacing: 0.1em;
+    }
+
+    .app-header {
+      background: linear-gradient(180deg, #0d1428 0%, #070b16 100%);
+      border-bottom: 1px solid #1e2a4a;
+      padding: 20px 32px;
+      display: flex; align-items: center; gap: 16px;
+    }
+
+    .app-header-logo {
+      width: 48px; height: 48px; border-radius: 10px;
+      background: #6c63ff22; border: 1px solid #6c63ff44;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden; padding: 4px; flex-shrink: 0;
+    }
+
+    .app-header-logo img { width: 100%; height: 100%; object-fit: contain; }
+
+    .app-header-info h1 {
+      font-size: 16px; font-weight: 700; color: #e2e8f0;
+      letter-spacing: 0.05em; margin-bottom: 4px;
+    }
+
+    .app-header-info p { font-size: 10px; color: #4a5568; letter-spacing: 0.1em; }
+
+    .iframe-container { flex: 1; display: flex; flex-direction: column; }
+
+    iframe {
+      flex: 1; width: 100%; min-height: calc(100vh - 120px);
+      border: none;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="/" class="nav-brand">
+      <img src="/logo.png" alt="NeuroMatrix" onerror="this.style.display='none'" />
+      <span class="nav-brand-text">NEURO<span>MATRIX</span> Biosystems</span>
+    </a>
+    <span class="nav-badge">● NeuroMatrix LMS</span>
+    <a href="/" class="nav-back">← Back to Home</a>
+  </nav>
+
+  <div class="app-header">
+    <div class="app-header-logo">
+      <img src="/neuromatrix_lms_logo.png" alt="NeuroMatrix LMS" onerror="this.outerHTML='🎓'" />
+    </div>
+    <div class="app-header-info">
+      <h1>NeuroMatrix Learning Management System</h1>
+      <p>NEUROSCIENCE RESEARCH TRAINING · AFRICAN UNIVERSITIES & RESEARCH INSTITUTIONS</p>
+    </div>
+  </div>
+
+  <div class="iframe-container">
+    <iframe
+      src="https://ademideola-multi-lecture-dashboard.hf.space"
+      title="NeuroMatrix LMS"
+      allow="accelerometer; camera; microphone"
+      loading="lazy"
+    ></iframe>
+  </div>
+
+</body>
+</html>
