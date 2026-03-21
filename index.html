@@ -961,7 +961,223 @@ https://doi.org/10.1007/s11694-026-04084-5</div>
     </div>
   </section>
 
-  <!-- ── GALLERY ── -->
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gallery - NeuroTrack Pro</title>
+  <style>
+    :root {
+      --gold: #f5b042;
+      --gold-dim: rgba(245, 176, 66, 0.1);
+      --dark: #1e2a3e;
+      --light: #f8fafc;
+    }
+
+    /* Gallery Section Styles */
+    #gallery {
+      padding: 4rem 2rem;
+      background: var(--light);
+    }
+
+    .section-eyebrow {
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-size: 0.85rem;
+      color: var(--gold);
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: var(--dark);
+    }
+
+    .section-title em {
+      color: var(--gold);
+      font-style: italic;
+    }
+
+    .section-sub {
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto 3rem;
+      color: #64748b;
+      line-height: 1.6;
+    }
+
+    /* Masonry Grid Layout */
+    .masonry-grid {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      grid-auto-rows: auto;
+    }
+
+    .masonry-item {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      cursor: pointer;
+      background: #fff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .masonry-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+    }
+
+    .masonry-img {
+      width: 100%;
+      height: auto;
+      display: block;
+      transition: transform 0.3s ease;
+    }
+
+    .masonry-item:hover .masonry-img {
+      transform: scale(1.05);
+    }
+
+    .masonry-caption {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+      padding: 1.5rem 1rem 1rem;
+      color: white;
+      transform: translateY(100%);
+      transition: transform 0.3s ease;
+    }
+
+    .masonry-item:hover .masonry-caption {
+      transform: translateY(0);
+    }
+
+    .masonry-tag {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      background: rgba(245, 176, 66, 0.2);
+      color: var(--gold);
+    }
+
+    .masonry-caption-title {
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .masonry-caption-sub {
+      font-size: 0.85rem;
+      opacity: 0.9;
+    }
+
+    /* Lightbox Styles */
+    .lightbox {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      cursor: pointer;
+    }
+
+    .lightbox.active {
+      display: flex;
+    }
+
+    .lightbox-img {
+      max-width: 90%;
+      max-height: 80vh;
+      object-fit: contain;
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .lightbox-caption {
+      margin-top: 1rem;
+      color: white;
+      text-align: center;
+      max-width: 80%;
+      font-size: 1rem;
+      line-height: 1.5;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 0.75rem 1.5rem;
+      border-radius: 30px;
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      font-size: 1rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      font-weight: 600;
+    }
+
+    .lightbox-close:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    /* Reveal Animation */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      animation: reveal 0.6s ease forwards;
+    }
+
+    @keyframes reveal {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .masonry-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1rem;
+      }
+      
+      .section-title {
+        font-size: 1.8rem;
+      }
+      
+      .lightbox-img {
+        max-width: 95%;
+        max-height: 70vh;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- GALLERY SECTION -->
   <section id="gallery">
     <div class="section-eyebrow">Behind the Research</div>
     <h2 class="section-title">Lab, Field & <em>Conference</em></h2>
@@ -971,7 +1187,7 @@ https://doi.org/10.1007/s11694-026-04084-5</div>
 
       <!-- Image 1 — DS-I Africa team -->
       <div class="masonry-item" onclick="openLightbox(this.querySelector('img').src, '5th DS-I Africa Consortium Meeting, Accra, Ghana — August 2025')">
-        <img class="masonry-img" src="conf-dsi-team.jpg" alt="DS-I Africa Consortium Meeting 2025 — Accra, Ghana" />
+        <img class="masonry-img" src="conf-dsi-team.jpg" alt="DS-I Africa Consortium Meeting 2025 — Accra, Ghana" onerror="this.src='https://via.placeholder.com/400x300?text=Image+Not+Found'"/>
         <div class="masonry-caption">
           <div class="masonry-tag" style="background:var(--gold-dim);color:var(--gold);">Conference</div>
           <div class="masonry-caption-title">5th DS-I Africa Consortium Meeting</div>
@@ -981,7 +1197,7 @@ https://doi.org/10.1007/s11694-026-04084-5</div>
 
       <!-- Image 7 — Lab team formal -->
       <div class="masonry-item" onclick="openLightbox(this.querySelector('img').src, 'Neuroscience & Inflammation Unit research team with supervisor — University of Ilorin')">
-        <img class="masonry-img" src="lab-team-formal.jpg" alt="Research team with supervisor — University of Ilorin" />
+        <img class="masonry-img" src="lab-team-formal.jpg" alt="Research team with supervisor — University of Ilorin" onerror="this.src='https://via.placeholder.com/400x300?text=Image+Not+Found'"/>
         <div class="masonry-caption">
           <div class="masonry-tag" style="background:#6c63ff22;color:#6c63ff;">Team</div>
           <div class="masonry-caption-title">Research Team with Supervisor</div>
@@ -991,7 +1207,7 @@ https://doi.org/10.1007/s11694-026-04084-5</div>
 
       <!-- Image 2 — DS-I Africa solo -->
       <div class="masonry-item" onclick="openLightbox(this.querySelector('img').src, 'Principal researcher at the 5th DS-I Africa Consortium Meeting, Accra, Ghana')">
-        <img class="masonry-img" src="conf-dsi-solo.jpg" alt="DS-I Africa Consortium Meeting — principal researcher" />
+        <img class="masonry-img" src="conf-dsi-solo.jpg" alt="DS-I Africa Consortium Meeting — principal researcher" onerror="this.src='https://via.placeholder.com/400x300?text=Image+Not+Found'"/>
         <div class="masonry-caption">
           <div class="masonry-tag" style="background:var(--gold-dim);color:var(--gold);">Conference</div>
           <div class="masonry-caption-title">DS-I Africa — Accra, Ghana 2025</div>
@@ -1001,7 +1217,7 @@ https://doi.org/10.1007/s11694-026-04084-5</div>
 
       <!-- Image 4 — Large DS-I group -->
       <div class="masonry-item" onclick="openLightbox(this.querySelector('img').src, 'DS-I Africa Consortium full delegate group photo — Accra, Ghana 2025')">
-        <img class="masonry-img" src="conf-dsi-group.jpg" alt="DS-I Africa full group photo" />
+        <img class="masonry-img" src="conf-dsi-group.jpg" alt="DS-I Africa full group photo" onerror="this.src='https://via.placeholder.com/400x300?text=Image+Not+Found'"/>
         <div class="masonry-caption">
           <div class="masonry-tag" style="background:var(--gold-dim);color:var(--gold);">Conference</div>
           <div class="masonry-caption-title">DS-I Africa Delegate Group</div>
@@ -1011,7 +1227,7 @@ https://doi.org/10.1007/s11694-026-04084-5</div>
 
       <!-- Image 6 — Lab team casual -->
       <div class="masonry-item" onclick="openLightbox(this.querySelector('img').src, 'Student research team in lab coats — University of Ilorin')">
-        <img class="masonry-img" src="lab-team-casual.jpg" alt="Student research team — University of Ilorin" />
+        <img class="masonry-img" src="lab-team-casual.jpg" alt="Student research team — University of Ilorin" onerror="this.src='https://via.placeholder.com/400x300?text=Image+Not+Found'"/>
         <div class="masonry-caption">
           <div class="masonry-tag" style="background:#00f5c422;color:#00f5c4;">Lab Team</div>
           <div class="masonry-caption-title">Student Research Team</div>
@@ -1021,7 +1237,7 @@ https://doi.org/10.1007/s11694-026-04084-5</div>
 
       <!-- Image 5 — Inform Africa group -->
       <div class="masonry-item" onclick="openLightbox(this.querySelector('img').src, 'INFORM Africa conference group photo — DS-I Africa Consortium Meeting 2025')">
-        <img class="masonry-img" src="conf-inform-group.jpg" alt="INFORM Africa group at DS-I Africa meeting" />
+        <img class="masonry-img" src="conf-inform-group.jpg" alt="INFORM Africa group at DS-I Africa meeting" onerror="this.src='https://via.placeholder.com/400x300?text=Image+Not+Found'"/>
         <div class="masonry-caption">
           <div class="masonry-tag" style="background:#6c63ff22;color:#6c63ff;">Conference</div>
           <div class="masonry-caption-title">INFORM Africa Working Group</div>
@@ -1031,7 +1247,7 @@ https://doi.org/10.1007/s11694-026-04084-5</div>
 
       <!-- Image 3 — Conference selfie -->
       <div class="masonry-item" onclick="openLightbox(this.querySelector('img').src, 'Networking with fellow researchers at DS-I Africa Consortium Meeting, Accra 2025')">
-        <img class="masonry-img" src="conf-dsi-selfie.jpg" alt="Networking at DS-I Africa — Accra 2025" />
+        <img class="masonry-img" src="conf-dsi-selfie.jpg" alt="Networking at DS-I Africa — Accra 2025" onerror="this.src='https://via.placeholder.com/400x300?text=Image+Not+Found'"/>
         <div class="masonry-caption">
           <div class="masonry-tag" style="background:var(--gold-dim);color:var(--gold);">Conference</div>
           <div class="masonry-caption-title">Networking at DS-I Africa</div>
@@ -1049,6 +1265,59 @@ https://doi.org/10.1007/s11694-026-04084-5</div>
     <div class="lightbox-caption" id="lightbox-caption"></div>
   </div>
 
+  <script>
+    // Lightbox Functions
+    function openLightbox(imgSrc, caption) {
+      const lightbox = document.getElementById('lightbox');
+      const lightboxImg = document.getElementById('lightbox-img');
+      const lightboxCaption = document.getElementById('lightbox-caption');
+      
+      lightboxImg.src = imgSrc;
+      lightboxCaption.textContent = caption;
+      lightbox.classList.add('active');
+      
+      // Prevent body scrolling when lightbox is open
+      document.body.style.overflow = 'hidden';
+    }
+    
+    function closeLightbox(event) {
+      // Close if clicking on the overlay background
+      if (event && event.target !== event.currentTarget) {
+        return;
+      }
+      
+      const lightbox = document.getElementById('lightbox');
+      lightbox.classList.remove('active');
+      
+      // Re-enable body scrolling
+      document.body.style.overflow = '';
+    }
+    
+    // Close lightbox with Escape key
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        const lightbox = document.getElementById('lightbox');
+        if (lightbox.classList.contains('active')) {
+          closeLightbox();
+        }
+      }
+    });
+    
+    // Optional: Add loading animation for images
+    document.querySelectorAll('.masonry-img').forEach(img => {
+      img.addEventListener('load', function() {
+        this.style.opacity = '1';
+      });
+      if (img.complete) {
+        img.style.opacity = '1';
+      } else {
+        img.style.opacity = '0';
+        img.style.transition = 'opacity 0.3s ease';
+      }
+    });
+  </script>
+</body>
+</html>
 
   <!DOCTYPE html>
 <html lang="en">
