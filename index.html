@@ -566,6 +566,132 @@
       footer { grid-template-columns: 1fr 1fr; padding: 32px 20px; }
       .newsletter-form { flex-direction: column; }
       .hero-stats { gap: 24px; flex-wrap: wrap; }
+      .masonry-grid { columns: 2; }
+      .faq-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 480px) {
+      .masonry-grid { columns: 1; }
+    }
+
+    /* ── GALLERY ───────────────────────────────────────────────────────── */
+    #gallery { background: var(--surface); }
+
+    .masonry-grid {
+      columns: 3; column-gap: 16px; margin-top: 48px;
+    }
+
+    .masonry-item {
+      break-inside: avoid; margin-bottom: 16px;
+      position: relative; border-radius: 10px; overflow: hidden;
+      cursor: pointer; border: 1px solid var(--border);
+      transition: all 0.3s; background: var(--panel);
+    }
+
+    .masonry-item:hover { transform: translateY(-4px); border-color: var(--gold-mid); }
+
+    .masonry-img {
+      width: 100%; display: block; transition: transform 0.4s ease;
+      background: var(--panel); min-height: 160px;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .masonry-item:hover .masonry-img { transform: scale(1.04); }
+
+    .masonry-placeholder {
+      width: 100%; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 32px 20px; gap: 10px; min-height: 160px;
+      background: var(--panel);
+    }
+
+    .masonry-placeholder-icon { font-size: 32px; opacity: 0.5; }
+
+    .masonry-caption {
+      padding: 12px 14px; border-top: 1px solid var(--border);
+    }
+
+    .masonry-tag {
+      display: inline-block; font-size: 8px; letter-spacing: 0.1em;
+      text-transform: uppercase; padding: 2px 8px; border-radius: 4px;
+      margin-bottom: 6px;
+    }
+
+    .masonry-caption-title {
+      font-size: 11px; font-weight: 600; color: var(--text); margin-bottom: 3px;
+    }
+
+    .masonry-caption-sub { font-size: 9px; color: var(--muted); }
+
+    .gallery-upload-note {
+      margin-top: 32px; padding: 16px 24px;
+      background: var(--panel); border: 1px dashed var(--gold-mid);
+      border-radius: 10px; text-align: center;
+      font-size: 10px; color: var(--muted); line-height: 1.8;
+    }
+
+    /* Lightbox */
+    .lightbox {
+      display: none; position: fixed; inset: 0; z-index: 300;
+      background: rgba(0,0,0,0.92); backdrop-filter: blur(8px);
+      align-items: center; justify-content: center; flex-direction: column;
+      gap: 16px;
+    }
+
+    .lightbox.open { display: flex; }
+
+    .lightbox-img {
+      max-width: 88vw; max-height: 78vh;
+      border-radius: 10px; border: 1px solid var(--border);
+      object-fit: contain;
+    }
+
+    .lightbox-close {
+      position: absolute; top: 20px; right: 24px;
+      background: var(--panel); border: 1px solid var(--border);
+      color: var(--text); font-size: 18px; cursor: pointer;
+      border-radius: 8px; padding: 6px 12px; z-index: 301;
+    }
+
+    .lightbox-caption {
+      text-align: center; font-size: 11px; color: var(--muted); max-width: 500px;
+    }
+
+    /* ── FAQ ────────────────────────────────────────────────────────────── */
+    #faq { background: var(--bg); }
+
+    .faq-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 0 56px; margin-top: 48px;
+    }
+
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+      padding: 20px 0; cursor: pointer; transition: padding 0.2s;
+    }
+
+    .faq-item:hover { padding-left: 6px; }
+
+    .faq-q {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      gap: 12px; font-size: 12px; color: var(--text); font-weight: 600;
+      line-height: 1.5;
+    }
+
+    .faq-arrow { transition: transform 0.2s; flex-shrink: 0; color: var(--gold); }
+    .faq-item.open .faq-arrow { transform: rotate(180deg); }
+
+    .faq-a {
+      font-size: 11px; color: var(--muted); line-height: 1.8;
+      margin-top: 0; max-height: 0; overflow: hidden;
+      transition: max-height 0.35s ease, margin-top 0.2s ease;
+      padding-right: 24px;
+    }
+
+    .faq-item.open .faq-a {
+      display: block;
+      max-height: 300px;
+      margin-top: 12px;
     }
   </style>
 </head>
@@ -580,6 +706,8 @@
     <ul class="nav-links">
       <li><a href="#apps">Products</a></li>
       <li><a href="#publications">Research</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#faq">FAQ</a></li>
       <li><a href="#contact">Contact</a></li>
       <li><a href="#newsletter" class="nav-cta">Stay Updated</a></li>
     </ul>
@@ -631,37 +759,24 @@
 
     <div class="apps-grid">
 
-      
       <!-- NeuroTrack Pro -->
-<a href="https://neurotrack-ten.vercel.app" target="_blank" class="app-card" style="--card-color: #c9a84c;">
-  <div class="app-card-status" style="background:#c9a84c22;color:#c9a84c;border:1px solid #c9a84c44;">● Live</div>
-  <div class="app-card-icon">🏊</div>
-  <div class="app-card-tag" style="background:#c9a84c22;color:#c9a84c;border:1px solid #c9a84c44;">Behavioral Analysis</div>
-  <div class="app-card-title">NeuroTrack Pro</div>
-  <p class="app-card-desc">AI-powered Morris Water Maze, Y-Maze and Open Field Test analysis platform with real-time trajectory tracking and heatmap generation.</p>
-  <ul class="app-card-features">
-    <li>Video upload + auto rat tracking</li>
-    <li>Escape latency & path length metrics</li>
-    <li>Probe trial quadrant analysis</li>
-    <li>Y-Maze spontaneous alternation</li>
-    <li>OFT anxiety index + velocity</li>
-    <li>Desktop .exe + web version</li>
-  </ul>
-  <div class="app-card-link">Launch App →</div>
-  <div style="display:flex; gap:8px; margin-top:16px;">
-    <a href="/pricing.html"
-       onclick="event.stopPropagation()"
-       style="background:#c9a84c; color:#070b16; padding:6px 14px; border-radius:6px; font-size:10px; font-weight:700; text-decoration:none;">
-      View Pricing →
-    </a>
-    <a href="https://neurotrack-ten.vercel.app"
-       target="_blank"
-       onclick="event.stopPropagation()"
-       style="background:transparent; color:#c9a84c; border:1px solid #c9a84c44; padding:6px 14px; border-radius:6px; font-size:10px; font-weight:700; text-decoration:none;">
-      Try Free →
-    </a>
-  </div>
-</a>
+      <a href="https://neurotrack-ten.vercel.app" target="_blank" class="app-card" style="--card-color: #c9a84c;">
+        <div class="app-card-status" style="background:#c9a84c22;color:#c9a84c;border:1px solid #c9a84c44;">● Live</div>
+        <div class="app-card-icon">🏊</div>
+        <div class="app-card-tag" style="background:#c9a84c22;color:#c9a84c;border:1px solid #c9a84c44;">Behavioral Analysis</div>
+        <div class="app-card-title">NeuroTrack Pro</div>
+        <p class="app-card-desc">AI-powered Morris Water Maze, Y-Maze and Open Field Test analysis platform with real-time trajectory tracking and heatmap generation.</p>
+        <ul class="app-card-features">
+          <li>Video upload + auto rat tracking</li>
+          <li>Escape latency & path length metrics</li>
+          <li>Probe trial quadrant analysis</li>
+          <li>Y-Maze spontaneous alternation</li>
+          <li>OFT anxiety index + velocity</li>
+          <li>Desktop .exe + web version</li>
+        </ul>
+        <div class="app-card-link">Launch App →</div>
+      </a>
+
       <!-- African NeuroHealth -->
       <a href="https://huggingface.co/spaces/ademideola/african-neurohealth" class="app-card" style="--card-color: #00f5c4;">
         <div class="app-card-status" style="background:#00f5c422;color:#00f5c4;border:1px solid #00f5c444;">● Live</div>
@@ -846,8 +961,7 @@ https://doi.org/10.1007/s11694-026-04084-5</div>
     </div>
   </section>
 
-
-   <!-- ── GALLERY ── -->
+  <!-- ── GALLERY ── -->
   <section id="gallery">
     <div class="section-eyebrow">Behind the Research</div>
     <h2 class="section-title">Lab, Field & <em>Conference</em></h2>
@@ -935,142 +1049,137 @@ https://doi.org/10.1007/s11694-026-04084-5</div>
     <div class="lightbox-caption" id="lightbox-caption"></div>
   </div>
 
-  
-    <!-- ── FAQ ── -->
-
-    <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FAQ - NeuroTrack Pro</title>
-  <style>
-    /* FAQ specific styles */
-    .faq-grid {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 2rem 1rem;
-    }
-    .faq-section {
-      background: #fff;
-      border-radius: 20px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-      padding: 1.5rem;
-    }
-    .faq-title {
-      font-size: 2rem;
-      font-weight: 700;
-      margin-bottom: 2rem;
-      color: #1e2a3e;
-      border-left: 4px solid var(--gold, #f5b042);
-      padding-left: 1rem;
-    }
-    .faq-item {
-      border-bottom: 1px solid #e2e8f0;
-      cursor: pointer;
-      transition: background 0.2s ease;
-    }
-    .faq-item:hover {
-      background: #f8fafc;
-    }
-    .faq-q {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-weight: 600;
-      font-size: 1.1rem;
-      padding: 1.2rem 0;
-      color: #0f172a;
-    }
-    .faq-arrow {
-      font-size: 0.9rem;
-      transition: transform 0.3s ease;
-      color: var(--gold, #f5b042);
-    }
-    /* Active state rotates arrow */
-    .faq-item.active .faq-arrow {
-      transform: rotate(180deg);
-    }
-    /* Answer hidden by default */
-    .faq-a {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.4s ease-out, padding 0.3s ease;
-      background: #fef9e6;
-      margin: 0;
-      border-radius: 12px;
-      color: #334155;
-      line-height: 1.5;
-      font-size: 0.95rem;
-      padding: 0 1rem;
-    }
-    /* When active, show answer */
-    .faq-item.active .faq-a {
-      max-height: 300px; /* adjust based on content length, can also use 1000px for safety */
-      padding: 1rem;
-      margin-bottom: 1rem;
-    }
-    /* Optional: smooth transition for background */
-    .faq-a p {
-      margin: 0;
-    }
-    /* Keep gold color variable */
-    :root {
-      --gold: #f5b042;
-    }
-  </style>
-</head>
-<body>
-  <!-- FAQ SECTION (corrected) -->
+  <!-- ── FAQ ── -->
   <section id="faq">
+    <div class="section-eyebrow">Common Questions</div>
+    <h2 class="section-title">Frequently Asked <em>Questions</em></h2>
+    <p class="section-sub">Everything you need to know about NeuroMatrix Biosystems and our platforms.</p>
+
     <div class="faq-grid reveal">
-      <div class="faq-section">
-        <div class="faq-title">Frequently Asked <em style="font-style:italic;color:var(--gold);">Questions</em></div>
 
+      <!-- Column 1 -->
+      <div>
         <div class="faq-item" onclick="toggleFaq(this)">
-          <div class="faq-q">What is included in the license? <span class="faq-arrow">▼</span></div>
-          <div class="faq-a">Your license unlocks full access to NeuroTrack Pro web app AND the desktop Windows .exe installer. It covers Morris Water Maze, Y-Maze, and Open Field Test analysis including video upload, auto-tracking, trajectory, heatmap, all metrics, PNG and CSV export.</div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-q">What is NeuroMatrix Biosystems? <span class="faq-arrow">▼</span></div>
+          <div class="faq-a">NeuroMatrix Biosystems is a neuroscience research software company developed at the University of Ilorin, Nigeria. We build AI-powered tools for preclinical and clinical neuroscience research, with a focus on making world-class research software accessible to African researchers and institutions.</div>
         </div>
 
         <div class="faq-item" onclick="toggleFaq(this)">
-          <div class="faq-q">How do I receive my license key? <span class="faq-arrow">▼</span></div>
-          <div class="faq-a">After payment via Paystack or bank transfer, your unique license key is emailed to you within 24 hours. For Paystack payments it is usually automated within minutes.</div>
+          <div class="faq-q">What is NeuroTrack Pro? <span class="faq-arrow">▼</span></div>
+          <div class="faq-a">NeuroTrack Pro is an AI-powered behavioral analysis platform for preclinical neuroscience. It automates animal tracking in the Morris Water Maze, Y-Maze, and Open Field Test — generating trajectory maps, heatmaps and quantitative metrics from standard lab videos. It is a direct affordable alternative to commercial software like ANY-maze.</div>
         </div>
 
         <div class="faq-item" onclick="toggleFaq(this)">
-          <div class="faq-q">Is this a one-time payment or subscription? <span class="faq-arrow">▼</span></div>
-          <div class="faq-a">100% one-time payment — perpetual license with no recurring fees. Researcher and Institution plans include free upgrades for 1 year and lifetime respectively.</div>
+          <div class="faq-q">Is NeuroTrack Pro free to use? <span class="faq-arrow">▼</span></div>
+          <div class="faq-a">NeuroTrack Pro has a free tier that allows up to 3 video sessions with basic trajectory analysis. Full features including heatmap, Y-Maze, Open Field Test, probe trial analysis and unlimited sessions require a one-time license starting from $29 — compared to $1,000–$5,000+ for commercial alternatives.</div>
         </div>
 
         <div class="faq-item" onclick="toggleFaq(this)">
-          <div class="faq-q">Can I use this for my PhD thesis? <span class="faq-arrow">▼</span></div>
-          <div class="faq-a">Yes! NeuroTrack Pro is designed specifically for academic research. The Researcher plan includes a software citation you can include in your methods section.</div>
+          <div class="faq-q">What camera do I need for NeuroTrack Pro? <span class="faq-arrow">▼</span></div>
+          <div class="faq-a">Any standard camera that can record video works — smartphone cameras, USB webcams, or dedicated lab cameras. NeuroTrack Pro accepts MP4, AVI, and MOV formats. No proprietary hardware is required, unlike commercial systems that bundle expensive camera setups.</div>
         </div>
 
         <div class="faq-item" onclick="toggleFaq(this)">
-          <div class="faq-q">How does NeuroTrack Pro compare to ANY-maze? <span class="faq-arrow">▼</span></div>
-          <div class="faq-a">ANY-maze costs $1,000–$5,000+ and requires hardware bundles. NeuroTrack Pro starts at $29, works with any existing camera, runs on any Windows PC, and includes a web version — making it ideal for African research institutions with limited budgets.</div>
+          <div class="faq-q">Can I use NeuroTrack Pro for my PhD research? <span class="faq-arrow">▼</span></div>
+          <div class="faq-a">Yes — NeuroTrack Pro is designed specifically for academic research. The Researcher plan includes a software citation formatted for your methods section. The platform has been used in active PhD research at the University of Ilorin funded by TETFund and the GRASP/NIH/DSI Collaborative Program.</div>
         </div>
-
-        <div class="faq-item" onclick="toggleFaq(this)">
-          <div class="faq-q">What if I need a refund? <span class="faq-arrow">▼</span></div>
-          <div class="faq-a">We offer a 7-day refund policy if the software does not work as described. Contact neuromatrixbiosystem@gmail.com with your license key and reason.</div>
-        </div>
-
       </div>
+
+      <!-- Column 2 -->
+      <div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-q">What is the African NeuroHealth AI Dashboard? <span class="faq-arrow">▼</span></div>
+          <div class="faq-a">African NeuroHealth AI is a clinical AI platform for predicting stroke and dementia risk in African populations. It incorporates culturally relevant factors including lifestyle, environmental stressors and dietary patterns. It achieves 86.7% stroke prediction accuracy and 93.3% dementia prediction accuracy, and is freely accessible online.</div>
+        </div>
+
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-q">Who funds this research? <span class="faq-arrow">▼</span></div>
+          <div class="faq-a">Our research is supported by TETFund Nigeria under the Academic Staff Training & Development (AST&D) scheme, and the Growing Data-science Research in Africa to Stimulate Progress (GRASP) program — a collaboration between African institutions, the National Institutes of Health (NIH) and the Data Science Initiative (DSI).</div>
+        </div>
+
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-q">How do I collaborate with NeuroMatrix Biosystems? <span class="faq-arrow">▼</span></div>
+          <div class="faq-a">We welcome collaborations with researchers, institutions and universities across Africa and globally. Fill in the contact form below with your research interests and institution. We are particularly interested in multi-site behavioral neuroscience studies, clinical AI validation and educational partnerships.</div>
+        </div>
+
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-q">Is the software peer-reviewed? <span class="faq-arrow">▼</span></div>
+          <div class="faq-a">A manuscript describing NeuroTrack Pro is currently being prepared for submission to SoftwareX (Elsevier) — a peer-reviewed journal for research software. The African NeuroHealth AI Dashboard has been presented at international conferences and is actively used in ongoing NIH-supported research.</div>
+        </div>
+
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-q">What is the NeuroMatrix LMS? <span class="faq-arrow">▼</span></div>
+          <div class="faq-a">The NeuroMatrix Learning Management System is an upcoming platform for neuroscience research training, designed for African universities and research institutions. It will provide structured course modules, interactive research methodology training, certificate programs and integration with our analysis tools. Contact us for early access.</div>
+        </div>
+      </div>
+
     </div>
   </section>
 
-  <script>
-    // Toggle FAQ: adds/removes 'active' class on the clicked .faq-item
-    function toggleFaq(element) {
-      // Toggle the 'active' class on the parent .faq-item container
-      element.classList.toggle('active');
-    }
-  </script>
-</body>
-</html>
-  
+  <!-- ── NEWSLETTER ── -->
+  <section id="newsletter">
+    <div class="newsletter-inner reveal">
+      <div class="section-eyebrow" style="justify-content:center;">Stay Updated</div>
+      <h2 class="section-title" style="text-align:center;">Research <em>Newsletter</em></h2>
+      <p class="section-sub" style="margin:0 auto;text-align:center;">
+        Get updates on new platform releases, research publications and neuroscience tools from NeuroMatrix Biosystems.
+      </p>
+      <form class="newsletter-form" onsubmit="handleNewsletter(event)">
+        <input class="newsletter-input" type="email" placeholder="your@email.com" required />
+        <button type="submit" class="btn-primary">Subscribe →</button>
+      </form>
+      <div class="success-msg" id="newsletter-success" style="margin-top:16px;">
+        ✅ Subscribed! Welcome to the NeuroMatrix community.
+      </div>
+      <p style="font-size:9px;color:var(--dim);margin-top:16px;text-align:center;">
+        No spam. Research updates only. Unsubscribe anytime.
+      </p>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer>
+    <div>
+      <div class="footer-brand-name">NEUROMATRIX Biosystems</div>
+      <div class="footer-brand-sub">Precision Neuroscience Tools</div>
+      <p class="footer-brand-desc">
+        AI-powered research platforms developed at the University of Ilorin, Nigeria —
+        supported by the GRASP/NIH/DSI Collaborative Program.
+      </p>
+    </div>
+    <div>
+      <div class="footer-col-title">Platforms</div>
+      <ul class="footer-links">
+        <li><a href="https://neurotrack-ten.vercel.app" target="_blank">NeuroTrack Pro</a></li>
+        <li><a href="https://huggingface.co/spaces/ademideola/african-neurohealth" target="_blank">African NeuroHealth AI</a></li>
+        <li><a href="#contact">NeuroMatrix LMS</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Research</div>
+      <ul class="footer-links">
+        <li><a href="#publications">Publications</a></li>
+        <li><a href="https://github.com/ademide-star" target="_blank">GitHub</a></li>
+        <li><a href="https://huggingface.co/ademideola" target="_blank">Hugging Face</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Connect</div>
+      <ul class="footer-links">
+        <li><a href="#contact">Contact</a></li>
+        <li><a href="#newsletter">Newsletter</a></li>
+        <li><a href="https://github.com/ademide-star/neurotrack" target="_blank">Open Source</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <div class="footer-bottom">
+    <span class="footer-bottom-text">© 2026 NeuroMatrix Biosystems — Adebimpe John Omolola E.</span>
+    <span class="footer-bottom-text">neuromatrixbiosystems.com</span>
+    <span class="footer-bottom-text">University of Ilorin · GRASP/NIH/DSI</span>
+  </div>
+
   <script>
     // ── Gallery lightbox ──
     const galleryData = {};
