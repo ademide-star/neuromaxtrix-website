@@ -936,28 +936,28 @@ https://doi.org/10.1007/s11694-026-04084-5</div>
       </div>
 
       <!-- Form -->
-      <form class="contact-form" onsubmit="handleContact(event)">
+      <form class="contact-form" action="https://formspree.io/f/xlgpyzzq" method="POST">
         <div class="form-row">
           <div class="form-group">
             <label class="form-label">First Name</label>
-            <input class="form-input" type="text" placeholder="John" required />
+            <input class="form-input" type="text" name="first_name" placeholder="John" required />
           </div>
           <div class="form-group">
             <label class="form-label">Last Name</label>
-            <input class="form-input" type="text" placeholder="Doe" required />
+            <input class="form-input" type="text" name="last_name" placeholder="Doe" required />
           </div>
         </div>
         <div class="form-group">
           <label class="form-label">Email</label>
-          <input class="form-input" type="email" placeholder="researcher@university.edu" required />
+          <input class="form-input" type="email" name="email" placeholder="researcher@university.edu" required />
         </div>
         <div class="form-group">
           <label class="form-label">Institution</label>
-          <input class="form-input" type="text" placeholder="University / Research Lab" />
+          <input class="form-input" type="text" name="institution" placeholder="University / Research Lab" />
         </div>
         <div class="form-group">
           <label class="form-label">Inquiry Type</label>
-          <select class="form-select">
+          <select class="form-select" name="inquiry_type">
             <option>Research Collaboration</option>
             <option>NeuroTrack Pro Support</option>
             <option>African NeuroHealth AI</option>
@@ -967,8 +967,13 @@ https://doi.org/10.1007/s11694-026-04084-5</div>
         </div>
         <div class="form-group">
           <label class="form-label">Message</label>
-          <textarea class="form-textarea" placeholder="Tell us about your research or inquiry..." required></textarea>
+          <textarea class="form-textarea" name="message" placeholder="Tell us about your research or inquiry..." required></textarea>
         </div>
+        <!-- Formspree honeypot spam filter -->
+        <input type="text" name="_gotcha" style="display:none" />
+        <!-- Redirect back after submit -->
+        <input type="hidden" name="_next" value="https://neuromatrixbiosystems.com/?submitted=true" />
+        <input type="hidden" name="_subject" value="New NeuroMatrix Contact Form Submission" />
         <button type="submit" class="btn-primary" style="width:100%;justify-content:center;">
           Send Message →
         </button>
