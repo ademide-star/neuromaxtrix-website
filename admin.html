@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NeuroMatrix Admin — License Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold:    #c9a84c;
+      --gold-d:  #c9a84c22;
+      --gold-m:  #c9a84c66;
+      --bg:      #070b16;
+      --surface: #0a0e1a;
+      --panel:   #0d1428;
+      --border:  #1e2a4a;
+      --text:    #e2e8f0;
+      --muted:   #4a5568;
+      --dim:     #2d3748;
+      --green:   #00f5c4;
+      --red:     #ff6b6b;
+      --blue:    #63b3ed;
+      --purple:  #6c63ff;
+    }
+
+    body {
+      background: var(--bg); color: var(--text);
+      font-family: 'IBM Plex Mono', monospace;
+      min-height: 100vh;
+    }
+
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--gold-m); border-radius: 2px; }
+
+    /* ── LOGIN SCREEN ── */
+    .login-screen {
+      min-height: 100vh; display: flex;
+      align-items: center; justify-content: center;
+      background: radial-gradient(ellipse 60% 60% at 50% 0%, #c9a84c08, transparent);
+    }
+
+    .login-box {
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 16px; padding: 48px 40px;
+      width: 100%; max-width: 400px; text-align: center;
+    }
+
+    .login-logo { font-size: 40px; margin-bottom: 16px; }
+
+    .login-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px; font-weight: 600; color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .login-sub { font-size: 9px; color: var(--muted); letter-spacing: 0.2em; margin-bottom: 32px; }
+
+    .login-input {
+      width: 100%; background: var(--surface); border: 1px solid var(--border);
+      border-radius: 8px; padding: 12px 16px; color: var(--text);
+      font-family: 'IBM Plex Mono', monospace; font-size: 13px;
+      outline: none; transition: border-color 0.2s; margin-bottom: 12px;
+      letter-spacing: 0.05em;
+    }
+
+    .login-input:focus { border-color: var(--gold-m); }
+
+    .btn-login {
+      width: 100%; background: var(--gold); color: var(--bg);
+      border: none; border-radius: 8px; padding: 12px;
+      font-family: 'IBM Plex Mono', monospace; font-size: 11px;
+      font-weight: 600; letter-spacing: 0.1em; cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-login:hover { background: #e8c96a; }
+
+    .login-error {
+      color: var(--red); font-size: 10px; margin-top: 10px; display: none;
+    }
+
+    /* ── DASHBOARD ── */
+    .dashboard { display: none; min-height: 100vh; }
+
+    /* ── TOPBAR ── */
+    .topbar {
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      padding: 0 32px; height: 60px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 100;
+    }
+
+    .topbar-brand { display: flex; align-items: center; gap: 10px; }
+    .topbar-brand-text { font-size: 13px; font-weight: 600; color: var(--gold); letter-spacing: 0.1em; }
+    .topbar-brand-text span { color: var(--text); }
+    .topbar-sub { font-size: 8px; color: var(--muted); letter-spacing: 0.2em; }
+
+    .topbar-right { display: flex; align-items: center; gap: 12px; }
+
+    .topbar-stat {
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 8px; padding: 6px 14px; text-align: center;
+    }
+
+    .topbar-stat-val { font-size: 16px; font-weight: 700; color: var(--gold); line-height: 1; }
+    .topbar-stat-label { font-size: 7px; color: var(--muted); letter-spacing: 0.1em; margin-top: 2px; }
+
+    .btn-logout {
+      background: none; border: 1px solid var(--border);
+      color: var(--muted); border-radius: 6px; padding: 6px 14px;
+      font-family: 'IBM Plex Mono', monospace; font-size: 9px;
+      cursor: pointer; transition: all 0.2s;
+    }
+
+    .btn-logout:hover { border-color: var(--red); color: var(--red); }
+
+    /* ── CONTENT ── */
+    .content { padding: 28px 32px; max-width: 1200px; margin: 0 auto; }
+
+    /* ── TABS ── */
+    .tabs {
+      display: flex; gap: 4px; background: var(--surface);
+      border: 1px solid var(--border); border-radius: 10px;
+      padding: 4px; margin-bottom: 28px; width: fit-content;
+    }
+
+    .tab {
+      padding: 8px 20px; border-radius: 7px; border: none;
+      font-family: 'IBM Plex Mono', monospace; font-size: 10px;
+      font-weight: 600; letter-spacing: 0.05em; cursor: pointer;
+      transition: all 0.2s; background: transparent; color: var(--muted);
+    }
+
+    .tab.active { background: var(--gold); color: var(--bg); }
+
+    /* ── CARDS ── */
+    .card {
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 12px; padding: 24px; margin-bottom: 20px;
+    }
+
+    .card-title {
+      font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 20px;
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    /* ── FORM ── */
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group.full { grid-column: 1 / -1; }
+
+    .form-label { font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+
+    .form-input, .form-select, .form-textarea {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 8px; padding: 10px 14px; color: var(--text);
+      font-family: 'IBM Plex Mono', monospace; font-size: 12px;
+      outline: none; transition: border-color 0.2s; width: 100%;
+    }
+
+    .form-input:focus, .form-select:focus { border-color: var(--gold-m); }
+    .form-select option { background: var(--panel); }
+    .form-textarea { resize: vertical; min-height: 80px; }
+
+    .btn-primary {
+      background: var(--gold); color: var(--bg); border: none;
+      border-radius: 8px; padding: 11px 24px;
+      font-family: 'IBM Plex Mono', monospace; font-size: 11px;
+      font-weight: 600; letter-spacing: 0.08em; cursor: pointer;
+      transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px;
+    }
+
+    .btn-primary:hover { background: #e8c96a; }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .btn-outline {
+      background: transparent; color: var(--gold);
+      border: 1px solid var(--gold-m); border-radius: 8px; padding: 8px 18px;
+      font-family: 'IBM Plex Mono', monospace; font-size: 10px;
+      font-weight: 600; cursor: pointer; transition: all 0.2s;
+    }
+
+    .btn-outline:hover { background: var(--gold-d); }
+
+    .btn-danger {
+      background: transparent; color: var(--red);
+      border: 1px solid #ff6b6b44; border-radius: 6px; padding: 5px 12px;
+      font-family: 'IBM Plex Mono', monospace; font-size: 9px;
+      cursor: pointer; transition: all 0.2s;
+    }
+
+    .btn-danger:hover { background: #ff6b6b22; }
+
+    /* ── RESULT BOX ── */
+    .result-box {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 8px; padding: 16px; margin-top: 16px;
+      display: none; font-size: 11px; line-height: 1.8;
+    }
+
+    .result-box.success { border-color: var(--green); background: #00f5c411; }
+    .result-box.error   { border-color: var(--red);   background: #ff6b6b11; }
+
+    .result-key {
+      font-size: 20px; font-weight: 700; color: var(--gold);
+      letter-spacing: 0.15em; margin: 8px 0;
+    }
+
+    /* ── TABLE ── */
+    .table-wrap { overflow-x: auto; }
+
+    table { width: 100%; border-collapse: collapse; font-size: 10px; }
+
+    th {
+      text-align: left; padding: 10px 14px;
+      font-size: 8px; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--muted); border-bottom: 1px solid var(--border);
+    }
+
+    td { padding: 12px 14px; border-bottom: 1px solid var(--dim); vertical-align: middle; }
+
+    tr:hover td { background: var(--surface); }
+
+    .badge {
+      display: inline-block; padding: 2px 8px; border-radius: 4px;
+      font-size: 8px; letter-spacing: 0.08em; font-weight: 600;
+    }
+
+    .badge-active   { background: #00f5c422; color: var(--green); border: 1px solid #00f5c444; }
+    .badge-expired  { background: #ff6b6b22; color: var(--red);   border: 1px solid #ff6b6b44; }
+    .badge-demo     { background: #6c63ff22; color: var(--purple); border: 1px solid #6c63ff44; }
+    .badge-paid     { background: var(--gold-d); color: var(--gold); border: 1px solid var(--gold-m); }
+
+    .days-bar {
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    .days-track {
+      flex: 1; height: 4px; background: var(--dim);
+      border-radius: 2px; overflow: hidden;
+    }
+
+    .days-fill { height: 100%; border-radius: 2px; transition: width 0.5s ease; }
+
+    /* ── BULK TEXTAREA ── */
+    .bulk-help {
+      font-size: 9px; color: var(--muted); line-height: 1.8; margin-bottom: 12px;
+    }
+
+    /* ── STATS ROW ── */
+    .stats-row {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 14px; margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 10px; padding: 16px;
+      border-left: 3px solid var(--card-color, var(--gold));
+    }
+
+    .stat-val {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 36px; font-weight: 600;
+      color: var(--card-color, var(--gold)); line-height: 1;
+    }
+
+    .stat-label { font-size: 9px; color: var(--muted); letter-spacing: 0.1em; margin-top: 4px; }
+
+    /* ── LOADING ── */
+    .spinner {
+      width: 16px; height: 16px; border: 2px solid transparent;
+      border-top-color: var(--bg); border-radius: 50%;
+      animation: spin 0.6s linear infinite; display: none;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── COPY BTN ── */
+    .copy-btn {
+      background: var(--gold-d); border: 1px solid var(--gold-m);
+      color: var(--gold); border-radius: 4px; padding: 3px 8px;
+      font-size: 8px; cursor: pointer; font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .copy-btn:hover { background: var(--gold); color: var(--bg); }
+
+    /* ── EMPTY STATE ── */
+    .empty { text-align: center; padding: 40px; color: var(--muted); font-size: 11px; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .content { padding: 16px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      .topbar { padding: 0 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── LOGIN ── -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">🧠</div>
+    <div class="login-title">Admin Dashboard</div>
+    <div class="login-sub">NEUROMATRIX BIOSYSTEMS · LICENSE MANAGEMENT</div>
+    <input class="login-input" id="serverUrl" type="text"
+      placeholder="https://neuromatrix-license.onrender.com"
+      value="https://neuromatrix-license.onrender.com" />
+    <input class="login-input" id="adminSecret" type="password"
+      placeholder="Admin Secret Key"
+      onkeydown="if(event.key==='Enter') login()" />
+    <button class="btn-login" onclick="login()">Access Dashboard →</button>
+    <div class="login-error" id="loginError">❌ Invalid secret key or server unreachable</div>
+  </div>
+</div>
+
+<!-- ── DASHBOARD ── -->
+<div class="dashboard" id="dashboard">
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="topbar-brand">
+      <div>
+        <div class="topbar-brand-text">NEURO<span>MATRIX</span></div>
+        <div class="topbar-sub">LICENSE ADMIN DASHBOARD</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="topbar-stat">
+        <div class="topbar-stat-val" id="statTotal">—</div>
+        <div class="topbar-stat-label">TOTAL</div>
+      </div>
+      <div class="topbar-stat">
+        <div class="topbar-stat-val" id="statActive" style="color:var(--green)">—</div>
+        <div class="topbar-stat-label">ACTIVE</div>
+      </div>
+      <div class="topbar-stat">
+        <div class="topbar-stat-val" id="statRevenue" style="color:var(--gold)">—</div>
+        <div class="topbar-stat-label">REVENUE ₦</div>
+      </div>
+      <button class="btn-logout" onclick="logout()">Sign Out</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab active" onclick="showTab('generate', this)">🎓 Generate Demo</button>
+      <button class="tab" onclick="showTab('bulk', this)">👥 Bulk Demo</button>
+      <button class="tab" onclick="showTab('manual', this)">🔑 Manual License</button>
+      <button class="tab" onclick="showTab('licenses', this)">📋 All Licenses</button>
+      <button class="tab" onclick="showTab('stats', this)">📊 Stats</button>
+    </div>
+
+    <!-- ── GENERATE DEMO TAB ── -->
+    <div id="tab-generate">
+      <div class="card">
+        <div class="card-title">🎓 Generate Student Demo License</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Student Full Name</label>
+            <input class="form-input" id="demoName" type="text" placeholder="e.g. Aisha Mohammed" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Student Email</label>
+            <input class="form-input" id="demoEmail" type="email" placeholder="student@unilorin.edu.ng" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Institution</label>
+            <input class="form-input" id="demoInstitution" type="text" value="University of Ilorin" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Duration</label>
+            <select class="form-select" id="demoDuration">
+              <option value="30">30 days — 1 month</option>
+              <option value="60">60 days — 2 months</option>
+              <option value="90">90 days — 3 months (max)</option>
+            </select>
+          </div>
+        </div>
+        <br/>
+        <button class="btn-primary" id="btnGenDemo" onclick="generateDemo()">
+          <div class="spinner" id="spinDemo"></div>
+          Generate & Email License →
+        </button>
+
+        <div class="result-box" id="demoResult">
+          <div style="font-size:9px;color:var(--green);letter-spacing:0.1em;margin-bottom:8px;">✅ DEMO LICENSE GENERATED</div>
+          <div style="font-size:10px;color:var(--muted);margin-bottom:4px;">License Key:</div>
+          <div class="result-key" id="demoKeyDisplay">—</div>
+          <button class="copy-btn" onclick="copyKey('demoKeyDisplay')">Copy Key</button>
+          <div style="margin-top:12px;font-size:10px;color:var(--muted);" id="demoDetails"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── BULK DEMO TAB ── -->
+    <div id="tab-bulk" style="display:none">
+      <div class="card">
+        <div class="card-title">👥 Bulk Demo Licenses — Multiple Students</div>
+        <div class="bulk-help">
+          Enter one student per line in format: <strong style="color:var(--gold)">email, name</strong><br/>
+          Example:<br/>
+          student1@unilorin.edu.ng, Aisha Mohammed<br/>
+          student2@unilorin.edu.ng, Bola Adeyemi<br/>
+          student3@unilorin.edu.ng, Chidi Okonkwo
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Institution</label>
+            <input class="form-input" id="bulkInstitution" type="text" value="University of Ilorin" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Duration for all students</label>
+            <select class="form-select" id="bulkDuration">
+              <option value="30">30 days — 1 month</option>
+              <option value="60">60 days — 2 months</option>
+              <option value="90">90 days — 3 months</option>
+            </select>
+          </div>
+          <div class="form-group full">
+            <label class="form-label">Students (one per line: email, name)</label>
+            <textarea class="form-textarea" id="bulkStudents" rows="8"
+              placeholder="student1@unilorin.edu.ng, Aisha Mohammed&#10;student2@unilorin.edu.ng, Bola Adeyemi&#10;student3@unilorin.edu.ng, Chidi Okonkwo"></textarea>
+          </div>
+        </div>
+        <br/>
+        <button class="btn-primary" id="btnBulk" onclick="generateBulk()">
+          <div class="spinner" id="spinBulk"></div>
+          Generate All & Send Emails →
+        </button>
+
+        <div class="result-box" id="bulkResult">
+          <div style="font-size:9px;color:var(--green);letter-spacing:0.1em;margin-bottom:12px;">✅ BULK LICENSES GENERATED</div>
+          <div id="bulkDetails"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── MANUAL LICENSE TAB ── -->
+    <div id="tab-manual" style="display:none">
+      <div class="card">
+        <div class="card-title">🔑 Manual License — For Bank Transfers</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Full Name</label>
+            <input class="form-input" id="manualName" type="text" placeholder="Dr. Jane Smith" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input class="form-input" id="manualEmail" type="email" placeholder="researcher@university.edu" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Institution</label>
+            <input class="form-input" id="manualInstitution" type="text" placeholder="University name" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Plan</label>
+            <select class="form-select" id="manualPlan">
+              <option value="student">Student — $29 / ₦49,000</option>
+              <option value="researcher" selected>Researcher — $49 / ₦79,000</option>
+              <option value="institution">Institution — $89 / ₦149,000</option>
+            </select>
+          </div>
+        </div>
+        <br/>
+        <button class="btn-primary" id="btnManual" onclick="generateManual()">
+          <div class="spinner" id="spinManual"></div>
+          Generate & Email License →
+        </button>
+
+        <div class="result-box" id="manualResult">
+          <div style="font-size:9px;color:var(--green);letter-spacing:0.1em;margin-bottom:8px;">✅ LICENSE GENERATED</div>
+          <div style="font-size:10px;color:var(--muted);margin-bottom:4px;">License Key:</div>
+          <div class="result-key" id="manualKeyDisplay">—</div>
+          <button class="copy-btn" onclick="copyKey('manualKeyDisplay')">Copy Key</button>
+          <div style="margin-top:12px;font-size:10px;color:var(--muted);" id="manualDetails"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── ALL LICENSES TAB ── -->
+    <div id="tab-licenses" style="display:none">
+      <div class="card">
+        <div class="card-title" style="justify-content:space-between;">
+          <span>📋 All Licenses</span>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <input class="form-input" id="searchLic" type="text" placeholder="Search email or key..."
+              style="width:220px;padding:6px 12px;font-size:10px;" oninput="filterLicenses()" />
+            <button class="btn-outline" onclick="loadLicenses()" style="padding:6px 14px;font-size:9px;">↻ Refresh</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>License Key</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Plan</th>
+                <th>Status</th>
+                <th>Expires</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="licenseTable">
+              <tr><td colspan="7" class="empty">Loading licenses...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── STATS TAB ── -->
+    <div id="tab-stats" style="display:none">
+      <div class="stats-row" id="statsGrid">
+        <div class="stat-card" style="--card-color:var(--gold)">
+          <div class="stat-val" id="s-total">—</div>
+          <div class="stat-label">TOTAL LICENSES</div>
+        </div>
+        <div class="stat-card" style="--card-color:var(--green)">
+          <div class="stat-val" id="s-active">—</div>
+          <div class="stat-label">ACTIVE</div>
+        </div>
+        <div class="stat-card" style="--card-color:var(--purple)">
+          <div class="stat-val" id="s-demo">—</div>
+          <div class="stat-label">DEMO LICENSES</div>
+        </div>
+        <div class="stat-card" style="--card-color:var(--blue)">
+          <div class="stat-val" id="s-revenue">—</div>
+          <div class="stat-label">REVENUE (USD)</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">📊 Revenue by Plan</div>
+        <div id="planBreakdown" style="font-size:11px;color:var(--muted);line-height:2.5;">
+          Loading...
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  let API     = '';
+  let SECRET  = '';
+  let allLicenses = [];
+
+  // ── LOGIN ──
+  async function login() {
+    API    = document.getElementById('serverUrl').value.trim().replace(/\/$/, '');
+    SECRET = document.getElementById('adminSecret').value.trim();
+    const err = document.getElementById('loginError');
+    err.style.display = 'none';
+
+    try {
+      const res  = await fetch(`${API}/admin/stats`, {
+        headers: { 'X-Admin-Secret': SECRET }
+      });
+      if (res.status === 401) {
+        err.textContent = '❌ Wrong admin secret key';
+        err.style.display = 'block'; return;
+      }
+      if (!res.ok) throw new Error('Server error');
+
+      const data = await res.json();
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('dashboard').style.display = 'block';
+      updateTopStats(data);
+      loadLicenses();
+    } catch(e) {
+      err.textContent = '❌ Cannot reach server — check URL';
+      err.style.display = 'block';
+    }
+  }
+
+  function logout() {
+    SECRET = ''; API = '';
+    document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('dashboard').style.display = 'none';
+    document.getElementById('adminSecret').value = '';
+  }
+
+  // ── TABS ──
+  function showTab(name, btn) {
+    document.querySelectorAll('[id^="tab-"]').forEach(t => t.style.display = 'none');
+    document.getElementById('tab-' + name).style.display = 'block';
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    if (name === 'licenses') loadLicenses();
+    if (name === 'stats')    loadStats();
+  }
+
+  // ── GENERATE DEMO ──
+  async function generateDemo() {
+    const name     = document.getElementById('demoName').value.trim();
+    const email    = document.getElementById('demoEmail').value.trim();
+    const inst     = document.getElementById('demoInstitution').value.trim();
+    const duration = document.getElementById('demoDuration').value;
+    const btn      = document.getElementById('btnGenDemo');
+    const spin     = document.getElementById('spinDemo');
+    const result   = document.getElementById('demoResult');
+
+    if (!name || !email) { alert('Please enter student name and email'); return; }
+
+    btn.disabled = true; spin.style.display = 'inline-block';
+    result.style.display = 'none';
+
+    try {
+      const res  = await fetch(`${API}/admin/demo`, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Admin-Secret': SECRET },
+        body:    JSON.stringify({ name, email, institution: inst, duration_days: parseInt(duration) }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed');
+
+      document.getElementById('demoKeyDisplay').textContent = data.license_key;
+      document.getElementById('demoDetails').innerHTML = `
+        <strong style="color:var(--text)">Student:</strong> ${name}<br/>
+        <strong style="color:var(--text)">Email:</strong> ${email}<br/>
+        <strong style="color:var(--text)">Duration:</strong> ${duration} days<br/>
+        <strong style="color:var(--text)">Expires:</strong> ${new Date(data.expires_at).toLocaleDateString('en-GB', {day:'2-digit',month:'long',year:'numeric'})}<br/>
+        <strong style="color:var(--green)">📧 License emailed to student!</strong>
+      `;
+      result.className = 'result-box success'; result.style.display = 'block';
+      document.getElementById('demoName').value = '';
+      document.getElementById('demoEmail').value = '';
+      refreshTopStats();
+    } catch(e) {
+      result.innerHTML = `❌ Error: ${e.message}`;
+      result.className = 'result-box error'; result.style.display = 'block';
+    } finally {
+      btn.disabled = false; spin.style.display = 'none';
+    }
+  }
+
+  // ── GENERATE BULK ──
+  async function generateBulk() {
+    const raw     = document.getElementById('bulkStudents').value.trim();
+    const inst    = document.getElementById('bulkInstitution').value.trim();
+    const dur     = document.getElementById('bulkDuration').value;
+    const btn     = document.getElementById('btnBulk');
+    const spin    = document.getElementById('spinBulk');
+    const result  = document.getElementById('bulkResult');
+
+    if (!raw) { alert('Please enter student list'); return; }
+
+    const students = raw.split('\n').map(line => {
+      const parts = line.split(',');
+      return { email: parts[0]?.trim(), name: parts[1]?.trim() || 'Student' };
+    }).filter(s => s.email && s.email.includes('@'));
+
+    if (!students.length) { alert('No valid students found. Format: email, name'); return; }
+    if (!confirm(`Generate ${students.length} demo licenses for ${dur} days?`)) return;
+
+    btn.disabled = true; spin.style.display = 'inline-block';
+    result.style.display = 'none';
+
+    try {
+      const res  = await fetch(`${API}/admin/demo/bulk`, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Admin-Secret': SECRET },
+        body:    JSON.stringify({ students, institution: inst, duration_days: parseInt(dur) }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed');
+
+      let html = `<div style="color:var(--green);margin-bottom:12px;">✅ Generated ${data.generated} licenses — emails sent!</div>`;
+      html += '<table style="width:100%;font-size:10px;border-collapse:collapse;">';
+      html += '<tr><th style="text-align:left;padding:6px;color:var(--muted);">Name</th><th style="text-align:left;padding:6px;color:var(--muted);">Email</th><th style="text-align:left;padding:6px;color:var(--muted);">Key</th></tr>';
+      data.licenses.forEach(l => {
+        html += `<tr>
+          <td style="padding:6px;color:var(--text);">${l.email}</td>
+          <td style="padding:6px;color:var(--muted);">${l.email}</td>
+          <td style="padding:6px;">
+            <span style="color:var(--gold);letter-spacing:0.1em;">${l.license_key}</span>
+            <button class="copy-btn" onclick="navigator.clipboard.writeText('${l.license_key}')">Copy</button>
+          </td>
+        </tr>`;
+      });
+      html += '</table>';
+
+      document.getElementById('bulkDetails').innerHTML = html;
+      result.className = 'result-box success'; result.style.display = 'block';
+      document.getElementById('bulkStudents').value = '';
+      refreshTopStats();
+    } catch(e) {
+      result.innerHTML = `❌ Error: ${e.message}`;
+      result.className = 'result-box error'; result.style.display = 'block';
+    } finally {
+      btn.disabled = false; spin.style.display = 'none';
+    }
+  }
+
+  // ── MANUAL LICENSE ──
+  async function generateManual() {
+    const name  = document.getElementById('manualName').value.trim();
+    const email = document.getElementById('manualEmail').value.trim();
+    const inst  = document.getElementById('manualInstitution').value.trim();
+    const plan  = document.getElementById('manualPlan').value;
+    const btn   = document.getElementById('btnManual');
+    const spin  = document.getElementById('spinManual');
+    const result= document.getElementById('manualResult');
+
+    if (!name || !email) { alert('Please enter name and email'); return; }
+
+    btn.disabled = true; spin.style.display = 'inline-block';
+    result.style.display = 'none';
+
+    try {
+      const res  = await fetch(`${API}/admin/generate`, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Admin-Secret': SECRET },
+        body:    JSON.stringify({ name, email, institution: inst, plan }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed');
+
+      document.getElementById('manualKeyDisplay').textContent = data.license_key;
+      document.getElementById('manualDetails').innerHTML = `
+        <strong style="color:var(--text)">Name:</strong> ${name}<br/>
+        <strong style="color:var(--text)">Email:</strong> ${email}<br/>
+        <strong style="color:var(--text)">Plan:</strong> ${plan}<br/>
+        <strong style="color:var(--green)">📧 License emailed!</strong>
+      `;
+      result.className = 'result-box success'; result.style.display = 'block';
+      document.getElementById('manualName').value = '';
+      document.getElementById('manualEmail').value = '';
+      refreshTopStats();
+    } catch(e) {
+      result.innerHTML = `❌ Error: ${e.message}`;
+      result.className = 'result-box error'; result.style.display = 'block';
+    } finally {
+      btn.disabled = false; spin.style.display = 'none';
+    }
+  }
+
+  // ── LOAD LICENSES ──
+  async function loadLicenses() {
+    try {
+      const res  = await fetch(`${API}/admin/licenses`, {
+        headers: { 'X-Admin-Secret': SECRET }
+      });
+      const data = await res.json();
+      allLicenses = data.licenses || [];
+      renderTable(allLicenses);
+    } catch(e) {
+      document.getElementById('licenseTable').innerHTML =
+        `<tr><td colspan="7" class="empty">❌ Failed to load</td></tr>`;
+    }
+  }
+
+  function filterLicenses() {
+    const q = document.getElementById('searchLic').value.toLowerCase();
+    renderTable(allLicenses.filter(l =>
+      l.email?.toLowerCase().includes(q) ||
+      l.key?.toLowerCase().includes(q) ||
+      l.name?.toLowerCase().includes(q)
+    ));
+  }
+
+  function renderTable(licenses) {
+    const tbody = document.getElementById('licenseTable');
+    if (!licenses.length) {
+      tbody.innerHTML = '<tr><td colspan="7" class="empty">No licenses found</td></tr>'; return;
+    }
+
+    tbody.innerHTML = licenses.map(l => {
+      const isDemo    = l.is_demo || l.plan === 'student_demo';
+      const isExpired = l.expires_at && new Date(l.expires_at) < new Date();
+      const isActive  = l.active && !isExpired;
+
+      let expiryHtml = '<span style="color:var(--muted)">Lifetime</span>';
+      if (l.expires_at) {
+        const exp      = new Date(l.expires_at);
+        const created  = new Date(l.created_at);
+        const total    = (exp - created) / 86400000;
+        const left     = Math.max(0, (exp - new Date()) / 86400000);
+        const pct      = Math.round((left / total) * 100);
+        const color    = pct > 50 ? 'var(--green)' : pct > 20 ? 'var(--gold)' : 'var(--red)';
+        expiryHtml = `
+          <div class="days-bar">
+            <div class="days-track">
+              <div class="days-fill" style="width:${pct}%;background:${color}"></div>
+            </div>
+            <span style="color:${color};font-size:9px;white-space:nowrap;">
+              ${isExpired ? 'Expired' : Math.round(left) + 'd left'}
+            </span>
+          </div>`;
+      }
+
+      const statusBadge = !l.active
+        ? '<span class="badge badge-expired">Revoked</span>'
+        : isExpired
+        ? '<span class="badge badge-expired">Expired</span>'
+        : isDemo
+        ? '<span class="badge badge-demo">Demo</span>'
+        : '<span class="badge badge-paid">✓ Active</span>';
+
+      return `<tr>
+        <td>
+          <span style="color:var(--gold);font-size:10px;letter-spacing:0.05em;">${l.key}</span>
+          <button class="copy-btn" onclick="navigator.clipboard.writeText('${l.key}')">Copy</button>
+        </td>
+        <td style="color:var(--text)">${l.name || '—'}</td>
+        <td style="color:var(--muted)">${l.email || '—'}</td>
+        <td><span class="badge" style="background:var(--gold-d);color:var(--gold);border:1px solid var(--gold-m)">${l.plan}</span></td>
+        <td>${statusBadge}</td>
+        <td>${expiryHtml}</td>
+        <td>
+          ${isActive ? `<button class="btn-danger" onclick="revokeLicense('${l.key}')">Revoke</button>` : '—'}
+        </td>
+      </tr>`;
+    }).join('');
+  }
+
+  // ── REVOKE ──
+  async function revokeLicense(key) {
+    if (!confirm(`Revoke license ${key}?`)) return;
+    try {
+      await fetch(`${API}/admin/revoke`, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Admin-Secret': SECRET },
+        body:    JSON.stringify({ key }),
+      });
+      loadLicenses(); refreshTopStats();
+    } catch(e) { alert('Failed to revoke'); }
+  }
+
+  // ── STATS ──
+  async function loadStats() {
+    try {
+      const res  = await fetch(`${API}/admin/stats`, { headers: { 'X-Admin-Secret': SECRET } });
+      const data = await res.json();
+      document.getElementById('s-total').textContent   = data.total_licenses || 0;
+      document.getElementById('s-active').textContent  = data.active || 0;
+      document.getElementById('s-revenue').textContent = '$' + (data.total_revenue_usd || 0);
+      const demo = Object.entries(data.by_plan || {}).filter(([k]) => k.includes('demo'))
+        .reduce((a, [,v]) => a + v, 0);
+      document.getElementById('s-demo').textContent = demo;
+
+      let breakdown = '';
+      Object.entries(data.by_plan || {}).forEach(([plan, count]) => {
+        breakdown += `<div style="display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid var(--dim);">
+          <span style="width:160px;color:var(--text)">${plan}</span>
+          <div style="flex:1;background:var(--dim);border-radius:3px;height:6px;">
+            <div style="width:${Math.min(100,(count/Math.max(data.total_licenses,1))*100)}%;background:var(--gold);height:100%;border-radius:3px;"></div>
+          </div>
+          <span style="color:var(--gold);width:30px;text-align:right">${count}</span>
+        </div>`;
+      });
+      document.getElementById('planBreakdown').innerHTML = breakdown || 'No data yet';
+      updateTopStats(data);
+    } catch(e) {}
+  }
+
+  function updateTopStats(data) {
+    document.getElementById('statTotal').textContent   = data.total_licenses || 0;
+    document.getElementById('statActive').textContent  = data.active || 0;
+    document.getElementById('statRevenue').textContent = '₦' + (data.total_revenue_ngn || 0).toLocaleString();
+  }
+
+  async function refreshTopStats() {
+    try {
+      const res  = await fetch(`${API}/admin/stats`, { headers: { 'X-Admin-Secret': SECRET } });
+      const data = await res.json();
+      updateTopStats(data);
+    } catch(e) {}
+  }
+
+  // ── COPY ──
+  function copyKey(id) {
+    const key = document.getElementById(id).textContent;
+    navigator.clipboard.writeText(key).then(() => {
+      const btn = event.target;
+      btn.textContent = 'Copied!'; btn.style.background = 'var(--green)'; btn.style.color = 'var(--bg)';
+      setTimeout(() => { btn.textContent = 'Copy Key'; btn.style.background = ''; btn.style.color = ''; }, 2000);
+    });
+  }
+
+  // ── ENTER KEY LOGIN ──
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && document.getElementById('loginScreen').style.display !== 'none') login();
+  });
+</script>
+
+</body>
+</html>
