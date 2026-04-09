@@ -77,6 +77,7 @@
     }
 
     .btn-login:hover { background: #e8c96a; }
+    .btn-login:disabled { opacity: 0.6; cursor: not-allowed; }
 
     .login-error {
       color: var(--red); font-size: 10px; margin-top: 10px; display: none;
@@ -125,6 +126,7 @@
       display: flex; gap: 4px; background: var(--surface);
       border: 1px solid var(--border); border-radius: 10px;
       padding: 4px; margin-bottom: 28px; width: fit-content;
+      flex-wrap: wrap;
     }
 
     .tab {
@@ -299,6 +301,8 @@
       .form-grid { grid-template-columns: 1fr; }
       .stats-row { grid-template-columns: 1fr 1fr; }
       .topbar { padding: 0 16px; }
+      .tabs { width: 100%; }
+      .tab { flex: 1; text-align: center; }
     }
   </style>
 </head>
@@ -317,7 +321,7 @@
       placeholder="Admin Secret Key"
       onkeydown="if(event.key==='Enter') login()" />
     <button class="btn-login" onclick="login()">Access Dashboard →</button>
-    <div class="login-error" id="loginError">❌ Invalid secret key or server unreachable</div>
+    <div class="login-error" id="loginError"></div>
   </div>
 </div>
 
@@ -396,7 +400,7 @@
           <div style="font-size:9px;color:var(--green);letter-spacing:0.1em;margin-bottom:8px;">✅ DEMO LICENSE GENERATED</div>
           <div style="font-size:10px;color:var(--muted);margin-bottom:4px;">License Key:</div>
           <div class="result-key" id="demoKeyDisplay">—</div>
-          <button class="copy-btn" data-copy-id="demoKeyDisplay">Copy Key</button>
+          <button class="copy-btn" onclick="copyKey('demoKeyDisplay')">Copy Key</button>
           <div style="margin-top:12px;font-size:10px;color:var(--muted);" id="demoDetails"></div>
         </div>
       </div>
@@ -481,7 +485,7 @@
           <div style="font-size:9px;color:var(--green);letter-spacing:0.1em;margin-bottom:8px;">✅ LICENSE GENERATED</div>
           <div style="font-size:10px;color:var(--muted);margin-bottom:4px;">License Key:</div>
           <div class="result-key" id="manualKeyDisplay">—</div>
-          <button class="copy-btn" data-copy-id="manualKeyDisplay">Copy Key</button>
+          <button class="copy-btn" onclick="copyKey('manualKeyDisplay')">Copy Key</button>
           <div style="margin-top:12px;font-size:10px;color:var(--muted);" id="manualDetails"></div>
         </div>
       </div>
@@ -490,9 +494,9 @@
     <!-- ALL LICENSES TAB -->
     <div id="tab-licenses" style="display:none">
       <div class="card">
-        <div class="card-title" style="justify-content:space-between;">
+        <div class="card-title" style="justify-content:space-between; flex-wrap:wrap; gap:10px;">
           <span>📋 All Licenses</span>
-          <div style="display:flex;gap:8px;align-items:center;">
+          <div style="display:flex;gap:8px;align-items:center; flex-wrap:wrap;">
             <input class="form-input" id="searchLic" type="text" placeholder="Search email or key..."
               style="width:220px;padding:6px 12px;font-size:10px;" oninput="filterLicenses()" />
             <button class="btn-outline" onclick="loadLicenses()" style="padding:6px 14px;font-size:9px;">↻ Refresh</button>
@@ -556,86 +560,115 @@
   let SECRET  = '';
   let allLicenses = [];
 
-  // Helper: copy with fallback
-  function copyToClipboard(text) {
-    navigator.clipboard.writeText(text).catch(() => {
-      const textarea = document.createElement('textarea');
-      textarea.value = text;
-      document.body.appendChild(textarea);
-      textarea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textarea);
-    });
+  // Helper function for API calls with proper error handling
+  async function apiFetch(endpoint, options = {}) {
+    const url = `${API}${endpoint}`;
+    const defaultOptions = {
+      headers: {
+        'X-Admin-Secret': SECRET,
+        'Content-Type': 'application/json',
+      },
+      mode: 'cors',
+      ...options
+    };
+    
+    try {
+      const response = await fetch(url, defaultOptions);
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || `HTTP ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      if (error.message === 'Failed to fetch') {
+        throw new Error('Cannot connect to server. Please check: 1) Server URL is correct 2) Server is running 3) CORS is enabled on server');
+      }
+      throw error;
+    }
   }
 
-  // Attach copy handlers dynamically after DOM ready
-  document.addEventListener('click', (e) => {
-    if (e.target.classList && e.target.classList.contains('copy-btn')) {
-      const targetId = e.target.getAttribute('data-copy-id');
-      if (targetId) {
-        const keyEl = document.getElementById(targetId);
-        if (keyEl && keyEl.textContent && keyEl.textContent !== '—') {
-          copyToClipboard(keyEl.textContent);
-          const originalText = e.target.textContent;
-          e.target.textContent = '✓ Copied!';
-          setTimeout(() => { if(e.target) e.target.textContent = originalText; }, 1500);
-        } else {
-          alert('No key to copy');
-        }
-      } else if (e.target.closest('td')) {
-        const keySpan = e.target.closest('td')?.previousElementSibling?.querySelector?.('span');
-        if(keySpan) copyToClipboard(keySpan.textContent);
-      }
+  function copyKey(elementId) {
+    const keyElement = document.getElementById(elementId);
+    const key = keyElement.textContent;
+    if (key && key !== '—') {
+      navigator.clipboard.writeText(key).then(() => {
+        const btn = event.target;
+        const originalText = btn.textContent;
+        btn.textContent = '✓ Copied!';
+        setTimeout(() => { btn.textContent = originalText; }, 1500);
+      }).catch(() => alert('Could not copy to clipboard'));
     }
-  });
+  }
 
   async function login() {
-    API    = document.getElementById('serverUrl').value.trim().replace(/\/$/, '');
+    API = document.getElementById('serverUrl').value.trim().replace(/\/$/, '');
     SECRET = document.getElementById('adminSecret').value.trim();
-    const err = document.getElementById('loginError');
+    const errDiv = document.getElementById('loginError');
     const btn = document.querySelector('.btn-login');
-    err.style.display = 'none';
-    const originalBtnText = btn.textContent;
-    btn.textContent = 'Connecting...'; btn.disabled = true;
+    
+    errDiv.style.display = 'none';
+    const originalText = btn.textContent;
+    btn.textContent = 'Connecting...';
+    btn.disabled = true;
 
+    // Test connection first
     for (let attempt = 1; attempt <= 3; attempt++) {
       try {
-        btn.textContent = attempt > 1 ? `Waking server (${attempt}/3)...` : 'Connecting...';
-        const res = await fetch(`${API}/admin/stats`, {
+        btn.textContent = attempt > 1 ? `Attempt ${attempt}/3...` : 'Connecting...';
+        
+        const response = await fetch(`${API}/admin/stats`, {
           headers: { 'X-Admin-Secret': SECRET },
-          signal: AbortSignal.timeout(15000),
+          mode: 'cors'
         });
-        if (res.status === 401) {
-          err.textContent = '❌ Wrong admin secret key';
-          err.style.display = 'block';
-          btn.textContent = originalBtnText; btn.disabled = false;
+        
+        if (response.status === 401) {
+          errDiv.innerHTML = '❌ Wrong admin secret key';
+          errDiv.style.display = 'block';
+          btn.textContent = originalText;
+          btn.disabled = false;
           return;
         }
-        if (!res.ok) throw new Error('Server error ' + res.status);
-        const data = await res.json();
+        
+        if (!response.ok) throw new Error(`Server error: ${response.status}`);
+        
+        const data = await response.json();
+        
+        // Login successful
         document.getElementById('loginScreen').style.display = 'none';
         document.getElementById('dashboard').style.display = 'block';
         updateTopStats(data);
         loadLicenses();
-        btn.textContent = originalBtnText; btn.disabled = false;
+        btn.textContent = originalText;
+        btn.disabled = false;
         return;
-      } catch(e) {
-        console.warn(`Attempt ${attempt} failed:`, e.message);
-        if (attempt < 3) await new Promise(r => setTimeout(r, 3000));
-        else {
-          err.textContent = `❌ Cannot reach server after 3 attempts. Check: 1) Server URL is correct 2) Render service is running 3) Go to ${API}/ in browser first to wake it up`;
-          err.style.display = 'block';
-          btn.textContent = originalBtnText; btn.disabled = false;
+        
+      } catch (error) {
+        console.error(`Attempt ${attempt} failed:`, error);
+        if (attempt === 3) {
+          let errorMsg = '❌ ';
+          if (error.message.includes('Failed to fetch')) {
+            errorMsg += 'Cannot reach server. Make sure:<br/>• Server URL is correct<br/>• Server is running on Render<br/>• CORS is enabled on the server<br/>• Try opening the server URL in a new tab first to wake it up';
+          } else {
+            errorMsg += error.message;
+          }
+          errDiv.innerHTML = errorMsg;
+          errDiv.style.display = 'block';
+          btn.textContent = originalText;
+          btn.disabled = false;
+        } else {
+          await new Promise(resolve => setTimeout(resolve, 2000));
         }
       }
     }
   }
 
   function logout() {
-    SECRET = ''; API = '';
+    SECRET = '';
+    API = '';
     document.getElementById('loginScreen').style.display = 'flex';
     document.getElementById('dashboard').style.display = 'none';
     document.getElementById('adminSecret').value = '';
+    document.getElementById('serverUrl').value = 'https://neuromatrix-license.onrender.com';
   }
 
   function showTab(name, btn) {
@@ -648,71 +681,92 @@
   }
 
   async function generateDemo() {
-    const name     = document.getElementById('demoName').value.trim();
-    const email    = document.getElementById('demoEmail').value.trim();
-    const inst     = document.getElementById('demoInstitution').value.trim();
+    const name = document.getElementById('demoName').value.trim();
+    const email = document.getElementById('demoEmail').value.trim();
+    const inst = document.getElementById('demoInstitution').value.trim();
     const duration = document.getElementById('demoDuration').value;
-    const btn      = document.getElementById('btnGenDemo');
-    const spin     = document.getElementById('spinDemo');
-    const result   = document.getElementById('demoResult');
-    if (!name || !email) { alert('Please enter student name and email'); return; }
-    btn.disabled = true; spin.style.display = 'inline-block';
+    const btn = document.getElementById('btnGenDemo');
+    const spin = document.getElementById('spinDemo');
+    const result = document.getElementById('demoResult');
+
+    if (!name || !email) {
+      alert('Please enter student name and email');
+      return;
+    }
+
+    btn.disabled = true;
+    spin.style.display = 'inline-block';
     result.style.display = 'none';
+
     try {
-      const res  = await fetch(`${API}/admin/demo`, {
-        method:  'POST',
-        headers: { 'Content-Type': 'application/json', 'X-Admin-Secret': SECRET },
-        body:    JSON.stringify({ name, email, institution: inst, duration_days: parseInt(duration) }),
+      const data = await apiFetch('/admin/demo', {
+        method: 'POST',
+        body: JSON.stringify({ name, email, institution: inst, duration_days: parseInt(duration) })
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Failed');
+
       document.getElementById('demoKeyDisplay').textContent = data.license_key;
       document.getElementById('demoDetails').innerHTML = `
-        <strong style="color:var(--text)">Student:</strong> ${escapeHtml(name)}<br/>
-        <strong style="color:var(--text)">Email:</strong> ${escapeHtml(email)}<br/>
-        <strong style="color:var(--text)">Duration:</strong> ${duration} days<br/>
-        <strong style="color:var(--text)">Expires:</strong> ${new Date(data.expires_at).toLocaleDateString('en-GB', {day:'2-digit',month:'long',year:'numeric'})}<br/>
-        <strong style="color:var(--green)">📧 License emailed to student!</strong>
+        <strong>Student:</strong> ${escapeHtml(name)}<br/>
+        <strong>Email:</strong> ${escapeHtml(email)}<br/>
+        <strong>Duration:</strong> ${duration} days<br/>
+        <strong>Expires:</strong> ${new Date(data.expires_at).toLocaleDateString()}<br/>
+        <strong style="color:var(--green)">📧 License emailed!</strong>
       `;
-      result.className = 'result-box success'; result.style.display = 'block';
+      result.className = 'result-box success';
+      result.style.display = 'block';
       document.getElementById('demoName').value = '';
       document.getElementById('demoEmail').value = '';
-      refreshTopStats();
-    } catch(e) {
-      result.innerHTML = `❌ Error: ${escapeHtml(e.message)}`;
-      result.className = 'result-box error'; result.style.display = 'block';
+      await refreshTopStats();
+    } catch (error) {
+      result.innerHTML = `❌ Error: ${escapeHtml(error.message)}`;
+      result.className = 'result-box error';
+      result.style.display = 'block';
     } finally {
-      btn.disabled = false; spin.style.display = 'none';
+      btn.disabled = false;
+      spin.style.display = 'none';
     }
   }
 
-  async function generateBulk() { /* identical logic but fixed */
-    const raw     = document.getElementById('bulkStudents').value.trim();
-    const inst    = document.getElementById('bulkInstitution').value.trim();
-    const dur     = document.getElementById('bulkDuration').value;
-    const btn     = document.getElementById('btnBulk');
-    const spin    = document.getElementById('spinBulk');
-    const result  = document.getElementById('bulkResult');
-    if (!raw) { alert('Please enter student list'); return; }
-    const students = raw.split('\n').map(line => {
-      const idx = line.indexOf(',');
-      if (idx === -1) return null;
-      const email = line.substring(0, idx).trim();
-      const name = line.substring(idx+1).trim();
-      return email && email.includes('@') ? { email, name: name || 'Student' } : null;
-    }).filter(s => s);
-    if (!students.length) { alert('No valid students found. Format: email, name'); return; }
+  async function generateBulk() {
+    const raw = document.getElementById('bulkStudents').value.trim();
+    const inst = document.getElementById('bulkInstitution').value.trim();
+    const dur = document.getElementById('bulkDuration').value;
+    const btn = document.getElementById('btnBulk');
+    const spin = document.getElementById('spinBulk');
+    const result = document.getElementById('bulkResult');
+
+    if (!raw) {
+      alert('Please enter student list');
+      return;
+    }
+
+    const students = raw.split('\n')
+      .map(line => {
+        const commaIndex = line.indexOf(',');
+        if (commaIndex === -1) return null;
+        const email = line.substring(0, commaIndex).trim();
+        const name = line.substring(commaIndex + 1).trim();
+        return email && email.includes('@') ? { email, name: name || 'Student' } : null;
+      })
+      .filter(s => s);
+
+    if (!students.length) {
+      alert('No valid students found. Format: email, name on each line');
+      return;
+    }
+
     if (!confirm(`Generate ${students.length} demo licenses for ${dur} days?`)) return;
-    btn.disabled = true; spin.style.display = 'inline-block';
+
+    btn.disabled = true;
+    spin.style.display = 'inline-block';
     result.style.display = 'none';
+
     try {
-      const res  = await fetch(`${API}/admin/demo/bulk`, {
-        method:  'POST',
-        headers: { 'Content-Type': 'application/json', 'X-Admin-Secret': SECRET },
-        body:    JSON.stringify({ students, institution: inst, duration_days: parseInt(dur) }),
+      const data = await apiFetch('/admin/demo/bulk', {
+        method: 'POST',
+        body: JSON.stringify({ students, institution: inst, duration_days: parseInt(dur) })
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Failed');
+
       let html = `<div style="color:var(--green);margin-bottom:12px;">✅ Generated ${data.generated} licenses — emails sent!</div>`;
       html += '<table style="width:100%;font-size:10px;border-collapse:collapse;">';
       html += '<tr><th style="text-align:left;padding:6px;">Name</th><th style="text-align:left;padding:6px;">Email</th><th style="text-align:left;padding:6px;">Key</th></tr>';
@@ -721,41 +775,50 @@
           <td style="padding:6px;">${escapeHtml(l.name)}</td>
           <td style="padding:6px;">${escapeHtml(l.email)}</td>
           <td style="padding:6px;"><span style="color:var(--gold);">${escapeHtml(l.license_key)}</span>
-          <button class="copy-btn" data-copy-text="${escapeHtml(l.license_key)}" onclick="copyToClipboard('${escapeHtml(l.license_key).replace(/'/g, "\\'")}')">Copy</button></td>
+          <button class="copy-btn" onclick="navigator.clipboard.writeText('${escapeHtml(l.license_key).replace(/'/g, "\\'")}')">Copy</button></td>
         </tr>`;
       });
       html += '</table>';
+      
       document.getElementById('bulkDetails').innerHTML = html;
-      result.className = 'result-box success'; result.style.display = 'block';
+      result.className = 'result-box success';
+      result.style.display = 'block';
       document.getElementById('bulkStudents').value = '';
-      refreshTopStats();
-    } catch(e) {
-      result.innerHTML = `❌ Error: ${escapeHtml(e.message)}`;
-      result.className = 'result-box error'; result.style.display = 'block';
+      await refreshTopStats();
+    } catch (error) {
+      result.innerHTML = `❌ Error: ${escapeHtml(error.message)}`;
+      result.className = 'result-box error';
+      result.style.display = 'block';
     } finally {
-      btn.disabled = false; spin.style.display = 'none';
+      btn.disabled = false;
+      spin.style.display = 'none';
     }
   }
 
-  async function generateManual() { /* similar, keep safe */
-    const name  = document.getElementById('manualName').value.trim();
+  async function generateManual() {
+    const name = document.getElementById('manualName').value.trim();
     const email = document.getElementById('manualEmail').value.trim();
-    const inst  = document.getElementById('manualInstitution').value.trim();
-    const plan  = document.getElementById('manualPlan').value;
-    const btn   = document.getElementById('btnManual');
-    const spin  = document.getElementById('spinManual');
-    const result= document.getElementById('manualResult');
-    if (!name || !email) { alert('Please enter name and email'); return; }
-    btn.disabled = true; spin.style.display = 'inline-block';
+    const inst = document.getElementById('manualInstitution').value.trim();
+    const plan = document.getElementById('manualPlan').value;
+    const btn = document.getElementById('btnManual');
+    const spin = document.getElementById('spinManual');
+    const result = document.getElementById('manualResult');
+
+    if (!name || !email) {
+      alert('Please enter name and email');
+      return;
+    }
+
+    btn.disabled = true;
+    spin.style.display = 'inline-block';
     result.style.display = 'none';
+
     try {
-      const res  = await fetch(`${API}/admin/generate`, {
-        method:  'POST',
-        headers: { 'Content-Type': 'application/json', 'X-Admin-Secret': SECRET },
-        body:    JSON.stringify({ name, email, institution: inst, plan }),
+      const data = await apiFetch('/admin/generate', {
+        method: 'POST',
+        body: JSON.stringify({ name, email, institution: inst, plan })
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Failed');
+
       document.getElementById('manualKeyDisplay').textContent = data.license_key;
       document.getElementById('manualDetails').innerHTML = `
         <strong>Name:</strong> ${escapeHtml(name)}<br/>
@@ -763,54 +826,80 @@
         <strong>Plan:</strong> ${escapeHtml(plan)}<br/>
         <strong style="color:var(--green)">📧 License emailed!</strong>
       `;
-      result.className = 'result-box success'; result.style.display = 'block';
+      result.className = 'result-box success';
+      result.style.display = 'block';
       document.getElementById('manualName').value = '';
       document.getElementById('manualEmail').value = '';
-      refreshTopStats();
-    } catch(e) {
-      result.innerHTML = `❌ Error: ${escapeHtml(e.message)}`;
-      result.className = 'result-box error'; result.style.display = 'block';
+      await refreshTopStats();
+    } catch (error) {
+      result.innerHTML = `❌ Error: ${escapeHtml(error.message)}`;
+      result.className = 'result-box error';
+      result.style.display = 'block';
     } finally {
-      btn.disabled = false; spin.style.display = 'none';
+      btn.disabled = false;
+      spin.style.display = 'none';
     }
   }
 
   async function loadLicenses() {
     try {
-      const res = await fetch(`${API}/admin/licenses`, { headers: { 'X-Admin-Secret': SECRET } });
-      const data = await res.json();
+      const data = await apiFetch('/admin/licenses');
       allLicenses = data.licenses || [];
       renderTable(allLicenses);
-    } catch(e) {
-      document.getElementById('licenseTable').innerHTML = `<tr><td colspan="7" class="empty">❌ Failed to load</td></tr>`;
+    } catch (error) {
+      document.getElementById('licenseTable').innerHTML = 
+        `<tr><td colspan="7" class="empty">❌ Failed to load: ${escapeHtml(error.message)}</td></tr>`;
     }
   }
 
   function filterLicenses() {
-    const q = document.getElementById('searchLic').value.toLowerCase();
-    renderTable(allLicenses.filter(l => (l.email || '').toLowerCase().includes(q) || (l.key || '').toLowerCase().includes(q) || (l.name || '').toLowerCase().includes(q)));
+    const query = document.getElementById('searchLic').value.toLowerCase();
+    const filtered = allLicenses.filter(l => 
+      (l.email || '').toLowerCase().includes(query) ||
+      (l.key || '').toLowerCase().includes(query) ||
+      (l.name || '').toLowerCase().includes(query)
+    );
+    renderTable(filtered);
   }
 
   function renderTable(licenses) {
     const tbody = document.getElementById('licenseTable');
-    if (!licenses.length) { tbody.innerHTML = '<tr><td colspan="7" class="empty">No licenses found</td></tr>'; return; }
+    if (!licenses.length) {
+      tbody.innerHTML = '<tr><td colspan="7" class="empty">No licenses found</td></tr>';
+      return;
+    }
+
     tbody.innerHTML = licenses.map(l => {
       const isDemo = l.is_demo || l.plan === 'student_demo';
       const isExpired = l.expires_at && new Date(l.expires_at) < new Date();
       const isActive = l.active && !isExpired;
+
       let expiryHtml = '<span style="color:var(--muted)">Lifetime</span>';
       if (l.expires_at) {
         const exp = new Date(l.expires_at);
         const created = new Date(l.created_at);
         const total = (exp - created) / 86400000;
         const left = Math.max(0, (exp - new Date()) / 86400000);
-        const pct = total > 0 ? Math.round((left / total) * 100) : 0;
+        const pct = total > 0 ? Math.min(100, Math.round((left / total) * 100)) : 0;
         const color = pct > 50 ? 'var(--green)' : pct > 20 ? 'var(--gold)' : 'var(--red)';
-        expiryHtml = `<div class="days-bar"><div class="days-track"><div class="days-fill" style="width:${Math.min(100,pct)}%;background:${color}"></div></div><span style="color:${color};font-size:9px;">${isExpired ? 'Expired' : Math.round(left) + 'd left'}</span></div>`;
+        expiryHtml = `
+          <div class="days-bar">
+            <div class="days-track">
+              <div class="days-fill" style="width:${pct}%;background:${color}"></div>
+            </div>
+            <span style="color:${color};font-size:9px;">${isExpired ? 'Expired' : Math.round(left) + 'd left'}</span>
+          </div>`;
       }
-      const statusBadge = !l.active ? '<span class="badge badge-expired">Revoked</span>' : isExpired ? '<span class="badge badge-expired">Expired</span>' : isDemo ? '<span class="badge badge-demo">Demo</span>' : '<span class="badge badge-paid">✓ Active</span>';
+
+      const statusBadge = !l.active ? '<span class="badge badge-expired">Revoked</span>' :
+                          isExpired ? '<span class="badge badge-expired">Expired</span>' :
+                          isDemo ? '<span class="badge badge-demo">Demo</span>' :
+                          '<span class="badge badge-paid">✓ Active</span>';
+
       return `<tr>
-        <td><span style="color:var(--gold);">${escapeHtml(l.key)}</span> <button class="copy-btn" data-copy-text="${escapeHtml(l.key)}" onclick="copyToClipboard('${escapeHtml(l.key).replace(/'/g, "\\'")}')">Copy</button></td>
+        <td><span style="color:var(--gold);">${escapeHtml(l.key)}</span> 
+          <button class="copy-btn" onclick="navigator.clipboard.writeText('${escapeHtml(l.key).replace(/'/g, "\\'")}')">Copy</button>
+        </td>
         <td>${escapeHtml(l.name || '—')}</td>
         <td>${escapeHtml(l.email || '—')}</td>
         <td><span class="badge" style="background:var(--gold-d);color:var(--gold);">${escapeHtml(l.plan)}</span></td>
@@ -824,45 +913,73 @@
   async function revokeLicense(key) {
     if (!confirm(`Revoke license ${key}?`)) return;
     try {
-      await fetch(`${API}/admin/revoke`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Admin-Secret': SECRET }, body: JSON.stringify({ key }) });
-      loadLicenses(); refreshTopStats();
-    } catch(e) { alert('Failed to revoke'); }
+      await apiFetch('/admin/revoke', {
+        method: 'POST',
+        body: JSON.stringify({ key })
+      });
+      await loadLicenses();
+      await refreshTopStats();
+    } catch (error) {
+      alert(`Failed to revoke: ${error.message}`);
+    }
   }
 
   async function loadStats() {
     try {
-      const res = await fetch(`${API}/admin/stats`, { headers: { 'X-Admin-Secret': SECRET } });
-      const data = await res.json();
+      const data = await apiFetch('/admin/stats');
       document.getElementById('s-total').textContent = data.total_licenses || 0;
       document.getElementById('s-active').textContent = data.active || 0;
       document.getElementById('s-revenue').textContent = '$' + (data.total_revenue_usd || 0);
-      const demo = Object.entries(data.by_plan || {}).filter(([k]) => k.includes('demo')).reduce((a, [,v]) => a + v, 0);
-      document.getElementById('s-demo').textContent = demo;
+      
+      const demoCount = Object.entries(data.by_plan || {})
+        .filter(([plan]) => plan.includes('demo'))
+        .reduce((sum, [, count]) => sum + count, 0);
+      document.getElementById('s-demo').textContent = demoCount;
+
       let breakdown = '';
       Object.entries(data.by_plan || {}).forEach(([plan, count]) => {
-        breakdown += `<div style="display:flex;align-items:center;gap:12px;padding:6px 0;"><span style="width:160px;">${escapeHtml(plan)}</span><div style="flex:1;background:var(--dim);height:6px;"><div style="width:${Math.min(100, (count/Math.max(data.total_licenses,1))*100)}%;background:var(--gold);height:100%;"></div></div><span style="color:var(--gold);">${count}</span></div>`;
+        const percentage = data.total_licenses > 0 ? (count / data.total_licenses) * 100 : 0;
+        breakdown += `<div style="display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid var(--dim);">
+          <span style="width:140px;color:var(--text);">${escapeHtml(plan)}</span>
+          <div style="flex:1;background:var(--dim);border-radius:3px;height:6px;">
+            <div style="width:${percentage}%;background:var(--gold);height:100%;border-radius:3px;"></div>
+          </div>
+          <span style="color:var(--gold);min-width:40px;text-align:right;">${count}</span>
+        </div>`;
       });
       document.getElementById('planBreakdown').innerHTML = breakdown || 'No data yet';
       updateTopStats(data);
-    } catch(e) {}
+    } catch (error) {
+      console.error('Stats error:', error);
+      document.getElementById('planBreakdown').innerHTML = `<span style="color:var(--red)">Failed to load stats: ${escapeHtml(error.message)}</span>`;
+    }
   }
 
   function updateTopStats(data) {
     document.getElementById('statTotal').textContent = data.total_licenses || 0;
     document.getElementById('statActive').textContent = data.active || 0;
-    document.getElementById('statRevenue').textContent = '₦' + (data.total_revenue_ngn || 0).toLocaleString();
+    const revenueNgn = data.total_revenue_ngn || 0;
+    document.getElementById('statRevenue').textContent = '₦' + revenueNgn.toLocaleString();
   }
 
   async function refreshTopStats() {
     try {
-      const res = await fetch(`${API}/admin/stats`, { headers: { 'X-Admin-Secret': SECRET } });
-      const data = await res.json();
+      const data = await apiFetch('/admin/stats');
       updateTopStats(data);
-    } catch(e) {}
+    } catch (error) {
+      console.error('Failed to refresh stats:', error);
+    }
   }
 
-  function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, function(m) { if(m === '&') return '&amp;'; if(m === '<') return '&lt;'; if(m === '>') return '&gt;'; return m; }); }
-  window.copyToClipboard = copyToClipboard;
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, function(m) {
+      if (m === '&') return '&amp;';
+      if (m === '<') return '&lt;';
+      if (m === '>') return '&gt;';
+      return m;
+    });
+  }
 </script>
 </body>
 </html>
