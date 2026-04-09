@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>NeuroMatrix Admin — License Dashboard</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <style>
@@ -304,7 +304,7 @@
 </head>
 <body>
 
-<!-- ── LOGIN ── -->
+<!-- LOGIN SCREEN -->
 <div class="login-screen" id="loginScreen">
   <div class="login-box">
     <div class="login-logo">🧠</div>
@@ -321,7 +321,7 @@
   </div>
 </div>
 
-<!-- ── DASHBOARD ── -->
+<!-- DASHBOARD -->
 <div class="dashboard" id="dashboard">
 
   <!-- Topbar -->
@@ -353,14 +353,14 @@
 
     <!-- Tabs -->
     <div class="tabs">
-      <button class="tab active" onclick="showTab('generate', this)">🎓 Generate Demo</button>
-      <button class="tab" onclick="showTab('bulk', this)">👥 Bulk Demo</button>
-      <button class="tab" onclick="showTab('manual', this)">🔑 Manual License</button>
-      <button class="tab" onclick="showTab('licenses', this)">📋 All Licenses</button>
-      <button class="tab" onclick="showTab('stats', this)">📊 Stats</button>
+      <button class="tab active" data-tab="generate" onclick="showTab('generate', this)">🎓 Generate Demo</button>
+      <button class="tab" data-tab="bulk" onclick="showTab('bulk', this)">👥 Bulk Demo</button>
+      <button class="tab" data-tab="manual" onclick="showTab('manual', this)">🔑 Manual License</button>
+      <button class="tab" data-tab="licenses" onclick="showTab('licenses', this)">📋 All Licenses</button>
+      <button class="tab" data-tab="stats" onclick="showTab('stats', this)">📊 Stats</button>
     </div>
 
-    <!-- ── GENERATE DEMO TAB ── -->
+    <!-- GENERATE DEMO TAB -->
     <div id="tab-generate">
       <div class="card">
         <div class="card-title">🎓 Generate Student Demo License</div>
@@ -396,22 +396,22 @@
           <div style="font-size:9px;color:var(--green);letter-spacing:0.1em;margin-bottom:8px;">✅ DEMO LICENSE GENERATED</div>
           <div style="font-size:10px;color:var(--muted);margin-bottom:4px;">License Key:</div>
           <div class="result-key" id="demoKeyDisplay">—</div>
-          <button class="copy-btn" onclick="copyKey('demoKeyDisplay')">Copy Key</button>
+          <button class="copy-btn" data-copy-id="demoKeyDisplay">Copy Key</button>
           <div style="margin-top:12px;font-size:10px;color:var(--muted);" id="demoDetails"></div>
         </div>
       </div>
     </div>
 
-    <!-- ── BULK DEMO TAB ── -->
+    <!-- BULK DEMO TAB -->
     <div id="tab-bulk" style="display:none">
       <div class="card">
         <div class="card-title">👥 Bulk Demo Licenses — Multiple Students</div>
         <div class="bulk-help">
           Enter one student per line in format: <strong style="color:var(--gold)">email, name</strong><br/>
           Example:<br/>
-          <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="186b6c6d7c7d766c29586d767174776a7176367d7c6d36767f">[email&#160;protected]</a>, Aisha Mohammed<br/>
-          <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="1c6f6869787972682e5c69727570736e75723279786932727b">[email&#160;protected]</a>, Bola Adeyemi<br/>
-          <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="bfcccbcadbdad1cb8cffcad1d6d3d0cdd6d191dadbca91d1d8">[email&#160;protected]</a>, Chidi Okonkwo
+          aisha@unilorin.edu.ng, Aisha Mohammed<br/>
+          bola@unilorin.edu.ng, Bola Adeyemi<br/>
+          chidi@unilorin.edu.ng, Chidi Okonkwo
         </div>
         <div class="form-grid">
           <div class="form-group">
@@ -445,7 +445,7 @@
       </div>
     </div>
 
-    <!-- ── MANUAL LICENSE TAB ── -->
+    <!-- MANUAL LICENSE TAB -->
     <div id="tab-manual" style="display:none">
       <div class="card">
         <div class="card-title">🔑 Manual License — For Bank Transfers</div>
@@ -481,13 +481,13 @@
           <div style="font-size:9px;color:var(--green);letter-spacing:0.1em;margin-bottom:8px;">✅ LICENSE GENERATED</div>
           <div style="font-size:10px;color:var(--muted);margin-bottom:4px;">License Key:</div>
           <div class="result-key" id="manualKeyDisplay">—</div>
-          <button class="copy-btn" onclick="copyKey('manualKeyDisplay')">Copy Key</button>
+          <button class="copy-btn" data-copy-id="manualKeyDisplay">Copy Key</button>
           <div style="margin-top:12px;font-size:10px;color:var(--muted);" id="manualDetails"></div>
         </div>
       </div>
     </div>
 
-    <!-- ── ALL LICENSES TAB ── -->
+    <!-- ALL LICENSES TAB -->
     <div id="tab-licenses" style="display:none">
       <div class="card">
         <div class="card-title" style="justify-content:space-between;">
@@ -519,7 +519,7 @@
       </div>
     </div>
 
-    <!-- ── STATS TAB ── -->
+    <!-- STATS TAB -->
     <div id="tab-stats" style="display:none">
       <div class="stats-row" id="statsGrid">
         <div class="stat-card" style="--card-color:var(--gold)">
@@ -551,55 +551,81 @@
   </div>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
   let API     = '';
   let SECRET  = '';
   let allLicenses = [];
 
-  // ── LOGIN ──
+  // Helper: copy with fallback
+  function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).catch(() => {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+    });
+  }
+
+  // Attach copy handlers dynamically after DOM ready
+  document.addEventListener('click', (e) => {
+    if (e.target.classList && e.target.classList.contains('copy-btn')) {
+      const targetId = e.target.getAttribute('data-copy-id');
+      if (targetId) {
+        const keyEl = document.getElementById(targetId);
+        if (keyEl && keyEl.textContent && keyEl.textContent !== '—') {
+          copyToClipboard(keyEl.textContent);
+          const originalText = e.target.textContent;
+          e.target.textContent = '✓ Copied!';
+          setTimeout(() => { if(e.target) e.target.textContent = originalText; }, 1500);
+        } else {
+          alert('No key to copy');
+        }
+      } else if (e.target.closest('td')) {
+        const keySpan = e.target.closest('td')?.previousElementSibling?.querySelector?.('span');
+        if(keySpan) copyToClipboard(keySpan.textContent);
+      }
+    }
+  });
+
   async function login() {
     API    = document.getElementById('serverUrl').value.trim().replace(/\/$/, '');
     SECRET = document.getElementById('adminSecret').value.trim();
     const err = document.getElementById('loginError');
     const btn = document.querySelector('.btn-login');
     err.style.display = 'none';
+    const originalBtnText = btn.textContent;
     btn.textContent = 'Connecting...'; btn.disabled = true;
 
-    // Try up to 3 times — Render may be waking up
     for (let attempt = 1; attempt <= 3; attempt++) {
       try {
         btn.textContent = attempt > 1 ? `Waking server (${attempt}/3)...` : 'Connecting...';
-
         const res = await fetch(`${API}/admin/stats`, {
           headers: { 'X-Admin-Secret': SECRET },
-          signal: AbortSignal.timeout(15000), // 15 second timeout
+          signal: AbortSignal.timeout(15000),
         });
-
         if (res.status === 401) {
           err.textContent = '❌ Wrong admin secret key';
           err.style.display = 'block';
-          btn.textContent = 'Access Dashboard →'; btn.disabled = false;
+          btn.textContent = originalBtnText; btn.disabled = false;
           return;
         }
-
         if (!res.ok) throw new Error('Server error ' + res.status);
-
         const data = await res.json();
         document.getElementById('loginScreen').style.display = 'none';
         document.getElementById('dashboard').style.display = 'block';
-        btn.textContent = 'Access Dashboard →'; btn.disabled = false;
         updateTopStats(data);
         loadLicenses();
+        btn.textContent = originalBtnText; btn.disabled = false;
         return;
-
       } catch(e) {
         console.warn(`Attempt ${attempt} failed:`, e.message);
-        if (attempt < 3) {
-          await new Promise(r => setTimeout(r, 3000)); // wait 3s before retry
-        } else {
+        if (attempt < 3) await new Promise(r => setTimeout(r, 3000));
+        else {
           err.textContent = `❌ Cannot reach server after 3 attempts. Check: 1) Server URL is correct 2) Render service is running 3) Go to ${API}/ in browser first to wake it up`;
           err.style.display = 'block';
-          btn.textContent = 'Access Dashboard →'; btn.disabled = false;
+          btn.textContent = originalBtnText; btn.disabled = false;
         }
       }
     }
@@ -612,17 +638,15 @@
     document.getElementById('adminSecret').value = '';
   }
 
-  // ── TABS ──
   function showTab(name, btn) {
     document.querySelectorAll('[id^="tab-"]').forEach(t => t.style.display = 'none');
     document.getElementById('tab-' + name).style.display = 'block';
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     btn.classList.add('active');
     if (name === 'licenses') loadLicenses();
-    if (name === 'stats')    loadStats();
+    if (name === 'stats') loadStats();
   }
 
-  // ── GENERATE DEMO ──
   async function generateDemo() {
     const name     = document.getElementById('demoName').value.trim();
     const email    = document.getElementById('demoEmail').value.trim();
@@ -631,12 +655,9 @@
     const btn      = document.getElementById('btnGenDemo');
     const spin     = document.getElementById('spinDemo');
     const result   = document.getElementById('demoResult');
-
     if (!name || !email) { alert('Please enter student name and email'); return; }
-
     btn.disabled = true; spin.style.display = 'inline-block';
     result.style.display = 'none';
-
     try {
       const res  = await fetch(`${API}/admin/demo`, {
         method:  'POST',
@@ -645,11 +666,10 @@
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed');
-
       document.getElementById('demoKeyDisplay').textContent = data.license_key;
       document.getElementById('demoDetails').innerHTML = `
-        <strong style="color:var(--text)">Student:</strong> ${name}<br/>
-        <strong style="color:var(--text)">Email:</strong> ${email}<br/>
+        <strong style="color:var(--text)">Student:</strong> ${escapeHtml(name)}<br/>
+        <strong style="color:var(--text)">Email:</strong> ${escapeHtml(email)}<br/>
         <strong style="color:var(--text)">Duration:</strong> ${duration} days<br/>
         <strong style="color:var(--text)">Expires:</strong> ${new Date(data.expires_at).toLocaleDateString('en-GB', {day:'2-digit',month:'long',year:'numeric'})}<br/>
         <strong style="color:var(--green)">📧 License emailed to student!</strong>
@@ -659,35 +679,32 @@
       document.getElementById('demoEmail').value = '';
       refreshTopStats();
     } catch(e) {
-      result.innerHTML = `❌ Error: ${e.message}`;
+      result.innerHTML = `❌ Error: ${escapeHtml(e.message)}`;
       result.className = 'result-box error'; result.style.display = 'block';
     } finally {
       btn.disabled = false; spin.style.display = 'none';
     }
   }
 
-  // ── GENERATE BULK ──
-  async function generateBulk() {
+  async function generateBulk() { /* identical logic but fixed */
     const raw     = document.getElementById('bulkStudents').value.trim();
     const inst    = document.getElementById('bulkInstitution').value.trim();
     const dur     = document.getElementById('bulkDuration').value;
     const btn     = document.getElementById('btnBulk');
     const spin    = document.getElementById('spinBulk');
     const result  = document.getElementById('bulkResult');
-
     if (!raw) { alert('Please enter student list'); return; }
-
     const students = raw.split('\n').map(line => {
-      const parts = line.split(',');
-      return { email: parts[0]?.trim(), name: parts[1]?.trim() || 'Student' };
-    }).filter(s => s.email && s.email.includes('@'));
-
+      const idx = line.indexOf(',');
+      if (idx === -1) return null;
+      const email = line.substring(0, idx).trim();
+      const name = line.substring(idx+1).trim();
+      return email && email.includes('@') ? { email, name: name || 'Student' } : null;
+    }).filter(s => s);
     if (!students.length) { alert('No valid students found. Format: email, name'); return; }
     if (!confirm(`Generate ${students.length} demo licenses for ${dur} days?`)) return;
-
     btn.disabled = true; spin.style.display = 'inline-block';
     result.style.display = 'none';
-
     try {
       const res  = await fetch(`${API}/admin/demo/bulk`, {
         method:  'POST',
@@ -696,36 +713,31 @@
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed');
-
       let html = `<div style="color:var(--green);margin-bottom:12px;">✅ Generated ${data.generated} licenses — emails sent!</div>`;
       html += '<table style="width:100%;font-size:10px;border-collapse:collapse;">';
-      html += '<tr><th style="text-align:left;padding:6px;color:var(--muted);">Name</th><th style="text-align:left;padding:6px;color:var(--muted);">Email</th><th style="text-align:left;padding:6px;color:var(--muted);">Key</th></tr>';
+      html += '<tr><th style="text-align:left;padding:6px;">Name</th><th style="text-align:left;padding:6px;">Email</th><th style="text-align:left;padding:6px;">Key</th></tr>';
       data.licenses.forEach(l => {
         html += `<tr>
-          <td style="padding:6px;color:var(--text);">${l.email}</td>
-          <td style="padding:6px;color:var(--muted);">${l.email}</td>
-          <td style="padding:6px;">
-            <span style="color:var(--gold);letter-spacing:0.1em;">${l.license_key}</span>
-            <button class="copy-btn" onclick="navigator.clipboard.writeText('${l.license_key}')">Copy</button>
-          </td>
+          <td style="padding:6px;">${escapeHtml(l.name)}</td>
+          <td style="padding:6px;">${escapeHtml(l.email)}</td>
+          <td style="padding:6px;"><span style="color:var(--gold);">${escapeHtml(l.license_key)}</span>
+          <button class="copy-btn" data-copy-text="${escapeHtml(l.license_key)}" onclick="copyToClipboard('${escapeHtml(l.license_key).replace(/'/g, "\\'")}')">Copy</button></td>
         </tr>`;
       });
       html += '</table>';
-
       document.getElementById('bulkDetails').innerHTML = html;
       result.className = 'result-box success'; result.style.display = 'block';
       document.getElementById('bulkStudents').value = '';
       refreshTopStats();
     } catch(e) {
-      result.innerHTML = `❌ Error: ${e.message}`;
+      result.innerHTML = `❌ Error: ${escapeHtml(e.message)}`;
       result.className = 'result-box error'; result.style.display = 'block';
     } finally {
       btn.disabled = false; spin.style.display = 'none';
     }
   }
 
-  // ── MANUAL LICENSE ──
-  async function generateManual() {
+  async function generateManual() { /* similar, keep safe */
     const name  = document.getElementById('manualName').value.trim();
     const email = document.getElementById('manualEmail').value.trim();
     const inst  = document.getElementById('manualInstitution').value.trim();
@@ -733,12 +745,9 @@
     const btn   = document.getElementById('btnManual');
     const spin  = document.getElementById('spinManual');
     const result= document.getElementById('manualResult');
-
     if (!name || !email) { alert('Please enter name and email'); return; }
-
     btn.disabled = true; spin.style.display = 'inline-block';
     result.style.display = 'none';
-
     try {
       const res  = await fetch(`${API}/admin/generate`, {
         method:  'POST',
@@ -747,12 +756,11 @@
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed');
-
       document.getElementById('manualKeyDisplay').textContent = data.license_key;
       document.getElementById('manualDetails').innerHTML = `
-        <strong style="color:var(--text)">Name:</strong> ${name}<br/>
-        <strong style="color:var(--text)">Email:</strong> ${email}<br/>
-        <strong style="color:var(--text)">Plan:</strong> ${plan}<br/>
+        <strong>Name:</strong> ${escapeHtml(name)}<br/>
+        <strong>Email:</strong> ${escapeHtml(email)}<br/>
+        <strong>Plan:</strong> ${escapeHtml(plan)}<br/>
         <strong style="color:var(--green)">📧 License emailed!</strong>
       `;
       result.className = 'result-box success'; result.style.display = 'block';
@@ -760,126 +768,79 @@
       document.getElementById('manualEmail').value = '';
       refreshTopStats();
     } catch(e) {
-      result.innerHTML = `❌ Error: ${e.message}`;
+      result.innerHTML = `❌ Error: ${escapeHtml(e.message)}`;
       result.className = 'result-box error'; result.style.display = 'block';
     } finally {
       btn.disabled = false; spin.style.display = 'none';
     }
   }
 
-  // ── LOAD LICENSES ──
   async function loadLicenses() {
     try {
-      const res  = await fetch(`${API}/admin/licenses`, {
-        headers: { 'X-Admin-Secret': SECRET }
-      });
+      const res = await fetch(`${API}/admin/licenses`, { headers: { 'X-Admin-Secret': SECRET } });
       const data = await res.json();
       allLicenses = data.licenses || [];
       renderTable(allLicenses);
     } catch(e) {
-      document.getElementById('licenseTable').innerHTML =
-        `<tr><td colspan="7" class="empty">❌ Failed to load</td></tr>`;
+      document.getElementById('licenseTable').innerHTML = `<tr><td colspan="7" class="empty">❌ Failed to load</td></tr>`;
     }
   }
 
   function filterLicenses() {
     const q = document.getElementById('searchLic').value.toLowerCase();
-    renderTable(allLicenses.filter(l =>
-      l.email?.toLowerCase().includes(q) ||
-      l.key?.toLowerCase().includes(q) ||
-      l.name?.toLowerCase().includes(q)
-    ));
+    renderTable(allLicenses.filter(l => (l.email || '').toLowerCase().includes(q) || (l.key || '').toLowerCase().includes(q) || (l.name || '').toLowerCase().includes(q)));
   }
 
   function renderTable(licenses) {
     const tbody = document.getElementById('licenseTable');
-    if (!licenses.length) {
-      tbody.innerHTML = '<tr><td colspan="7" class="empty">No licenses found</td></tr>'; return;
-    }
-
+    if (!licenses.length) { tbody.innerHTML = '<tr><td colspan="7" class="empty">No licenses found</td></tr>'; return; }
     tbody.innerHTML = licenses.map(l => {
-      const isDemo    = l.is_demo || l.plan === 'student_demo';
+      const isDemo = l.is_demo || l.plan === 'student_demo';
       const isExpired = l.expires_at && new Date(l.expires_at) < new Date();
-      const isActive  = l.active && !isExpired;
-
+      const isActive = l.active && !isExpired;
       let expiryHtml = '<span style="color:var(--muted)">Lifetime</span>';
       if (l.expires_at) {
-        const exp      = new Date(l.expires_at);
-        const created  = new Date(l.created_at);
-        const total    = (exp - created) / 86400000;
-        const left     = Math.max(0, (exp - new Date()) / 86400000);
-        const pct      = Math.round((left / total) * 100);
-        const color    = pct > 50 ? 'var(--green)' : pct > 20 ? 'var(--gold)' : 'var(--red)';
-        expiryHtml = `
-          <div class="days-bar">
-            <div class="days-track">
-              <div class="days-fill" style="width:${pct}%;background:${color}"></div>
-            </div>
-            <span style="color:${color};font-size:9px;white-space:nowrap;">
-              ${isExpired ? 'Expired' : Math.round(left) + 'd left'}
-            </span>
-          </div>`;
+        const exp = new Date(l.expires_at);
+        const created = new Date(l.created_at);
+        const total = (exp - created) / 86400000;
+        const left = Math.max(0, (exp - new Date()) / 86400000);
+        const pct = total > 0 ? Math.round((left / total) * 100) : 0;
+        const color = pct > 50 ? 'var(--green)' : pct > 20 ? 'var(--gold)' : 'var(--red)';
+        expiryHtml = `<div class="days-bar"><div class="days-track"><div class="days-fill" style="width:${Math.min(100,pct)}%;background:${color}"></div></div><span style="color:${color};font-size:9px;">${isExpired ? 'Expired' : Math.round(left) + 'd left'}</span></div>`;
       }
-
-      const statusBadge = !l.active
-        ? '<span class="badge badge-expired">Revoked</span>'
-        : isExpired
-        ? '<span class="badge badge-expired">Expired</span>'
-        : isDemo
-        ? '<span class="badge badge-demo">Demo</span>'
-        : '<span class="badge badge-paid">✓ Active</span>';
-
+      const statusBadge = !l.active ? '<span class="badge badge-expired">Revoked</span>' : isExpired ? '<span class="badge badge-expired">Expired</span>' : isDemo ? '<span class="badge badge-demo">Demo</span>' : '<span class="badge badge-paid">✓ Active</span>';
       return `<tr>
-        <td>
-          <span style="color:var(--gold);font-size:10px;letter-spacing:0.05em;">${l.key}</span>
-          <button class="copy-btn" onclick="navigator.clipboard.writeText('${l.key}')">Copy</button>
-        </td>
-        <td style="color:var(--text)">${l.name || '—'}</td>
-        <td style="color:var(--muted)">${l.email || '—'}</td>
-        <td><span class="badge" style="background:var(--gold-d);color:var(--gold);border:1px solid var(--gold-m)">${l.plan}</span></td>
+        <td><span style="color:var(--gold);">${escapeHtml(l.key)}</span> <button class="copy-btn" data-copy-text="${escapeHtml(l.key)}" onclick="copyToClipboard('${escapeHtml(l.key).replace(/'/g, "\\'")}')">Copy</button></td>
+        <td>${escapeHtml(l.name || '—')}</td>
+        <td>${escapeHtml(l.email || '—')}</td>
+        <td><span class="badge" style="background:var(--gold-d);color:var(--gold);">${escapeHtml(l.plan)}</span></td>
         <td>${statusBadge}</td>
         <td>${expiryHtml}</td>
-        <td>
-          ${isActive ? `<button class="btn-danger" onclick="revokeLicense('${l.key}')">Revoke</button>` : '—'}
-        </td>
+        <td>${isActive ? `<button class="btn-danger" onclick="revokeLicense('${escapeHtml(l.key).replace(/'/g, "\\'")}')">Revoke</button>` : '—'}</td>
       </tr>`;
     }).join('');
   }
 
-  // ── REVOKE ──
   async function revokeLicense(key) {
     if (!confirm(`Revoke license ${key}?`)) return;
     try {
-      await fetch(`${API}/admin/revoke`, {
-        method:  'POST',
-        headers: { 'Content-Type': 'application/json', 'X-Admin-Secret': SECRET },
-        body:    JSON.stringify({ key }),
-      });
+      await fetch(`${API}/admin/revoke`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Admin-Secret': SECRET }, body: JSON.stringify({ key }) });
       loadLicenses(); refreshTopStats();
     } catch(e) { alert('Failed to revoke'); }
   }
 
-  // ── STATS ──
   async function loadStats() {
     try {
-      const res  = await fetch(`${API}/admin/stats`, { headers: { 'X-Admin-Secret': SECRET } });
+      const res = await fetch(`${API}/admin/stats`, { headers: { 'X-Admin-Secret': SECRET } });
       const data = await res.json();
-      document.getElementById('s-total').textContent   = data.total_licenses || 0;
-      document.getElementById('s-active').textContent  = data.active || 0;
+      document.getElementById('s-total').textContent = data.total_licenses || 0;
+      document.getElementById('s-active').textContent = data.active || 0;
       document.getElementById('s-revenue').textContent = '$' + (data.total_revenue_usd || 0);
-      const demo = Object.entries(data.by_plan || {}).filter(([k]) => k.includes('demo'))
-        .reduce((a, [,v]) => a + v, 0);
+      const demo = Object.entries(data.by_plan || {}).filter(([k]) => k.includes('demo')).reduce((a, [,v]) => a + v, 0);
       document.getElementById('s-demo').textContent = demo;
-
       let breakdown = '';
       Object.entries(data.by_plan || {}).forEach(([plan, count]) => {
-        breakdown += `<div style="display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid var(--dim);">
-          <span style="width:160px;color:var(--text)">${plan}</span>
-          <div style="flex:1;background:var(--dim);border-radius:3px;height:6px;">
-            <div style="width:${Math.min(100,(count/Math.max(data.total_licenses,1))*100)}%;background:var(--gold);height:100%;border-radius:3px;"></div>
-          </div>
-          <span style="color:var(--gold);width:30px;text-align:right">${count}</span>
-        </div>`;
+        breakdown += `<div style="display:flex;align-items:center;gap:12px;padding:6px 0;"><span style="width:160px;">${escapeHtml(plan)}</span><div style="flex:1;background:var(--dim);height:6px;"><div style="width:${Math.min(100, (count/Math.max(data.total_licenses,1))*100)}%;background:var(--gold);height:100%;"></div></div><span style="color:var(--gold);">${count}</span></div>`;
       });
       document.getElementById('planBreakdown').innerHTML = breakdown || 'No data yet';
       updateTopStats(data);
@@ -887,20 +848,21 @@
   }
 
   function updateTopStats(data) {
-    document.getElementById('statTotal').textContent   = data.total_licenses || 0;
-    document.getElementById('statActive').textContent  = data.active || 0;
+    document.getElementById('statTotal').textContent = data.total_licenses || 0;
+    document.getElementById('statActive').textContent = data.active || 0;
     document.getElementById('statRevenue').textContent = '₦' + (data.total_revenue_ngn || 0).toLocaleString();
   }
 
   async function refreshTopStats() {
     try {
-      const res  = await fetch(`${API}/admin/stats`, { headers: { 'X-Admin-Secret': SECRET } });
+      const res = await fetch(`${API}/admin/stats`, { headers: { 'X-Admin-Secret': SECRET } });
       const data = await res.json();
       updateTopStats(data);
     } catch(e) {}
   }
 
-  // ── COPY ──
-  function copyKey(id) {
-    const key = document.getElementById(id).textContent;
-    navigator.clipboard.writeText(key).then(
+  function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, function(m) { if(m === '&') return '&amp;'; if(m === '<') return '&lt;'; if(m === '>') return '&gt;'; return m; }); }
+  window.copyToClipboard = copyToClipboard;
+</script>
+</body>
+</html>
