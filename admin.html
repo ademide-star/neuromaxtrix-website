@@ -35,7 +35,6 @@
     ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb { background: var(--gold-m); border-radius: 2px; }
 
-    /* ── LOGIN SCREEN ── */
     .login-screen {
       min-height: 100vh; display: flex;
       align-items: center; justify-content: center;
@@ -45,7 +44,7 @@
     .login-box {
       background: var(--panel); border: 1px solid var(--border);
       border-radius: 16px; padding: 48px 40px;
-      width: 100%; max-width: 400px; text-align: center;
+      width: 100%; max-width: 450px; text-align: center;
     }
 
     .login-logo { font-size: 40px; margin-bottom: 16px; }
@@ -81,12 +80,15 @@
 
     .login-error {
       color: var(--red); font-size: 10px; margin-top: 10px; display: none;
+      background: #ff6b6b11;
+      padding: 12px;
+      border-radius: 8px;
+      text-align: left;
+      line-height: 1.5;
     }
 
-    /* ── DASHBOARD ── */
     .dashboard { display: none; min-height: 100vh; }
 
-    /* ── TOPBAR ── */
     .topbar {
       background: var(--surface); border-bottom: 1px solid var(--border);
       padding: 0 32px; height: 60px;
@@ -118,10 +120,8 @@
 
     .btn-logout:hover { border-color: var(--red); color: var(--red); }
 
-    /* ── CONTENT ── */
     .content { padding: 28px 32px; max-width: 1200px; margin: 0 auto; }
 
-    /* ── TABS ── */
     .tabs {
       display: flex; gap: 4px; background: var(--surface);
       border: 1px solid var(--border); border-radius: 10px;
@@ -138,7 +138,6 @@
 
     .tab.active { background: var(--gold); color: var(--bg); }
 
-    /* ── CARDS ── */
     .card {
       background: var(--panel); border: 1px solid var(--border);
       border-radius: 12px; padding: 24px; margin-bottom: 20px;
@@ -150,7 +149,6 @@
       display: flex; align-items: center; gap: 8px;
     }
 
-    /* ── FORM ── */
     .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
     .form-group { display: flex; flex-direction: column; gap: 6px; }
     .form-group.full { grid-column: 1 / -1; }
@@ -197,7 +195,6 @@
 
     .btn-danger:hover { background: #ff6b6b22; }
 
-    /* ── RESULT BOX ── */
     .result-box {
       background: var(--surface); border: 1px solid var(--border);
       border-radius: 8px; padding: 16px; margin-top: 16px;
@@ -212,19 +209,10 @@
       letter-spacing: 0.15em; margin: 8px 0;
     }
 
-    /* ── TABLE ── */
     .table-wrap { overflow-x: auto; }
-
     table { width: 100%; border-collapse: collapse; font-size: 10px; }
-
-    th {
-      text-align: left; padding: 10px 14px;
-      font-size: 8px; letter-spacing: 0.15em; text-transform: uppercase;
-      color: var(--muted); border-bottom: 1px solid var(--border);
-    }
-
+    th { text-align: left; padding: 10px 14px; font-size: 8px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--border); }
     td { padding: 12px 14px; border-bottom: 1px solid var(--dim); vertical-align: middle; }
-
     tr:hover td { background: var(--surface); }
 
     .badge {
@@ -237,65 +225,23 @@
     .badge-demo     { background: #6c63ff22; color: var(--purple); border: 1px solid #6c63ff44; }
     .badge-paid     { background: var(--gold-d); color: var(--gold); border: 1px solid var(--gold-m); }
 
-    .days-bar {
-      display: flex; align-items: center; gap: 8px;
-    }
-
-    .days-track {
-      flex: 1; height: 4px; background: var(--dim);
-      border-radius: 2px; overflow: hidden;
-    }
-
+    .days-bar { display: flex; align-items: center; gap: 8px; }
+    .days-track { flex: 1; height: 4px; background: var(--dim); border-radius: 2px; overflow: hidden; }
     .days-fill { height: 100%; border-radius: 2px; transition: width 0.5s ease; }
 
-    /* ── BULK TEXTAREA ── */
-    .bulk-help {
-      font-size: 9px; color: var(--muted); line-height: 1.8; margin-bottom: 12px;
-    }
-
-    /* ── STATS ROW ── */
-    .stats-row {
-      display: grid; grid-template-columns: repeat(4, 1fr);
-      gap: 14px; margin-bottom: 24px;
-    }
-
-    .stat-card {
-      background: var(--panel); border: 1px solid var(--border);
-      border-radius: 10px; padding: 16px;
-      border-left: 3px solid var(--card-color, var(--gold));
-    }
-
-    .stat-val {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 36px; font-weight: 600;
-      color: var(--card-color, var(--gold)); line-height: 1;
-    }
-
+    .bulk-help { font-size: 9px; color: var(--muted); line-height: 1.8; margin-bottom: 12px; }
+    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px; }
+    .stat-card { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 16px; border-left: 3px solid var(--card-color, var(--gold)); }
+    .stat-val { font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 600; color: var(--card-color, var(--gold)); line-height: 1; }
     .stat-label { font-size: 9px; color: var(--muted); letter-spacing: 0.1em; margin-top: 4px; }
 
-    /* ── LOADING ── */
-    .spinner {
-      width: 16px; height: 16px; border: 2px solid transparent;
-      border-top-color: var(--bg); border-radius: 50%;
-      animation: spin 0.6s linear infinite; display: none;
-    }
-
+    .spinner { width: 16px; height: 16px; border: 2px solid transparent; border-top-color: var(--bg); border-radius: 50%; animation: spin 0.6s linear infinite; display: none; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* ── COPY BTN ── */
-    .copy-btn {
-      background: var(--gold-d); border: 1px solid var(--gold-m);
-      color: var(--gold); border-radius: 4px; padding: 3px 8px;
-      font-size: 8px; cursor: pointer; font-family: inherit;
-      transition: all 0.2s;
-    }
-
+    .copy-btn { background: var(--gold-d); border: 1px solid var(--gold-m); color: var(--gold); border-radius: 4px; padding: 3px 8px; font-size: 8px; cursor: pointer; font-family: inherit; transition: all 0.2s; }
     .copy-btn:hover { background: var(--gold); color: var(--bg); }
-
-    /* ── EMPTY STATE ── */
     .empty { text-align: center; padding: 40px; color: var(--muted); font-size: 11px; }
 
-    /* ── RESPONSIVE ── */
     @media (max-width: 768px) {
       .content { padding: 16px; }
       .form-grid { grid-template-columns: 1fr; }
@@ -308,12 +254,12 @@
 </head>
 <body>
 
-<!-- LOGIN SCREEN -->
 <div class="login-screen" id="loginScreen">
   <div class="login-box">
     <div class="login-logo">🧠</div>
     <div class="login-title">Admin Dashboard</div>
     <div class="login-sub">NEUROMATRIX BIOSYSTEMS · LICENSE MANAGEMENT</div>
+    
     <input class="login-input" id="serverUrl" type="text"
       placeholder="https://neuromatrix-license.onrender.com"
       value="https://neuromatrix-license.onrender.com" />
@@ -325,10 +271,7 @@
   </div>
 </div>
 
-<!-- DASHBOARD -->
 <div class="dashboard" id="dashboard">
-
-  <!-- Topbar -->
   <div class="topbar">
     <div class="topbar-brand">
       <div>
@@ -337,25 +280,14 @@
       </div>
     </div>
     <div class="topbar-right">
-      <div class="topbar-stat">
-        <div class="topbar-stat-val" id="statTotal">—</div>
-        <div class="topbar-stat-label">TOTAL</div>
-      </div>
-      <div class="topbar-stat">
-        <div class="topbar-stat-val" id="statActive" style="color:var(--green)">—</div>
-        <div class="topbar-stat-label">ACTIVE</div>
-      </div>
-      <div class="topbar-stat">
-        <div class="topbar-stat-val" id="statRevenue" style="color:var(--gold)">—</div>
-        <div class="topbar-stat-label">REVENUE ₦</div>
-      </div>
+      <div class="topbar-stat"><div class="topbar-stat-val" id="statTotal">—</div><div class="topbar-stat-label">TOTAL</div></div>
+      <div class="topbar-stat"><div class="topbar-stat-val" id="statActive" style="color:var(--green)">—</div><div class="topbar-stat-label">ACTIVE</div></div>
+      <div class="topbar-stat"><div class="topbar-stat-val" id="statRevenue" style="color:var(--gold)">—</div><div class="topbar-stat-label">REVENUE ₦</div></div>
       <button class="btn-logout" onclick="logout()">Sign Out</button>
     </div>
   </div>
 
   <div class="content">
-
-    <!-- Tabs -->
     <div class="tabs">
       <button class="tab active" data-tab="generate" onclick="showTab('generate', this)">🎓 Generate Demo</button>
       <button class="tab" data-tab="bulk" onclick="showTab('bulk', this)">👥 Bulk Demo</button>
@@ -364,240 +296,87 @@
       <button class="tab" data-tab="stats" onclick="showTab('stats', this)">📊 Stats</button>
     </div>
 
-    <!-- GENERATE DEMO TAB -->
     <div id="tab-generate">
       <div class="card">
         <div class="card-title">🎓 Generate Student Demo License</div>
         <div class="form-grid">
-          <div class="form-group">
-            <label class="form-label">Student Full Name</label>
-            <input class="form-input" id="demoName" type="text" placeholder="e.g. Aisha Mohammed" />
-          </div>
-          <div class="form-group">
-            <label class="form-label">Student Email</label>
-            <input class="form-input" id="demoEmail" type="email" placeholder="student@unilorin.edu.ng" />
-          </div>
-          <div class="form-group">
-            <label class="form-label">Institution</label>
-            <input class="form-input" id="demoInstitution" type="text" value="University of Ilorin" />
-          </div>
-          <div class="form-group">
-            <label class="form-label">Duration</label>
-            <select class="form-select" id="demoDuration">
-              <option value="30">30 days — 1 month</option>
-              <option value="60">60 days — 2 months</option>
-              <option value="90">90 days — 3 months (max)</option>
-            </select>
-          </div>
+          <div class="form-group"><label class="form-label">Student Full Name</label><input class="form-input" id="demoName" type="text" placeholder="e.g. Aisha Mohammed" /></div>
+          <div class="form-group"><label class="form-label">Student Email</label><input class="form-input" id="demoEmail" type="email" placeholder="student@unilorin.edu.ng" /></div>
+          <div class="form-group"><label class="form-label">Institution</label><input class="form-input" id="demoInstitution" type="text" value="University of Ilorin" /></div>
+          <div class="form-group"><label class="form-label">Duration</label><select class="form-select" id="demoDuration"><option value="30">30 days — 1 month</option><option value="60">60 days — 2 months</option><option value="90">90 days — 3 months (max)</option></select></div>
         </div>
         <br/>
-        <button class="btn-primary" id="btnGenDemo" onclick="generateDemo()">
-          <div class="spinner" id="spinDemo"></div>
-          Generate & Email License →
-        </button>
-
-        <div class="result-box" id="demoResult">
-          <div style="font-size:9px;color:var(--green);letter-spacing:0.1em;margin-bottom:8px;">✅ DEMO LICENSE GENERATED</div>
-          <div style="font-size:10px;color:var(--muted);margin-bottom:4px;">License Key:</div>
-          <div class="result-key" id="demoKeyDisplay">—</div>
-          <button class="copy-btn" onclick="copyKey('demoKeyDisplay')">Copy Key</button>
-          <div style="margin-top:12px;font-size:10px;color:var(--muted);" id="demoDetails"></div>
-        </div>
+        <button class="btn-primary" id="btnGenDemo" onclick="generateDemo()"><div class="spinner" id="spinDemo"></div>Generate & Email License →</button>
+        <div class="result-box" id="demoResult"><div style="font-size:9px;color:var(--green);letter-spacing:0.1em;margin-bottom:8px;">✅ DEMO LICENSE GENERATED</div><div style="font-size:10px;color:var(--muted);margin-bottom:4px;">License Key:</div><div class="result-key" id="demoKeyDisplay">—</div><button class="copy-btn" onclick="copyKey('demoKeyDisplay')">Copy Key</button><div style="margin-top:12px;font-size:10px;color:var(--muted);" id="demoDetails"></div></div>
       </div>
     </div>
 
-    <!-- BULK DEMO TAB -->
     <div id="tab-bulk" style="display:none">
       <div class="card">
         <div class="card-title">👥 Bulk Demo Licenses — Multiple Students</div>
-        <div class="bulk-help">
-          Enter one student per line in format: <strong style="color:var(--gold)">email, name</strong><br/>
-          Example:<br/>
-          aisha@unilorin.edu.ng, Aisha Mohammed<br/>
-          bola@unilorin.edu.ng, Bola Adeyemi<br/>
-          chidi@unilorin.edu.ng, Chidi Okonkwo
-        </div>
+        <div class="bulk-help">Enter one student per line in format: <strong style="color:var(--gold)">email, name</strong><br/>Example:<br/>aisha@unilorin.edu.ng, Aisha Mohammed<br/>bola@unilorin.edu.ng, Bola Adeyemi</div>
         <div class="form-grid">
-          <div class="form-group">
-            <label class="form-label">Institution</label>
-            <input class="form-input" id="bulkInstitution" type="text" value="University of Ilorin" />
-          </div>
-          <div class="form-group">
-            <label class="form-label">Duration for all students</label>
-            <select class="form-select" id="bulkDuration">
-              <option value="30">30 days — 1 month</option>
-              <option value="60">60 days — 2 months</option>
-              <option value="90">90 days — 3 months</option>
-            </select>
-          </div>
-          <div class="form-group full">
-            <label class="form-label">Students (one per line: email, name)</label>
-            <textarea class="form-textarea" id="bulkStudents" rows="8"
-              placeholder="student1@unilorin.edu.ng, Aisha Mohammed&#10;student2@unilorin.edu.ng, Bola Adeyemi&#10;student3@unilorin.edu.ng, Chidi Okonkwo"></textarea>
-          </div>
+          <div class="form-group"><label class="form-label">Institution</label><input class="form-input" id="bulkInstitution" type="text" value="University of Ilorin" /></div>
+          <div class="form-group"><label class="form-label">Duration</label><select class="form-select" id="bulkDuration"><option value="30">30 days</option><option value="60">60 days</option><option value="90">90 days</option></select></div>
+          <div class="form-group full"><label class="form-label">Students (one per line: email, name)</label><textarea class="form-textarea" id="bulkStudents" rows="6" placeholder="student1@unilorin.edu.ng, Aisha Mohammed&#10;student2@unilorin.edu.ng, Bola Adeyemi"></textarea></div>
         </div>
-        <br/>
-        <button class="btn-primary" id="btnBulk" onclick="generateBulk()">
-          <div class="spinner" id="spinBulk"></div>
-          Generate All & Send Emails →
-        </button>
-
-        <div class="result-box" id="bulkResult">
-          <div style="font-size:9px;color:var(--green);letter-spacing:0.1em;margin-bottom:12px;">✅ BULK LICENSES GENERATED</div>
-          <div id="bulkDetails"></div>
-        </div>
+        <br/><button class="btn-primary" id="btnBulk" onclick="generateBulk()"><div class="spinner" id="spinBulk"></div>Generate All & Send Emails →</button>
+        <div class="result-box" id="bulkResult"><div style="font-size:9px;color:var(--green);letter-spacing:0.1em;margin-bottom:12px;">✅ BULK LICENSES GENERATED</div><div id="bulkDetails"></div></div>
       </div>
     </div>
 
-    <!-- MANUAL LICENSE TAB -->
     <div id="tab-manual" style="display:none">
       <div class="card">
         <div class="card-title">🔑 Manual License — For Bank Transfers</div>
         <div class="form-grid">
-          <div class="form-group">
-            <label class="form-label">Full Name</label>
-            <input class="form-input" id="manualName" type="text" placeholder="Dr. Jane Smith" />
-          </div>
-          <div class="form-group">
-            <label class="form-label">Email</label>
-            <input class="form-input" id="manualEmail" type="email" placeholder="researcher@university.edu" />
-          </div>
-          <div class="form-group">
-            <label class="form-label">Institution</label>
-            <input class="form-input" id="manualInstitution" type="text" placeholder="University name" />
-          </div>
-          <div class="form-group">
-            <label class="form-label">Plan</label>
-            <select class="form-select" id="manualPlan">
-              <option value="student">Student — $29 / ₦49,000</option>
-              <option value="researcher" selected>Researcher — $49 / ₦79,000</option>
-              <option value="institution">Institution — $89 / ₦149,000</option>
-            </select>
-          </div>
+          <div class="form-group"><label class="form-label">Full Name</label><input class="form-input" id="manualName" type="text" placeholder="Dr. Jane Smith" /></div>
+          <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="manualEmail" type="email" placeholder="researcher@university.edu" /></div>
+          <div class="form-group"><label class="form-label">Institution</label><input class="form-input" id="manualInstitution" type="text" placeholder="University name" /></div>
+          <div class="form-group"><label class="form-label">Plan</label><select class="form-select" id="manualPlan"><option value="student">Student — $29 / ₦49,000</option><option value="researcher" selected>Researcher — $49 / ₦79,000</option><option value="institution">Institution — $89 / ₦149,000</option></select></div>
         </div>
-        <br/>
-        <button class="btn-primary" id="btnManual" onclick="generateManual()">
-          <div class="spinner" id="spinManual"></div>
-          Generate & Email License →
-        </button>
-
-        <div class="result-box" id="manualResult">
-          <div style="font-size:9px;color:var(--green);letter-spacing:0.1em;margin-bottom:8px;">✅ LICENSE GENERATED</div>
-          <div style="font-size:10px;color:var(--muted);margin-bottom:4px;">License Key:</div>
-          <div class="result-key" id="manualKeyDisplay">—</div>
-          <button class="copy-btn" onclick="copyKey('manualKeyDisplay')">Copy Key</button>
-          <div style="margin-top:12px;font-size:10px;color:var(--muted);" id="manualDetails"></div>
-        </div>
+        <br/><button class="btn-primary" id="btnManual" onclick="generateManual()"><div class="spinner" id="spinManual"></div>Generate & Email License →</button>
+        <div class="result-box" id="manualResult"><div style="font-size:9px;color:var(--green);letter-spacing:0.1em;margin-bottom:8px;">✅ LICENSE GENERATED</div><div style="font-size:10px;color:var(--muted);margin-bottom:4px;">License Key:</div><div class="result-key" id="manualKeyDisplay">—</div><button class="copy-btn" onclick="copyKey('manualKeyDisplay')">Copy Key</button><div style="margin-top:12px;font-size:10px;color:var(--muted);" id="manualDetails"></div></div>
       </div>
     </div>
 
-    <!-- ALL LICENSES TAB -->
     <div id="tab-licenses" style="display:none">
       <div class="card">
-        <div class="card-title" style="justify-content:space-between; flex-wrap:wrap; gap:10px;">
-          <span>📋 All Licenses</span>
-          <div style="display:flex;gap:8px;align-items:center; flex-wrap:wrap;">
-            <input class="form-input" id="searchLic" type="text" placeholder="Search email or key..."
-              style="width:220px;padding:6px 12px;font-size:10px;" oninput="filterLicenses()" />
-            <button class="btn-outline" onclick="loadLicenses()" style="padding:6px 14px;font-size:9px;">↻ Refresh</button>
-          </div>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>License Key</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Plan</th>
-                <th>Status</th>
-                <th>Expires</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody id="licenseTable">
-              <tr><td colspan="7" class="empty">Loading licenses...</td></tr>
-            </tbody>
-          </table>
-        </div>
+        <div class="card-title" style="justify-content:space-between; flex-wrap:wrap; gap:10px;"><span>📋 All Licenses</span><div style="display:flex;gap:8px;"><input class="form-input" id="searchLic" type="text" placeholder="Search..." style="width:200px;padding:6px 12px;font-size:10px;" oninput="filterLicenses()" /><button class="btn-outline" onclick="loadLicenses()" style="padding:6px 14px;">↻ Refresh</button></div></div>
+        <div class="table-wrap"><table><thead><tr><th>License Key</th><th>Name</th><th>Email</th><th>Plan</th><th>Status</th><th>Expires</th><th>Action</th></tr></thead><tbody id="licenseTable"><tr><td colspan="7" class="empty">Loading licenses...</td></tr></tbody></table></div>
       </div>
     </div>
 
-    <!-- STATS TAB -->
     <div id="tab-stats" style="display:none">
-      <div class="stats-row" id="statsGrid">
-        <div class="stat-card" style="--card-color:var(--gold)">
-          <div class="stat-val" id="s-total">—</div>
-          <div class="stat-label">TOTAL LICENSES</div>
-        </div>
-        <div class="stat-card" style="--card-color:var(--green)">
-          <div class="stat-val" id="s-active">—</div>
-          <div class="stat-label">ACTIVE</div>
-        </div>
-        <div class="stat-card" style="--card-color:var(--purple)">
-          <div class="stat-val" id="s-demo">—</div>
-          <div class="stat-label">DEMO LICENSES</div>
-        </div>
-        <div class="stat-card" style="--card-color:var(--blue)">
-          <div class="stat-val" id="s-revenue">—</div>
-          <div class="stat-label">REVENUE (USD)</div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-title">📊 Revenue by Plan</div>
-        <div id="planBreakdown" style="font-size:11px;color:var(--muted);line-height:2.5;">
-          Loading...
-        </div>
-      </div>
+      <div class="stats-row"><div class="stat-card" style="--card-color:var(--gold)"><div class="stat-val" id="s-total">—</div><div class="stat-label">TOTAL LICENSES</div></div><div class="stat-card" style="--card-color:var(--green)"><div class="stat-val" id="s-active">—</div><div class="stat-label">ACTIVE</div></div><div class="stat-card" style="--card-color:var(--purple)"><div class="stat-val" id="s-demo">—</div><div class="stat-label">DEMO LICENSES</div></div><div class="stat-card" style="--card-color:var(--blue)"><div class="stat-val" id="s-revenue">—</div><div class="stat-label">REVENUE (USD)</div></div></div>
+      <div class="card"><div class="card-title">📊 Revenue by Plan</div><div id="planBreakdown" style="font-size:11px;color:var(--muted);line-height:2.5;">Loading...</div></div>
     </div>
-
   </div>
 </div>
 
 <script>
-  let API     = '';
-  let SECRET  = '';
-  let allLicenses = [];
+  let API = '', SECRET = '', allLicenses = [];
 
-  // Helper function for API calls with proper error handling
   async function apiFetch(endpoint, options = {}) {
     const url = `${API}${endpoint}`;
-    const defaultOptions = {
-      headers: {
+    const response = await fetch(url, {
+      headers: { 
         'X-Admin-Secret': SECRET,
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       },
       mode: 'cors',
       ...options
-    };
+    });
     
-    try {
-      const response = await fetch(url, defaultOptions);
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error || `HTTP ${response.status}`);
-      }
-      return await response.json();
-    } catch (error) {
-      if (error.message === 'Failed to fetch') {
-        throw new Error('Cannot connect to server. Please check: 1) Server URL is correct 2) Server is running 3) CORS is enabled on server');
-      }
-      throw error;
+    if (!response.ok) {
+      let errorMsg = `HTTP ${response.status}`;
+      try {
+        const errorData = await response.json();
+        errorMsg = errorData.error || errorData.message || errorMsg;
+      } catch(e) {}
+      throw new Error(errorMsg);
     }
-  }
-
-  function copyKey(elementId) {
-    const keyElement = document.getElementById(elementId);
-    const key = keyElement.textContent;
-    if (key && key !== '—') {
-      navigator.clipboard.writeText(key).then(() => {
-        const btn = event.target;
-        const originalText = btn.textContent;
-        btn.textContent = '✓ Copied!';
-        setTimeout(() => { btn.textContent = originalText; }, 1500);
-      }).catch(() => alert('Could not copy to clipboard'));
-    }
+    
+    return response.json();
   }
 
   async function login() {
@@ -605,70 +384,32 @@
     SECRET = document.getElementById('adminSecret').value.trim();
     const errDiv = document.getElementById('loginError');
     const btn = document.querySelector('.btn-login');
-    
     errDiv.style.display = 'none';
-    const originalText = btn.textContent;
-    btn.textContent = 'Connecting...';
     btn.disabled = true;
+    btn.textContent = 'Authenticating...';
 
-    // Test connection first
-    for (let attempt = 1; attempt <= 3; attempt++) {
-      try {
-        btn.textContent = attempt > 1 ? `Attempt ${attempt}/3...` : 'Connecting...';
-        
-        const response = await fetch(`${API}/admin/stats`, {
-          headers: { 'X-Admin-Secret': SECRET },
-          mode: 'cors'
-        });
-        
-        if (response.status === 401) {
-          errDiv.innerHTML = '❌ Wrong admin secret key';
-          errDiv.style.display = 'block';
-          btn.textContent = originalText;
-          btn.disabled = false;
-          return;
-        }
-        
-        if (!response.ok) throw new Error(`Server error: ${response.status}`);
-        
-        const data = await response.json();
-        
-        // Login successful
-        document.getElementById('loginScreen').style.display = 'none';
-        document.getElementById('dashboard').style.display = 'block';
-        updateTopStats(data);
-        loadLicenses();
-        btn.textContent = originalText;
-        btn.disabled = false;
-        return;
-        
-      } catch (error) {
-        console.error(`Attempt ${attempt} failed:`, error);
-        if (attempt === 3) {
-          let errorMsg = '❌ ';
-          if (error.message.includes('Failed to fetch')) {
-            errorMsg += 'Cannot reach server. Make sure:<br/>• Server URL is correct<br/>• Server is running on Render<br/>• CORS is enabled on the server<br/>• Try opening the server URL in a new tab first to wake it up';
-          } else {
-            errorMsg += error.message;
-          }
-          errDiv.innerHTML = errorMsg;
-          errDiv.style.display = 'block';
-          btn.textContent = originalText;
-          btn.disabled = false;
-        } else {
-          await new Promise(resolve => setTimeout(resolve, 2000));
-        }
-      }
+    try {
+      const data = await apiFetch('/admin/stats');
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('dashboard').style.display = 'block';
+      updateTopStats(data);
+      loadLicenses();
+      btn.disabled = false;
+      btn.textContent = 'Access Dashboard →';
+    } catch (error) {
+      errDiv.innerHTML = `❌ Login failed: ${error.message}`;
+      errDiv.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Access Dashboard →';
     }
   }
 
-  function logout() {
-    SECRET = '';
-    API = '';
-    document.getElementById('loginScreen').style.display = 'flex';
-    document.getElementById('dashboard').style.display = 'none';
-    document.getElementById('adminSecret').value = '';
-    document.getElementById('serverUrl').value = 'https://neuromatrix-license.onrender.com';
+  function logout() { 
+    SECRET = ''; 
+    API = ''; 
+    document.getElementById('loginScreen').style.display = 'flex'; 
+    document.getElementById('dashboard').style.display = 'none'; 
+    document.getElementById('adminSecret').value = ''; 
   }
 
   function showTab(name, btn) {
@@ -680,45 +421,75 @@
     if (name === 'stats') loadStats();
   }
 
+  function copyKey(id) { 
+    const key = document.getElementById(id).textContent; 
+    if(key && key !== '—') {
+      navigator.clipboard.writeText(key).then(() => {
+        alert('License key copied to clipboard!');
+      });
+    }
+  }
+
   async function generateDemo() {
     const name = document.getElementById('demoName').value.trim();
     const email = document.getElementById('demoEmail').value.trim();
     const inst = document.getElementById('demoInstitution').value.trim();
-    const duration = document.getElementById('demoDuration').value;
+    const duration = parseInt(document.getElementById('demoDuration').value);
+    
+    if (!name || !email) { 
+      alert('Please enter student name and email'); 
+      return; 
+    }
+    
     const btn = document.getElementById('btnGenDemo');
     const spin = document.getElementById('spinDemo');
     const result = document.getElementById('demoResult');
-
-    if (!name || !email) {
-      alert('Please enter student name and email');
-      return;
-    }
-
+    
     btn.disabled = true;
     spin.style.display = 'inline-block';
     result.style.display = 'none';
-
+    
     try {
-      const data = await apiFetch('/admin/demo', {
-        method: 'POST',
-        body: JSON.stringify({ name, email, institution: inst, duration_days: parseInt(duration) })
+      const payload = { 
+        name, 
+        email, 
+        institution: inst, 
+        duration_days: duration 
+      };
+      
+      console.log('Sending demo request:', payload);
+      
+      const data = await apiFetch('/admin/demo', { 
+        method: 'POST', 
+        body: JSON.stringify(payload) 
       });
-
+      
       document.getElementById('demoKeyDisplay').textContent = data.license_key;
       document.getElementById('demoDetails').innerHTML = `
         <strong>Student:</strong> ${escapeHtml(name)}<br/>
         <strong>Email:</strong> ${escapeHtml(email)}<br/>
         <strong>Duration:</strong> ${duration} days<br/>
         <strong>Expires:</strong> ${new Date(data.expires_at).toLocaleDateString()}<br/>
-        <strong style="color:var(--green)">📧 License emailed!</strong>
+        <strong style="color:var(--green)">✅ License generated successfully!</strong>
       `;
       result.className = 'result-box success';
       result.style.display = 'block';
+      
+      // Clear form
       document.getElementById('demoName').value = '';
       document.getElementById('demoEmail').value = '';
+      
+      // Refresh stats and licenses
       await refreshTopStats();
-    } catch (error) {
-      result.innerHTML = `❌ Error: ${escapeHtml(error.message)}`;
+      await loadLicenses();
+      
+    } catch(error) {
+      console.error('Demo generation error:', error);
+      result.innerHTML = `
+        <div style="color:var(--red);margin-bottom:8px;">❌ Failed to generate license</div>
+        <div style="font-size:10px;">Error: ${escapeHtml(error.message)}</div>
+        <div style="font-size:9px;color:var(--muted);margin-top:8px;">Make sure your backend has the /admin/demo endpoint</div>
+      `;
       result.className = 'result-box error';
       result.style.display = 'block';
     } finally {
@@ -730,51 +501,52 @@
   async function generateBulk() {
     const raw = document.getElementById('bulkStudents').value.trim();
     const inst = document.getElementById('bulkInstitution').value.trim();
-    const dur = document.getElementById('bulkDuration').value;
-    const btn = document.getElementById('btnBulk');
-    const spin = document.getElementById('spinBulk');
-    const result = document.getElementById('bulkResult');
-
-    if (!raw) {
-      alert('Please enter student list');
-      return;
+    const dur = parseInt(document.getElementById('bulkDuration').value);
+    
+    if (!raw) { 
+      alert('Please enter student list'); 
+      return; 
     }
-
+    
     const students = raw.split('\n')
       .map(line => {
-        const commaIndex = line.indexOf(',');
-        if (commaIndex === -1) return null;
-        const email = line.substring(0, commaIndex).trim();
-        const name = line.substring(commaIndex + 1).trim();
+        const idx = line.indexOf(',');
+        if(idx === -1) return null;
+        const email = line.substring(0, idx).trim();
+        const name = line.substring(idx + 1).trim();
         return email && email.includes('@') ? { email, name: name || 'Student' } : null;
       })
       .filter(s => s);
-
-    if (!students.length) {
-      alert('No valid students found. Format: email, name on each line');
-      return;
+    
+    if(!students.length) { 
+      alert('No valid students found. Format: email, name on each line'); 
+      return; 
     }
-
-    if (!confirm(`Generate ${students.length} demo licenses for ${dur} days?`)) return;
-
+    
+    if(!confirm(`Generate ${students.length} demo licenses for ${dur} days?`)) return;
+    
+    const btn = document.getElementById('btnBulk');
+    const spin = document.getElementById('spinBulk');
+    const result = document.getElementById('bulkResult');
+    
     btn.disabled = true;
     spin.style.display = 'inline-block';
     result.style.display = 'none';
-
+    
     try {
-      const data = await apiFetch('/admin/demo/bulk', {
-        method: 'POST',
-        body: JSON.stringify({ students, institution: inst, duration_days: parseInt(dur) })
+      const data = await apiFetch('/admin/demo/bulk', { 
+        method: 'POST', 
+        body: JSON.stringify({ students, institution: inst, duration_days: dur }) 
       });
-
-      let html = `<div style="color:var(--green);margin-bottom:12px;">✅ Generated ${data.generated} licenses — emails sent!</div>`;
+      
+      let html = `<div style="color:var(--green);margin-bottom:12px;">✅ Generated ${data.generated} licenses</div>`;
       html += '<table style="width:100%;font-size:10px;border-collapse:collapse;">';
       html += '<tr><th style="text-align:left;padding:6px;">Name</th><th style="text-align:left;padding:6px;">Email</th><th style="text-align:left;padding:6px;">Key</th></tr>';
       data.licenses.forEach(l => {
         html += `<tr>
           <td style="padding:6px;">${escapeHtml(l.name)}</td>
           <td style="padding:6px;">${escapeHtml(l.email)}</td>
-          <td style="padding:6px;"><span style="color:var(--gold);">${escapeHtml(l.license_key)}</span>
+          <td style="padding:6px;"><span style="color:var(--gold);">${escapeHtml(l.license_key)}</span> 
           <button class="copy-btn" onclick="navigator.clipboard.writeText('${escapeHtml(l.license_key).replace(/'/g, "\\'")}')">Copy</button></td>
         </tr>`;
       });
@@ -785,7 +557,9 @@
       result.style.display = 'block';
       document.getElementById('bulkStudents').value = '';
       await refreshTopStats();
-    } catch (error) {
+      await loadLicenses();
+      
+    } catch(error) {
       result.innerHTML = `❌ Error: ${escapeHtml(error.message)}`;
       result.className = 'result-box error';
       result.style.display = 'block';
@@ -800,38 +574,42 @@
     const email = document.getElementById('manualEmail').value.trim();
     const inst = document.getElementById('manualInstitution').value.trim();
     const plan = document.getElementById('manualPlan').value;
+    
+    if(!name || !email) { 
+      alert('Please enter name and email'); 
+      return; 
+    }
+    
     const btn = document.getElementById('btnManual');
     const spin = document.getElementById('spinManual');
     const result = document.getElementById('manualResult');
-
-    if (!name || !email) {
-      alert('Please enter name and email');
-      return;
-    }
-
+    
     btn.disabled = true;
     spin.style.display = 'inline-block';
     result.style.display = 'none';
-
+    
     try {
-      const data = await apiFetch('/admin/generate', {
-        method: 'POST',
-        body: JSON.stringify({ name, email, institution: inst, plan })
+      const data = await apiFetch('/admin/generate', { 
+        method: 'POST', 
+        body: JSON.stringify({ name, email, institution: inst, plan }) 
       });
-
+      
       document.getElementById('manualKeyDisplay').textContent = data.license_key;
       document.getElementById('manualDetails').innerHTML = `
         <strong>Name:</strong> ${escapeHtml(name)}<br/>
         <strong>Email:</strong> ${escapeHtml(email)}<br/>
         <strong>Plan:</strong> ${escapeHtml(plan)}<br/>
-        <strong style="color:var(--green)">📧 License emailed!</strong>
+        <strong style="color:var(--green)">✅ License generated successfully!</strong>
       `;
       result.className = 'result-box success';
       result.style.display = 'block';
+      
       document.getElementById('manualName').value = '';
       document.getElementById('manualEmail').value = '';
       await refreshTopStats();
-    } catch (error) {
+      await loadLicenses();
+      
+    } catch(error) {
       result.innerHTML = `❌ Error: ${escapeHtml(error.message)}`;
       result.className = 'result-box error';
       result.style.display = 'block';
@@ -841,67 +619,59 @@
     }
   }
 
-  async function loadLicenses() {
-    try {
-      const data = await apiFetch('/admin/licenses');
-      allLicenses = data.licenses || [];
-      renderTable(allLicenses);
-    } catch (error) {
-      document.getElementById('licenseTable').innerHTML = 
-        `<tr><td colspan="7" class="empty">❌ Failed to load: ${escapeHtml(error.message)}</td></tr>`;
-    }
+  async function loadLicenses() { 
+    try { 
+      const data = await apiFetch('/admin/licenses'); 
+      allLicenses = data.licenses || []; 
+      renderTable(allLicenses); 
+    } catch(e) { 
+      document.getElementById('licenseTable').innerHTML = `<tr><td colspan="7" class="empty">❌ ${escapeHtml(e.message)}</td></tr>`; 
+    } 
   }
-
-  function filterLicenses() {
-    const query = document.getElementById('searchLic').value.toLowerCase();
-    const filtered = allLicenses.filter(l => 
-      (l.email || '').toLowerCase().includes(query) ||
-      (l.key || '').toLowerCase().includes(query) ||
-      (l.name || '').toLowerCase().includes(query)
-    );
-    renderTable(filtered);
+  
+  function filterLicenses() { 
+    const q = document.getElementById('searchLic').value.toLowerCase(); 
+    renderTable(allLicenses.filter(l => 
+      (l.email||'').toLowerCase().includes(q) || 
+      (l.key||'').toLowerCase().includes(q) || 
+      (l.name||'').toLowerCase().includes(q)
+    )); 
   }
-
+  
   function renderTable(licenses) {
     const tbody = document.getElementById('licenseTable');
-    if (!licenses.length) {
-      tbody.innerHTML = '<tr><td colspan="7" class="empty">No licenses found</td></tr>';
-      return;
+    if(!licenses.length) { 
+      tbody.innerHTML = '<tr><td colspan="7" class="empty">No licenses found</td></tr>'; 
+      return; 
     }
-
+    
     tbody.innerHTML = licenses.map(l => {
       const isDemo = l.is_demo || l.plan === 'student_demo';
       const isExpired = l.expires_at && new Date(l.expires_at) < new Date();
       const isActive = l.active && !isExpired;
-
+      
       let expiryHtml = '<span style="color:var(--muted)">Lifetime</span>';
-      if (l.expires_at) {
+      if(l.expires_at) {
         const exp = new Date(l.expires_at);
         const created = new Date(l.created_at);
         const total = (exp - created) / 86400000;
         const left = Math.max(0, (exp - new Date()) / 86400000);
-        const pct = total > 0 ? Math.min(100, Math.round((left / total) * 100)) : 0;
+        const pct = total > 0 ? Math.min(100, Math.round((left/total)*100)) : 0;
         const color = pct > 50 ? 'var(--green)' : pct > 20 ? 'var(--gold)' : 'var(--red)';
-        expiryHtml = `
-          <div class="days-bar">
-            <div class="days-track">
-              <div class="days-fill" style="width:${pct}%;background:${color}"></div>
-            </div>
-            <span style="color:${color};font-size:9px;">${isExpired ? 'Expired' : Math.round(left) + 'd left'}</span>
-          </div>`;
+        expiryHtml = `<div class="days-bar"><div class="days-track"><div class="days-fill" style="width:${pct}%;background:${color}"></div></div><span style="color:${color};">${isExpired ? 'Expired' : Math.round(left)+'d'}</span></div>`;
       }
-
+      
       const statusBadge = !l.active ? '<span class="badge badge-expired">Revoked</span>' :
                           isExpired ? '<span class="badge badge-expired">Expired</span>' :
                           isDemo ? '<span class="badge badge-demo">Demo</span>' :
-                          '<span class="badge badge-paid">✓ Active</span>';
-
+                          '<span class="badge badge-paid">Active</span>';
+      
       return `<tr>
         <td><span style="color:var(--gold);">${escapeHtml(l.key)}</span> 
           <button class="copy-btn" onclick="navigator.clipboard.writeText('${escapeHtml(l.key).replace(/'/g, "\\'")}')">Copy</button>
         </td>
-        <td>${escapeHtml(l.name || '—')}</td>
-        <td>${escapeHtml(l.email || '—')}</td>
+        <td>${escapeHtml(l.name||'—')}</td>
+        <td>${escapeHtml(l.email||'—')}</td>
         <td><span class="badge" style="background:var(--gold-d);color:var(--gold);">${escapeHtml(l.plan)}</span></td>
         <td>${statusBadge}</td>
         <td>${expiryHtml}</td>
@@ -909,76 +679,64 @@
       </tr>`;
     }).join('');
   }
-
-  async function revokeLicense(key) {
-    if (!confirm(`Revoke license ${key}?`)) return;
-    try {
-      await apiFetch('/admin/revoke', {
-        method: 'POST',
-        body: JSON.stringify({ key })
-      });
-      await loadLicenses();
-      await refreshTopStats();
-    } catch (error) {
-      alert(`Failed to revoke: ${error.message}`);
-    }
+  
+  async function revokeLicense(key) { 
+    if(!confirm(`Revoke license ${key}?`)) return; 
+    try { 
+      await apiFetch('/admin/revoke', { method: 'POST', body: JSON.stringify({ key }) }); 
+      await loadLicenses(); 
+      await refreshTopStats(); 
+    } catch(e) { 
+      alert('Failed to revoke: '+e.message); 
+    } 
   }
-
-  async function loadStats() {
-    try {
-      const data = await apiFetch('/admin/stats');
-      document.getElementById('s-total').textContent = data.total_licenses || 0;
-      document.getElementById('s-active').textContent = data.active || 0;
-      document.getElementById('s-revenue').textContent = '$' + (data.total_revenue_usd || 0);
+  
+  async function loadStats() { 
+    try { 
+      const data = await apiFetch('/admin/stats'); 
+      document.getElementById('s-total').textContent = data.total_licenses||0; 
+      document.getElementById('s-active').textContent = data.active||0; 
+      document.getElementById('s-revenue').textContent = '$'+(data.total_revenue_usd||0); 
       
-      const demoCount = Object.entries(data.by_plan || {})
-        .filter(([plan]) => plan.includes('demo'))
-        .reduce((sum, [, count]) => sum + count, 0);
-      document.getElementById('s-demo').textContent = demoCount;
-
-      let breakdown = '';
-      Object.entries(data.by_plan || {}).forEach(([plan, count]) => {
-        const percentage = data.total_licenses > 0 ? (count / data.total_licenses) * 100 : 0;
-        breakdown += `<div style="display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid var(--dim);">
-          <span style="width:140px;color:var(--text);">${escapeHtml(plan)}</span>
-          <div style="flex:1;background:var(--dim);border-radius:3px;height:6px;">
-            <div style="width:${percentage}%;background:var(--gold);height:100%;border-radius:3px;"></div>
+      const demo = Object.entries(data.by_plan||{})
+        .filter(([k])=>k.includes('demo'))
+        .reduce((a,[,v])=>a+v,0); 
+      document.getElementById('s-demo').textContent = demo; 
+      
+      let breakdown = ''; 
+      Object.entries(data.by_plan||{}).forEach(([plan,count])=>{ 
+        const pct = data.total_licenses>0?(count/data.total_licenses)*100:0; 
+        breakdown += `<div style="display:flex;align-items:center;gap:12px;padding:6px 0;">
+          <span style="width:140px;">${escapeHtml(plan)}</span>
+          <div style="flex:1;background:var(--dim);height:6px;">
+            <div style="width:${pct}%;background:var(--gold);height:100%;"></div>
           </div>
-          <span style="color:var(--gold);min-width:40px;text-align:right;">${count}</span>
-        </div>`;
-      });
-      document.getElementById('planBreakdown').innerHTML = breakdown || 'No data yet';
-      updateTopStats(data);
-    } catch (error) {
-      console.error('Stats error:', error);
-      document.getElementById('planBreakdown').innerHTML = `<span style="color:var(--red)">Failed to load stats: ${escapeHtml(error.message)}</span>`;
-    }
+          <span style="color:var(--gold);">${count}</span>
+        </div>`; 
+      }); 
+      document.getElementById('planBreakdown').innerHTML = breakdown||'No data'; 
+      updateTopStats(data); 
+    } catch(e) { 
+      document.getElementById('planBreakdown').innerHTML = `<span style="color:var(--red)">Error: ${escapeHtml(e.message)}</span>`; 
+    } 
   }
-
-  function updateTopStats(data) {
-    document.getElementById('statTotal').textContent = data.total_licenses || 0;
-    document.getElementById('statActive').textContent = data.active || 0;
-    const revenueNgn = data.total_revenue_ngn || 0;
-    document.getElementById('statRevenue').textContent = '₦' + revenueNgn.toLocaleString();
+  
+  function updateTopStats(data) { 
+    document.getElementById('statTotal').textContent = data.total_licenses||0; 
+    document.getElementById('statActive').textContent = data.active||0; 
+    document.getElementById('statRevenue').textContent = '₦'+(data.total_revenue_ngn||0).toLocaleString(); 
   }
-
-  async function refreshTopStats() {
-    try {
-      const data = await apiFetch('/admin/stats');
-      updateTopStats(data);
-    } catch (error) {
-      console.error('Failed to refresh stats:', error);
-    }
+  
+  async function refreshTopStats() { 
+    try { 
+      const data = await apiFetch('/admin/stats'); 
+      updateTopStats(data); 
+    } catch(e) {} 
   }
-
-  function escapeHtml(str) {
-    if (!str) return '';
-    return str.replace(/[&<>]/g, function(m) {
-      if (m === '&') return '&amp;';
-      if (m === '<') return '&lt;';
-      if (m === '>') return '&gt;';
-      return m;
-    });
+  
+  function escapeHtml(str) { 
+    if(!str) return ''; 
+    return str.replace(/[&<>]/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m])); 
   }
 </script>
 </body>
