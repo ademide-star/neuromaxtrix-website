@@ -409,9 +409,9 @@
         <div class="bulk-help">
           Enter one student per line in format: <strong style="color:var(--gold)">email, name</strong><br/>
           Example:<br/>
-          student1@unilorin.edu.ng, Aisha Mohammed<br/>
-          student2@unilorin.edu.ng, Bola Adeyemi<br/>
-          student3@unilorin.edu.ng, Chidi Okonkwo
+          <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="186b6c6d7c7d766c29586d767174776a7176367d7c6d36767f">[email&#160;protected]</a>, Aisha Mohammed<br/>
+          <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="1c6f6869787972682e5c69727570736e75723279786932727b">[email&#160;protected]</a>, Bola Adeyemi<br/>
+          <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="bfcccbcadbdad1cb8cffcad1d6d3d0cdd6d191dadbca91d1d8">[email&#160;protected]</a>, Chidi Okonkwo
         </div>
         <div class="form-grid">
           <div class="form-group">
@@ -551,7 +551,7 @@
   </div>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
   let API     = '';
   let SECRET  = '';
   let allLicenses = [];
@@ -561,26 +561,47 @@
     API    = document.getElementById('serverUrl').value.trim().replace(/\/$/, '');
     SECRET = document.getElementById('adminSecret').value.trim();
     const err = document.getElementById('loginError');
+    const btn = document.querySelector('.btn-login');
     err.style.display = 'none';
+    btn.textContent = 'Connecting...'; btn.disabled = true;
 
-    try {
-      const res  = await fetch(`${API}/admin/stats`, {
-        headers: { 'X-Admin-Secret': SECRET }
-      });
-      if (res.status === 401) {
-        err.textContent = '❌ Wrong admin secret key';
-        err.style.display = 'block'; return;
+    // Try up to 3 times — Render may be waking up
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      try {
+        btn.textContent = attempt > 1 ? `Waking server (${attempt}/3)...` : 'Connecting...';
+
+        const res = await fetch(`${API}/admin/stats`, {
+          headers: { 'X-Admin-Secret': SECRET },
+          signal: AbortSignal.timeout(15000), // 15 second timeout
+        });
+
+        if (res.status === 401) {
+          err.textContent = '❌ Wrong admin secret key';
+          err.style.display = 'block';
+          btn.textContent = 'Access Dashboard →'; btn.disabled = false;
+          return;
+        }
+
+        if (!res.ok) throw new Error('Server error ' + res.status);
+
+        const data = await res.json();
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+        btn.textContent = 'Access Dashboard →'; btn.disabled = false;
+        updateTopStats(data);
+        loadLicenses();
+        return;
+
+      } catch(e) {
+        console.warn(`Attempt ${attempt} failed:`, e.message);
+        if (attempt < 3) {
+          await new Promise(r => setTimeout(r, 3000)); // wait 3s before retry
+        } else {
+          err.textContent = `❌ Cannot reach server after 3 attempts. Check: 1) Server URL is correct 2) Render service is running 3) Go to ${API}/ in browser first to wake it up`;
+          err.style.display = 'block';
+          btn.textContent = 'Access Dashboard →'; btn.disabled = false;
+        }
       }
-      if (!res.ok) throw new Error('Server error');
-
-      const data = await res.json();
-      document.getElementById('loginScreen').style.display = 'none';
-      document.getElementById('dashboard').style.display = 'block';
-      updateTopStats(data);
-      loadLicenses();
-    } catch(e) {
-      err.textContent = '❌ Cannot reach server — check URL';
-      err.style.display = 'block';
     }
   }
 
@@ -882,18 +903,4 @@
   // ── COPY ──
   function copyKey(id) {
     const key = document.getElementById(id).textContent;
-    navigator.clipboard.writeText(key).then(() => {
-      const btn = event.target;
-      btn.textContent = 'Copied!'; btn.style.background = 'var(--green)'; btn.style.color = 'var(--bg)';
-      setTimeout(() => { btn.textContent = 'Copy Key'; btn.style.background = ''; btn.style.color = ''; }, 2000);
-    });
-  }
-
-  // ── ENTER KEY LOGIN ──
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Enter' && document.getElementById('loginScreen').style.display !== 'none') login();
-  });
-</script>
-
-</body>
-</html>
+    navigator.clipboard.writeText(key).then(
