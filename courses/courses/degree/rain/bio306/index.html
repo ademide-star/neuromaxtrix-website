@@ -1,0 +1,2845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BIO 306 — Systematic Biology | Interactive Lecture Notes</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lora:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --forest: #1a3a2a;
+  --moss: #2d5a3d;
+  --fern: #3d7a52;
+  --leaf: #5a9e6f;
+  --sage: #8fbc9a;
+  --mist: #c8dfc e;
+  --cream: #f5f0e8;
+  --parchment: #ede5d0;
+  --gold: #c8960c;
+  --amber: #e8b84b;
+  --ink: #1a1a0e;
+  --bark: #6b4c2a;
+  --rust: #8b3a2a;
+  --sky: #3a6b8a;
+  --sidebar-w: 280px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Lora', Georgia, serif;
+  background: var(--cream);
+  color: var(--ink);
+  display: flex;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── SIDEBAR ── */
+#sidebar {
+  position: fixed;
+  left: 0; top: 0; bottom: 0;
+  width: var(--sidebar-w);
+  background: var(--forest);
+  overflow-y: auto;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  border-right: 3px solid var(--gold);
+}
+
+#sidebar::-webkit-scrollbar { width: 4px; }
+#sidebar::-webkit-scrollbar-track { background: var(--forest); }
+#sidebar::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
+
+.sidebar-header {
+  padding: 28px 20px 20px;
+  border-bottom: 1px solid rgba(200,150,12,0.3);
+}
+
+.sidebar-header .course-code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--amber);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.sidebar-header h2 {
+  font-family: 'Playfair Display', serif;
+  color: var(--cream);
+  font-size: 15px;
+  line-height: 1.4;
+  font-weight: 600;
+}
+
+.sidebar-progress {
+  padding: 12px 20px;
+  border-bottom: 1px solid rgba(200,150,12,0.2);
+}
+
+.progress-bar-bg {
+  height: 3px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 2px;
+  margin-top: 6px;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold), var(--amber));
+  border-radius: 2px;
+  transition: width 0.5s ease;
+  width: 0%;
+}
+
+.progress-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--sage);
+  letter-spacing: 1px;
+}
+
+.week-nav { padding: 8px 0; flex: 1; }
+
+.week-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-left: 3px solid transparent;
+  text-decoration: none;
+}
+
+.week-nav-item:hover {
+  background: rgba(255,255,255,0.06);
+  border-left-color: var(--sage);
+}
+
+.week-nav-item.active {
+  background: rgba(200,150,12,0.12);
+  border-left-color: var(--gold);
+}
+
+.week-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--gold);
+  min-width: 26px;
+  font-weight: 500;
+}
+
+.week-title {
+  font-family: 'Lora', serif;
+  font-size: 12px;
+  color: var(--sage);
+  line-height: 1.3;
+}
+
+.week-nav-item.active .week-title { color: var(--cream); }
+
+.week-done-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--fern);
+  margin-left: auto;
+  flex-shrink: 0;
+  display: none;
+}
+
+.week-nav-item.done .week-done-dot { display: block; }
+
+/* ── MAIN CONTENT ── */
+#main {
+  margin-left: var(--sidebar-w);
+  flex: 1;
+  min-height: 100vh;
+}
+
+/* ── HERO ── */
+.hero {
+  background: linear-gradient(135deg, var(--forest) 0%, var(--moss) 50%, #1a4a3a 100%);
+  padding: 80px 60px 60px;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 4px solid var(--gold);
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle at 20% 50%, rgba(93,158,111,0.15) 0%, transparent 60%),
+    radial-gradient(circle at 80% 20%, rgba(200,150,12,0.1) 0%, transparent 50%);
+}
+
+.hero-leaf {
+  position: absolute;
+  right: 60px; top: 40px;
+  opacity: 0.08;
+  font-size: 220px;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.hero-badge {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--amber);
+  letter-spacing: 3px;
+  border: 1px solid rgba(232,184,75,0.4);
+  padding: 5px 14px;
+  border-radius: 2px;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  animation: fadeInDown 0.6s ease both;
+}
+
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(36px, 5vw, 58px);
+  color: var(--cream);
+  line-height: 1.1;
+  margin-bottom: 12px;
+  animation: fadeInDown 0.7s ease 0.1s both;
+}
+
+.hero h1 em {
+  color: var(--amber);
+  font-style: italic;
+}
+
+.hero-sub {
+  font-family: 'Lora', serif;
+  font-size: 16px;
+  color: var(--sage);
+  font-style: italic;
+  margin-bottom: 32px;
+  animation: fadeInDown 0.7s ease 0.2s both;
+}
+
+.hero-stats {
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+  animation: fadeInDown 0.7s ease 0.3s both;
+}
+
+.hero-stat {
+  text-align: center;
+  border-left: 2px solid rgba(200,150,12,0.4);
+  padding-left: 16px;
+}
+
+.hero-stat-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px;
+  color: var(--gold);
+  display: block;
+  line-height: 1;
+}
+
+.hero-stat-label {
+  font-family: 'Lora', serif;
+  font-size: 11px;
+  color: var(--sage);
+  letter-spacing: 1px;
+}
+
+/* ── CONTENT AREA ── */
+.content-area {
+  padding: 0;
+}
+
+/* ── WEEK SECTION ── */
+.week-section {
+  padding: 60px;
+  border-bottom: 1px solid rgba(45,90,61,0.15);
+  display: none;
+  animation: fadeIn 0.4s ease;
+}
+
+.week-section.active { display: block; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeInDown { from { opacity: 0; transform: translateY(-16px); } to { opacity: 1; transform: translateY(0); } }
+
+.week-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  margin-bottom: 40px;
+  padding-bottom: 28px;
+  border-bottom: 2px solid var(--parchment);
+}
+
+.week-number-badge {
+  background: var(--forest);
+  color: var(--gold);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 3px;
+  white-space: nowrap;
+  margin-top: 6px;
+  letter-spacing: 2px;
+}
+
+.week-header-text h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px;
+  color: var(--forest);
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+.week-header-text p {
+  color: var(--fern);
+  font-style: italic;
+  font-size: 15px;
+}
+
+/* ── LEARNING OUTCOMES BOX ── */
+.lo-box {
+  background: var(--forest);
+  border-radius: 8px;
+  padding: 24px 28px;
+  margin-bottom: 36px;
+  position: relative;
+  overflow: hidden;
+}
+
+.lo-box::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold), var(--amber), var(--gold));
+}
+
+.lo-box h3 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--amber);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+.lo-list { list-style: none; }
+
+.lo-list li {
+  color: var(--sage);
+  font-size: 13.5px;
+  padding: 5px 0 5px 20px;
+  position: relative;
+  line-height: 1.5;
+}
+
+.lo-list li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--gold);
+  font-size: 12px;
+}
+
+/* ── CONTENT BLOCKS ── */
+.content-block { margin-bottom: 36px; }
+
+.content-block h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  color: var(--forest);
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(45,90,61,0.2);
+}
+
+.content-block p {
+  font-size: 15px;
+  line-height: 1.85;
+  color: #2a2a1a;
+  margin-bottom: 12px;
+}
+
+/* ── DEFINITION TABLE ── */
+.def-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(26,58,42,0.08);
+}
+
+.def-table thead tr {
+  background: var(--forest);
+}
+
+.def-table thead th {
+  padding: 12px 16px;
+  text-align: left;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--amber);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.def-table tbody tr { transition: background 0.2s; }
+.def-table tbody tr:nth-child(even) { background: rgba(45,90,61,0.05); }
+.def-table tbody tr:hover { background: rgba(200,150,12,0.07); }
+
+.def-table td {
+  padding: 12px 16px;
+  font-size: 14px;
+  line-height: 1.6;
+  border-bottom: 1px solid rgba(45,90,61,0.1);
+  vertical-align: top;
+}
+
+.def-table td:first-child {
+  font-weight: 600;
+  color: var(--forest);
+  white-space: nowrap;
+  font-family: 'Lora', serif;
+}
+
+/* ── KEY CONCEPT BOX ── */
+.key-box {
+  background: linear-gradient(135deg, #f5f0e8 0%, #ede5d0 100%);
+  border: 1px solid rgba(200,150,12,0.3);
+  border-left: 4px solid var(--gold);
+  border-radius: 0 6px 6px 0;
+  padding: 20px 24px;
+  margin: 24px 0;
+}
+
+.key-box .key-box-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--gold);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.key-box ul { list-style: none; }
+.key-box li {
+  padding: 4px 0 4px 18px;
+  position: relative;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink);
+}
+.key-box li::before { content: '✦'; position: absolute; left: 0; color: var(--gold); font-size: 9px; top: 7px; }
+
+/* ── WARNING / NOTE BOX ── */
+.note-box {
+  background: rgba(26,58,42,0.06);
+  border: 1px solid rgba(45,90,61,0.25);
+  border-radius: 6px;
+  padding: 16px 20px;
+  margin: 20px 0;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.note-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+.note-box p { margin: 0; font-size: 14px; line-height: 1.65; color: var(--forest); }
+
+/* ── DIAGRAM CONTAINERS ── */
+.diagram-container {
+  background: white;
+  border: 1px solid rgba(45,90,61,0.15);
+  border-radius: 8px;
+  padding: 32px;
+  margin: 28px 0;
+  box-shadow: 0 4px 20px rgba(26,58,42,0.06);
+  text-align: center;
+}
+
+.diagram-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 14px;
+  color: var(--forest);
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.diagram-caption {
+  font-size: 12px;
+  color: #777;
+  font-style: italic;
+  margin-top: 12px;
+}
+
+/* ── SVG DIAGRAMS ── */
+svg text { font-family: 'Lora', Georgia, serif; }
+
+/* Draw-in animation */
+@keyframes drawLine {
+  from { stroke-dashoffset: 1000; }
+  to { stroke-dashoffset: 0; }
+}
+
+.animated-path {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+}
+
+.diagram-container:hover .animated-path {
+  animation: drawLine 1.5s ease forwards;
+}
+
+/* ── INTERACTIVE CARDS ── */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin: 24px 0;
+}
+
+.concept-card {
+  background: white;
+  border: 1px solid rgba(45,90,61,0.15);
+  border-radius: 8px;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.concept-card::before {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--forest), var(--fern));
+  transform: scaleX(0);
+  transition: transform 0.3s;
+}
+
+.concept-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(26,58,42,0.12);
+  border-color: var(--fern);
+}
+
+.concept-card:hover::before { transform: scaleX(1); }
+
+.card-icon { font-size: 28px; margin-bottom: 10px; }
+
+.card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--forest);
+  margin-bottom: 6px;
+}
+
+.card-text { font-size: 13px; color: #555; line-height: 1.6; }
+
+.card-detail {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--parchment);
+  font-size: 12.5px;
+  color: var(--forest);
+  line-height: 1.6;
+  display: none;
+}
+
+.concept-card.expanded .card-detail { display: block; }
+.concept-card.expanded { background: rgba(45,90,61,0.04); }
+
+.card-toggle {
+  position: absolute;
+  top: 12px; right: 12px;
+  font-size: 16px;
+  color: var(--gold);
+  transition: transform 0.3s;
+}
+
+.concept-card.expanded .card-toggle { transform: rotate(45deg); }
+
+/* ── QUIZ COMPONENT ── */
+.quiz-block {
+  background: var(--forest);
+  border-radius: 10px;
+  padding: 28px;
+  margin: 36px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.quiz-block::after {
+  content: '?';
+  position: absolute;
+  right: 24px; top: 16px;
+  font-family: 'Playfair Display', serif;
+  font-size: 80px;
+  color: rgba(255,255,255,0.04);
+  pointer-events: none;
+}
+
+.quiz-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--amber);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.quiz-question {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  color: var(--cream);
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.quiz-options { display: flex; flex-direction: column; gap: 10px; }
+
+.quiz-option {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 6px;
+  padding: 12px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--sage);
+  transition: all 0.2s;
+  text-align: left;
+  font-family: 'Lora', serif;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.quiz-option:hover:not(.answered) {
+  background: rgba(255,255,255,0.12);
+  border-color: rgba(200,150,12,0.4);
+  color: var(--cream);
+}
+
+.quiz-option.correct {
+  background: rgba(93,158,111,0.25);
+  border-color: var(--fern);
+  color: #a8e6b8;
+}
+
+.quiz-option.wrong {
+  background: rgba(139,58,42,0.25);
+  border-color: var(--rust);
+  color: #e8a898;
+}
+
+.option-letter {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--gold);
+  min-width: 20px;
+}
+
+.quiz-feedback {
+  margin-top: 16px;
+  padding: 14px 18px;
+  border-radius: 6px;
+  font-size: 14px;
+  line-height: 1.6;
+  display: none;
+}
+
+.quiz-feedback.show { display: block; }
+.quiz-feedback.correct-fb { background: rgba(93,158,111,0.2); color: #a8e6b8; border: 1px solid var(--fern); }
+.quiz-feedback.wrong-fb { background: rgba(139,58,42,0.2); color: #e8a898; border: 1px solid var(--rust); }
+
+/* ── TIMELINE ── */
+.timeline {
+  position: relative;
+  padding-left: 40px;
+  margin: 28px 0;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 12px; top: 0; bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--forest), var(--fern), var(--sage));
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 28px;
+  animation: slideInLeft 0.5s ease both;
+}
+
+.timeline-item:nth-child(1) { animation-delay: 0.1s; }
+.timeline-item:nth-child(2) { animation-delay: 0.2s; }
+.timeline-item:nth-child(3) { animation-delay: 0.3s; }
+.timeline-item:nth-child(4) { animation-delay: 0.4s; }
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.timeline-dot {
+  position: absolute;
+  left: -33px; top: 4px;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--gold);
+  border: 2px solid var(--cream);
+  box-shadow: 0 0 0 2px var(--forest);
+}
+
+.timeline-date {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--gold);
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+
+.timeline-content h4 {
+  font-family: 'Playfair Display', serif;
+  font-size: 16px;
+  color: var(--forest);
+  margin-bottom: 6px;
+}
+
+.timeline-content p { font-size: 14px; color: #444; line-height: 1.65; }
+
+/* ── HIERARCHY INTERACTIVE ── */
+.hierarchy-tree {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  padding: 20px 0;
+}
+
+.hier-level {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  position: relative;
+}
+
+.hier-node {
+  padding: 10px 24px;
+  border-radius: 4px;
+  font-family: 'Lora', serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s;
+  position: relative;
+  text-align: center;
+  min-width: 180px;
+  border: 1px solid transparent;
+}
+
+.hier-node:hover { filter: brightness(1.1); transform: scale(1.03); }
+
+.hier-connector {
+  width: 2px;
+  height: 24px;
+  background: var(--fern);
+  margin: 0 auto;
+}
+
+.hier-tooltip {
+  display: none;
+  position: absolute;
+  left: 110%;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--forest);
+  color: var(--cream);
+  font-size: 12px;
+  padding: 8px 14px;
+  border-radius: 4px;
+  white-space: nowrap;
+  z-index: 10;
+  border: 1px solid var(--gold);
+  pointer-events: none;
+  font-family: 'Lora', serif;
+  font-style: italic;
+}
+
+.hier-node:hover .hier-tooltip { display: block; }
+
+/* ── SPECIES CONCEPT COMPARATOR ── */
+.species-comparator {
+  margin: 28px 0;
+}
+
+.comparator-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 0;
+  flex-wrap: wrap;
+}
+
+.comp-tab {
+  padding: 9px 18px;
+  background: var(--parchment);
+  border: 1px solid rgba(45,90,61,0.2);
+  border-bottom: none;
+  border-radius: 6px 6px 0 0;
+  cursor: pointer;
+  font-family: 'Lora', serif;
+  font-size: 13px;
+  color: var(--forest);
+  transition: all 0.2s;
+}
+
+.comp-tab:hover { background: rgba(45,90,61,0.1); }
+
+.comp-tab.active {
+  background: var(--forest);
+  color: var(--cream);
+  border-color: var(--forest);
+}
+
+.comp-panel {
+  display: none;
+  background: white;
+  border: 1px solid rgba(45,90,61,0.2);
+  border-radius: 0 6px 6px 6px;
+  padding: 24px;
+}
+
+.comp-panel.active { display: block; }
+
+.comp-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 16px;
+}
+
+.comp-section h5 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.comp-section.strengths h5 { color: var(--fern); }
+.comp-section.weaknesses h5 { color: var(--rust); }
+
+.comp-section ul { list-style: none; }
+.comp-section li { font-size: 13.5px; line-height: 1.65; padding: 3px 0 3px 16px; position: relative; }
+.comp-section.strengths li::before { content: '+'; position: absolute; left: 0; color: var(--fern); font-weight: 700; }
+.comp-section.weaknesses li::before { content: '−'; position: absolute; left: 0; color: var(--rust); font-weight: 700; }
+
+/* ── WEEK NAV BUTTONS ── */
+.week-nav-btns {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid var(--parchment);
+}
+
+.nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 22px;
+  background: var(--forest);
+  color: var(--cream);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: 'Lora', serif;
+  font-size: 14px;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+
+.nav-btn:hover {
+  background: var(--moss);
+  transform: translateY(-1px);
+}
+
+.nav-btn.disabled {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.nav-btn-label { font-size: 11px; color: var(--sage); display: block; font-family: 'JetBrains Mono', monospace; letter-spacing: 1px; }
+.nav-btn-title { font-weight: 500; }
+
+/* ── MARK COMPLETE ── */
+.mark-complete-btn {
+  background: transparent;
+  border: 1px solid var(--fern);
+  color: var(--fern);
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  transition: all 0.2s;
+}
+
+.mark-complete-btn:hover, .mark-complete-btn.done {
+  background: var(--fern);
+  color: white;
+}
+
+.mark-complete-btn.done { cursor: default; }
+
+/* ── BINOMIAL DIAGRAM ── */
+.binomial-demo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin: 24px 0;
+  flex-wrap: wrap;
+}
+
+.binomial-part {
+  text-align: center;
+  padding: 20px 28px;
+  position: relative;
+}
+
+.binomial-part.genus { background: rgba(26,58,42,0.08); border-radius: 8px 0 0 8px; }
+.binomial-part.epithet { background: rgba(200,150,12,0.08); border-radius: 0 8px 8px 0; }
+
+.binomial-word {
+  font-family: 'Playfair Display', serif;
+  font-size: 36px;
+  font-style: italic;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.binomial-part.genus .binomial-word { color: var(--forest); }
+.binomial-part.epithet .binomial-word { color: var(--bark); }
+
+.binomial-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.binomial-part.genus .binomial-label { color: var(--forest); }
+.binomial-part.epithet .binomial-label { color: var(--bark); }
+
+.binomial-meaning {
+  font-size: 12px;
+  color: #777;
+  margin-top: 4px;
+}
+
+.binomial-plus {
+  font-size: 28px;
+  color: var(--gold);
+  padding: 0 8px;
+  font-weight: 300;
+  align-self: center;
+}
+
+/* ── CLADOGRAM SVG ── */
+.cladogram-interactive { cursor: pointer; }
+.cladogram-interactive .clade-node { transition: r 0.2s; }
+.cladogram-interactive .clade-node:hover { r: 8; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  #sidebar { transform: translateX(-100%); transition: transform 0.3s; }
+  #sidebar.open { transform: translateX(0); }
+  #main { margin-left: 0; }
+  .week-section { padding: 32px 24px; }
+  .hero { padding: 48px 24px 40px; }
+  .comp-grid { grid-template-columns: 1fr; }
+}
+
+.mobile-menu-btn {
+  display: none;
+  position: fixed;
+  top: 16px; left: 16px;
+  z-index: 200;
+  background: var(--forest);
+  color: var(--gold);
+  border: 1px solid var(--gold);
+  border-radius: 4px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+@media (max-width: 900px) { .mobile-menu-btn { display: block; } }
+
+/* ── SCROLL REVEAL ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* HOME SECTION */
+#home-section {
+  padding: 60px;
+  display: block;
+}
+
+.home-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 14px;
+  margin-top: 32px;
+}
+
+.home-week-card {
+  background: white;
+  border: 1px solid rgba(45,90,61,0.15);
+  border-radius: 8px;
+  padding: 18px;
+  cursor: pointer;
+  transition: all 0.25s;
+  text-decoration: none;
+  display: block;
+}
+
+.home-week-card:hover {
+  border-color: var(--fern);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(26,58,42,0.1);
+}
+
+.home-card-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--gold);
+  letter-spacing: 2px;
+  margin-bottom: 6px;
+}
+
+.home-card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 13px;
+  color: var(--forest);
+  line-height: 1.4;
+  font-weight: 600;
+}
+
+.home-card-sub {
+  font-size: 11px;
+  color: #888;
+  margin-top: 4px;
+  font-style: italic;
+}
+
+.separator-line {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  margin: 32px 0;
+  opacity: 0.4;
+}
+
+/* Nomenclature breakdown */
+.nomenclature-breakdown {
+  display: flex;
+  gap: 16px;
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
+
+.nom-rule {
+  flex: 1;
+  min-width: 180px;
+  background: white;
+  border: 1px solid rgba(45,90,61,0.15);
+  border-top: 3px solid var(--fern);
+  border-radius: 0 0 6px 6px;
+  padding: 16px;
+}
+
+.nom-rule-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 24px;
+  color: var(--fern);
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+.nom-rule-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 14px;
+  color: var(--forest);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.nom-rule-text {
+  font-size: 12.5px;
+  color: #555;
+  line-height: 1.6;
+}
+
+/* Suffix table highlight */
+.suffix-highlight {
+  display: inline-block;
+  background: rgba(200,150,12,0.12);
+  color: var(--bark);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-weight: 500;
+}
+
+/* Practical box */
+.practical-box {
+  background: rgba(58,107,138,0.06);
+  border: 1px solid rgba(58,107,138,0.2);
+  border-left: 4px solid var(--sky);
+  border-radius: 0 6px 6px 0;
+  padding: 18px 22px;
+  margin: 20px 0;
+}
+
+.practical-box .practical-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--sky);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.practical-box p { font-size: 14px; margin: 0; line-height: 1.65; }
+</style>
+</head>
+<body>
+
+<button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
+
+<!-- SIDEBAR -->
+<nav id="sidebar">
+  <div class="sidebar-header">
+    <span class="course-code">BIO 306</span>
+    <h2>Systematic Biology</h2>
+  </div>
+  <div class="sidebar-progress">
+    <div class="progress-label">Progress: <span id="progress-text">0 / 15</span></div>
+    <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-bar"></div></div>
+  </div>
+  <nav class="week-nav" id="week-nav">
+    <a class="week-nav-item active" onclick="showSection('home')" href="#">
+      <span class="week-num">⌂</span>
+      <span class="week-title">Course Home</span>
+      <span class="week-done-dot"></span>
+    </a>
+    <a class="week-nav-item" onclick="showSection('w1')" href="#">
+      <span class="week-num">W01</span>
+      <span class="week-title">Introduction & Pre-Linnaean</span>
+      <span class="week-done-dot"></span>
+    </a>
+    <a class="week-nav-item" onclick="showSection('w2')" href="#">
+      <span class="week-num">W02</span>
+      <span class="week-title">Linnaean Taxonomy</span>
+      <span class="week-done-dot"></span>
+    </a>
+    <a class="week-nav-item" onclick="showSection('w3')" href="#">
+      <span class="week-num">W03</span>
+      <span class="week-title">Darwinian & New Systematics</span>
+      <span class="week-done-dot"></span>
+    </a>
+    <a class="week-nav-item" onclick="showSection('w4')" href="#">
+      <span class="week-num">W04</span>
+      <span class="week-title">Taxonomic Hierarchies I</span>
+      <span class="week-done-dot"></span>
+    </a>
+    <a class="week-nav-item" onclick="showSection('w5')" href="#">
+      <span class="week-num">W05</span>
+      <span class="week-title">Hierarchies — Below & Above</span>
+      <span class="week-done-dot"></span>
+    </a>
+    <a class="week-nav-item" onclick="showSection('w6')" href="#">
+      <span class="week-num">W06</span>
+      <span class="week-title">The Species Concept</span>
+      <span class="week-done-dot"></span>
+    </a>
+    <a class="week-nav-item" onclick="showSection('w7')" href="#">
+      <span class="week-num">W07</span>
+      <span class="week-title">Biological Nomenclature</span>
+      <span class="week-done-dot"></span>
+    </a>
+    <a class="week-nav-item" onclick="showSection('w8')" href="#">
+      <span class="week-num">W08</span>
+      <span class="week-title">Mid-Semester Review</span>
+      <span class="week-done-dot"></span>
+    </a>
+    <a class="week-nav-item" onclick="showSection('w9')" href="#">
+      <span class="week-num">W09</span>
+      <span class="week-title">Numerical Taxonomy I</span>
+      <span class="week-done-dot"></span>
+    </a>
+    <a class="week-nav-item" onclick="showSection('w10')" href="#">
+      <span class="week-num">W10</span>
+      <span class="week-title">Numerical Taxonomy II</span>
+      <span class="week-done-dot"></span>
+    </a>
+    <a class="week-nav-item" onclick="showSection('w11')" href="#">
+      <span class="week-num">W11</span>
+      <span class="week-title">Cladistics & Phylogenetics</span>
+      <span class="week-done-dot"></span>
+    </a>
+    <a class="week-nav-item" onclick="showSection('w12')" href="#">
+      <span class="week-num">W12</span>
+      <span class="week-title">Molecular Systematics</span>
+      <span class="week-done-dot"></span>
+    </a>
+    <a class="week-nav-item" onclick="showSection('w13')" href="#">
+      <span class="week-num">W13</span>
+      <span class="week-title">Keys & Keying — Theory</span>
+      <span class="week-done-dot"></span>
+    </a>
+    <a class="week-nav-item" onclick="showSection('w14')" href="#">
+      <span class="week-num">W14</span>
+      <span class="week-title">Keys — Construction Practice</span>
+      <span class="week-done-dot"></span>
+    </a>
+    <a class="week-nav-item" onclick="showSection('w15')" href="#">
+      <span class="week-num">W15</span>
+      <span class="week-title">Synthesis & Review</span>
+      <span class="week-done-dot"></span>
+    </a>
+  </nav>
+</nav>
+
+<!-- MAIN -->
+<main id="main">
+
+  <!-- HERO -->
+  <div class="hero" id="hero-bar">
+    <div class="hero-leaf">🌿</div>
+    <div class="hero-badge">University Course · 2 Units · 300 Level</div>
+    <h1>BIO 306 — <em>Systematic</em><br>Biology</h1>
+    <p class="hero-sub">From Aristotle to AI: naming, classifying, and understanding all life on Earth</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><span class="hero-stat-num">15</span><span class="hero-stat-label">Weeks</span></div>
+      <div class="hero-stat"><span class="hero-stat-num">28</span><span class="hero-stat-label">Key Concepts</span></div>
+      <div class="hero-stat"><span class="hero-stat-num">15</span><span class="hero-stat-label">Interactive Quizzes</span></div>
+      <div class="hero-stat"><span class="hero-stat-num">8</span><span class="hero-stat-label">Animated Diagrams</span></div>
+    </div>
+  </div>
+
+  <div class="content-area">
+
+  <!-- HOME -->
+  <section id="home-section">
+    <h2 style="font-family:'Playfair Display',serif;font-size:28px;color:var(--forest);margin-bottom:8px;">Welcome to Systematic Biology</h2>
+    <p style="font-size:15px;color:#555;font-style:italic;margin-bottom:24px;">Select a week to begin, or continue where you left off.</p>
+
+    <div class="key-box">
+      <div class="key-box-title">🎯 Course Learning Outcomes</div>
+      <ul>
+        <li>Describe Pre-Linnaean, Linnaean, and Darwinian taxonomic concepts of species</li>
+        <li>Explain the binomial system of nomenclature and its governing rules</li>
+        <li>Classify organisms using the full taxonomic hierarchy</li>
+        <li>Construct and apply dichotomous keys for identification</li>
+        <li>Apply numerical and phylogenetic methods to classify organisms</li>
+      </ul>
+    </div>
+
+    <div class="home-grid">
+      <a class="home-week-card" onclick="showSection('w1')" href="#">
+        <div class="home-card-num">WEEK 01</div>
+        <div class="home-card-title">Introduction & Pre-Linnaean</div>
+        <div class="home-card-sub">Folk taxonomy · Aristotle · Herbalists</div>
+      </a>
+      <a class="home-week-card" onclick="showSection('w2')" href="#">
+        <div class="home-card-num">WEEK 02</div>
+        <div class="home-card-title">Linnaean Taxonomy</div>
+        <div class="home-card-sub">Binomial nomenclature · Hierarchy</div>
+      </a>
+      <a class="home-week-card" onclick="showSection('w3')" href="#">
+        <div class="home-card-num">WEEK 03</div>
+        <div class="home-card-title">Darwinian & New Systematics</div>
+        <div class="home-card-sub">Evolution · Modern Synthesis</div>
+      </a>
+      <a class="home-week-card" onclick="showSection('w4')" href="#">
+        <div class="home-card-num">WEEK 04</div>
+        <div class="home-card-title">Taxonomic Hierarchies I</div>
+        <div class="home-card-sub">Domain → Species · Suffixes</div>
+      </a>
+      <a class="home-week-card" onclick="showSection('w5')" href="#">
+        <div class="home-card-num">WEEK 05</div>
+        <div class="home-card-title">Hierarchies — Below & Above</div>
+        <div class="home-card-sub">Subspecies · Variety · Tribe</div>
+      </a>
+      <a class="home-week-card" onclick="showSection('w6')" href="#">
+        <div class="home-card-num">WEEK 06</div>
+        <div class="home-card-title">The Species Concept</div>
+        <div class="home-card-sub">BSC · PSC · Ecological · Cryptic</div>
+      </a>
+      <a class="home-week-card" onclick="showSection('w7')" href="#">
+        <div class="home-card-num">WEEK 07</div>
+        <div class="home-card-title">Biological Nomenclature</div>
+        <div class="home-card-sub">ICZN · ICN · Priority · Types</div>
+      </a>
+      <a class="home-week-card" onclick="showSection('w8')" href="#">
+        <div class="home-card-num">WEEK 08</div>
+        <div class="home-card-title">Mid-Semester Review</div>
+        <div class="home-card-sub">Synthesis · Practice questions</div>
+      </a>
+      <a class="home-week-card" onclick="showSection('w9')" href="#">
+        <div class="home-card-num">WEEK 09</div>
+        <div class="home-card-title">Numerical Taxonomy I</div>
+        <div class="home-card-sub">OTUs · Characters · Coefficients</div>
+      </a>
+      <a class="home-week-card" onclick="showSection('w10')" href="#">
+        <div class="home-card-num">WEEK 10</div>
+        <div class="home-card-title">Numerical Taxonomy II</div>
+        <div class="home-card-sub">UPGMA · Dendrograms · PCA</div>
+      </a>
+      <a class="home-week-card" onclick="showSection('w11')" href="#">
+        <div class="home-card-num">WEEK 11</div>
+        <div class="home-card-title">Cladistics & Phylogenetics</div>
+        <div class="home-card-sub">Hennig · Synapomorphy · Parsimony</div>
+      </a>
+      <a class="home-week-card" onclick="showSection('w12')" href="#">
+        <div class="home-card-num">WEEK 12</div>
+        <div class="home-card-title">Molecular Systematics</div>
+        <div class="home-card-sub">DNA barcoding · Phylogenomics</div>
+      </a>
+      <a class="home-week-card" onclick="showSection('w13')" href="#">
+        <div class="home-card-num">WEEK 13</div>
+        <div class="home-card-title">Keys & Keying — Theory</div>
+        <div class="home-card-sub">Types · Principles · Published keys</div>
+      </a>
+      <a class="home-week-card" onclick="showSection('w14')" href="#">
+        <div class="home-card-num">WEEK 14</div>
+        <div class="home-card-title">Key Construction Practice</div>
+        <div class="home-card-sub">Building · Testing · Digital tools</div>
+      </a>
+      <a class="home-week-card" onclick="showSection('w15')" href="#">
+        <div class="home-card-num">WEEK 15</div>
+        <div class="home-card-title">Synthesis & Course Review</div>
+        <div class="home-card-sub">Applications · Exam preparation</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ═══ WEEK 1 ═══ -->
+  <section class="week-section" id="w1-section">
+    <div class="week-header">
+      <span class="week-number-badge">WEEK 01</span>
+      <div class="week-header-text">
+        <h2>Introduction & Historical Background</h2>
+        <p>Pre-Linnaean taxonomy · Folk classification · Aristotle · Early herbalists</p>
+      </div>
+    </div>
+
+    <div class="lo-box">
+      <h3>Learning Outcomes</h3>
+      <ul class="lo-list">
+        <li>Define systematic biology, taxonomy, and nomenclature</li>
+        <li>Describe the scope and importance of systematic biology</li>
+        <li>Explain folk taxonomy and its characteristics</li>
+        <li>Outline Aristotle's contribution and its significance</li>
+        <li>Identify limitations of pre-Linnaean classification</li>
+      </ul>
+    </div>
+
+    <div class="content-block reveal">
+      <h3>1.1 What is Systematic Biology?</h3>
+      <p>Systematic Biology is the scientific discipline concerned with the <strong>diversity of organisms</strong> — how they are named, described, classified, and related to one another through evolutionary history. It is the foundational framework upon which all of biological science is organised.</p>
+      <p>Three closely related terms are frequently used interchangeably but have distinct meanings:</p>
+      <table class="def-table">
+        <thead><tr><th>Term</th><th>Definition</th><th>Scope</th></tr></thead>
+        <tbody>
+          <tr><td>Taxonomy</td><td>Naming, describing, and classifying organisms into groups (taxa)</td><td>Narrower — the practical work</td></tr>
+          <tr><td>Systematics</td><td>Includes taxonomy plus investigation of evolutionary relationships</td><td>Broader — includes phylogenetics</td></tr>
+          <tr><td>Nomenclature</td><td>The formal system of rules for naming organisms</td><td>Specific — the language of taxonomy</td></tr>
+          <tr><td>Classification</td><td>Arrangement of organisms into a hierarchical scheme</td><td>The output of taxonomic work</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="content-block reveal">
+      <h3>1.2 Why Does Systematic Biology Matter?</h3>
+      <div class="cards-grid">
+        <div class="concept-card" onclick="toggleCard(this)">
+          <span class="card-toggle">+</span>
+          <div class="card-icon">💊</div>
+          <div class="card-title">Medicine</div>
+          <div class="card-text">Identifying disease vectors and locating bioactive compounds</div>
+          <div class="card-detail">Without correct identification of <em>Anopheles gambiae</em> vs. other mosquito species, malaria control is impossible. Many antibiotics came from correctly identified soil bacteria.</div>
+        </div>
+        <div class="concept-card" onclick="toggleCard(this)">
+          <span class="card-toggle">+</span>
+          <div class="card-icon">🌾</div>
+          <div class="card-title">Agriculture</div>
+          <div class="card-text">Pest control, identifying crop wild relatives for breeding</div>
+          <div class="card-detail">Wild relatives of cassava, yam, and sorghum — correctly identified through taxonomy — provide disease resistance genes for crop improvement programmes across West Africa.</div>
+        </div>
+        <div class="concept-card" onclick="toggleCard(this)">
+          <span class="card-toggle">+</span>
+          <div class="card-icon">🛡️</div>
+          <div class="card-title">Conservation</div>
+          <div class="card-text">Defining species for legal protection and biodiversity assessment</div>
+          <div class="card-detail">Nigerian law can only protect species that have been formally described. Unclassified organisms cannot receive legal protection regardless of their rarity.</div>
+        </div>
+        <div class="concept-card" onclick="toggleCard(this)">
+          <span class="card-toggle">+</span>
+          <div class="card-icon">🔬</div>
+          <div class="card-title">Universal Language</div>
+          <div class="card-text">A single agreed name understood by scientists worldwide</div>
+          <div class="card-detail">The African giant snail is called by over 40 different names in local languages across West Africa. Its scientific name <em>Lissachatina fulica</em> is understood by every scientist on Earth.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block reveal">
+      <h3>1.3 History of Classification — A Timeline</h3>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">PRE-SCIENTIFIC ERA</div>
+          <div class="timeline-content">
+            <h4>Folk Taxonomy</h4>
+            <p>Human societies worldwide developed classification systems based on utility — edible, medicinal, dangerous. These are sophisticated but vernacular, local, and not universally transferable.</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">~350 BC</div>
+          <div class="timeline-content">
+            <h4>Aristotle's Classification</h4>
+            <p>Grouped animals into <em>Enaima</em> (with blood) and <em>Anaima</em> (without blood). Introduced logical definition by <strong>genus + differentia</strong>. His student Theophrastus classified ~500 plants.</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">15th–17th CENTURY</div>
+          <div class="timeline-content">
+            <h4>Renaissance Herbalists</h4>
+            <p>Gesner (<em>Historia Animalium</em>), Ray (<em>Historia Plantarum</em>) — first modern concept of species as breeding groups. Species names still polynomial — up to 20 words long.</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">1735–1758</div>
+          <div class="timeline-content">
+            <h4>Linnaean Revolution</h4>
+            <p>Binomial nomenclature; hierarchical classification; universal adoption worldwide. Starting points: plants 1753, animals 1758.</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">1859 → PRESENT</div>
+          <div class="timeline-content">
+            <h4>Evolutionary Taxonomy → Molecular Systematics</h4>
+            <p>Darwin transforms taxonomy from cataloguing to understanding evolutionary relationships. Modern tools: DNA barcoding, phylogenomics, integrative taxonomy.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block reveal">
+      <h3>1.4 Limitations of Pre-Linnaean Systems</h3>
+      <div class="note-box">
+        <span class="note-icon">⚠️</span>
+        <p><strong>The core problem:</strong> Before Linnaeus, a single plant might carry names 20+ words long in Latin. The same organism had completely different names in England, France, Nigeria, and India. Science could not communicate across languages or borders.</p>
+      </div>
+      <table class="def-table">
+        <thead><tr><th>Limitation</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td>No universal naming standard</td><td>Plantain described as a 20-word Latin phrase by each author</td></tr>
+          <tr><td>No consistent hierarchy</td><td>Different authors used different categories</td></tr>
+          <tr><td>Descriptions not reproducible</td><td>Colour and shape descriptions were subjective</td></tr>
+          <tr><td>No evolutionary framework</td><td>Classification was purely descriptive, static</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="quiz-block reveal">
+      <div class="quiz-label">📝 Self-Check Quiz — Week 1</div>
+      <div class="quiz-question">Aristotle classified animals into <em>Enaima</em> and <em>Anaima</em>. Which modern terms roughly correspond to these categories?</div>
+      <div class="quiz-options" id="q1-opts">
+        <button class="quiz-option" onclick="answerQ('q1','a','c')" data-id="a"><span class="option-letter">A</span> Vertebrates and invertebrates</button>
+        <button class="quiz-option" onclick="answerQ('q1','b','c')" data-id="b"><span class="option-letter">B</span> Plants and animals</button>
+        <button class="quiz-option" onclick="answerQ('q1','c','c')" data-id="c"><span class="option-letter">C</span> Kingdom Animalia and Kingdom Plantae</button>
+        <button class="quiz-option" onclick="answerQ('q1','d','c')" data-id="d"><span class="option-letter">D</span> Prokaryotes and eukaryotes</button>
+      </div>
+      <div class="quiz-feedback" id="q1-feedback"></div>
+    </div>
+
+    <div class="week-nav-btns">
+      <button class="nav-btn disabled">← Previous</button>
+      <button class="mark-complete-btn" onclick="markDone('w1',this)">Mark Complete ✓</button>
+      <button class="nav-btn" onclick="showSection('w2')">
+        <div><span class="nav-btn-label">Next →</span><span class="nav-btn-title">Linnaean Taxonomy</span></div>
+      </button>
+    </div>
+  </section>
+
+  <!-- ═══ WEEK 2 ═══ -->
+  <section class="week-section" id="w2-section">
+    <div class="week-header">
+      <span class="week-number-badge">WEEK 02</span>
+      <div class="week-header-text">
+        <h2>Linnaean Taxonomy</h2>
+        <p>Systema Naturae · Binomial nomenclature · Hierarchical classification · Typological species</p>
+      </div>
+    </div>
+
+    <div class="lo-box">
+      <h3>Learning Outcomes</h3>
+      <ul class="lo-list">
+        <li>Explain the binomial system of nomenclature with correct formatting</li>
+        <li>State the formal starting points of botanical and zoological nomenclature</li>
+        <li>Write correct binomial citations with author and year</li>
+        <li>Describe the Linnaean hierarchical classification system</li>
+        <li>Define the typological species concept and its limitations</li>
+      </ul>
+    </div>
+
+    <div class="content-block reveal">
+      <h3>2.1 Carl Linnaeus — The Architect of Modern Taxonomy</h3>
+      <p>Carl Linnaeus (1707–1778), a Swedish botanist and physician, revolutionised natural history with two master works that remain the formal starting points of nomenclature today:</p>
+      <div class="nomenclature-breakdown">
+        <div class="nom-rule">
+          <span class="nom-rule-num">1753</span>
+          <div class="nom-rule-title">Species Plantarum</div>
+          <div class="nom-rule-text">Formal starting point of <strong>botanical</strong> nomenclature. ~8,000 plant species named using the new binomial system.</div>
+        </div>
+        <div class="nom-rule">
+          <span class="nom-rule-num">1758</span>
+          <div class="nom-rule-title">Systema Naturae (10th ed.)</div>
+          <div class="nom-rule-text">Formal starting point of <strong>zoological</strong> nomenclature. Any animal name published before this date has no standing.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block reveal">
+      <h3>2.2 The Binomial System — Interactive Diagram</h3>
+      <p>Linnaeus replaced lengthy polynomial phrases with an elegant two-word name: <strong>genus + specific epithet</strong>. Click the example below to see how it works:</p>
+
+      <div class="diagram-container">
+        <div class="diagram-title">Anatomy of a Binomial Name</div>
+        <div class="binomial-demo">
+          <div class="binomial-part genus">
+            <span class="binomial-word">Homo</span>
+            <span class="binomial-label">Genus Name</span>
+            <div class="binomial-meaning">Capitalised · Latin/Latinised</div>
+          </div>
+          <span class="binomial-plus">+</span>
+          <div class="binomial-part epithet">
+            <span class="binomial-word">sapiens</span>
+            <span class="binomial-label">Specific Epithet</span>
+            <div class="binomial-meaning">Lowercase · Means "wise"</div>
+          </div>
+        </div>
+        <div style="margin-top:16px;font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--forest);">
+          Full citation: <em style="font-style:italic;">Homo sapiens</em> Linnaeus, 1758
+        </div>
+        <div class="diagram-caption">Both words italicised (or underlined in handwriting). Author not italicised.</div>
+      </div>
+
+      <div class="note-box">
+        <span class="note-icon">📜</span>
+        <p><strong>Before Linnaeus:</strong> Plantain was named <em>"Plantago foliis ovato-lanceolatis pubescentibus, spica cylindrica, scapo tereti"</em> — a 9-word description, not a name. Linnaeus replaced this with <em>Plantago media</em> — two words, universally usable.</p>
+      </div>
+    </div>
+
+    <div class="content-block reveal">
+      <h3>2.3 Rules of Binomial Nomenclature</h3>
+      <div class="nomenclature-breakdown">
+        <div class="nom-rule"><span class="nom-rule-num">①</span><div class="nom-rule-title">Latin Form</div><div class="nom-rule-text">Names must be in Latin or Latinised form, regardless of language of origin.</div></div>
+        <div class="nom-rule"><span class="nom-rule-num">②</span><div class="nom-rule-title">Capitalisation</div><div class="nom-rule-text">Genus: capitalised. Specific epithet: always lowercase. <em>Homo sapiens</em> ✓ &nbsp; <em>homo Sapiens</em> ✗</div></div>
+        <div class="nom-rule"><span class="nom-rule-num">③</span><div class="nom-rule-title">Italics</div><div class="nom-rule-text">Binomial always italicised in print; underlined in handwriting.</div></div>
+        <div class="nom-rule"><span class="nom-rule-num">④</span><div class="nom-rule-title">Author Citation</div><div class="nom-rule-text">Author's surname + year follow the name. Parentheses if genus later changed.</div></div>
+        <div class="nom-rule"><span class="nom-rule-num">⑤</span><div class="nom-rule-title">Uniqueness</div><div class="nom-rule-text">Each genus–epithet combination is unique across all of life.</div></div>
+      </div>
+    </div>
+
+    <div class="content-block reveal">
+      <h3>2.4 The Linnaean Hierarchy</h3>
+      <p>Linnaeus organised life into nested ranks. Hover over each node to see an example:</p>
+      <div class="diagram-container">
+        <div class="diagram-title">Linnaean Taxonomic Hierarchy (hover for examples)</div>
+        <div class="hierarchy-tree">
+          <div class="hier-level">
+            <div class="hier-node" style="background:#1a3a2a;color:#f5f0e8;width:220px;">
+              Kingdom
+              <div class="hier-tooltip">e.g. Animalia, Plantae, Fungi</div>
+            </div>
+          </div>
+          <div class="hier-connector"></div>
+          <div class="hier-level">
+            <div class="hier-node" style="background:#2d5a3d;color:#f5f0e8;width:210px;">
+              Phylum / Division
+              <div class="hier-tooltip">e.g. Chordata, Magnoliophyta</div>
+            </div>
+          </div>
+          <div class="hier-connector"></div>
+          <div class="hier-level">
+            <div class="hier-node" style="background:#3d7a52;color:white;width:200px;">
+              Class
+              <div class="hier-tooltip">e.g. Mammalia, Insecta</div>
+            </div>
+          </div>
+          <div class="hier-connector"></div>
+          <div class="hier-level">
+            <div class="hier-node" style="background:#5a9e6f;color:white;width:190px;">
+              Order
+              <div class="hier-tooltip">e.g. Primates, Rosales</div>
+            </div>
+          </div>
+          <div class="hier-connector"></div>
+          <div class="hier-level">
+            <div class="hier-node" style="background:#8fbc9a;color:#1a1a0e;width:180px;">
+              Family
+              <div class="hier-tooltip">e.g. Hominidae, Fabaceae</div>
+            </div>
+          </div>
+          <div class="hier-connector"></div>
+          <div class="hier-level">
+            <div class="hier-node" style="background:#c8dfc0;color:#1a1a0e;width:170px;">
+              Genus
+              <div class="hier-tooltip">e.g. Homo, Zea</div>
+            </div>
+          </div>
+          <div class="hier-connector"></div>
+          <div class="hier-level">
+            <div class="hier-node" style="background:#c8960c;color:white;width:160px;">
+              Species
+              <div class="hier-tooltip">e.g. Homo sapiens, Zea mays</div>
+            </div>
+          </div>
+        </div>
+        <div class="diagram-caption">↑ Ranks nest inside each other. Each species belongs to exactly one of each rank.</div>
+      </div>
+    </div>
+
+    <div class="quiz-block reveal">
+      <div class="quiz-label">📝 Self-Check Quiz — Week 2</div>
+      <div class="quiz-question">The binomial <em>Panthera leo</em> (Linnaeus, 1758) is listed with parentheses around "Linnaeus, 1758" in some sources. What does this indicate?</div>
+      <div class="quiz-options" id="q2-opts">
+        <button class="quiz-option" onclick="answerQ('q2','a','b')" data-id="a"><span class="option-letter">A</span> Linnaeus described this species after 1758</button>
+        <button class="quiz-option" onclick="answerQ('q2','b','b')" data-id="b"><span class="option-letter">B</span> Linnaeus originally placed the species in a different genus</button>
+        <button class="quiz-option" onclick="answerQ('q2','c','b')" data-id="c"><span class="option-letter">C</span> The name is a synonym, not the correct name</button>
+        <button class="quiz-option" onclick="answerQ('q2','d','b')" data-id="d"><span class="option-letter">D</span> The species was described by two authors jointly</button>
+      </div>
+      <div class="quiz-feedback" id="q2-feedback"></div>
+    </div>
+
+    <div class="week-nav-btns">
+      <button class="nav-btn" onclick="showSection('w1')"><div><span class="nav-btn-label">← Previous</span><span class="nav-btn-title">Introduction</span></div></button>
+      <button class="mark-complete-btn" onclick="markDone('w2',this)">Mark Complete ✓</button>
+      <button class="nav-btn" onclick="showSection('w3')"><div><span class="nav-btn-label">Next →</span><span class="nav-btn-title">Darwinian Taxonomy</span></div></button>
+    </div>
+  </section>
+
+  <!-- ═══ WEEK 3 ═══ -->
+  <section class="week-section" id="w3-section">
+    <div class="week-header">
+      <span class="week-number-badge">WEEK 03</span>
+      <div class="week-header-text">
+        <h2>Darwinian Taxonomy & The New Systematics</h2>
+        <p>Impact of evolution · Population thinking · Biosystematics · Modern Synthesis</p>
+      </div>
+    </div>
+
+    <div class="lo-box">
+      <h3>Learning Outcomes</h3>
+      <ul class="lo-list">
+        <li>Explain how Darwin's theory transformed taxonomic thinking</li>
+        <li>Distinguish typological thinking from population thinking</li>
+        <li>Define the New Systematics and list its key features</li>
+        <li>Explain the Modern Synthesis and its impact on taxonomy</li>
+        <li>Compare natural vs. artificial classification</li>
+      </ul>
+    </div>
+
+    <div class="content-block reveal">
+      <h3>3.1 Darwin's Transformative Impact (1859)</h3>
+      <p>Darwin's <em>On the Origin of Species</em> (1859) demolished the Linnaean assumption that species were fixed, divinely created types. He demonstrated that all organisms share common ancestry through descent with modification — meaning that classification should reflect <strong>genealogical relationships</strong>, not just morphological similarity.</p>
+      <div class="key-box">
+        <div class="key-box-title">🌿 Darwin's Core Insight for Taxonomy</div>
+        <ul>
+          <li>Species are not fixed types — they change over time</li>
+          <li>The natural system of classification is genealogical (like a family tree)</li>
+          <li>Taxonomic ranks reflect degrees of evolutionary divergence</li>
+          <li>Variation within species is biologically meaningful, not error</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="content-block reveal">
+      <h3>3.2 Typological vs. Population Thinking</h3>
+
+      <div class="diagram-container">
+        <div class="diagram-title">Two Ways of Thinking About Species</div>
+        <svg viewBox="0 0 700 280" width="100%" style="max-width:700px;">
+          <!-- Typological -->
+          <rect x="20" y="20" width="300" height="240" rx="8" fill="#f5f0e8" stroke="#1a3a2a" stroke-width="1.5"/>
+          <text x="170" y="50" text-anchor="middle" font-family="Playfair Display,serif" font-size="14" fill="#1a3a2a" font-weight="600">Typological Thinking</text>
+          <text x="170" y="68" text-anchor="middle" font-family="Lora,serif" font-size="11" fill="#777">(Pre-Darwin)</text>
+          <!-- Ideal type circle -->
+          <circle cx="170" cy="140" r="50" fill="#1a3a2a" opacity="0.15" stroke="#1a3a2a" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <circle cx="170" cy="140" r="12" fill="#1a3a2a"/>
+          <text x="170" y="144" text-anchor="middle" font-family="Lora,serif" font-size="9" fill="white">TYPE</text>
+          <!-- Variation as error dots -->
+          <circle cx="140" cy="110" r="5" fill="#c8960c" opacity="0.5"/>
+          <circle cx="200" cy="155" r="5" fill="#c8960c" opacity="0.5"/>
+          <circle cx="155" cy="170" r="5" fill="#c8960c" opacity="0.5"/>
+          <circle cx="195" cy="115" r="5" fill="#c8960c" opacity="0.5"/>
+          <text x="170" y="210" text-anchor="middle" font-family="Lora,serif" font-size="11" fill="#8b3a2a">Variation = deviation (error)</text>
+          <text x="170" y="228" text-anchor="middle" font-family="Lora,serif" font-size="11" fill="#555">Fixed ideal type; all individuals</text>
+          <text x="170" y="244" text-anchor="middle" font-family="Lora,serif" font-size="11" fill="#555">measured against it</text>
+
+          <!-- Population -->
+          <rect x="380" y="20" width="300" height="240" rx="8" fill="#e8f4ec" stroke="#2d5a3d" stroke-width="1.5"/>
+          <text x="530" y="50" text-anchor="middle" font-family="Playfair Display,serif" font-size="14" fill="#1a3a2a" font-weight="600">Population Thinking</text>
+          <text x="530" y="68" text-anchor="middle" font-family="Lora,serif" font-size="11" fill="#777">(Post-Darwin)</text>
+          <!-- Distributed population -->
+          <circle cx="490" cy="120" r="8" fill="#2d5a3d" opacity="0.8"/>
+          <circle cx="520" cy="100" r="9" fill="#2d5a3d" opacity="0.7"/>
+          <circle cx="560" cy="115" r="7" fill="#2d5a3d" opacity="0.9"/>
+          <circle cx="545" cy="145" r="10" fill="#2d5a3d" opacity="0.6"/>
+          <circle cx="505" cy="155" r="8" fill="#2d5a3d" opacity="0.8"/>
+          <circle cx="575" cy="135" r="6" fill="#2d5a3d" opacity="0.7"/>
+          <circle cx="530" cy="168" r="9" fill="#2d5a3d" opacity="0.5"/>
+          <circle cx="490" cy="148" r="7" fill="#2d5a3d" opacity="0.9"/>
+          <text x="530" y="210" text-anchor="middle" font-family="Lora,serif" font-size="11" fill="#2d5a3d">Variation = raw material of evolution</text>
+          <text x="530" y="228" text-anchor="middle" font-family="Lora,serif" font-size="11" fill="#555">Species = real, variable populations;</text>
+          <text x="530" y="244" text-anchor="middle" font-family="Lora,serif" font-size="11" fill="#555">no ideal "type"</text>
+        </svg>
+        <div class="diagram-caption">Hover or zoom to compare the two paradigms. Darwin made population thinking the scientific norm.</div>
+      </div>
+    </div>
+
+    <div class="content-block reveal">
+      <h3>3.3 Natural vs. Artificial Classification</h3>
+      <table class="def-table">
+        <thead><tr><th>Feature</th><th>Artificial Classification</th><th>Natural Classification</th></tr></thead>
+        <tbody>
+          <tr><td>Basis</td><td>Any convenient feature (e.g. wing presence)</td><td>Shared evolutionary ancestry</td></tr>
+          <tr><td>Example</td><td>All flying animals grouped together</td><td>Birds + crocodiles together (both are Archosauria)</td></tr>
+          <tr><td>Predictive power</td><td>Low — characters shared by convenience</td><td>High — shared characters imply shared biology</td></tr>
+          <tr><td>Linnaeus's plant system</td><td>Based on stamen numbers — artificial</td><td>His animal system was more natural</td></tr>
+          <tr><td>Modern standard</td><td>Used only for practical keys</td><td>Required for all formal taxonomy</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="content-block reveal">
+      <h3>3.4 The Modern Synthesis</h3>
+      <p>The Modern Synthesis (1930s–1950s) united Darwinian natural selection with Mendelian genetics, providing the theoretical foundation for all modern systematics:</p>
+      <div class="cards-grid">
+        <div class="concept-card" onclick="toggleCard(this)"><span class="card-toggle">+</span><div class="card-icon">🧬</div><div class="card-title">Genetic Basis</div><div class="card-text">Fisher, Haldane, Wright — mathematical population genetics</div><div class="card-detail">Showed that natural selection acting on Mendelian genes could produce the patterns observed in nature, reconciling Darwinism with genetics.</div></div>
+        <div class="concept-card" onclick="toggleCard(this)"><span class="card-toggle">+</span><div class="card-icon">🦋</div><div class="card-title">Speciation Theory</div><div class="card-text">Mayr & Dobzhansky — how new species form</div><div class="card-detail">Ernst Mayr's 1942 book Systematics and the Origin of Species formalised the Biological Species Concept and placed speciation at the centre of evolutionary biology.</div></div>
+        <div class="concept-card" onclick="toggleCard(this)"><span class="card-toggle">+</span><div class="card-icon">🗺️</div><div class="card-title">Geographic Variation</div><div class="card-text">Subspecies and population structure studied formally</div><div class="card-detail">Taxonomy shifted from single type specimens to population samples. Geographic variants (subspecies) were formally recognised as stages in species formation.</div></div>
+      </div>
+    </div>
+
+    <div class="quiz-block reveal">
+      <div class="quiz-label">📝 Self-Check Quiz — Week 3</div>
+      <div class="quiz-question">In "population thinking," what is the role of variation within a species?</div>
+      <div class="quiz-options" id="q3-opts">
+        <button class="quiz-option" onclick="answerQ('q3','a','d')" data-id="a"><span class="option-letter">A</span> It represents defective individuals that should be excluded from classification</button>
+        <button class="quiz-option" onclick="answerQ('q3','b','d')" data-id="b"><span class="option-letter">B</span> It is irrelevant to taxonomic classification</button>
+        <button class="quiz-option" onclick="answerQ('q3','c','d')" data-id="c"><span class="option-letter">C</span> It shows how far individuals deviate from the ideal type</button>
+        <button class="quiz-option" onclick="answerQ('q3','d','d')" data-id="d"><span class="option-letter">D</span> It is the raw material of evolution and biologically meaningful</button>
+      </div>
+      <div class="quiz-feedback" id="q3-feedback"></div>
+    </div>
+
+    <div class="week-nav-btns">
+      <button class="nav-btn" onclick="showSection('w2')"><div><span class="nav-btn-label">← Previous</span><span class="nav-btn-title">Linnaean Taxonomy</span></div></button>
+      <button class="mark-complete-btn" onclick="markDone('w3',this)">Mark Complete ✓</button>
+      <button class="nav-btn" onclick="showSection('w4')"><div><span class="nav-btn-label">Next →</span><span class="nav-btn-title">Taxonomic Hierarchies</span></div></button>
+    </div>
+  </section>
+
+  <!-- ═══ WEEK 4 ═══ -->
+  <section class="week-section" id="w4-section">
+    <div class="week-header">
+      <span class="week-number-badge">WEEK 04</span>
+      <div class="week-header-text">
+        <h2>Taxonomic Hierarchies — Major Ranks</h2>
+        <p>Domain to Species · Obligatory ranks · Suffixes · Worked examples</p>
+      </div>
+    </div>
+
+    <div class="lo-box">
+      <h3>Learning Outcomes</h3>
+      <ul class="lo-list">
+        <li>List all seven obligatory taxonomic ranks in correct order</li>
+        <li>Recognise taxonomic rank from name suffix alone</li>
+        <li>Place any given organism in the full taxonomic hierarchy</li>
+        <li>Explain the significance of the Domain rank</li>
+      </ul>
+    </div>
+
+    <div class="content-block reveal">
+      <h3>4.1 The Full Modern Hierarchy</h3>
+      <table class="def-table">
+        <thead><tr><th>Rank</th><th>Example (Human)</th><th>Example (Maize)</th><th>Suffix</th></tr></thead>
+        <tbody>
+          <tr><td>Domain</td><td>Eukarya</td><td>Eukarya</td><td>—</td></tr>
+          <tr><td>Kingdom</td><td>Animalia</td><td>Plantae</td><td>—</td></tr>
+          <tr><td>Phylum / Division</td><td>Chordata</td><td>Magnoliophyta</td><td class="suffix-highlight">-phyta</td></tr>
+          <tr><td>Class</td><td>Mammalia</td><td>Liliopsida</td><td class="suffix-highlight">-opsida</td></tr>
+          <tr><td>Order</td><td>Primates</td><td>Poales</td><td class="suffix-highlight">-ales</td></tr>
+          <tr><td>Family</td><td>Hominidae</td><td>Poaceae</td><td class="suffix-highlight">-idae / -aceae</td></tr>
+          <tr><td>Genus</td><td>Homo</td><td>Zea</td><td>—</td></tr>
+          <tr><td>Species</td><td><em>Homo sapiens</em></td><td><em>Zea mays</em></td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="content-block reveal">
+      <h3>4.2 Taxonomic Suffixes — Recognition Guide</h3>
+      <div class="diagram-container">
+        <div class="diagram-title">Identifying Rank from Name Ending</div>
+        <svg viewBox="0 0 680 320" width="100%" style="max-width:680px;">
+          <!-- Background -->
+          <rect x="0" y="0" width="680" height="320" fill="white"/>
+
+          <!-- Botany column -->
+          <rect x="30" y="10" width="280" height="300" rx="6" fill="#e8f4ec" stroke="#2d5a3d" stroke-width="1"/>
+          <text x="170" y="35" text-anchor="middle" font-family="Playfair Display,serif" font-size="13" fill="#1a3a2a" font-weight="600">🌿 Botany / Mycology</text>
+
+          <text x="50" y="65" font-family="JetBrains Mono,monospace" font-size="11" fill="#2d5a3d">-phyta</text>
+          <text x="130" y="65" font-family="Lora,serif" font-size="11" fill="#444">Division</text>
+          <text x="50" y="90" font-family="JetBrains Mono,monospace" font-size="11" fill="#2d5a3d">-opsida</text>
+          <text x="130" y="90" font-family="Lora,serif" font-size="11" fill="#444">Class (plants)</text>
+          <text x="50" y="115" font-family="JetBrains Mono,monospace" font-size="11" fill="#2d5a3d">-mycetes</text>
+          <text x="130" y="115" font-family="Lora,serif" font-size="11" fill="#444">Class (fungi)</text>
+          <text x="50" y="140" font-family="JetBrains Mono,monospace" font-size="11" fill="#2d5a3d">-ales</text>
+          <text x="130" y="140" font-family="Lora,serif" font-size="11" fill="#444">Order</text>
+          <text x="50" y="165" font-family="JetBrains Mono,monospace" font-size="11" fill="#2d5a3d">-aceae</text>
+          <text x="130" y="165" font-family="Lora,serif" font-size="11" fill="#444">Family</text>
+          <text x="50" y="190" font-family="JetBrains Mono,monospace" font-size="11" fill="#2d5a3d">-oideae</text>
+          <text x="130" y="190" font-family="Lora,serif" font-size="11" fill="#444">Subfamily</text>
+          <text x="50" y="215" font-family="JetBrains Mono,monospace" font-size="11" fill="#2d5a3d">-eae</text>
+          <text x="130" y="215" font-family="Lora,serif" font-size="11" fill="#444">Tribe</text>
+
+          <text x="50" y="255" font-family="Lora,serif" font-size="11" fill="#555" font-style="italic">Example: Ros-ales, Fab-aceae</text>
+          <text x="50" y="273" font-family="Lora,serif" font-size="11" fill="#555" font-style="italic">Papilion-oideae, Tritic-eae</text>
+
+          <!-- Zoology column -->
+          <rect x="370" y="10" width="280" height="300" rx="6" fill="#f0f4fa" stroke="#3a6b8a" stroke-width="1"/>
+          <text x="510" y="35" text-anchor="middle" font-family="Playfair Display,serif" font-size="13" fill="#1a3a2a" font-weight="600">🦎 Zoology</text>
+
+          <text x="390" y="65" font-family="JetBrains Mono,monospace" font-size="11" fill="#3a6b8a">-a</text>
+          <text x="430" y="65" font-family="Lora,serif" font-size="11" fill="#444">Phylum (e.g. Chordat-a)</text>
+          <text x="390" y="90" font-family="JetBrains Mono,monospace" font-size="11" fill="#3a6b8a">-ia</text>
+          <text x="430" y="90" font-family="Lora,serif" font-size="11" fill="#444">Class (e.g. Mammal-ia)</text>
+          <text x="390" y="115" font-family="JetBrains Mono,monospace" font-size="11" fill="#3a6b8a">-a / -es</text>
+          <text x="430" y="115" font-family="Lora,serif" font-size="11" fill="#444">Order (less standardised)</text>
+          <text x="390" y="140" font-family="JetBrains Mono,monospace" font-size="11" fill="#3a6b8a">-idae</text>
+          <text x="430" y="140" font-family="Lora,serif" font-size="11" fill="#444">Family</text>
+          <text x="390" y="165" font-family="JetBrains Mono,monospace" font-size="11" fill="#3a6b8a">-inae</text>
+          <text x="430" y="165" font-family="Lora,serif" font-size="11" fill="#444">Subfamily</text>
+          <text x="390" y="190" font-family="JetBrains Mono,monospace" font-size="11" fill="#3a6b8a">-ini</text>
+          <text x="430" y="190" font-family="Lora,serif" font-size="11" fill="#444">Tribe</text>
+
+          <text x="390" y="255" font-family="Lora,serif" font-size="11" fill="#555" font-style="italic">Example: Feli-dae, Feli-nae</text>
+          <text x="390" y="273" font-family="Lora,serif" font-size="11" fill="#555" font-style="italic">Homin-idae, Homin-inae</text>
+        </svg>
+        <div class="diagram-caption">Memorise the -aceae (plant family) and -idae (animal family) suffixes — the most commonly tested.</div>
+      </div>
+    </div>
+
+    <div class="quiz-block reveal">
+      <div class="quiz-label">📝 Self-Check Quiz — Week 4</div>
+      <div class="quiz-question">A taxonomic name ends in <span class="suffix-highlight">-aceae</span>. What rank does this represent?</div>
+      <div class="quiz-options" id="q4-opts">
+        <button class="quiz-option" onclick="answerQ('q4','a','b')" data-id="a"><span class="option-letter">A</span> Order in botany</button>
+        <button class="quiz-option" onclick="answerQ('q4','b','b')" data-id="b"><span class="option-letter">B</span> Family in botany</button>
+        <button class="quiz-option" onclick="answerQ('q4','c','b')" data-id="c"><span class="option-letter">C</span> Subfamily in botany</button>
+        <button class="quiz-option" onclick="answerQ('q4','d','b')" data-id="d"><span class="option-letter">D</span> Family in zoology</button>
+      </div>
+      <div class="quiz-feedback" id="q4-feedback"></div>
+    </div>
+
+    <div class="week-nav-btns">
+      <button class="nav-btn" onclick="showSection('w3')"><div><span class="nav-btn-label">← Previous</span><span class="nav-btn-title">Darwinian Taxonomy</span></div></button>
+      <button class="mark-complete-btn" onclick="markDone('w4',this)">Mark Complete ✓</button>
+      <button class="nav-btn" onclick="showSection('w5')"><div><span class="nav-btn-label">Next →</span><span class="nav-btn-title">Below & Above Species</span></div></button>
+    </div>
+  </section>
+
+  <!-- ═══ WEEK 5 ═══ -->
+  <section class="week-section" id="w5-section">
+    <div class="week-header"><span class="week-number-badge">WEEK 05</span><div class="week-header-text"><h2>Hierarchies — Below & Above Species</h2><p>Subspecies · Variety · Form · Ecotype · Tribe · Superfamily</p></div></div>
+    <div class="lo-box"><h3>Learning Outcomes</h3><ul class="lo-list"><li>Define and distinguish subspecies, variety, and form</li><li>Write correct trinomial nomenclature for infraspecific taxa</li><li>Explain ecotype and cultivar and their taxonomic status</li><li>List secondary ranks above the family level</li></ul></div>
+    <div class="content-block reveal">
+      <h3>5.1 Infraspecific Categories</h3>
+      <table class="def-table">
+        <thead><tr><th>Rank</th><th>Notation</th><th>Definition</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td>Subspecies</td><td><em>subsp.</em> or <em>ssp.</em></td><td>Geographically defined population differing from other populations; the only formal infraspecific rank in zoology</td><td><em>Panthera leo leo</em> (African lion)</td></tr>
+          <tr><td>Variety</td><td><em>var.</em></td><td>Plants: non-geographic morphological variant occurring throughout species range</td><td><em>Rosa canina var. dumetorum</em></td></tr>
+          <tr><td>Form</td><td><em>f.</em></td><td>Lowest formal rank; single morphological variant (e.g. flower colour) occurring sporadically</td><td><em>Fagus sylvatica f. purpurea</em></td></tr>
+          <tr><td>Cultivar</td><td>cv. or 'Name'</td><td>Human-selected variety; governed by ICNCP; name in single quotes, not italicised</td><td>Rosa 'Peace'</td></tr>
+          <tr><td>Ecotype</td><td>—</td><td>Informal; genetically adapted local population; no formal nomenclatural rank</td><td>Alpine vs. coastal Plantago maritima</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="content-block reveal">
+      <h3>5.2 Writing Trinomial Names</h3>
+      <div class="diagram-container">
+        <div class="diagram-title">Trinomial Nomenclature Structure</div>
+        <div class="binomial-demo" style="flex-wrap:wrap;">
+          <div class="binomial-part genus"><span class="binomial-word" style="font-size:26px;">Panthera</span><span class="binomial-label">Genus</span></div>
+          <span class="binomial-plus">+</span>
+          <div class="binomial-part epithet"><span class="binomial-word" style="font-size:26px;">leo</span><span class="binomial-label">Species</span></div>
+          <span class="binomial-plus">+</span>
+          <div class="binomial-part" style="background:rgba(58,107,138,0.08);border-radius:8px;padding:20px 28px;text-align:center;">
+            <span class="binomial-word" style="font-size:26px;color:var(--sky);">leo</span>
+            <span class="binomial-label" style="color:var(--sky);">Subspecies Epithet</span>
+            <div class="binomial-meaning">Same rules as species epithet</div>
+          </div>
+        </div>
+        <div style="margin-top:12px;font-family:'Lora',serif;font-size:13px;color:var(--forest);">Full name: <em>Panthera leo leo</em> (Linnaeus, 1758) — the nominate subspecies</div>
+        <div class="diagram-caption">In zoology, the subspecies rank indicator (subsp.) is often omitted. In botany, it is written: <em>Rosa canina</em> subsp. <em>canina</em>.</div>
+      </div>
+    </div>
+    <div class="content-block reveal">
+      <h3>5.3 Secondary Ranks Above Family</h3>
+      <table class="def-table">
+        <thead><tr><th>Rank</th><th>Suffix</th><th>Position</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td>Tribe</td><td class="suffix-highlight">-eae / -ini</td><td>Within family, above genus</td><td>Triticeae (wheat tribe) within Poaceae</td></tr>
+          <tr><td>Subfamily</td><td class="suffix-highlight">-inae / -oideae</td><td>Within family, above tribe</td><td>Papilionoideae within Fabaceae</td></tr>
+          <tr><td>Superfamily</td><td class="suffix-highlight">-oidea</td><td>Above family, below order</td><td>Apoidea (bees) within Hymenoptera</td></tr>
+          <tr><td>Suborder</td><td>—</td><td>Within order</td><td>Serpentes within Squamata</td></tr>
+          <tr><td>Superorder</td><td>—</td><td>Above order, below class</td><td>Afrotheria — African placental mammals</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="quiz-block reveal">
+      <div class="quiz-label">📝 Self-Check Quiz — Week 5</div>
+      <div class="quiz-question">An alpine population of <em>Plantago maritima</em> is genetically adapted to cold, rocky conditions but is not morphologically distinct enough to name formally. This population is best described as:</div>
+      <div class="quiz-options" id="q5-opts">
+        <button class="quiz-option" onclick="answerQ('q5','a','c')" data-id="a"><span class="option-letter">A</span> A subspecies</button>
+        <button class="quiz-option" onclick="answerQ('q5','b','c')" data-id="b"><span class="option-letter">B</span> A variety</button>
+        <button class="quiz-option" onclick="answerQ('q5','c','c')" data-id="c"><span class="option-letter">C</span> An ecotype</button>
+        <button class="quiz-option" onclick="answerQ('q5','d','c')" data-id="d"><span class="option-letter">D</span> A cultivar</button>
+      </div>
+      <div class="quiz-feedback" id="q5-feedback"></div>
+    </div>
+    <div class="week-nav-btns">
+      <button class="nav-btn" onclick="showSection('w4')"><div><span class="nav-btn-label">← Previous</span><span class="nav-btn-title">Major Ranks</span></div></button>
+      <button class="mark-complete-btn" onclick="markDone('w5',this)">Mark Complete ✓</button>
+      <button class="nav-btn" onclick="showSection('w6')"><div><span class="nav-btn-label">Next →</span><span class="nav-btn-title">Species Concept</span></div></button>
+    </div>
+  </section>
+
+  <!-- ═══ WEEK 6 ═══ -->
+  <section class="week-section" id="w6-section">
+    <div class="week-header"><span class="week-number-badge">WEEK 06</span><div class="week-header-text"><h2>The Species Concept</h2><p>BSC · Morphological · Phylogenetic · Ecological · Cryptic species</p></div></div>
+    <div class="lo-box"><h3>Learning Outcomes</h3><ul class="lo-list"><li>State and evaluate the Biological Species Concept</li><li>Compare at least four species concepts with strengths and weaknesses</li><li>Define cryptic species and ring species with examples</li><li>Explain why no single species concept is universally applicable</li></ul></div>
+
+    <div class="content-block reveal">
+      <h3>6.1 The Species Problem</h3>
+      <p>Despite being the fundamental unit of biology, "species" has no universally agreed definition. Over <strong>30 species concepts</strong> have been proposed. Each reflects a different philosophical emphasis — reproductive isolation, evolutionary lineage, ecological role, or morphological distinctiveness. Understanding the leading concepts and their trade-offs is essential for any practising biologist.</p>
+    </div>
+
+    <div class="content-block reveal">
+      <h3>6.2 Species Concepts — Interactive Comparator</h3>
+      <div class="species-comparator">
+        <div class="comparator-tabs">
+          <button class="comp-tab active" onclick="switchTab('bsc',this)">Biological (BSC)</button>
+          <button class="comp-tab" onclick="switchTab('msc',this)">Morphological</button>
+          <button class="comp-tab" onclick="switchTab('psc',this)">Phylogenetic</button>
+          <button class="comp-tab" onclick="switchTab('eco',this)">Ecological</button>
+        </div>
+        <div class="comp-panel active" id="bsc-panel">
+          <p><strong>Proposed by Ernst Mayr (1942):</strong> "Species are groups of actually or potentially interbreeding natural populations, which are reproductively isolated from other such groups."</p>
+          <p style="margin-top:10px;font-size:13px;color:var(--sky);"><strong>Key criterion:</strong> Reproductive isolation — gene flow within the species, no gene flow between species.</p>
+          <div class="comp-grid">
+            <div class="comp-section strengths"><h5>✦ Strengths</h5><ul><li>Biologically meaningful</li><li>Explains cohesion of species</li><li>Widely accepted as intuitive</li></ul></div>
+            <div class="comp-section weaknesses"><h5>✦ Weaknesses</h5><ul><li>Inapplicable to asexual organisms (bacteria)</li><li>Cannot be applied to fossils</li><li>Allopatric populations cannot be tested</li><li>Plants hybridise freely across "species"</li></ul></div>
+          </div>
+        </div>
+        <div class="comp-panel" id="msc-panel">
+          <p><strong>Working concept since Aristotle:</strong> Species are distinguished by consistent, diagnosable morphological differences.</p>
+          <p style="margin-top:10px;font-size:13px;color:var(--sky);"><strong>Key criterion:</strong> Morphological distinctiveness — appearance and anatomy.</p>
+          <div class="comp-grid">
+            <div class="comp-section strengths"><h5>✦ Strengths</h5><ul><li>Practical — works on any specimen</li><li>Applicable to fossils</li><li>Used for all museum collections</li></ul></div>
+            <div class="comp-section weaknesses"><h5>✦ Weaknesses</h5><ul><li>Subjective — "lumpers" vs. "splitters"</li><li>Misses cryptic species</li><li>Cannot accommodate sexual dimorphism</li></ul></div>
+          </div>
+        </div>
+        <div class="comp-panel" id="psc-panel">
+          <p><strong>de Queiroz & Gauthier (1990):</strong> "The smallest diagnosable cluster of individual organisms within which there is a parental pattern of ancestry and descent."</p>
+          <p style="margin-top:10px;font-size:13px;color:var(--sky);"><strong>Key criterion:</strong> Monophyly — shared derived characters (synapomorphies).</p>
+          <div class="comp-grid">
+            <div class="comp-section strengths"><h5>✦ Strengths</h5><ul><li>Compatible with cladistics and molecular data</li><li>Detects cryptic species</li><li>Objective criteria</li></ul></div>
+            <div class="comp-section weaknesses"><h5>✦ Weaknesses</h5><ul><li>Taxonomic inflation — many trivial species</li><li>Dependent on character choice</li></ul></div>
+          </div>
+        </div>
+        <div class="comp-panel" id="eco-panel">
+          <p><strong>Van Valen (1976):</strong> A species is a lineage that occupies an adaptive zone (ecological niche) distinct from other lineages.</p>
+          <p style="margin-top:10px;font-size:13px;color:var(--sky);"><strong>Key criterion:</strong> Ecological niche distinctiveness.</p>
+          <div class="comp-grid">
+            <div class="comp-section strengths"><h5>✦ Strengths</h5><ul><li>Useful for adaptive radiation</li><li>Captures ecological reality</li></ul></div>
+            <div class="comp-section weaknesses"><h5>✦ Weaknesses</h5><ul><li>Adaptive zones are hard to define</li><li>Related species can share niches</li></ul></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block reveal">
+      <h3>6.3 Cryptic Species & Ring Species</h3>
+      <div class="diagram-container">
+        <div class="diagram-title">Ring Species — A Challenge to the BSC</div>
+        <svg viewBox="0 0 400 300" width="100%" style="max-width:400px;">
+          <defs><marker id="arr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2d5a3d"/></marker></defs>
+          <!-- Ring -->
+          <ellipse cx="200" cy="150" rx="120" ry="100" fill="none" stroke="#c8dfc0" stroke-width="2" stroke-dasharray="5,3"/>
+          <!-- Populations -->
+          <circle cx="200" cy="50" r="22" fill="#1a3a2a" opacity="0.9"/>
+          <text x="200" y="54" text-anchor="middle" fill="white" font-size="10" font-family="JetBrains Mono,monospace">Pop A</text>
+          <circle cx="305" cy="100" r="22" fill="#2d5a3d" opacity="0.85"/>
+          <text x="305" y="104" text-anchor="middle" fill="white" font-size="10" font-family="JetBrains Mono,monospace">Pop B</text>
+          <circle cx="310" cy="200" r="22" fill="#3d7a52" opacity="0.85"/>
+          <text x="310" y="204" text-anchor="middle" fill="white" font-size="10" font-family="JetBrains Mono,monospace">Pop C</text>
+          <circle cx="200" cy="250" r="22" fill="#5a9e6f" opacity="0.85"/>
+          <text x="200" y="254" text-anchor="middle" fill="white" font-size="10" font-family="JetBrains Mono,monospace">Pop D</text>
+          <circle cx="90" cy="200" r="22" fill="#8fbc9a"/>
+          <text x="90" y="204" text-anchor="middle" fill="#1a1a0e" font-size="10" font-family="JetBrains Mono,monospace">Pop E</text>
+          <circle cx="95" cy="100" r="22" fill="#c8dfc0"/>
+          <text x="95" y="104" text-anchor="middle" fill="#1a1a0e" font-size="10" font-family="JetBrains Mono,monospace">Pop F</text>
+          <!-- Interbreed arrows -->
+          <line x1="220" y1="62" x2="286" y2="88" stroke="#2d5a3d" stroke-width="1.5" marker-end="url(#arr)"/>
+          <line x1="305" y1="122" x2="312" y2="178" stroke="#2d5a3d" stroke-width="1.5" marker-end="url(#arr)"/>
+          <line x1="293" y1="214" x2="222" y2="240" stroke="#2d5a3d" stroke-width="1.5" marker-end="url(#arr)"/>
+          <line x1="178" y1="243" x2="112" y2="218" stroke="#2d5a3d" stroke-width="1.5" marker-end="url(#arr)"/>
+          <line x1="93" y1="178" x2="96" y2="122" stroke="#2d5a3d" stroke-width="1.5" marker-end="url(#arr)"/>
+          <!-- NO interbreed A-F -->
+          <line x1="115" y1="88" x2="180" y2="62" stroke="#8b3a2a" stroke-width="2" stroke-dasharray="4,3"/>
+          <text x="148" y="68" text-anchor="middle" font-size="10" fill="#8b3a2a" font-family="Lora,serif">✗ cannot</text>
+          <text x="148" y="80" text-anchor="middle" font-size="10" fill="#8b3a2a" font-family="Lora,serif">interbreed</text>
+        </svg>
+        <div class="diagram-caption">Adjacent populations interbreed freely (solid arrows), but the terminal populations A and F cannot interbreed — are they one species or two? The BSC cannot give a clean answer.</div>
+      </div>
+    </div>
+
+    <div class="quiz-block reveal">
+      <div class="quiz-label">📝 Self-Check Quiz — Week 6</div>
+      <div class="quiz-question">Two morphologically identical frog populations in Cameroon are found to be genetically distinct and do not interbreed when sympatric. They are best described as:</div>
+      <div class="quiz-options" id="q6-opts">
+        <button class="quiz-option" onclick="answerQ('q6','a','b')" data-id="a"><span class="option-letter">A</span> One species with high intraspecific variation</button>
+        <button class="quiz-option" onclick="answerQ('q6','b','b')" data-id="b"><span class="option-letter">B</span> Cryptic species</button>
+        <button class="quiz-option" onclick="answerQ('q6','c','b')" data-id="c"><span class="option-letter">C</span> Ring species</button>
+        <button class="quiz-option" onclick="answerQ('q6','d','b')" data-id="d"><span class="option-letter">D</span> Subspecies of the same species</button>
+      </div>
+      <div class="quiz-feedback" id="q6-feedback"></div>
+    </div>
+    <div class="week-nav-btns">
+      <button class="nav-btn" onclick="showSection('w5')"><div><span class="nav-btn-label">← Previous</span><span class="nav-btn-title">Below & Above Species</span></div></button>
+      <button class="mark-complete-btn" onclick="markDone('w6',this)">Mark Complete ✓</button>
+      <button class="nav-btn" onclick="showSection('w7')"><div><span class="nav-btn-label">Next →</span><span class="nav-btn-title">Nomenclature</span></div></button>
+    </div>
+  </section>
+
+  <!-- WEEKS 7–15: condensed but complete -->
+  <!-- ═══ WEEK 7 ═══ -->
+  <section class="week-section" id="w7-section">
+    <div class="week-header"><span class="week-number-badge">WEEK 07</span><div class="week-header-text"><h2>Biological Nomenclature — Rules & Codes</h2><p>ICZN · ICN · Priority · Type Specimens · Author Citation · Synonymy</p></div></div>
+    <div class="lo-box"><h3>Learning Outcomes</h3><ul class="lo-list"><li>Name the major nomenclatural codes and their scope</li><li>Apply the principle of priority to resolve synonymy</li><li>Write correct author citations with and without parentheses</li><li>Define holotype, lectotype, neotype, and paratype</li><li>Identify nomen nudum, nomen dubium, and nomen conservandum</li></ul></div>
+    <div class="content-block reveal">
+      <h3>7.1 The Major Nomenclatural Codes</h3>
+      <table class="def-table"><thead><tr><th>Code</th><th>Full Name</th><th>Scope</th><th>Starting Point</th></tr></thead><tbody>
+        <tr><td>ICZN</td><td>International Code of Zoological Nomenclature</td><td>Animals</td><td>Systema Naturae 10th ed., 1758</td></tr>
+        <tr><td>ICN</td><td>International Code of Nomenclature for algae, fungi, plants</td><td>Plants, algae, fungi</td><td>Species Plantarum, 1753</td></tr>
+        <tr><td>ICNP</td><td>International Code of Nomenclature of Prokaryotes</td><td>Bacteria, Archaea</td><td>1 January 1980</td></tr>
+        <tr><td>ICNCP</td><td>International Code for Cultivated Plants</td><td>Cultivated varieties</td><td>Ongoing editions</td></tr>
+      </tbody></table>
+    </div>
+    <div class="content-block reveal">
+      <h3>7.2 The Principle of Priority</h3>
+      <p>The oldest validly published name for a taxon takes priority and must be used. All later names for the same taxon become <strong>synonyms</strong>.</p>
+      <div class="key-box"><div class="key-box-title">📋 Requirements for Valid Publication</div><ul>
+        <li>Published in an effectively distributed scientific work (not a thesis or personal website)</li>
+        <li>Accompanied by a description or diagnosis distinguishing the taxon from others</li>
+        <li>Since 2012 (botany): must be registered in IPNI (plants) or MycoBank (fungi)</li>
+        <li>Since 2012 (botany): English diagnosis is acceptable; Latin no longer required</li>
+      </ul></div>
+    </div>
+    <div class="content-block reveal">
+      <h3>7.3 Type Specimens</h3>
+      <table class="def-table"><thead><tr><th>Type Category</th><th>Definition</th></tr></thead><tbody>
+        <tr><td>Holotype</td><td>Single specimen designated by original author; most authoritative</td></tr>
+        <tr><td>Paratype</td><td>Additional specimens cited in original description alongside the holotype</td></tr>
+        <tr><td>Lectotype</td><td>Specimen selected from original material when no holotype was designated</td></tr>
+        <tr><td>Neotype</td><td>New type designated when all original material has been lost or destroyed</td></tr>
+        <tr><td>Isotype</td><td>Duplicate of the holotype from the same collection event (botany)</td></tr>
+      </tbody></table>
+    </div>
+    <div class="content-block reveal">
+      <h3>7.4 Problematic Name Categories</h3>
+      <table class="def-table"><thead><tr><th>Latin Term</th><th>Abbreviation</th><th>Meaning</th></tr></thead><tbody>
+        <tr><td>Nomen nudum</td><td>nom. nud.</td><td>"Naked name" — published without description; not validly published; no standing</td></tr>
+        <tr><td>Nomen dubium</td><td>nom. dub.</td><td>"Doubtful name" — cannot be identified from original description</td></tr>
+        <tr><td>Nomen oblitum</td><td>nom. obl.</td><td>"Forgotten name" — unused for 50+ years; can be formally suppressed</td></tr>
+        <tr><td>Nomen conservandum</td><td>nom. cons.</td><td>"Conserved name" — later name formally retained by committee vote to avoid disruption</td></tr>
+      </tbody></table>
+    </div>
+    <div class="quiz-block reveal">
+      <div class="quiz-label">📝 Self-Check Quiz — Week 7</div>
+      <div class="quiz-question">The citation reads <em>Passer domesticus</em> (Linnaeus, 1758). What do the parentheses around "Linnaeus, 1758" indicate?</div>
+      <div class="quiz-options" id="q7-opts">
+        <button class="quiz-option" onclick="answerQ('q7','a','b')" data-id="a"><span class="option-letter">A</span> Linnaeus described the species after 1758 using a different method</button>
+        <button class="quiz-option" onclick="answerQ('q7','b','b')" data-id="b"><span class="option-letter">B</span> Linnaeus originally placed this species in a different genus; it was later moved to <em>Passer</em></button>
+        <button class="quiz-option" onclick="answerQ('q7','c','b')" data-id="c"><span class="option-letter">C</span> The name is a nomen dubium</button>
+        <button class="quiz-option" onclick="answerQ('q7','d','b')" data-id="d"><span class="option-letter">D</span> The species is a cultivar</button>
+      </div>
+      <div class="quiz-feedback" id="q7-feedback"></div>
+    </div>
+    <div class="week-nav-btns">
+      <button class="nav-btn" onclick="showSection('w6')"><div><span class="nav-btn-label">← Previous</span><span class="nav-btn-title">Species Concept</span></div></button>
+      <button class="mark-complete-btn" onclick="markDone('w7',this)">Mark Complete ✓</button>
+      <button class="nav-btn" onclick="showSection('w8')"><div><span class="nav-btn-label">Next →</span><span class="nav-btn-title">Mid-Semester Review</span></div></button>
+    </div>
+  </section>
+
+  <!-- WEEK 8 -->
+  <section class="week-section" id="w8-section">
+    <div class="week-header"><span class="week-number-badge">WEEK 08</span><div class="week-header-text"><h2>Mid-Semester Review</h2><p>Synthesis of Weeks 1–7 · Concept comparisons · Practice questions</p></div></div>
+    <div class="lo-box"><h3>Review Objectives</h3><ul class="lo-list"><li>Summarise key concepts from all seven preceding weeks</li><li>Compare major ideas across themes (e.g. species concepts, nomenclature rules)</li><li>Practise examination-style questions</li></ul></div>
+    <div class="content-block reveal">
+      <h3>8.1 Synthesis Summary Table</h3>
+      <table class="def-table"><thead><tr><th>Era</th><th>Key Figure</th><th>Main Contribution</th><th>Limitation</th></tr></thead><tbody>
+        <tr><td>Pre-Linnaean</td><td>Aristotle, Ray</td><td>Logical classification; first species concept</td><td>No universal naming; polynomial names</td></tr>
+        <tr><td>Linnaean</td><td>Linnaeus</td><td>Binomial nomenclature; hierarchical system</td><td>Fixed types; no evolutionary context</td></tr>
+        <tr><td>Darwinian</td><td>Darwin, Mayr</td><td>Evolutionary framework; BSC; population thinking</td><td>BSC inapplicable to asexuals/fossils</td></tr>
+        <tr><td>Modern</td><td>Hennig, Sokal</td><td>Cladistics; numerical taxonomy; molecular methods</td><td>No single method works for all groups</td></tr>
+      </tbody></table>
+    </div>
+    <div class="content-block reveal">
+      <h3>8.2 Practice Questions</h3>
+      <div class="key-box"><div class="key-box-title">📝 Short Answer — Attempt These Before Continuing</div><ul>
+        <li>State three limitations of the Biological Species Concept</li>
+        <li>Distinguish subspecies from variety with one example each</li>
+        <li>Why was binomial nomenclature an improvement on polynomial names?</li>
+        <li>What is a holotype and why is it important?</li>
+        <li>Give the full classification of <em>Homo sapiens</em> from Domain to Species</li>
+        <li>Compare typological thinking with population thinking</li>
+        <li>Define nomen nudum and state which rule it violates</li>
+      </ul></div>
+    </div>
+    <div class="quiz-block reveal">
+      <div class="quiz-label">📝 Review Quiz — Week 8</div>
+      <div class="quiz-question">Which of the following is NOT a requirement for a name to be validly published under the ICN?</div>
+      <div class="quiz-options" id="q8-opts">
+        <button class="quiz-option" onclick="answerQ('q8','a','c')" data-id="a"><span class="option-letter">A</span> Effective distribution of the publication</button>
+        <button class="quiz-option" onclick="answerQ('q8','b','c')" data-id="b"><span class="option-letter">B</span> Presence of a description or diagnosis</button>
+        <button class="quiz-option" onclick="answerQ('q8','c','c')" data-id="c"><span class="option-letter">C</span> Written in Latin (after 2012)</button>
+        <button class="quiz-option" onclick="answerQ('q8','d','c')" data-id="d"><span class="option-letter">D</span> Registration in IPNI or MycoBank (after 2012)</button>
+      </div>
+      <div class="quiz-feedback" id="q8-feedback"></div>
+    </div>
+    <div class="week-nav-btns">
+      <button class="nav-btn" onclick="showSection('w7')"><div><span class="nav-btn-label">← Previous</span><span class="nav-btn-title">Nomenclature</span></div></button>
+      <button class="mark-complete-btn" onclick="markDone('w8',this)">Mark Complete ✓</button>
+      <button class="nav-btn" onclick="showSection('w9')"><div><span class="nav-btn-label">Next →</span><span class="nav-btn-title">Numerical Taxonomy I</span></div></button>
+    </div>
+  </section>
+
+  <!-- WEEK 9 -->
+  <section class="week-section" id="w9-section">
+    <div class="week-header"><span class="week-number-badge">WEEK 09</span><div class="week-header-text"><h2>Numerical Taxonomy I</h2><p>OTUs · Character types · Coding · Similarity coefficients</p></div></div>
+    <div class="lo-box"><h3>Learning Outcomes</h3><ul class="lo-list"><li>Define OTU and explain its role in numerical taxonomy</li><li>Distinguish binary, multistate, and continuous characters</li><li>Calculate Simple Matching and Jaccard similarity coefficients</li><li>Identify invariant characters and explain why they contribute no information</li></ul></div>
+    <div class="content-block reveal">
+      <h3>9.1 Principles of Numerical Taxonomy</h3>
+      <p>Numerical taxonomy (phenetics) was formalised by Sokal & Sneath (1963). It classifies organisms by <strong>overall similarity</strong> across many characters simultaneously, aiming for objective, reproducible results.</p>
+      <table class="def-table"><thead><tr><th>Principle</th><th>Explanation</th></tr></thead><tbody>
+        <tr><td>OTU (Operational Taxonomic Unit)</td><td>The entity being classified — a specimen, population, or species. Must be clearly defined and comparable.</td></tr>
+        <tr><td>Many characters</td><td>Phenetics uses as many characters as possible (50–200) to represent overall similarity</td></tr>
+        <tr><td>Equal weighting</td><td>All characters are initially given equal weight — no character is a priori more important</td></tr>
+        <tr><td>Reproducibility</td><td>Same dataset → same result, regardless of who analyses it</td></tr>
+      </tbody></table>
+    </div>
+    <div class="content-block reveal">
+      <h3>9.2 Character Types and Coding</h3>
+      <table class="def-table"><thead><tr><th>Type</th><th>Description</th><th>Coding</th><th>Example</th></tr></thead><tbody>
+        <tr><td>Binary (2-state)</td><td>Present or absent</td><td>1 or 0</td><td>Wings: present=1, absent=0</td></tr>
+        <tr><td>Multistate qualitative</td><td>Multiple unordered states</td><td>0,1,2,3…</td><td>Flower colour: red=0, yellow=1, white=2</td></tr>
+        <tr><td>Quantitative continuous</td><td>Measured on a scale</td><td>z-score = (x−mean)/SD</td><td>Leaf length in mm</td></tr>
+        <tr><td>Meristic</td><td>Counted whole numbers</td><td>Raw count or standardised</td><td>Number of dorsal spines</td></tr>
+      </tbody></table>
+    </div>
+    <div class="content-block reveal">
+      <h3>9.3 Similarity Coefficients</h3>
+      <div class="diagram-container">
+        <div class="diagram-title">Simple Matching vs. Jaccard Coefficient</div>
+        <svg viewBox="0 0 600 200" width="100%" style="max-width:600px;">
+          <rect x="20" y="20" width="250" height="160" rx="6" fill="#e8f4ec" stroke="#2d5a3d" stroke-width="1.5"/>
+          <text x="145" y="45" text-anchor="middle" font-family="Playfair Display,serif" font-size="13" fill="#1a3a2a" font-weight="600">Simple Matching (SSM)</text>
+          <text x="145" y="70" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="12" fill="#2d5a3d">SSM = (a + d) / (a+b+c+d)</text>
+          <line x1="40" y1="85" x2="250" y2="85" stroke="#c8dfc0" stroke-width="1"/>
+          <text x="40" y="105" font-family="Lora,serif" font-size="11" fill="#444">a = both present (1-1 matches)</text>
+          <text x="40" y="122" font-family="Lora,serif" font-size="11" fill="#444">b = OTU1 present, OTU2 absent</text>
+          <text x="40" y="139" font-family="Lora,serif" font-size="11" fill="#444">c = OTU1 absent, OTU2 present</text>
+          <text x="40" y="156" font-family="Lora,serif" font-size="11" fill="#444">d = both absent (0-0 matches)</text>
+          <text x="145" y="175" text-anchor="middle" font-family="Lora,serif" font-size="10" fill="#777" font-style="italic">Includes negative matches (d)</text>
+
+          <rect x="330" y="20" width="250" height="160" rx="6" fill="#f0f4fa" stroke="#3a6b8a" stroke-width="1.5"/>
+          <text x="455" y="45" text-anchor="middle" font-family="Playfair Display,serif" font-size="13" fill="#1a3a2a" font-weight="600">Jaccard Coefficient (SJ)</text>
+          <text x="455" y="70" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="12" fill="#3a6b8a">SJ = a / (a + b + c)</text>
+          <line x1="350" y1="85" x2="560" y2="85" stroke="#c8dfc0" stroke-width="1"/>
+          <text x="350" y="105" font-family="Lora,serif" font-size="11" fill="#444">a = both present</text>
+          <text x="350" y="122" font-family="Lora,serif" font-size="11" fill="#444">b = OTU1 only</text>
+          <text x="350" y="139" font-family="Lora,serif" font-size="11" fill="#444">c = OTU2 only</text>
+          <text x="350" y="156" font-family="Lora,serif" font-size="11" fill="#8b3a2a">d = EXCLUDED (0-0 not counted)</text>
+          <text x="455" y="175" text-anchor="middle" font-family="Lora,serif" font-size="10" fill="#777" font-style="italic">Better for presence/absence data</text>
+        </svg>
+        <div class="diagram-caption">Use SSM when absences are meaningful; use Jaccard when shared absences may reflect inability to measure rather than true absence.</div>
+      </div>
+    </div>
+    <div class="quiz-block reveal">
+      <div class="quiz-label">📝 Self-Check Quiz — Week 9</div>
+      <div class="quiz-question">Two insect OTUs share 8 characters where both are present (a=8), differ in 2 where only OTU1 has the character (b=2), differ in 1 where only OTU2 has the character (c=1), and both lack 4 characters (d=4). What is the Jaccard coefficient?</div>
+      <div class="quiz-options" id="q9-opts">
+        <button class="quiz-option" onclick="answerQ('q9','a','b')" data-id="a"><span class="option-letter">A</span> 0.80</button>
+        <button class="quiz-option" onclick="answerQ('q9','b','b')" data-id="b"><span class="option-letter">B</span> 0.73 (= 8/11)</button>
+        <button class="quiz-option" onclick="answerQ('q9','c','b')" data-id="c"><span class="option-letter">C</span> 0.53 (= 8/15)</button>
+        <button class="quiz-option" onclick="answerQ('q9','d','b')" data-id="d"><span class="option-letter">D</span> 0.67</button>
+      </div>
+      <div class="quiz-feedback" id="q9-feedback"></div>
+    </div>
+    <div class="week-nav-btns">
+      <button class="nav-btn" onclick="showSection('w8')"><div><span class="nav-btn-label">← Previous</span><span class="nav-btn-title">Mid-Semester Review</span></div></button>
+      <button class="mark-complete-btn" onclick="markDone('w9',this)">Mark Complete ✓</button>
+      <button class="nav-btn" onclick="showSection('w10')"><div><span class="nav-btn-label">Next →</span><span class="nav-btn-title">Numerical Taxonomy II</span></div></button>
+    </div>
+  </section>
+
+  <!-- WEEK 10 -->
+  <section class="week-section" id="w10-section">
+    <div class="week-header"><span class="week-number-badge">WEEK 10</span><div class="week-header-text"><h2>Numerical Taxonomy II</h2><p>Cluster analysis · UPGMA · Dendrograms · PCA · Critique of phenetics</p></div></div>
+    <div class="lo-box"><h3>Learning Outcomes</h3><ul class="lo-list"><li>Explain the UPGMA clustering method step by step</li><li>Construct and interpret a simple dendrogram</li><li>Explain the cophenetic correlation coefficient</li><li>State three criticisms of the phenetic approach</li></ul></div>
+    <div class="content-block reveal">
+      <h3>10.1 UPGMA — Unweighted Pair Group Method with Arithmetic Mean</h3>
+      <p>The most common phenetic clustering method. Steps:</p>
+      <div class="key-box"><div class="key-box-title">🔢 UPGMA Algorithm</div><ul>
+        <li>Step 1: Find the pair of OTUs with the smallest distance in the similarity matrix</li>
+        <li>Step 2: Merge them into a cluster; place node at halfway point on the distance axis</li>
+        <li>Step 3: Recalculate distances from the new cluster to all remaining OTUs (arithmetic mean)</li>
+        <li>Step 4: Repeat Steps 1–3 until all OTUs are joined into one tree</li>
+      </ul></div>
+    </div>
+    <div class="content-block reveal">
+      <h3>10.2 Reading a Dendrogram</h3>
+      <div class="diagram-container">
+        <div class="diagram-title">Sample Phenogram — 5 Insect OTUs (hover nodes)</div>
+        <svg viewBox="0 0 580 280" width="100%" style="max-width:580px;" class="cladogram-interactive">
+          <!-- Axis -->
+          <line x1="60" y1="240" x2="540" y2="240" stroke="#ccc" stroke-width="1"/>
+          <text x="60" y="258" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#999">0.0</text>
+          <text x="180" y="258" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#999">0.3</text>
+          <text x="300" y="258" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#999">0.5</text>
+          <text x="420" y="258" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#999">0.7</text>
+          <text x="540" y="258" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#999">1.0</text>
+          <text x="300" y="272" text-anchor="middle" font-family="Lora,serif" font-size="10" fill="#777">← Distance →</text>
+
+          <!-- OTU labels -->
+          <text x="556" y="44" font-family="JetBrains Mono,monospace" font-size="11" fill="#1a3a2a">A</text>
+          <text x="556" y="84" font-family="JetBrains Mono,monospace" font-size="11" fill="#1a3a2a">B</text>
+          <text x="556" y="124" font-family="JetBrains Mono,monospace" font-size="11" fill="#1a3a2a">C</text>
+          <text x="556" y="164" font-family="JetBrains Mono,monospace" font-size="11" fill="#1a3a2a">D</text>
+          <text x="556" y="204" font-family="JetBrains Mono,monospace" font-size="11" fill="#1a3a2a">E</text>
+
+          <!-- Branches -->
+          <line x1="540" y1="40" x2="480" y2="40" stroke="#2d5a3d" stroke-width="2"/>
+          <line x1="540" y1="80" x2="480" y2="80" stroke="#2d5a3d" stroke-width="2"/>
+          <line x1="480" y1="40" x2="480" y2="80" stroke="#2d5a3d" stroke-width="2"/>
+          <line x1="480" y1="60" x2="380" y2="60" stroke="#2d5a3d" stroke-width="2"/>
+
+          <line x1="540" y1="120" x2="460" y2="120" stroke="#2d5a3d" stroke-width="2"/>
+          <line x1="540" y1="160" x2="460" y2="160" stroke="#2d5a3d" stroke-width="2"/>
+          <line x1="460" y1="120" x2="460" y2="160" stroke="#2d5a3d" stroke-width="2"/>
+          <line x1="460" y1="140" x2="380" y2="140" stroke="#2d5a3d" stroke-width="2"/>
+
+          <line x1="380" y1="60" x2="380" y2="140" stroke="#2d5a3d" stroke-width="2"/>
+          <line x1="380" y1="100" x2="220" y2="100" stroke="#2d5a3d" stroke-width="2"/>
+
+          <line x1="540" y1="200" x2="220" y2="200" stroke="#2d5a3d" stroke-width="2"/>
+          <line x1="220" y1="100" x2="220" y2="200" stroke="#2d5a3d" stroke-width="2"/>
+          <line x1="220" y1="150" x2="60" y2="150" stroke="#2d5a3d" stroke-width="2"/>
+
+          <!-- Cluster nodes -->
+          <circle cx="480" cy="60" r="6" fill="#c8960c" class="clade-node"><title>Cluster A+B: distance 0.25 — very similar</title></circle>
+          <circle cx="460" cy="140" r="6" fill="#c8960c" class="clade-node"><title>Cluster C+D: distance 0.30</title></circle>
+          <circle cx="380" cy="100" r="6" fill="#5a9e6f" class="clade-node"><title>Cluster (A+B)+(C+D): distance 0.45</title></circle>
+          <circle cx="220" cy="150" r="6" fill="#3d7a52" class="clade-node"><title>Root cluster + E: distance 0.80</title></circle>
+
+          <!-- Annotations -->
+          <text x="480" y="28" text-anchor="middle" font-family="Lora,serif" font-size="9" fill="#c8960c" font-style="italic">d=0.25</text>
+          <text x="460" y="108" text-anchor="middle" font-family="Lora,serif" font-size="9" fill="#c8960c" font-style="italic">d=0.30</text>
+          <text x="380" y="88" text-anchor="middle" font-family="Lora,serif" font-size="9" fill="#5a9e6f" font-style="italic">d=0.45</text>
+        </svg>
+        <div class="diagram-caption">Hover the coloured nodes to read cluster similarity values. OTUs A and B are most similar (d=0.25); E is most distinct from all others.</div>
+      </div>
+    </div>
+    <div class="content-block reveal">
+      <h3>10.3 Critique of Phenetics</h3>
+      <table class="def-table"><thead><tr><th>Criticism</th><th>Explanation</th></tr></thead><tbody>
+        <tr><td>Similarity ≠ relationship</td><td>Convergent evolution makes unrelated taxa appear similar. Whales and fish group together by phenetics but are not closely related.</td></tr>
+        <tr><td>Homoplasy undetected</td><td>Cannot distinguish homologous characters from analogous ones</td></tr>
+        <tr><td>Character sampling bias</td><td>Different character sets can produce radically different phenograms from the same organisms</td></tr>
+        <tr><td>Equal weighting is itself a bias</td><td>Claiming no weighting still assigns equal weight — this is a theoretical assumption</td></tr>
+      </tbody></table>
+    </div>
+    <div class="quiz-block reveal">
+      <div class="quiz-label">📝 Self-Check Quiz — Week 10</div>
+      <div class="quiz-question">A phenogram groups dolphins and tuna fish together based on streamlined body form and fin-like appendages. This result is most likely due to:</div>
+      <div class="quiz-options" id="q10-opts">
+        <button class="quiz-option" onclick="answerQ('q10','a','c')" data-id="a"><span class="option-letter">A</span> Shared ancestry (synapomorphy)</button>
+        <button class="quiz-option" onclick="answerQ('q10','b','c')" data-id="b"><span class="option-letter">B</span> Correct application of the Jaccard coefficient</button>
+        <button class="quiz-option" onclick="answerQ('q10','c','c')" data-id="c"><span class="option-letter">C</span> Convergent evolution creating homoplasy in the dataset</button>
+        <button class="quiz-option" onclick="answerQ('q10','d','c')" data-id="d"><span class="option-letter">D</span> Both being in the same order</button>
+      </div>
+      <div class="quiz-feedback" id="q10-feedback"></div>
+    </div>
+    <div class="week-nav-btns">
+      <button class="nav-btn" onclick="showSection('w9')"><div><span class="nav-btn-label">← Previous</span><span class="nav-btn-title">Numerical Taxonomy I</span></div></button>
+      <button class="mark-complete-btn" onclick="markDone('w10',this)">Mark Complete ✓</button>
+      <button class="nav-btn" onclick="showSection('w11')"><div><span class="nav-btn-label">Next →</span><span class="nav-btn-title">Cladistics</span></div></button>
+    </div>
+  </section>
+
+  <!-- WEEK 11 -->
+  <section class="week-section" id="w11-section">
+    <div class="week-header"><span class="week-number-badge">WEEK 11</span><div class="week-header-text"><h2>Cladistics & Phylogenetic Systematics</h2><p>Hennig's principles · Synapomorphies · Cladogram construction · Monophyly</p></div></div>
+    <div class="lo-box"><h3>Learning Outcomes</h3><ul class="lo-list"><li>Define synapomorphy, symplesiomorphy, and autapomorphy</li><li>Distinguish monophyletic, paraphyletic, and polyphyletic groups</li><li>Use outgroup comparison to polarise characters</li><li>Apply parsimony to choose between alternative cladograms</li></ul></div>
+    <div class="content-block reveal">
+      <h3>11.1 Hennig's Core Principles</h3>
+      <table class="def-table"><thead><tr><th>Term</th><th>Definition</th><th>Taxonomic Use</th></tr></thead><tbody>
+        <tr><td>Synapomorphy</td><td>Shared derived character state — inherited from an immediate common ancestor</td><td>The ONLY valid basis for grouping taxa in cladistics</td></tr>
+        <tr><td>Symplesiomorphy</td><td>Shared ancestral (primitive) character — present in the common ancestor of a larger group</td><td>Cannot be used to define a clade — tells us nothing about recent common ancestry</td></tr>
+        <tr><td>Autapomorphy</td><td>Unique derived character in one taxon only</td><td>Diagnoses the taxon but does not help in grouping</td></tr>
+        <tr><td>Outgroup</td><td>Taxon outside the study group used to determine character polarity</td><td>Character state found in the outgroup = ancestral (plesiomorphic)</td></tr>
+      </tbody></table>
+    </div>
+    <div class="content-block reveal">
+      <h3>11.2 Types of Groups — Animated Cladogram</h3>
+      <div class="diagram-container">
+        <div class="diagram-title">Monophyletic vs. Paraphyletic vs. Polyphyletic (hover groups)</div>
+        <svg viewBox="0 0 660 300" width="100%" style="max-width:660px;" class="cladogram-interactive">
+          <!-- MONOPHYLETIC -->
+          <rect x="10" y="10" width="190" height="280" rx="6" fill="#e8f4ec" stroke="#2d5a3d" stroke-width="1.5"/>
+          <text x="105" y="30" text-anchor="middle" font-family="Playfair Display,serif" font-size="12" fill="#1a3a2a" font-weight="600">Monophyletic ✓</text>
+          <text x="105" y="44" text-anchor="middle" font-family="Lora,serif" font-size="10" fill="#2d5a3d" font-style="italic">ancestor + ALL descendants</text>
+          <line x1="105" y1="58" x2="105" y2="90" stroke="#2d5a3d" stroke-width="2"/>
+          <line x1="75" y1="90" x2="135" y2="90" stroke="#2d5a3d" stroke-width="2"/>
+          <line x1="75" y1="90" x2="75" y2="120" stroke="#2d5a3d" stroke-width="2"/>
+          <line x1="135" y1="90" x2="135" y2="120" stroke="#2d5a3d" stroke-width="2"/>
+          <line x1="60" y1="120" x2="90" y2="120" stroke="#2d5a3d" stroke-width="2"/>
+          <line x1="60" y1="120" x2="60" y2="155" stroke="#2d5a3d" stroke-width="2"/>
+          <line x1="90" y1="120" x2="90" y2="155" stroke="#2d5a3d" stroke-width="2"/>
+          <circle cx="60" cy="168" r="12" fill="#2d5a3d"/><text x="60" y="172" text-anchor="middle" fill="white" font-size="9" font-family="JetBrains Mono,monospace">A</text>
+          <circle cx="90" cy="168" r="12" fill="#2d5a3d"/><text x="90" y="172" text-anchor="middle" fill="white" font-size="9" font-family="JetBrains Mono,monospace">B</text>
+          <circle cx="135" cy="168" r="12" fill="#2d5a3d"/><text x="135" y="172" text-anchor="middle" fill="white" font-size="9" font-family="JetBrains Mono,monospace">C</text>
+          <rect x="40" y="150" width="115" height="40" rx="4" fill="none" stroke="#c8960c" stroke-width="2" stroke-dasharray="4,2"/>
+          <text x="97" y="212" text-anchor="middle" font-family="Lora,serif" font-size="10" fill="#c8960c">Clade {A+B+C} = valid</text>
+          <text x="97" y="228" text-anchor="middle" font-family="Lora,serif" font-size="10" fill="#555">All share unique</text>
+          <text x="97" y="244" text-anchor="middle" font-family="Lora,serif" font-size="10" fill="#555">ancestor (node ★)</text>
+          <circle cx="105" cy="90" r="8" fill="#c8960c"/><text x="105" y="94" text-anchor="middle" fill="white" font-size="9">★</text>
+
+          <!-- PARAPHYLETIC -->
+          <rect x="235" y="10" width="190" height="280" rx="6" fill="#fff8e8" stroke="#c8960c" stroke-width="1.5"/>
+          <text x="330" y="30" text-anchor="middle" font-family="Playfair Display,serif" font-size="12" fill="#1a3a2a" font-weight="600">Paraphyletic ✗</text>
+          <text x="330" y="44" text-anchor="middle" font-family="Lora,serif" font-size="10" fill="#8b3a2a" font-style="italic">ancestor + SOME descendants</text>
+          <line x1="330" y1="58" x2="330" y2="90" stroke="#2d5a3d" stroke-width="2"/>
+          <line x1="290" y1="90" x2="370" y2="90" stroke="#2d5a3d" stroke-width="2"/>
+          <line x1="290" y1="90" x2="290" y2="120" stroke="#2d5a3d" stroke-width="2"/>
+          <line x1="370" y1="90" x2="370" y2="155" stroke="#2d5a3d" stroke-width="2"/>
+          <line x1="270" y1="120" x2="310" y2="120" stroke="#2d5a3d" stroke-width="2"/>
+          <line x1="270" y1="120" x2="270" y2="155" stroke="#2d5a3d" stroke-width="2"/>
+          <line x1="310" y1="120" x2="310" y2="155" stroke="#2d5a3d" stroke-width="2"/>
+          <circle cx="270" cy="168" r="12" fill="#2d5a3d"/><text x="270" y="172" text-anchor="middle" fill="white" font-size="9" font-family="JetBrains Mono,monospace">A</text>
+          <circle cx="310" cy="168" r="12" fill="#2d5a3d"/><text x="310" y="172" text-anchor="middle" fill="white" font-size="9" font-family="JetBrains Mono,monospace">B</text>
+          <circle cx="370" cy="168" r="12" fill="#c8960c"/><text x="370" y="172" text-anchor="middle" fill="white" font-size="9" font-family="JetBrains Mono,monospace">C</text>
+          <rect x="250" y="150" width="80" height="40" rx="4" fill="none" stroke="#8b3a2a" stroke-width="2" stroke-dasharray="4,2"/>
+          <text x="330" y="212" text-anchor="middle" font-family="Lora,serif" font-size="10" fill="#8b3a2a">{A+B} without C = invalid</text>
+          <text x="330" y="228" text-anchor="middle" font-family="Lora,serif" font-size="10" fill="#555">e.g. "Reptilia" without birds</text>
+
+          <!-- POLYPHYLETIC -->
+          <rect x="460" y="10" width="190" height="280" rx="6" fill="#fde8e8" stroke="#8b3a2a" stroke-width="1.5"/>
+          <text x="555" y="30" text-anchor="middle" font-family="Playfair Display,serif" font-size="12" fill="#1a3a2a" font-weight="600">Polyphyletic ✗✗</text>
+          <text x="555" y="44" text-anchor="middle" font-family="Lora,serif" font-size="10" fill="#8b3a2a" font-style="italic">unrelated taxa grouped together</text>
+          <line x1="510" y1="58" x2="510" y2="120" stroke="#2d5a3d" stroke-width="2"/>
+          <line x1="600" y1="58" x2="600" y2="120" stroke="#2d5a3d" stroke-width="2"/>
+          <line x1="490" y1="120" x2="530" y2="120" stroke="#2d5a3d" stroke-width="2"/>
+          <line x1="580" y1="120" x2="620" y2="120" stroke="#2d5a3d" stroke-width="2"/>
+          <line x1="490" y1="120" x2="490" y2="155" stroke="#2d5a3d" stroke-width="2"/>
+          <line x1="530" y1="120" x2="530" y2="155" stroke="#2d5a3d" stroke-width="2"/>
+          <line x1="580" y1="120" x2="580" y2="155" stroke="#2d5a3d" stroke-width="2"/>
+          <line x1="620" y1="120" x2="620" y2="155" stroke="#2d5a3d" stroke-width="2"/>
+          <circle cx="490" cy="168" r="12" fill="#2d5a3d"/><text x="490" y="172" text-anchor="middle" fill="white" font-size="8">Bird</text>
+          <circle cx="530" cy="168" r="12" fill="#2d5a3d"/><text x="530" y="172" text-anchor="middle" fill="white" font-size="8">Bat</text>
+          <circle cx="580" cy="168" r="12" fill="#8b3a2a"/><text x="580" y="172" text-anchor="middle" fill="white" font-size="8">Fly</text>
+          <circle cx="620" cy="168" r="12" fill="#8b3a2a"/><text x="620" y="172" text-anchor="middle" fill="white" font-size="8">Bee</text>
+          <rect x="470" y="150" width="80" height="40" rx="4" fill="none" stroke="#8b3a2a" stroke-width="2" stroke-dasharray="4,2"/>
+          <rect x="560" y="150" width="80" height="40" rx="4" fill="none" stroke="#8b3a2a" stroke-width="2" stroke-dasharray="4,2"/>
+          <line x1="490" y1="195" x2="620" y2="195" stroke="#8b3a2a" stroke-width="1.5" stroke-dasharray="3,3"/>
+          <text x="555" y="215" text-anchor="middle" font-family="Lora,serif" font-size="10" fill="#8b3a2a">"Flying animals" — invalid!</text>
+          <text x="555" y="231" text-anchor="middle" font-family="Lora,serif" font-size="10" fill="#555">Wings evolved independently</text>
+        </svg>
+        <div class="diagram-caption">Cladistics accepts ONLY monophyletic groups. Paraphyletic and polyphyletic groupings are rejected because they do not reflect evolutionary history.</div>
+      </div>
+    </div>
+    <div class="quiz-block reveal">
+      <div class="quiz-label">📝 Self-Check Quiz — Week 11</div>
+      <div class="quiz-question">The traditional class "Reptilia" (lizards, snakes, turtles, crocodiles) EXCLUDES birds, even though birds descended from the same ancestor as crocodiles. This makes Reptilia:</div>
+      <div class="quiz-options" id="q11-opts">
+        <button class="quiz-option" onclick="answerQ('q11','a','b')" data-id="a"><span class="option-letter">A</span> Monophyletic — it includes all descendants of one ancestor</button>
+        <button class="quiz-option" onclick="answerQ('q11','b','b')" data-id="b"><span class="option-letter">B</span> Paraphyletic — it excludes birds which are descendants of the same ancestor</button>
+        <button class="quiz-option" onclick="answerQ('q11','c','b')" data-id="c"><span class="option-letter">C</span> Polyphyletic — reptiles evolved independently multiple times</button>
+        <button class="quiz-option" onclick="answerQ('q11','d','b')" data-id="d"><span class="option-letter">D</span> Artificially classified — it is based on ecological roles</button>
+      </div>
+      <div class="quiz-feedback" id="q11-feedback"></div>
+    </div>
+    <div class="week-nav-btns">
+      <button class="nav-btn" onclick="showSection('w10')"><div><span class="nav-btn-label">← Previous</span><span class="nav-btn-title">Numerical Taxonomy II</span></div></button>
+      <button class="mark-complete-btn" onclick="markDone('w11',this)">Mark Complete ✓</button>
+      <button class="nav-btn" onclick="showSection('w12')"><div><span class="nav-btn-label">Next →</span><span class="nav-btn-title">Molecular Systematics</span></div></button>
+    </div>
+  </section>
+
+  <!-- WEEK 12 -->
+  <section class="week-section" id="w12-section">
+    <div class="week-header"><span class="week-number-badge">WEEK 12</span><div class="week-header-text"><h2>Molecular Systematics & Integrative Taxonomy</h2><p>DNA barcoding · Phylogenomics · Combining evidence streams</p></div></div>
+    <div class="lo-box"><h3>Learning Outcomes</h3><ul class="lo-list"><li>Explain DNA barcoding and state the standard markers for animals, plants, and fungi</li><li>Distinguish single-gene phylogenetics from phylogenomics</li><li>Explain gene tree vs. species tree discordance</li><li>Define integrative taxonomy and list its evidence streams</li></ul></div>
+    <div class="content-block reveal">
+      <h3>12.1 DNA Barcoding</h3>
+      <table class="def-table"><thead><tr><th>Marker</th><th>Genome</th><th>Standard Group</th><th>Size</th></tr></thead><tbody>
+        <tr><td>COI (Cytochrome c oxidase I)</td><td>Mitochondrial</td><td>Animals (standard barcode)</td><td>~650 bp</td></tr>
+        <tr><td>rbcL + matK</td><td>Plastid</td><td>Land plants (two-locus barcode)</td><td>~550 + 900 bp</td></tr>
+        <tr><td>ITS (Internal Transcribed Spacer)</td><td>Nuclear ribosomal</td><td>Fungi (and many plants)</td><td>~600 bp</td></tr>
+        <tr><td>16S rRNA</td><td>Ribosomal</td><td>Bacteria, Archaea</td><td>~1500 bp</td></tr>
+      </tbody></table>
+      <div class="note-box"><span class="note-icon">🇳🇬</span><p><strong>Nigerian application:</strong> DNA barcoding has been used to identify bush meat species at Nigerian markets, detecting illegal trade in protected species including pangolins and primates where morphological identification of processed meat is impossible.</p></div>
+    </div>
+    <div class="content-block reveal">
+      <h3>12.2 Integrative Taxonomy Framework</h3>
+      <div class="diagram-container">
+        <div class="diagram-title">Integrative Taxonomy — Evidence Streams</div>
+        <svg viewBox="0 0 500 340" width="100%" style="max-width:500px;">
+          <!-- Central hub -->
+          <circle cx="250" cy="170" r="55" fill="#1a3a2a"/>
+          <text x="250" y="163" text-anchor="middle" font-family="Playfair Display,serif" font-size="13" fill="white" font-weight="600">Integrative</text>
+          <text x="250" y="180" text-anchor="middle" font-family="Playfair Display,serif" font-size="13" fill="white" font-weight="600">Taxonomy</text>
+          <text x="250" y="196" text-anchor="middle" font-family="Lora,serif" font-size="10" fill="#8fbc9a" font-style="italic">species delimitation</text>
+
+          <!-- Spokes -->
+          <line x1="200" y1="125" x2="145" y2="70" stroke="#5a9e6f" stroke-width="1.5"/>
+          <line x1="250" y1="115" x2="250" y2="50" stroke="#5a9e6f" stroke-width="1.5"/>
+          <line x1="300" y1="125" x2="355" y2="70" stroke="#5a9e6f" stroke-width="1.5"/>
+          <line x1="305" y1="170" x2="390" y2="170" stroke="#5a9e6f" stroke-width="1.5"/>
+          <line x1="300" y1="215" x2="355" y2="270" stroke="#5a9e6f" stroke-width="1.5"/>
+          <line x1="250" y1="225" x2="250" y2="295" stroke="#5a9e6f" stroke-width="1.5"/>
+          <line x1="195" y1="215" x2="140" y2="270" stroke="#5a9e6f" stroke-width="1.5"/>
+          <line x1="195" y1="170" x2="110" y2="170" stroke="#5a9e6f" stroke-width="1.5"/>
+
+          <!-- Nodes -->
+          <circle cx="130" cy="58" r="38" fill="#2d5a3d"/>
+          <text x="130" y="52" text-anchor="middle" fill="white" font-size="10" font-family="Lora,serif">Morphology</text>
+          <text x="130" y="66" text-anchor="middle" fill="#c8dfc0" font-size="9" font-family="Lora,serif">anatomy · SEM</text>
+
+          <circle cx="250" cy="34" r="34" fill="#3d7a52"/>
+          <text x="250" y="28" text-anchor="middle" fill="white" font-size="10" font-family="Lora,serif">Molecules</text>
+          <text x="250" y="42" text-anchor="middle" fill="#c8dfc0" font-size="9" font-family="Lora,serif">DNA · proteins</text>
+
+          <circle cx="370" cy="58" r="38" fill="#2d5a3d"/>
+          <text x="370" y="52" text-anchor="middle" fill="white" font-size="10" font-family="Lora,serif">Ecology</text>
+          <text x="370" y="66" text-anchor="middle" fill="#c8dfc0" font-size="9" font-family="Lora,serif">niche · habitat</text>
+
+          <circle cx="415" cy="170" r="34" fill="#3d7a52"/>
+          <text x="415" y="164" text-anchor="middle" fill="white" font-size="10" font-family="Lora,serif">Behaviour</text>
+          <text x="415" y="178" text-anchor="middle" fill="#c8dfc0" font-size="9" font-family="Lora,serif">mate signals</text>
+
+          <circle cx="370" cy="280" r="38" fill="#2d5a3d"/>
+          <text x="370" y="274" text-anchor="middle" fill="white" font-size="10" font-family="Lora,serif">Geography</text>
+          <text x="370" y="288" text-anchor="middle" fill="#c8dfc0" font-size="9" font-family="Lora,serif">distribution</text>
+
+          <circle cx="250" cy="310" r="34" fill="#3d7a52"/>
+          <text x="250" y="304" text-anchor="middle" fill="white" font-size="10" font-family="Lora,serif">Chromosomes</text>
+          <text x="250" y="318" text-anchor="middle" fill="#c8dfc0" font-size="9" font-family="Lora,serif">karyotype</text>
+
+          <circle cx="130" cy="280" r="38" fill="#2d5a3d"/>
+          <text x="130" y="274" text-anchor="middle" fill="white" font-size="10" font-family="Lora,serif">Reproduction</text>
+          <text x="130" y="288" text-anchor="middle" fill="#c8dfc0" font-size="9" font-family="Lora,serif">crossing expts</text>
+
+          <circle cx="85" cy="170" r="34" fill="#3d7a52"/>
+          <text x="85" y="164" text-anchor="middle" fill="white" font-size="10" font-family="Lora,serif">Chemistry</text>
+          <text x="85" y="178" text-anchor="middle" fill="#c8dfc0" font-size="9" font-family="Lora,serif">metabolites</text>
+        </svg>
+        <div class="diagram-caption">Integrative taxonomy combines all available evidence. A species description using 3+ evidence streams is considered highly robust.</div>
+      </div>
+    </div>
+    <div class="quiz-block reveal">
+      <div class="quiz-label">📝 Self-Check Quiz — Week 12</div>
+      <div class="quiz-question">A customs officer intercepts dried fish at Lagos airport and needs to identify the species for CITES compliance. The most appropriate rapid identification tool is:</div>
+      <div class="quiz-options" id="q12-opts">
+        <button class="quiz-option" onclick="answerQ('q12','a','b')" data-id="a"><span class="option-letter">A</span> A morphological dichotomous key for fresh fish</button>
+        <button class="quiz-option" onclick="answerQ('q12','b','b')" data-id="b"><span class="option-letter">B</span> DNA barcoding (COI gene sequencing)</button>
+        <button class="quiz-option" onclick="answerQ('q12','c','b')" data-id="c"><span class="option-letter">C</span> Numerical taxonomy using a phenogram</button>
+        <button class="quiz-option" onclick="answerQ('q12','d','b')" data-id="d"><span class="option-letter">D</span> Outgroup comparison using cladistics</button>
+      </div>
+      <div class="quiz-feedback" id="q12-feedback"></div>
+    </div>
+    <div class="week-nav-btns">
+      <button class="nav-btn" onclick="showSection('w11')"><div><span class="nav-btn-label">← Previous</span><span class="nav-btn-title">Cladistics</span></div></button>
+      <button class="mark-complete-btn" onclick="markDone('w12',this)">Mark Complete ✓</button>
+      <button class="nav-btn" onclick="showSection('w13')"><div><span class="nav-btn-label">Next →</span><span class="nav-btn-title">Keys — Theory</span></div></button>
+    </div>
+  </section>
+
+  <!-- WEEK 13 -->
+  <section class="week-section" id="w13-section">
+    <div class="week-header"><span class="week-number-badge">WEEK 13</span><div class="week-header-text"><h2>Keys and Keying — Theory & Types</h2><p>Dichotomous · Polyclave · Pictorial · Principles of construction</p></div></div>
+    <div class="lo-box"><h3>Learning Outcomes</h3><ul class="lo-list"><li>Define a taxonomic key and explain its purpose</li><li>Distinguish bracketed from indented dichotomous keys</li><li>Compare dichotomous and polyclave keys</li><li>State the principles of good key construction</li></ul></div>
+    <div class="content-block reveal">
+      <h3>13.1 Types of Keys</h3>
+      <div class="cards-grid">
+        <div class="concept-card" onclick="toggleCard(this)"><span class="card-toggle">+</span><div class="card-icon">🔀</div><div class="card-title">Bracketed Dichotomous Key</div><div class="card-text">Both leads of each couplet are adjacent. Compact but harder to navigate visually.</div><div class="card-detail">Example format:<br>1a. Leaves opposite…… 2<br>1b. Leaves alternate…… 5<br>2a. Petals 4, free…… Brassicaceae<br>2b. Petals not 4, free…… 3</div></div>
+        <div class="concept-card" onclick="toggleCard(this)"><span class="card-toggle">+</span><div class="card-icon">↕️</div><div class="card-title">Indented Dichotomous Key</div><div class="card-text">Contrasting leads at same indentation level. More visual but very long for large groups.</div><div class="card-detail">The indented format is more intuitive for beginners — you can see the branching structure visually, unlike the bracketed format where leads may be many pages apart.</div></div>
+        <div class="concept-card" onclick="toggleCard(this)"><span class="card-toggle">+</span><div class="card-icon">🎛️</div><div class="card-title">Polyclave (Multi-access) Key</div><div class="card-text">User selects characters in any order. Ideal for damaged specimens or missing data.</div><div class="card-detail">Used in DELTA, Lucid, and iNaturalist systems. User selects any observable character first; the system eliminates non-matching taxa progressively until one remains.</div></div>
+        <div class="concept-card" onclick="toggleCard(this)"><span class="card-toggle">+</span><div class="card-icon">🖼️</div><div class="card-title">Pictorial Key</div><div class="card-text">Photographs or drawings as primary identification tool. Ideal for non-specialists.</div><div class="card-detail">Field guides for birds, butterflies, and wildflowers are essentially pictorial keys. Best for organisms with visually distinctive features; breaks down for subtle morphological differences.</div></div>
+      </div>
+    </div>
+    <div class="content-block reveal">
+      <h3>13.2 Principles of Good Key Construction</h3>
+      <table class="def-table"><thead><tr><th>Principle</th><th>Rule</th><th>Example of Violation</th></tr></thead><tbody>
+        <tr><td>Mutually exclusive</td><td>The two leads must be truly contrasting; no overlap</td><td>"Leaves 3–5 cm" vs. "Leaves 4–8 cm" — overlap at 4–5 cm</td></tr>
+        <tr><td>Parallel structure</td><td>Both leads start with the same organ or word</td><td>Lead 1a: "Leaves simple" / Lead 1b: "Flowers present" — different organs</td></tr>
+        <tr><td>Observable characters</td><td>Use characters visible on a typical specimen</td><td>"Scent pleasant" — subjective and variable</td></tr>
+        <tr><td>Stable characters</td><td>Avoid characters that vary with age, season, or sex</td><td>"Flowers present" — useless in vegetative season</td></tr>
+        <tr><td>Single path</td><td>Every taxon reachable by one path only</td><td>Same species appearing at two endpoints</td></tr>
+      </tbody></table>
+    </div>
+    <div class="practical-box">
+      <div class="practical-label">🔬 Practical Connection — Week 13</div>
+      <p>In your Week 5 practical (Using Keys — Plants), you used a published flora. Now that you understand construction principles, go back and identify: (a) one couplet where you were uncertain between leads, and (b) state which principle it may have violated.</p>
+    </div>
+    <div class="quiz-block reveal">
+      <div class="quiz-label">📝 Self-Check Quiz — Week 13</div>
+      <div class="quiz-question">A couplet reads: "1a. Leaves 3–6 cm long…… 2" and "1b. Leaves 5–10 cm long…… 3". Which key construction principle does this violate?</div>
+      <div class="quiz-options" id="q13-opts">
+        <button class="quiz-option" onclick="answerQ('q13','a','a')" data-id="a"><span class="option-letter">A</span> Mutually exclusive — the ranges overlap between 5 and 6 cm</button>
+        <button class="quiz-option" onclick="answerQ('q13','b','a')" data-id="b"><span class="option-letter">B</span> Parallel structure — both leads refer to different organs</button>
+        <button class="quiz-option" onclick="answerQ('q13','c','a')" data-id="c"><span class="option-letter">C</span> Observable characters — leaf length cannot be measured</button>
+        <button class="quiz-option" onclick="answerQ('q13','d','a')" data-id="d"><span class="option-letter">D</span> Single path — this would create two paths to the same taxon</button>
+      </div>
+      <div class="quiz-feedback" id="q13-feedback"></div>
+    </div>
+    <div class="week-nav-btns">
+      <button class="nav-btn" onclick="showSection('w12')"><div><span class="nav-btn-label">← Previous</span><span class="nav-btn-title">Molecular Systematics</span></div></button>
+      <button class="mark-complete-btn" onclick="markDone('w13',this)">Mark Complete ✓</button>
+      <button class="nav-btn" onclick="showSection('w14')"><div><span class="nav-btn-label">Next →</span><span class="nav-btn-title">Key Construction</span></div></button>
+    </div>
+  </section>
+
+  <!-- WEEK 14 -->
+  <section class="week-section" id="w14-section">
+    <div class="week-header"><span class="week-number-badge">WEEK 14</span><div class="week-header-text"><h2>Keys — Construction Practice</h2><p>Step-by-step key building · Common errors · Digital tools</p></div></div>
+    <div class="lo-box"><h3>Learning Outcomes</h3><ul class="lo-list"><li>Construct a functional dichotomous key for 5–10 taxa</li><li>Identify and correct common key construction errors</li><li>Use iNaturalist and Lucid for digital identification</li><li>Evaluate the limitations of keys for atypical specimens</li></ul></div>
+    <div class="content-block reveal">
+      <h3>14.1 Step-by-Step Key Construction</h3>
+      <div class="key-box"><div class="key-box-title">🛠️ Key Construction Workflow</div><ul>
+        <li><strong>Step 1 — Define scope:</strong> Which taxa? What life stage? State clearly at the key heading.</li>
+        <li><strong>Step 2 — Character matrix:</strong> List all taxa in rows; all characters in columns. Fill in states.</li>
+        <li><strong>Step 3 — Splitting character:</strong> Find a character that best divides taxa into two roughly equal groups.</li>
+        <li><strong>Step 4 — Write parallel couplets:</strong> Both leads same grammatical form, referring to same structure.</li>
+        <li><strong>Step 5 — Recurse:</strong> Each subset of taxa subdivided further until all uniquely identified.</li>
+        <li><strong>Step 6 — Number couplets:</strong> Bracketed format: number pairs consecutively.</li>
+        <li><strong>Step 7 — Test:</strong> Use key on specimens not used during construction; ask a colleague to test it blind.</li>
+      </ul></div>
+    </div>
+    <div class="content-block reveal">
+      <h3>14.2 Common Key Construction Errors</h3>
+      <table class="def-table"><thead><tr><th>Error</th><th>Example</th><th>Fix</th></tr></thead><tbody>
+        <tr><td>Overlapping ranges</td><td>"Leaves 3–5 cm" vs. "Leaves 4–8 cm"</td><td>Use non-overlapping ranges: "≤4 cm" vs. ">4 cm"</td></tr>
+        <tr><td>Non-parallel structure</td><td>1a: "Leaves simple" / 1b: "Petals absent"</td><td>Make both leads about leaves: 1b: "Leaves compound"</td></tr>
+        <tr><td>Subjective characters</td><td>"Smell sweet or absent"</td><td>Replace with measurable: "Flowers with 5 separate petals"</td></tr>
+        <tr><td>Dead-end couplet</td><td>A lead that goes nowhere</td><td>Every path must end at a taxon name</td></tr>
+        <tr><td>Seasonal characters</td><td>Key based entirely on flower colour</td><td>Provide vegetative alternatives for out-of-season specimens</td></tr>
+      </tbody></table>
+    </div>
+    <div class="content-block reveal">
+      <h3>14.3 Digital Identification Platforms</h3>
+      <table class="def-table"><thead><tr><th>Platform</th><th>Type</th><th>Best For</th><th>Limitation</th></tr></thead><tbody>
+        <tr><td>iNaturalist</td><td>AI image recognition + community</td><td>Common, well-photographed species; citizen science</td><td>Fails for cryptic species; needs good photos</td></tr>
+        <tr><td>Lucid (lucidcentral.org)</td><td>Polyclave key</td><td>Damaged specimens; any character order</td><td>Requires curated database; not universal</td></tr>
+        <tr><td>DELTA</td><td>Character database → key generator</td><td>Professional taxonomists building multiple outputs</td><td>Steep learning curve; requires data entry</td></tr>
+        <tr><td>GBIF</td><td>Occurrence database</td><td>Verifying identifications; checking distribution</td><td>Not an identification tool per se</td></tr>
+      </tbody></table>
+    </div>
+    <div class="quiz-block reveal">
+      <div class="quiz-label">📝 Self-Check Quiz — Week 14</div>
+      <div class="quiz-question">You are constructing a key for 10 plant species and notice that one character (stem colour) is the same (green) in all 10 species. This character should be:</div>
+      <div class="quiz-options" id="q14-opts">
+        <button class="quiz-option" onclick="answerQ('q14','a','c')" data-id="a"><span class="option-letter">A</span> Used as the first couplet because it is easily observable</button>
+        <button class="quiz-option" onclick="answerQ('q14','b','c')" data-id="b"><span class="option-letter">B</span> Used as a corroborating character in the final couplet</button>
+        <button class="quiz-option" onclick="answerQ('q14','c','c')" data-id="c"><span class="option-letter">C</span> Excluded entirely — invariant characters provide no discriminatory information</button>
+        <button class="quiz-option" onclick="answerQ('q14','d','c')" data-id="d"><span class="option-letter">D</span> Used in both leads of a couplet to confirm the identification</button>
+      </div>
+      <div class="quiz-feedback" id="q14-feedback"></div>
+    </div>
+    <div class="week-nav-btns">
+      <button class="nav-btn" onclick="showSection('w13')"><div><span class="nav-btn-label">← Previous</span><span class="nav-btn-title">Keys — Theory</span></div></button>
+      <button class="mark-complete-btn" onclick="markDone('w14',this)">Mark Complete ✓</button>
+      <button class="nav-btn" onclick="showSection('w15')"><div><span class="nav-btn-label">Next →</span><span class="nav-btn-title">Synthesis & Review</span></div></button>
+    </div>
+  </section>
+
+  <!-- WEEK 15 -->
+  <section class="week-section" id="w15-section">
+    <div class="week-header"><span class="week-number-badge">WEEK 15</span><div class="week-header-text"><h2>Synthesis & Course Review</h2><p>Integrating all topics · Applied scenarios · Examination preparation</p></div></div>
+    <div class="lo-box"><h3>Final Outcomes</h3><ul class="lo-list"><li>Integrate all course concepts into a coherent understanding of systematic biology</li><li>Apply taxonomic reasoning to real-world scenarios</li><li>Prepare for the final examination</li></ul></div>
+    <div class="content-block reveal">
+      <h3>15.1 The Integrated Framework</h3>
+      <table class="def-table"><thead><tr><th>Topic</th><th>Connects To</th><th>Applied Significance</th></tr></thead><tbody>
+        <tr><td>Nomenclature rules</td><td>Species concept — defines the entity being named</td><td>Legal names for conservation, trade, patents</td></tr>
+        <tr><td>Type specimen</td><td>Nomenclature — anchors the name; Morphological species concept</td><td>Herbarium collections as national scientific heritage</td></tr>
+        <tr><td>Character × taxon matrix</td><td>Numerical taxonomy AND cladistics use the same matrix — different analysis</td><td>Choosing the right method for the question being asked</td></tr>
+        <tr><td>Molecular systematics</td><td>Uses cladistic framework; detects cryptic species missed by BSC and morphology</td><td>Food fraud detection, biosecurity, disease vector ID</td></tr>
+        <tr><td>Keys</td><td>Use same characters as taxonomy; organise for identification rather than classification</td><td>Field guides, pest management, clinical microbiology</td></tr>
+      </tbody></table>
+    </div>
+    <div class="content-block reveal">
+      <h3>15.2 Exam Preparation Guide</h3>
+      <div class="key-box"><div class="key-box-title">📚 Revision Checklist by Week</div><ul>
+        <li><strong>Wk 1–3:</strong> Be able to compare Pre-Linnaean / Linnaean / Darwinian in a table</li>
+        <li><strong>Wk 4–5:</strong> Know all ranks, suffixes, and infraspecific categories; write trinomials</li>
+        <li><strong>Wk 6:</strong> Memorise BSC, PSC, morphological, ecological — strengths AND weaknesses</li>
+        <li><strong>Wk 7:</strong> Five nomenclature rules; all five type categories; author citation rules</li>
+        <li><strong>Wk 9–10:</strong> Calculate Jaccard; explain UPGMA step by step; interpret a dendrogram</li>
+        <li><strong>Wk 11:</strong> Define synapomorphy vs. symplesiomorphy; identify monophyly/paraphyly/polyphyly on a cladogram</li>
+        <li><strong>Wk 12:</strong> Barcode markers (COI/rbcL+matK/ITS); what is phylogenomics; integrative taxonomy</li>
+        <li><strong>Wk 13–14:</strong> Principles of key construction; construct and use a dichotomous key</li>
+      </ul></div>
+    </div>
+    <div class="quiz-block reveal">
+      <div class="quiz-label">📝 Final Review Quiz — Week 15</div>
+      <div class="quiz-question">A researcher studying West African freshwater mussels finds two populations that are morphologically identical, reproductively isolated in sympatry, and genetically distinct (COI barcode divergence >3%). Which taxonomic approach would MOST reliably resolve whether these are one or two species?</div>
+      <div class="quiz-options" id="q15-opts">
+        <button class="quiz-option" onclick="answerQ('q15','a','d')" data-id="a"><span class="option-letter">A</span> Morphological species concept alone</button>
+        <button class="quiz-option" onclick="answerQ('q15','b','d')" data-id="b"><span class="option-letter">B</span> Biological species concept using crossing experiments only</button>
+        <button class="quiz-option" onclick="answerQ('q15','c','d')" data-id="c"><span class="option-letter">C</span> Numerical taxonomy (phenetics) using morphological characters</button>
+        <button class="quiz-option" onclick="answerQ('q15','d','d')" data-id="d"><span class="option-letter">D</span> Integrative taxonomy combining morphology, molecular data, and reproductive biology</button>
+      </div>
+      <div class="quiz-feedback" id="q15-feedback"></div>
+    </div>
+
+    <div style="background:var(--forest);border-radius:10px;padding:32px;margin-top:48px;text-align:center;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--amber);letter-spacing:3px;margin-bottom:12px;">COURSE COMPLETE</div>
+      <div style="font-family:'Playfair Display',serif;font-size:28px;color:var(--cream);margin-bottom:8px;">Congratulations!</div>
+      <p style="color:var(--sage);font-size:14px;font-style:italic;max-width:480px;margin:0 auto;">You have worked through 15 weeks of Systematic Biology — from Aristotle's first classification to DNA barcoding in modern West African conservation. The names we give to life matter. Use them well.</p>
+    </div>
+
+    <div class="week-nav-btns">
+      <button class="nav-btn" onclick="showSection('w14')"><div><span class="nav-btn-label">← Previous</span><span class="nav-btn-title">Key Construction</span></div></button>
+      <button class="mark-complete-btn" onclick="markDone('w15',this)">Mark Complete ✓</button>
+      <button class="nav-btn" onclick="showSection('home')"><div><span class="nav-btn-label">↩ Return to</span><span class="nav-btn-title">Course Home</span></div></button>
+    </div>
+  </section>
+
+  </div><!-- end content-area -->
+</main>
+
+<script>
+// ── STATE ──────────────────────────────────────────────────
+const completed = new Set(JSON.parse(localStorage.getItem('bio306_done') || '[]'));
+const sectionMap = {
+  home: 'home-section',
+  w1: 'w1-section', w2: 'w2-section', w3: 'w3-section',
+  w4: 'w4-section', w5: 'w5-section', w6: 'w6-section',
+  w7: 'w7-section', w8: 'w8-section', w9: 'w9-section',
+  w10: 'w10-section', w11: 'w11-section', w12: 'w12-section',
+  w13: 'w13-section', w14: 'w14-section', w15: 'w15-section',
+};
+
+// ── NAVIGATION ─────────────────────────────────────────────
+function showSection(id) {
+  document.querySelectorAll('.week-section, #home-section').forEach(s => {
+    s.classList.remove('active');
+    s.style.display = 'none';
+  });
+  const target = document.getElementById(sectionMap[id]);
+  if (target) {
+    target.style.display = 'block';
+    target.classList.add('active');
+  }
+  document.querySelectorAll('.week-nav-item').forEach((item, idx) => {
+    item.classList.remove('active');
+    if (idx === 0 && id === 'home') item.classList.add('active');
+    if (id !== 'home' && idx > 0) {
+      const wNum = parseInt(id.replace('w',''));
+      if (idx === wNum) item.classList.add('active');
+    }
+  });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  initReveal();
+  return false;
+}
+
+// Init: show home
+document.querySelectorAll('.week-section').forEach(s => { s.style.display = 'none'; });
+document.getElementById('home-section').style.display = 'block';
+restoreProgress();
+
+// ── CARDS ─────────────────────────────────────────────────
+function toggleCard(card) {
+  card.classList.toggle('expanded');
+}
+
+// ── TABS ──────────────────────────────────────────────────
+function switchTab(id, btn) {
+  document.querySelectorAll('.comp-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.comp-tab').forEach(t => t.classList.remove('active'));
+  const panel = document.getElementById(id + '-panel');
+  if (panel) panel.classList.add('active');
+  btn.classList.add('active');
+}
+
+// ── QUIZ ──────────────────────────────────────────────────
+const explanations = {
+  q1: { c: "Correct! Aristotle's Enaima ('with blood') corresponds roughly to vertebrates, and Anaima ('bloodless') to invertebrates. His classification predates modern terminology but shows remarkable insight." },
+  q2: { b: "Correct! Parentheses around an author's name indicate the species was originally placed in a different genus. Linnaeus first described the lion as Felis leo — it was later moved to Panthera, so his name goes in parentheses." },
+  q3: { d: "Correct! In population thinking (post-Darwin), variation within a species is biologically real and meaningful — it is the raw material upon which natural selection acts, making evolution possible." },
+  q4: { b: "Correct! The suffix -aceae is the standard family suffix in botany. For example: Fabaceae (legume family), Poaceae (grass family), Asteraceae (daisy family)." },
+  q5: { c: "Correct! An ecotype is an informal category — a genetically adapted local population that lacks sufficient morphological distinction to merit a formal name. It has no nomenclatural standing." },
+  q6: { b: "Correct! Morphologically identical but genetically distinct, reproductively isolated populations are cryptic species — detectable only by molecular or behavioral methods, not morphology." },
+  q7: { b: "Correct! Linnaeus originally placed the house sparrow in the genus Fringilla. It was later moved to Passer, so Linnaeus's name is now in parentheses: Passer domesticus (Linnaeus, 1758)." },
+  q8: { c: "Correct! Since the 2012 revisions to the ICN, Latin is NO LONGER required for plant descriptions. English (or any language) is now acceptable. The other three options ARE still required." },
+  q9: { b: "Correct! Jaccard = a/(a+b+c) = 8/(8+2+1) = 8/11 ≈ 0.73. Note: the 4 shared absences (d=4) are EXCLUDED from the Jaccard calculation." },
+  q10: { c: "Correct! This is a classic example of homoplasy through convergent evolution. Both dolphins and tuna independently evolved streamlined bodies for aquatic life — they are not closely related. Phenetics, which cannot distinguish convergence from shared ancestry, would incorrectly group them." },
+  q11: { b: "Correct! Traditional 'Reptilia' excludes birds (Aves), even though birds evolved from dinosaurs which are part of the same ancestor as crocodiles. Excluding birds makes Reptilia paraphyletic — invalid in cladistics." },
+  q12: { b: "Correct! DNA barcoding (COI gene) is the standard tool for species identification from processed or fragmentary material where morphological characters are absent. It is now routinely used in customs enforcement worldwide." },
+  q13: { a: "Correct! Ranges of 3–6 cm and 5–10 cm overlap between 5 and 6 cm. Any specimen with leaves of 5.2 cm could go down either path — a direct violation of the mutually exclusive principle." },
+  q14: { c: "Correct! Invariant characters (same state in all OTUs) provide no discriminatory information for a key — every specimen takes the same path, so the character does nothing. Remove it and use a character that actually varies." },
+  q15: { d: "Correct! With cryptic species (morphologically identical, reproductively isolated, genetically distinct), no single method resolves the question definitively. Integrative taxonomy — combining morphological, molecular, and reproductive evidence — is the gold standard." },
+};
+
+function answerQ(qId, chosen, correct) {
+  const opts = document.getElementById(qId + '-opts');
+  if (!opts || opts.classList.contains('answered')) return;
+  opts.classList.add('answered');
+  opts.querySelectorAll('.quiz-option').forEach(btn => {
+    btn.style.pointerEvents = 'none';
+    if (btn.dataset.id === correct) btn.classList.add('correct');
+    else if (btn.dataset.id === chosen && chosen !== correct) btn.classList.add('wrong');
+  });
+  const fb = document.getElementById(qId + '-feedback');
+  if (fb) {
+    const isRight = chosen === correct;
+    fb.className = 'quiz-feedback show ' + (isRight ? 'correct-fb' : 'wrong-fb');
+    const exp = explanations[qId];
+    fb.innerHTML = (isRight ? '✓ Correct! — ' : '✗ Not quite. The correct answer is <strong>' + correct.toUpperCase() + '</strong>. — ') + (exp ? exp[correct] : '');
+  }
+}
+
+// ── PROGRESS ─────────────────────────────────────────────
+function markDone(weekId, btn) {
+  completed.add(weekId);
+  localStorage.setItem('bio306_done', JSON.stringify([...completed]));
+  btn.textContent = '✓ Completed';
+  btn.classList.add('done');
+  updateProgress();
+  const navItems = document.querySelectorAll('.week-nav-item');
+  const idx = parseInt(weekId.replace('w', ''));
+  if (navItems[idx]) navItems[idx].classList.add('done');
+}
+
+function updateProgress() {
+  const total = 15;
+  const done = completed.size;
+  document.getElementById('progress-text').textContent = done + ' / ' + total;
+  document.getElementById('progress-bar').style.width = (done / total * 100) + '%';
+}
+
+function restoreProgress() {
+  completed.forEach(weekId => {
+    const idx = parseInt(weekId.replace('w', ''));
+    const navItems = document.querySelectorAll('.week-nav-item');
+    if (navItems[idx]) navItems[idx].classList.add('done');
+    const btns = document.querySelectorAll('.mark-complete-btn');
+    btns.forEach(btn => {
+      if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(weekId)) {
+        btn.textContent = '✓ Completed';
+        btn.classList.add('done');
+      }
+    });
+  });
+  updateProgress();
+}
+
+// ── MOBILE SIDEBAR ────────────────────────────────────────
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+// ── SCROLL REVEAL ─────────────────────────────────────────
+function initReveal() {
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  reveals.forEach(r => { r.classList.remove('visible'); observer.observe(r); });
+}
+
+initReveal();
+
+// Close sidebar when nav item clicked on mobile
+document.querySelectorAll('.week-nav-item').forEach(item => {
+  item.addEventListener('click', () => {
+    if (window.innerWidth < 900) document.getElementById('sidebar').classList.remove('open');
+  });
+});
+</script>
+</body>
+</html>
