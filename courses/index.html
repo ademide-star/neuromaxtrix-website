@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Neuromatrix · Interactive Courses</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lora:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --forest: #1a3a2a;
+    --moss: #2d5a3d;
+    --fern: #3d7a52;
+    --leaf: #5a9e6f;
+    --sage: #8fbc9a;
+    --mist: #c8dfc0;
+    --cream: #f5f0e8;
+    --parchment: #ede5d0;
+    --gold: #c8960c;
+    --amber: #e8b84b;
+    --ink: #1a1a0e;
+    --bark: #6b4c2a;
+    --rust: #8b3a2a;
+    --sky: #3a6b8a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Lora', Georgia, serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Header */
+  .dashboard-header {
+    background: linear-gradient(135deg, var(--forest) 0%, var(--moss) 50%, #1a4a3a 100%);
+    padding: 70px 40px 50px;
+    border-bottom: 4px solid var(--gold);
+    position: relative;
+    overflow: hidden;
+  }
+  .dashboard-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle at 30% 40%, rgba(93,158,111,0.12) 0%, transparent 60%),
+      radial-gradient(circle at 80% 70%, rgba(200,150,12,0.08) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  .header-leaf {
+    position: absolute;
+    right: 40px;
+    top: 20px;
+    opacity: 0.06;
+    font-size: 200px;
+    line-height: 1;
+    pointer-events: none;
+  }
+  .header-badge {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--amber);
+    letter-spacing: 3px;
+    border: 1px solid rgba(232,184,75,0.4);
+    padding: 5px 14px;
+    border-radius: 2px;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+  }
+  .dashboard-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(36px, 6vw, 58px);
+    color: var(--cream);
+    line-height: 1.1;
+    margin-bottom: 12px;
+    position: relative;
+  }
+  .dashboard-header h1 em {
+    color: var(--amber);
+    font-style: italic;
+  }
+  .header-sub {
+    font-family: 'Lora', serif;
+    font-size: 16px;
+    color: var(--sage);
+    font-style: italic;
+    position: relative;
+  }
+
+  /* Main container */
+  .dashboard-main {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 48px 32px;
+    flex: 1;
+  }
+
+  /* Semester sections */
+  .semester-section {
+    margin-bottom: 56px;
+  }
+  .semester-title {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .semester-icon {
+    font-size: 32px;
+  }
+  .semester-title h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    color: var(--forest);
+    border-bottom: 2px solid var(--parchment);
+    padding-bottom: 10px;
+    flex: 1;
+  }
+
+  /* Programme sub‑sections */
+  .programme-group {
+    margin-bottom: 40px;
+  }
+  .programme-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+    padding-left: 4px;
+  }
+
+  /* Course Grid */
+  .course-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 24px;
+  }
+
+  /* Course Card */
+  .course-card {
+    background: white;
+    border: 1px solid rgba(45,90,61,0.15);
+    border-radius: 12px;
+    padding: 24px;
+    transition: all 0.25s;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+    position: relative;
+    overflow: hidden;
+  }
+  .course-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 32px rgba(26,58,42,0.12);
+    border-color: var(--fern);
+  }
+  .course-card::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--forest), var(--fern));
+    transform: scaleX(0);
+    transition: transform 0.3s;
+  }
+  .course-card:hover::before {
+    transform: scaleX(1);
+  }
+
+  /* Placeholder card (coming soon) */
+  .course-card.placeholder {
+    opacity: 0.65;
+    pointer-events: none;
+    background: rgba(255,255,255,0.7);
+    border-style: dashed;
+  }
+  .course-card.placeholder .course-code {
+    color: var(--bark);
+  }
+
+  .course-code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .course-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    color: var(--forest);
+    line-height: 1.3;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+  .course-sub {
+    font-size: 13px;
+    color: var(--fern);
+    font-style: italic;
+    margin-bottom: 14px;
+  }
+  .course-desc {
+    font-size: 13px;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 18px;
+    flex: 1;
+  }
+  .course-badge {
+    display: inline-block;
+    background: var(--forest);
+    color: var(--cream);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    letter-spacing: 1px;
+    align-self: flex-start;
+    border: 1px solid rgba(200,150,12,0.3);
+  }
+  .course-badge.coming-soon {
+    background: transparent;
+    color: var(--bark);
+    border: 1px solid var(--bark);
+  }
+
+  /* Footer */
+  .dashboard-footer {
+    text-align: center;
+    padding: 32px;
+    border-top: 1px solid rgba(45,90,61,0.15);
+    color: var(--fern);
+    font-size: 13px;
+    background: rgba(255,255,255,0.4);
+  }
+  .dashboard-footer a {
+    color: var(--gold);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .dashboard-footer a:hover {
+    text-decoration: underline;
+  }
+
+  /* Responsive */
+  @media (max-width: 700px) {
+    .dashboard-header {
+      padding: 48px 24px 40px;
+    }
+    .dashboard-main {
+      padding: 32px 20px;
+    }
+    .semester-title h2 {
+      font-size: 24px;
+    }
+    .course-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Progress note */
+  .progress-note {
+    background: rgba(26,58,42,0.05);
+    border-radius: 8px;
+    padding: 12px 20px;
+    margin-bottom: 32px;
+    font-size: 13px;
+    color: var(--forest);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-left: 4px solid var(--gold);
+  }
+  .progress-note span {
+    font-size: 20px;
+  }
+</style>
+</head>
+<body>
+
+<div class="dashboard-header">
+  <div class="header-leaf">🌿🧬</div>
+  <span class="header-badge">Neuromatrix Learning</span>
+  <h1>Interactive <em>Course</em><br>Dashboard</h1>
+  <p class="header-sub">Self‑contained lectures · Quizzes · Progress Tracking · Built for Nigerian Biology Students</p>
+</div>
+
+<main class="dashboard-main">
+
+  <!-- Info Note -->
+  <div class="progress-note">
+    <span>💡</span>
+    <p><strong>Your progress is saved automatically</strong> in this browser. Return anytime to continue where you left off. Each course tracks completed weeks independently.</p>
+  </div>
+
+  <!-- ========== HARMATTAN SEMESTER ========== -->
+  <section class="semester-section">
+    <div class="semester-title">
+      <span class="semester-icon">🌾</span>
+      <h2>Harmattan Semester</h2>
+    </div>
+
+    <!-- Degree Programme -->
+    <div class="programme-group">
+      <div class="programme-label">📘 Degree Courses</div>
+      <div class="course-grid">
+        <!-- MCB 221 - General Microbiology -->
+        <a href="degree/harmattan/mcb221/" class="course-card">
+          <div class="course-code">MCB 221</div>
+          <div class="course-title">General Microbiology</div>
+          <div class="course-sub">2 Units · 200 Level</div>
+          <div class="course-desc">Microbial structure, growth, metabolism, and diversity. Foundations of bacteriology, virology, and mycology.</div>
+          <span class="course-badge">15 WEEKS →</span>
+        </a>
+        <!-- BIO 203 - General Physiology -->
+        <a href="degree/harmattan/bio203/" class="course-card">
+          <div class="course-code">BIO 203</div>
+          <div class="course-title">General Physiology</div>
+          <div class="course-sub">3 Units · 200 Level</div>
+          <div class="course-desc">Principles of animal and plant function. Homeostasis, transport, coordination, and responses to the environment.</div>
+          <span class="course-badge">15 WEEKS →</span>
+        </a>
+        <!-- BCH 201 - General Biochemistry I -->
+        <a href="degree/harmattan/bch201/" class="course-card">
+          <div class="course-code">BCH 201</div>
+          <div class="course-title">General Biochemistry I</div>
+          <div class="course-sub">2 Units · 200 Level</div>
+          <div class="course-desc">Structure and function of biomolecules: carbohydrates, lipids, proteins, and nucleic acids. Enzyme kinetics introduction.</div>
+          <span class="course-badge">15 WEEKS →</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- NCE Programme -->
+    <div class="programme-group">
+      <div class="programme-label">📗 NCE Courses</div>
+      <div class="course-grid">
+        <!-- BIO 113 - Virus, Bacteria & Lower Plants -->
+        <a href="nce/harmattan/bio113/" class="course-card">
+          <div class="course-code">BIO 113</div>
+          <div class="course-title">Virus, Bacteria & Lower Plants</div>
+          <div class="course-sub">2 Units · NCE I</div>
+          <div class="course-desc">Introduction to prokaryotes, viruses, algae, fungi, and bryophytes. Morphology, reproduction, and economic importance.</div>
+          <span class="course-badge">12 WEEKS →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== RAIN SEMESTER ========== -->
+  <section class="semester-section">
+    <div class="semester-title">
+      <span class="semester-icon">🌧️</span>
+      <h2>Rain Semester</h2>
+    </div>
+
+    <!-- Degree Programme -->
+    <div class="programme-group">
+      <div class="programme-label">📘 Degree Courses</div>
+      <div class="course-grid">
+        <!-- BIO 306 - Systematic Biology (READY) -->
+        <a href="degree/rain/bio306/" class="course-card">
+          <div class="course-code">BIO 306</div>
+          <div class="course-title">Systematic Biology</div>
+          <div class="course-sub">2 Units · 300 Level</div>
+          <div class="course-desc">✅ <strong>Fully built.</strong> Linnaean taxonomy, nomenclature, species concepts, cladistics, and keys. 15 weeks with quizzes and animated diagrams.</div>
+          <span class="course-badge">LAUNCH COURSE →</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- NCE Programme -->
+    <div class="programme-group">
+      <div class="programme-label">📗 NCE Courses</div>
+      <div class="course-grid">
+        <!-- BIO 121 - Diversity of Invertebrates -->
+        <a href="nce/rain/bio121/" class="course-card">
+          <div class="course-code">BIO 121</div>
+          <div class="course-title">Diversity of Invertebrates</div>
+          <div class="course-sub">2 Units · NCE I</div>
+          <div class="course-desc">Survey of major invertebrate phyla: Porifera to Echinodermata. Morphology, life cycles, and ecological roles.</div>
+          <span class="course-badge">12 WEEKS →</span>
+        </a>
+        <!-- BIO 221 - Plant Physiology -->
+        <a href="nce/rain/bio221/" class="course-card">
+          <div class="course-code">BIO 221</div>
+          <div class="course-title">Plant Physiology</div>
+          <div class="course-sub">2 Units · NCE II</div>
+          <div class="course-desc">Water relations, photosynthesis, mineral nutrition, growth regulators, and plant movements.</div>
+          <span class="course-badge">12 WEEKS →</span>
+        </a>
+        <!-- BIO 222 - Vertebrate Anatomy & Physiology -->
+        <a href="nce/rain/bio222/" class="course-card">
+          <div class="course-code">BIO 222</div>
+          <div class="course-title">Vertebrate Anatomy & Physiology</div>
+          <div class="course-sub">2 Units · NCE II</div>
+          <div class="course-desc">Comparative anatomy of vertebrate systems: integumentary, skeletal, muscular, nervous, circulatory, and reproductive.</div>
+          <span class="course-badge">12 WEEKS →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Placeholder note for courses under development -->
+  <div style="margin-top: 48px; padding: 16px 0; text-align: center; font-family: 'Lora', serif; font-size: 13px; color: var(--bark); border-top: 1px dashed rgba(45,90,61,0.2);">
+    <span style="background: var(--parchment); padding: 6px 18px; border-radius: 30px;">📌 Courses are being developed sequentially. Links become active as content is uploaded.</span>
+  </div>
+</main>
+
+<footer class="dashboard-footer">
+  <p>🧬 <a href="../">← Back to Neuromatrix Main Site</a> &nbsp;|&nbsp; Progress saved locally in your browser &nbsp;|&nbsp; Built for Nigerian Biology Curriculum</p>
+  <p style="margin-top: 12px; font-size: 11px; opacity: 0.7;">© Neuromatrix · Systematic Biology · MCB · BCH · NCE Biology</p>
+</footer>
+
+</body>
+</html>
