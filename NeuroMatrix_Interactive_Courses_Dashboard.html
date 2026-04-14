@@ -1,0 +1,2081 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NeuroMatrix Biosystems — Interactive Lecture Library</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════
+   ROOT & RESET
+═══════════════════════════════════════════════ */
+:root {
+  --void:       #050810;
+  --deep:       #0a0f1e;
+  --panel:      #0d1424;
+  --card:       #111829;
+  --border:     #1e2d45;
+  --border2:    #2a3d5a;
+
+  --cyan:       #00d4ff;
+  --cyan-dim:   #0099bb;
+  --cyan-glow:  rgba(0,212,255,0.12);
+  --cyan-mist:  rgba(0,212,255,0.06);
+
+  --gold:       #f0c040;
+  --gold-dim:   #b88e20;
+  --gold-glow:  rgba(240,192,64,0.12);
+
+  --green:      #00e5a0;
+  --green-dim:  #00a870;
+  --green-glow: rgba(0,229,160,0.1);
+
+  --violet:     #a078ff;
+  --violet-dim: #6045cc;
+  --violet-glow:rgba(160,120,255,0.1);
+
+  --coral:      #ff6b6b;
+  --coral-dim:  #cc4444;
+  --coral-glow: rgba(255,107,107,0.1);
+
+  --amber:      #ff9f40;
+  --amber-glow: rgba(255,159,64,0.1);
+
+  --text:       #e8edf5;
+  --text2:      #8a9ab8;
+  --text3:      #4a5a78;
+
+  --font-display: 'DM Serif Display', Georgia, serif;
+  --font-ui:      'Syne', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--void);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ═══════════════════════════════════════════════
+   NOISE OVERLAY
+═══════════════════════════════════════════════ */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.4;
+}
+
+/* ═══════════════════════════════════════════════
+   BACKGROUND MESH
+═══════════════════════════════════════════════ */
+.bg-mesh {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.bg-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.08;
+  animation: drift 20s ease-in-out infinite alternate;
+}
+
+.bg-orb:nth-child(1) { width: 600px; height: 600px; background: var(--cyan); top: -200px; left: -100px; animation-duration: 18s; }
+.bg-orb:nth-child(2) { width: 500px; height: 500px; background: var(--violet); top: 30%; right: -150px; animation-duration: 22s; animation-delay: -5s; }
+.bg-orb:nth-child(3) { width: 400px; height: 400px; background: var(--green); bottom: 10%; left: 30%; animation-duration: 15s; animation-delay: -8s; }
+
+@keyframes drift {
+  from { transform: translate(0,0) scale(1); }
+  to   { transform: translate(40px,60px) scale(1.1); }
+}
+
+/* ═══════════════════════════════════════════════
+   LAYOUT WRAPPER
+═══════════════════════════════════════════════ */
+#app {
+  position: relative;
+  z-index: 1;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 32px 80px;
+}
+
+/* ═══════════════════════════════════════════════
+   TOP NAV
+═══════════════════════════════════════════════ */
+.topnav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 0 28px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 0;
+}
+
+.logo-group {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.logo-mark {
+  width: 42px; height: 42px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--cyan) 0%, var(--violet) 100%);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-ui);
+  font-weight: 800;
+  font-size: 16px;
+  color: var(--void);
+  letter-spacing: -1px;
+  flex-shrink: 0;
+  box-shadow: 0 0 24px rgba(0,212,255,0.25);
+}
+
+.logo-text { display: flex; flex-direction: column; }
+.logo-name {
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--text);
+  letter-spacing: 0.5px;
+  line-height: 1.1;
+}
+.logo-sub {
+  font-size: 10px;
+  color: var(--text3);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-family: var(--font-ui);
+}
+
+.nav-pills {
+  display: flex;
+  gap: 4px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 4px;
+}
+
+.nav-pill {
+  padding: 7px 18px;
+  border-radius: 7px;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text2);
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.3px;
+  border: none;
+  background: transparent;
+}
+
+.nav-pill:hover { color: var(--text); background: var(--border); }
+.nav-pill.active { background: var(--cyan); color: var(--void); }
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nav-stat {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 14px;
+}
+
+.stat-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 8px var(--green);
+  animation: pulse 2s ease infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(0.8); }
+}
+
+.stat-text {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  color: var(--text2);
+  font-weight: 500;
+}
+
+/* ═══════════════════════════════════════════════
+   HERO SECTION
+═══════════════════════════════════════════════ */
+.hero {
+  padding: 64px 0 52px;
+  position: relative;
+}
+
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--cyan);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+.eyebrow-line {
+  width: 32px; height: 1px;
+  background: var(--cyan);
+  opacity: 0.5;
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(42px, 6vw, 72px);
+  line-height: 1.05;
+  color: var(--text);
+  margin-bottom: 16px;
+  max-width: 820px;
+}
+
+.hero-title em {
+  font-style: italic;
+  color: var(--cyan);
+  position: relative;
+}
+
+.hero-title em::after {
+  content: '';
+  position: absolute;
+  bottom: 4px; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--cyan), transparent);
+  opacity: 0.4;
+}
+
+.hero-sub {
+  font-size: 15px;
+  color: var(--text2);
+  line-height: 1.7;
+  max-width: 560px;
+  margin-bottom: 40px;
+  font-weight: 300;
+}
+
+.hero-metrics {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+}
+
+.hero-metric {
+  padding: 0 32px 0 0;
+  margin-right: 32px;
+  border-right: 1px solid var(--border);
+}
+
+.hero-metric:last-child { border-right: none; margin-right: 0; padding-right: 0; }
+
+.metric-num {
+  font-family: var(--font-display);
+  font-size: 38px;
+  color: var(--text);
+  display: block;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.metric-num span { color: var(--cyan); }
+
+.metric-label {
+  font-family: var(--font-ui);
+  font-size: 10px;
+  color: var(--text3);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* ═══════════════════════════════════════════════
+   SEMESTER FILTER BAR
+═══════════════════════════════════════════════ */
+.filter-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 40px;
+  padding: 20px 24px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filter-label {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  color: var(--text3);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-right: 4px;
+  font-weight: 600;
+}
+
+.filter-btn {
+  padding: 8px 18px;
+  border-radius: 8px;
+  border: 1px solid var(--border2);
+  background: transparent;
+  color: var(--text2);
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.3px;
+}
+
+.filter-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+
+.filter-btn.active-harmattan {
+  background: rgba(0,212,255,0.1);
+  border-color: var(--cyan);
+  color: var(--cyan);
+}
+
+.filter-btn.active-rain {
+  background: rgba(0,229,160,0.1);
+  border-color: var(--green);
+  color: var(--green);
+}
+
+.filter-btn.active-all {
+  background: rgba(160,120,255,0.1);
+  border-color: var(--violet);
+  color: var(--violet);
+}
+
+.search-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 14px;
+  min-width: 220px;
+}
+
+.search-icon { font-size: 14px; opacity: 0.5; }
+
+.search-input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 13px;
+  width: 100%;
+}
+
+.search-input::placeholder { color: var(--text3); }
+
+/* ═══════════════════════════════════════════════
+   SEMESTER SECTIONS
+═══════════════════════════════════════════════ */
+.semester-block {
+  margin-bottom: 60px;
+  transition: all 0.3s;
+}
+
+.semester-block.hidden { display: none; }
+
+.semester-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.sem-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px 6px 10px;
+  border-radius: 100px;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.sem-badge.harmattan {
+  background: rgba(0,212,255,0.08);
+  border: 1px solid rgba(0,212,255,0.25);
+  color: var(--cyan);
+}
+
+.sem-badge.rain {
+  background: rgba(0,229,160,0.08);
+  border: 1px solid rgba(0,229,160,0.25);
+  color: var(--green);
+}
+
+.sem-badge-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+}
+
+.harmattan .sem-badge-dot { background: var(--cyan); box-shadow: 0 0 6px var(--cyan); }
+.rain .sem-badge-dot { background: var(--green); box-shadow: 0 0 6px var(--green); }
+
+.sem-title {
+  font-family: var(--font-display);
+  font-size: 26px;
+  color: var(--text);
+}
+
+.sem-divider {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--border2), transparent);
+}
+
+.sem-count {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  color: var(--text3);
+  letter-spacing: 1px;
+}
+
+/* ═══════════════════════════════════════════════
+   PROGRAMME LABEL
+═══════════════════════════════════════════════ */
+.prog-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  margin-top: 28px;
+}
+
+.prog-tag {
+  font-family: var(--font-ui);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 4px;
+}
+
+.prog-tag.degree {
+  background: rgba(240,192,64,0.1);
+  border: 1px solid rgba(240,192,64,0.3);
+  color: var(--gold);
+}
+
+.prog-tag.nce {
+  background: rgba(160,120,255,0.1);
+  border: 1px solid rgba(160,120,255,0.3);
+  color: var(--violet);
+}
+
+.prog-line {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ═══════════════════════════════════════════════
+   COURSE GRID
+═══════════════════════════════════════════════ */
+.course-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 20px;
+}
+
+/* ═══════════════════════════════════════════════
+   COURSE CARD
+═══════════════════════════════════════════════ */
+.course-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  animation: cardIn 0.5s ease both;
+}
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.course-card:nth-child(1) { animation-delay: 0.05s; }
+.course-card:nth-child(2) { animation-delay: 0.10s; }
+.course-card:nth-child(3) { animation-delay: 0.15s; }
+.course-card:nth-child(4) { animation-delay: 0.20s; }
+.course-card:nth-child(5) { animation-delay: 0.25s; }
+.course-card:nth-child(6) { animation-delay: 0.30s; }
+.course-card:nth-child(7) { animation-delay: 0.35s; }
+.course-card:nth-child(8) { animation-delay: 0.40s; }
+
+.course-card:hover {
+  border-color: var(--border2);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+}
+
+/* Accent line top */
+.card-accent {
+  height: 3px;
+  width: 100%;
+}
+
+/* Card header band */
+.card-band {
+  padding: 24px 24px 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.card-band::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.05;
+}
+
+/* Course code chip */
+.course-code-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-ui);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  border: 1px solid;
+}
+
+.card-icon-wrap {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 52px;
+  opacity: 0.08;
+  pointer-events: none;
+  line-height: 1;
+}
+
+.course-title {
+  font-family: var(--font-display);
+  font-size: 19px;
+  line-height: 1.25;
+  color: var(--text);
+  margin-bottom: 6px;
+  max-width: 85%;
+}
+
+.course-subtitle {
+  font-size: 12px;
+  color: var(--text3);
+  letter-spacing: 0.5px;
+  font-family: var(--font-ui);
+}
+
+/* Card body */
+.card-body {
+  padding: 18px 24px 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  border-top: 1px solid var(--border);
+}
+
+/* Topics preview */
+.topics-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.topic-tag {
+  font-size: 10px;
+  color: var(--text3);
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 3px 9px;
+  border-radius: 4px;
+  font-family: var(--font-ui);
+  letter-spacing: 0.3px;
+  transition: all 0.2s;
+}
+
+.course-card:hover .topic-tag {
+  border-color: var(--border2);
+  color: var(--text2);
+}
+
+/* Progress row */
+.card-progress-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.progress-track {
+  flex: 1;
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 1s ease;
+  width: 0%;
+}
+
+.progress-pct {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 600;
+  min-width: 28px;
+  text-align: right;
+}
+
+/* Stats row */
+.card-stats {
+  display: flex;
+  gap: 0;
+  border-top: 1px solid var(--border);
+  padding-top: 14px;
+}
+
+.card-stat {
+  flex: 1;
+  text-align: center;
+  border-right: 1px solid var(--border);
+}
+
+.card-stat:last-child { border-right: none; }
+
+.cs-num {
+  font-family: var(--font-ui);
+  font-size: 16px;
+  font-weight: 700;
+  display: block;
+  line-height: 1.1;
+  margin-bottom: 3px;
+}
+
+.cs-label {
+  font-size: 10px;
+  color: var(--text3);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-family: var(--font-ui);
+}
+
+/* Card footer */
+.card-footer {
+  padding: 14px 24px;
+  background: var(--panel);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.launch-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: 8px;
+  border: 1px solid;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+
+.launch-btn:hover { filter: brightness(1.15); transform: translateX(2px); }
+
+.launch-arrow {
+  font-size: 14px;
+  transition: transform 0.2s;
+}
+
+.launch-btn:hover .launch-arrow { transform: translateX(3px); }
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-ui);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 100px;
+}
+
+.status-pill.ready {
+  background: rgba(0,229,160,0.1);
+  color: var(--green);
+  border: 1px solid rgba(0,229,160,0.2);
+}
+
+.status-pill.building {
+  background: rgba(240,192,64,0.1);
+  color: var(--gold);
+  border: 1px solid rgba(240,192,64,0.2);
+}
+
+.status-pill.coming {
+  background: rgba(74,90,120,0.3);
+  color: var(--text3);
+  border: 1px solid var(--border);
+}
+
+.status-dot { width: 5px; height: 5px; border-radius: 50%; }
+.status-dot.ready { background: var(--green); box-shadow: 0 0 5px var(--green); animation: pulse 2s infinite; }
+.status-dot.building { background: var(--gold); }
+.status-dot.coming { background: var(--text3); }
+
+/* ═══════════════════════════════════════════════
+   COLOUR THEMES PER COURSE
+═══════════════════════════════════════════════ */
+/* MCB 221 — cyan */
+.theme-mcb .card-accent { background: linear-gradient(90deg, var(--cyan), var(--violet)); }
+.theme-mcb .card-band::before { background: var(--cyan); }
+.theme-mcb .course-code-chip { color: var(--cyan); border-color: rgba(0,212,255,0.3); background: rgba(0,212,255,0.07); }
+.theme-mcb .progress-fill { background: linear-gradient(90deg, var(--cyan), var(--violet)); }
+.theme-mcb .cs-num { color: var(--cyan); }
+.theme-mcb .launch-btn { color: var(--cyan); border-color: rgba(0,212,255,0.3); background: rgba(0,212,255,0.06); }
+.theme-mcb .launch-btn:hover { background: rgba(0,212,255,0.15); }
+
+/* BIO 203 — green */
+.theme-bio203 .card-accent { background: linear-gradient(90deg, var(--green), var(--cyan)); }
+.theme-bio203 .card-band::before { background: var(--green); }
+.theme-bio203 .course-code-chip { color: var(--green); border-color: rgba(0,229,160,0.3); background: rgba(0,229,160,0.07); }
+.theme-bio203 .progress-fill { background: linear-gradient(90deg, var(--green), var(--cyan)); }
+.theme-bio203 .cs-num { color: var(--green); }
+.theme-bio203 .launch-btn { color: var(--green); border-color: rgba(0,229,160,0.3); background: rgba(0,229,160,0.06); }
+.theme-bio203 .launch-btn:hover { background: rgba(0,229,160,0.15); }
+
+/* BCH 201 — gold */
+.theme-bch .card-accent { background: linear-gradient(90deg, var(--gold), var(--amber)); }
+.theme-bch .card-band::before { background: var(--gold); }
+.theme-bch .course-code-chip { color: var(--gold); border-color: rgba(240,192,64,0.3); background: rgba(240,192,64,0.07); }
+.theme-bch .progress-fill { background: linear-gradient(90deg, var(--gold), var(--amber)); }
+.theme-bch .cs-num { color: var(--gold); }
+.theme-bch .launch-btn { color: var(--gold); border-color: rgba(240,192,64,0.3); background: rgba(240,192,64,0.06); }
+.theme-bch .launch-btn:hover { background: rgba(240,192,64,0.15); }
+
+/* BIO 113 — violet */
+.theme-bio113 .card-accent { background: linear-gradient(90deg, var(--violet), var(--coral)); }
+.theme-bio113 .card-band::before { background: var(--violet); }
+.theme-bio113 .course-code-chip { color: var(--violet); border-color: rgba(160,120,255,0.3); background: rgba(160,120,255,0.07); }
+.theme-bio113 .progress-fill { background: linear-gradient(90deg, var(--violet), var(--coral)); }
+.theme-bio113 .cs-num { color: var(--violet); }
+.theme-bio113 .launch-btn { color: var(--violet); border-color: rgba(160,120,255,0.3); background: rgba(160,120,255,0.06); }
+.theme-bio113 .launch-btn:hover { background: rgba(160,120,255,0.15); }
+
+/* BIO 306 — green-teal (has notes) */
+.theme-bio306 .card-accent { background: linear-gradient(90deg, #00e5a0, #00b4d8, #a078ff); }
+.theme-bio306 .card-band::before { background: var(--green); }
+.theme-bio306 .course-code-chip { color: var(--green); border-color: rgba(0,229,160,0.3); background: rgba(0,229,160,0.07); }
+.theme-bio306 .progress-fill { background: linear-gradient(90deg, var(--green), #00b4d8, var(--violet)); }
+.theme-bio306 .cs-num { color: var(--green); }
+.theme-bio306 .launch-btn { color: var(--green); border-color: rgba(0,229,160,0.4); background: rgba(0,229,160,0.08); }
+.theme-bio306 .launch-btn:hover { background: rgba(0,229,160,0.2); }
+
+/* BIO 121 — coral */
+.theme-bio121 .card-accent { background: linear-gradient(90deg, var(--coral), var(--amber)); }
+.theme-bio121 .card-band::before { background: var(--coral); }
+.theme-bio121 .course-code-chip { color: var(--coral); border-color: rgba(255,107,107,0.3); background: rgba(255,107,107,0.07); }
+.theme-bio121 .progress-fill { background: linear-gradient(90deg, var(--coral), var(--amber)); }
+.theme-bio121 .cs-num { color: var(--coral); }
+.theme-bio121 .launch-btn { color: var(--coral); border-color: rgba(255,107,107,0.3); background: rgba(255,107,107,0.06); }
+.theme-bio121 .launch-btn:hover { background: rgba(255,107,107,0.15); }
+
+/* BIO 221 — amber */
+.theme-bio221 .card-accent { background: linear-gradient(90deg, var(--amber), var(--gold)); }
+.theme-bio221 .card-band::before { background: var(--amber); }
+.theme-bio221 .course-code-chip { color: var(--amber); border-color: rgba(255,159,64,0.3); background: rgba(255,159,64,0.07); }
+.theme-bio221 .progress-fill { background: linear-gradient(90deg, var(--amber), var(--gold)); }
+.theme-bio221 .cs-num { color: var(--amber); }
+.theme-bio221 .launch-btn { color: var(--amber); border-color: rgba(255,159,64,0.3); background: rgba(255,159,64,0.06); }
+.theme-bio221 .launch-btn:hover { background: rgba(255,159,64,0.15); }
+
+/* BIO 222 — violet-cyan */
+.theme-bio222 .card-accent { background: linear-gradient(90deg, var(--violet), var(--cyan)); }
+.theme-bio222 .card-band::before { background: var(--violet); }
+.theme-bio222 .course-code-chip { color: var(--violet); border-color: rgba(160,120,255,0.3); background: rgba(160,120,255,0.07); }
+.theme-bio222 .progress-fill { background: linear-gradient(90deg, var(--violet), var(--cyan)); }
+.theme-bio222 .cs-num { color: var(--violet); }
+.theme-bio222 .launch-btn { color: var(--violet); border-color: rgba(160,120,255,0.3); background: rgba(160,120,255,0.06); }
+.theme-bio222 .launch-btn:hover { background: rgba(160,120,255,0.15); }
+
+/* ═══════════════════════════════════════════════
+   FEATURED CARD (BIO 306 — has full notes)
+═══════════════════════════════════════════════ */
+.course-card.featured {
+  grid-column: span 2;
+  flex-direction: row;
+}
+
+@media (max-width: 760px) { .course-card.featured { grid-column: span 1; flex-direction: column; } }
+
+.featured .card-band {
+  flex: 1;
+  border-top: none;
+  border-bottom: none;
+  border-right: 1px solid var(--border);
+  padding: 28px 28px 24px;
+}
+
+@media (max-width: 760px) {
+  .featured .card-band { border-right: none; border-bottom: 1px solid var(--border); }
+}
+
+.featured-right {
+  width: 280px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0;
+}
+
+@media (max-width: 760px) { .featured-right { width: 100%; } }
+
+.featured-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-ui);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: 4px;
+  background: rgba(0,229,160,0.12);
+  border: 1px solid rgba(0,229,160,0.3);
+  color: var(--green);
+  margin-bottom: 14px;
+  width: fit-content;
+}
+
+.featured-title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  line-height: 1.15;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+
+.featured-desc {
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.7;
+  margin-bottom: 20px;
+  font-weight: 300;
+}
+
+.featured-topics-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+
+.featured-stat-bar {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1px;
+  background: var(--border);
+  border-top: 1px solid var(--border);
+}
+
+.fstat {
+  padding: 14px 12px;
+  background: var(--card);
+  text-align: center;
+}
+
+.fstat-num {
+  font-family: var(--font-ui);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--green);
+  display: block;
+  line-height: 1;
+  margin-bottom: 3px;
+}
+
+.fstat-label {
+  font-size: 9px;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-family: var(--font-ui);
+}
+
+.featured-launch-wrap {
+  padding: 20px;
+  background: var(--panel);
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.featured-launch-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 13px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(0,229,160,0.15), rgba(0,180,216,0.1));
+  border: 1px solid rgba(0,229,160,0.3);
+  color: var(--green);
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.25s;
+  text-decoration: none;
+}
+
+.featured-launch-btn:hover {
+  background: linear-gradient(135deg, rgba(0,229,160,0.25), rgba(0,180,216,0.18));
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(0,229,160,0.15);
+}
+
+.featured-sub-btns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.sub-btn {
+  padding: 9px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border2);
+  background: transparent;
+  color: var(--text2);
+  font-family: var(--font-ui);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+}
+
+.sub-btn:hover { border-color: var(--green); color: var(--green); background: rgba(0,229,160,0.05); }
+
+/* ═══════════════════════════════════════════════
+   MODAL (course detail)
+═══════════════════════════════════════════════ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(6px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+
+.modal {
+  background: var(--card);
+  border: 1px solid var(--border2);
+  border-radius: 20px;
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  transform: scale(0.95) translateY(20px);
+  transition: transform 0.3s;
+}
+
+.modal-overlay.open .modal { transform: scale(1) translateY(0); }
+
+.modal::-webkit-scrollbar { width: 4px; }
+.modal::-webkit-scrollbar-track { background: transparent; }
+.modal::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+.modal-header {
+  padding: 28px 28px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.modal-close {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--text2);
+  font-size: 16px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.modal-close:hover { background: var(--border); color: var(--text); }
+
+.modal-body { padding: 24px 28px; }
+
+.modal-outcomes { list-style: none; }
+.modal-outcomes li {
+  padding: 8px 0 8px 20px;
+  position: relative;
+  font-size: 13.5px;
+  color: var(--text2);
+  line-height: 1.6;
+  border-bottom: 1px solid var(--border);
+}
+.modal-outcomes li:last-child { border-bottom: none; }
+.modal-outcomes li::before {
+  content: '→';
+  position: absolute; left: 0;
+  font-size: 12px;
+}
+
+.modal-weeks {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  margin-top: 16px;
+}
+
+.modal-week {
+  aspect-ratio: 1;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-ui);
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text3);
+  transition: all 0.2s;
+  cursor: default;
+  letter-spacing: 0.5px;
+}
+
+.modal-week.complete {
+  background: rgba(0,229,160,0.1);
+  border-color: rgba(0,229,160,0.3);
+  color: var(--green);
+}
+
+.modal-cta {
+  display: flex;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.modal-btn-primary {
+  flex: 1;
+  padding: 13px;
+  border-radius: 10px;
+  border: 1px solid rgba(0,212,255,0.3);
+  background: rgba(0,212,255,0.1);
+  color: var(--cyan);
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  text-align: center;
+  display: block;
+}
+
+.modal-btn-primary:hover { background: rgba(0,212,255,0.2); }
+
+.modal-btn-secondary {
+  padding: 13px 18px;
+  border-radius: 10px;
+  border: 1px solid var(--border2);
+  background: transparent;
+  color: var(--text2);
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.modal-btn-secondary:hover { border-color: var(--text2); color: var(--text); }
+
+/* ═══════════════════════════════════════════════
+   BOTTOM STATS BAR
+═══════════════════════════════════════════════ */
+.bottom-bar {
+  margin-top: 64px;
+  padding: 32px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 24px;
+}
+
+.bstat {
+  text-align: center;
+  padding: 8px;
+  border-right: 1px solid var(--border);
+}
+
+.bstat:last-child { border-right: none; }
+
+.bstat-num {
+  font-family: var(--font-display);
+  font-size: 36px;
+  color: var(--text);
+  display: block;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.bstat-num .accent { color: var(--cyan); }
+.bstat-label { font-family: var(--font-ui); font-size: 10px; color: var(--text3); letter-spacing: 2px; text-transform: uppercase; }
+
+/* ═══════════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════════ */
+.site-footer {
+  margin-top: 48px;
+  padding: 24px 0;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.footer-copy {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  color: var(--text3);
+  letter-spacing: 0.5px;
+}
+
+.footer-links {
+  display: flex;
+  gap: 20px;
+}
+
+.footer-link {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  color: var(--text3);
+  text-decoration: none;
+  transition: color 0.2s;
+  letter-spacing: 0.5px;
+}
+
+.footer-link:hover { color: var(--cyan); }
+
+/* ═══════════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  #app { padding: 0 16px 60px; }
+  .hero { padding: 40px 0 36px; }
+  .hero-metrics { flex-wrap: wrap; gap: 16px; }
+  .hero-metric { border-right: none; margin-right: 0; padding: 0; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+  .nav-pills { display: none; }
+  .course-grid { grid-template-columns: 1fr; }
+  .course-card.featured { grid-column: span 1; flex-direction: column; }
+  .featured .card-band { border-right: none; }
+  .featured-right { width: 100%; }
+  .filter-bar { flex-direction: column; align-items: flex-start; }
+  .search-wrap { width: 100%; }
+  .bottom-bar { grid-template-columns: repeat(2, 1fr); }
+  .bstat { border-right: none; border-bottom: 1px solid var(--border); }
+  .bstat:nth-child(odd) { border-right: 1px solid var(--border); }
+}
+
+@media (max-width: 480px) {
+  .hero-title { font-size: 32px; }
+  .modal-weeks { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* ═══════════════════════════════════════════════
+   SCROLL REVEAL
+═══════════════════════════════════════════════ */
+.reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal.vis { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- Background -->
+<div class="bg-mesh">
+  <div class="bg-orb"></div>
+  <div class="bg-orb"></div>
+  <div class="bg-orb"></div>
+</div>
+
+<div id="app">
+
+  <!-- ── TOP NAV ── -->
+  <nav class="topnav">
+    <div class="logo-group">
+      <div class="logo-mark">NM</div>
+      <div class="logo-text">
+        <span class="logo-name">NeuroMatrix</span>
+        <span class="logo-sub">Biosystems · LMS</span>
+      </div>
+    </div>
+    <div class="nav-pills">
+      <button class="nav-pill active">📚 Courses</button>
+      <button class="nav-pill">📊 Progress</button>
+      <button class="nav-pill">🎯 Practice</button>
+      <button class="nav-pill">📁 Resources</button>
+    </div>
+    <div class="nav-right">
+      <div class="nav-stat">
+        <div class="stat-dot"></div>
+        <span class="stat-text">8 Courses · 2 Semesters</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── HERO ── -->
+  <section class="hero reveal">
+    <div class="hero-eyebrow">
+      <span class="eyebrow-line"></span>
+      Interactive Lecture Library
+      <span class="eyebrow-line"></span>
+    </div>
+    <h1 class="hero-title">Your <em>Courses</em>,<br>Fully Interactive</h1>
+    <p class="hero-sub">Animated diagrams, self-check quizzes, and structured lecture notes — for every course across both semesters. Built for Nigerian biology students.</p>
+    <div class="hero-metrics">
+      <div class="hero-metric">
+        <span class="metric-num">8</span>
+        <span class="metric-label">Total Courses</span>
+      </div>
+      <div class="hero-metric">
+        <span class="metric-num">1<span style="font-size:22px;color:var(--text3)">/8</span></span>
+        <span class="metric-label">Notes Ready</span>
+      </div>
+      <div class="hero-metric">
+        <span class="metric-num">2</span>
+        <span class="metric-label">Semesters</span>
+      </div>
+      <div class="hero-metric">
+        <span class="metric-num"><span style="color:var(--cyan)">15</span></span>
+        <span class="metric-label">Weeks (per course)</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FILTER BAR ── -->
+  <div class="filter-bar reveal">
+    <div class="filter-group">
+      <span class="filter-label">Semester</span>
+      <button class="filter-btn active-all" id="btn-all" onclick="filterSem('all')">All</button>
+      <button class="filter-btn" id="btn-harmattan" onclick="filterSem('harmattan')">🌤 Harmattan</button>
+      <button class="filter-btn" id="btn-rain" onclick="filterSem('rain')">🌧 Rain</button>
+    </div>
+    <div class="filter-group">
+      <span class="filter-label">Programme</span>
+      <button class="filter-btn" id="btn-degree" onclick="filterProg('degree')">🎓 Degree</button>
+      <button class="filter-btn" id="btn-nce" onclick="filterProg('nce')">📜 NCE</button>
+      <button class="filter-btn" id="btn-prog-all" onclick="filterProg('all')">Both</button>
+    </div>
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input class="search-input" type="text" placeholder="Search courses..." id="search-input" oninput="searchCourses(this.value)">
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       HARMATTAN / 1ST SEMESTER
+  ══════════════════════════════════════════ -->
+  <section class="semester-block reveal" id="sem-harmattan">
+    <div class="semester-header">
+      <div class="sem-badge harmattan">
+        <div class="sem-badge-dot"></div>
+        1st Semester
+      </div>
+      <h2 class="sem-title">Harmattan</h2>
+      <div class="sem-divider"></div>
+      <span class="sem-count">4 COURSES</span>
+    </div>
+
+    <!-- DEGREE -->
+    <div class="prog-label">
+      <span class="prog-tag degree">🎓 Degree</span>
+      <div class="prog-line"></div>
+    </div>
+
+    <div class="course-grid">
+
+      <!-- MCB 221 -->
+      <div class="course-card theme-mcb" data-code="MCB221" data-sem="harmattan" data-prog="degree" onclick="openModal('mcb221')">
+        <div class="card-accent"></div>
+        <div class="card-band">
+          <div class="card-icon-wrap">🦠</div>
+          <div class="course-code-chip">MCB 221</div>
+          <div class="course-title">General Microbiology</div>
+          <div class="course-subtitle">Degree · 100-Level Foundation</div>
+        </div>
+        <div class="card-body">
+          <div class="topics-preview">
+            <span class="topic-tag">Cell structure</span>
+            <span class="topic-tag">Bacterial growth</span>
+            <span class="topic-tag">Viruses</span>
+            <span class="topic-tag">Sterilisation</span>
+            <span class="topic-tag">Pathogenicity</span>
+            <span class="topic-tag">Immunology</span>
+          </div>
+          <div class="card-progress-row">
+            <div class="progress-track"><div class="progress-fill" data-target="0"></div></div>
+            <span class="progress-pct" style="color:var(--text3)">0%</span>
+          </div>
+          <div class="card-stats">
+            <div class="card-stat"><span class="cs-num">15</span><span class="cs-label">Weeks</span></div>
+            <div class="card-stat"><span class="cs-num">15</span><span class="cs-label">Quizzes</span></div>
+            <div class="card-stat"><span class="cs-num">8</span><span class="cs-label">Diagrams</span></div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="status-pill coming"><div class="status-dot coming"></div>Building</div>
+          <div class="launch-btn">Preview <span class="launch-arrow">→</span></div>
+        </div>
+      </div>
+
+      <!-- BIO 203 -->
+      <div class="course-card theme-bio203" data-code="BIO203" data-sem="harmattan" data-prog="degree" onclick="openModal('bio203')">
+        <div class="card-accent"></div>
+        <div class="card-band">
+          <div class="card-icon-wrap">🫀</div>
+          <div class="course-code-chip">BIO 203</div>
+          <div class="course-title">General Physiology</div>
+          <div class="course-subtitle">Degree · 200-Level Core</div>
+        </div>
+        <div class="card-body">
+          <div class="topics-preview">
+            <span class="topic-tag">Cell transport</span>
+            <span class="topic-tag">Nerve impulse</span>
+            <span class="topic-tag">Muscle contraction</span>
+            <span class="topic-tag">Digestion</span>
+            <span class="topic-tag">Circulation</span>
+            <span class="topic-tag">Homeostasis</span>
+          </div>
+          <div class="card-progress-row">
+            <div class="progress-track"><div class="progress-fill" data-target="0"></div></div>
+            <span class="progress-pct" style="color:var(--text3)">0%</span>
+          </div>
+          <div class="card-stats">
+            <div class="card-stat"><span class="cs-num">15</span><span class="cs-label">Weeks</span></div>
+            <div class="card-stat"><span class="cs-num">15</span><span class="cs-label">Quizzes</span></div>
+            <div class="card-stat"><span class="cs-num">10</span><span class="cs-label">Diagrams</span></div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="status-pill coming"><div class="status-dot coming"></div>Building</div>
+          <div class="launch-btn">Preview <span class="launch-arrow">→</span></div>
+        </div>
+      </div>
+
+      <!-- BCH 201 -->
+      <div class="course-card theme-bch" data-code="BCH201" data-sem="harmattan" data-prog="degree" onclick="openModal('bch201')">
+        <div class="card-accent"></div>
+        <div class="card-band">
+          <div class="card-icon-wrap">⚗️</div>
+          <div class="course-code-chip">BCH 201</div>
+          <div class="course-title">General Biochemistry I</div>
+          <div class="course-subtitle">Degree · 200-Level Core</div>
+        </div>
+        <div class="card-body">
+          <div class="topics-preview">
+            <span class="topic-tag">Amino acids</span>
+            <span class="topic-tag">Proteins</span>
+            <span class="topic-tag">Enzymes</span>
+            <span class="topic-tag">Carbohydrates</span>
+            <span class="topic-tag">Lipids</span>
+            <span class="topic-tag">Nucleic acids</span>
+          </div>
+          <div class="card-progress-row">
+            <div class="progress-track"><div class="progress-fill" data-target="0"></div></div>
+            <span class="progress-pct" style="color:var(--text3)">0%</span>
+          </div>
+          <div class="card-stats">
+            <div class="card-stat"><span class="cs-num">15</span><span class="cs-label">Weeks</span></div>
+            <div class="card-stat"><span class="cs-num">15</span><span class="cs-label">Quizzes</span></div>
+            <div class="card-stat"><span class="cs-num">12</span><span class="cs-label">Diagrams</span></div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="status-pill coming"><div class="status-dot coming"></div>Building</div>
+          <div class="launch-btn">Preview <span class="launch-arrow">→</span></div>
+        </div>
+      </div>
+
+    </div><!-- /degree grid -->
+
+    <!-- NCE -->
+    <div class="prog-label">
+      <span class="prog-tag nce">📜 NCE</span>
+      <div class="prog-line"></div>
+    </div>
+
+    <div class="course-grid">
+
+      <!-- BIO 113 -->
+      <div class="course-card theme-bio113" data-code="BIO113" data-sem="harmattan" data-prog="nce" onclick="openModal('bio113')">
+        <div class="card-accent"></div>
+        <div class="card-band">
+          <div class="card-icon-wrap">🌿</div>
+          <div class="course-code-chip">BIO 113</div>
+          <div class="course-title">Virus, Bacteria &amp; Lower Plants</div>
+          <div class="course-subtitle">NCE · Year 1</div>
+        </div>
+        <div class="card-body">
+          <div class="topics-preview">
+            <span class="topic-tag">Virus structure</span>
+            <span class="topic-tag">Bacteriology</span>
+            <span class="topic-tag">Algae</span>
+            <span class="topic-tag">Fungi</span>
+            <span class="topic-tag">Bryophytes</span>
+            <span class="topic-tag">Pteridophytes</span>
+          </div>
+          <div class="card-progress-row">
+            <div class="progress-track"><div class="progress-fill" data-target="0"></div></div>
+            <span class="progress-pct" style="color:var(--text3)">0%</span>
+          </div>
+          <div class="card-stats">
+            <div class="card-stat"><span class="cs-num">15</span><span class="cs-label">Weeks</span></div>
+            <div class="card-stat"><span class="cs-num">15</span><span class="cs-label">Quizzes</span></div>
+            <div class="card-stat"><span class="cs-num">9</span><span class="cs-label">Diagrams</span></div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="status-pill coming"><div class="status-dot coming"></div>Building</div>
+          <div class="launch-btn">Preview <span class="launch-arrow">→</span></div>
+        </div>
+      </div>
+
+    </div><!-- /nce grid harmattan -->
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       RAIN / 2ND SEMESTER
+  ══════════════════════════════════════════ -->
+  <section class="semester-block reveal" id="sem-rain">
+    <div class="semester-header">
+      <div class="sem-badge rain">
+        <div class="sem-badge-dot"></div>
+        2nd Semester
+      </div>
+      <h2 class="sem-title">Rain</h2>
+      <div class="sem-divider"></div>
+      <span class="sem-count">4 COURSES</span>
+    </div>
+
+    <!-- DEGREE -->
+    <div class="prog-label">
+      <span class="prog-tag degree">🎓 Degree</span>
+      <div class="prog-line"></div>
+    </div>
+
+    <div class="course-grid">
+
+      <!-- BIO 306 FEATURED -->
+      <div class="course-card theme-bio306 featured" data-code="BIO306" data-sem="rain" data-prog="degree">
+        <div class="card-accent"></div>
+        <div class="card-band">
+          <div class="card-icon-wrap">🌿</div>
+          <div class="featured-badge">⚡ Full Notes Available</div>
+          <div class="featured-title">BIO 306 — Systematic Biology</div>
+          <p class="featured-desc">From Aristotle to AI — 15 weeks of interactive lecture notes with animated SVG diagrams, species concept comparators, cladogram builders, and self-check quizzes. Degree · 300 Level.</p>
+          <div class="featured-topics-grid">
+            <span class="topic-tag">Pre-Linnaean history</span>
+            <span class="topic-tag">Binomial nomenclature</span>
+            <span class="topic-tag">Taxonomic hierarchy</span>
+            <span class="topic-tag">Species concepts</span>
+            <span class="topic-tag">ICZN / ICN rules</span>
+            <span class="topic-tag">Numerical taxonomy</span>
+            <span class="topic-tag">Cladistics</span>
+            <span class="topic-tag">DNA barcoding</span>
+            <span class="topic-tag">Keys &amp; keying</span>
+            <span class="topic-tag">Molecular systematics</span>
+          </div>
+        </div>
+        <div class="featured-right">
+          <div class="featured-stat-bar">
+            <div class="fstat"><span class="fstat-num">15</span><span class="fstat-label">Weeks</span></div>
+            <div class="fstat"><span class="fstat-num">15</span><span class="fstat-label">Quizzes</span></div>
+            <div class="fstat"><span class="fstat-num">8</span><span class="fstat-label">Diagrams</span></div>
+          </div>
+          <div class="featured-launch-wrap">
+            <a href="BIO306_Interactive_Lecture_Notes.html" class="featured-launch-btn">
+              ⚡ Launch Interactive Notes
+            </a>
+            <div class="featured-sub-btns">
+              <a href="BIO306_Systematic_Biology_Course_Outline.docx" class="sub-btn">📄 Course Outline</a>
+              <a href="BIO306_Lecture_Notes_Weeks1-15.docx" class="sub-btn">📝 Download Notes</a>
+              <a href="BIO306_Practical_Schedule_Theatre_Arts.docx" class="sub-btn">🎭 Practicals</a>
+              <a href="#" class="sub-btn" onclick="openModal('bio306'); return false;">ℹ️ Details</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /degree grid rain -->
+
+    <!-- NCE -->
+    <div class="prog-label">
+      <span class="prog-tag nce">📜 NCE</span>
+      <div class="prog-line"></div>
+    </div>
+
+    <div class="course-grid">
+
+      <!-- BIO 121 -->
+      <div class="course-card theme-bio121" data-code="BIO121" data-sem="rain" data-prog="nce" onclick="openModal('bio121')">
+        <div class="card-accent"></div>
+        <div class="card-band">
+          <div class="card-icon-wrap">🦋</div>
+          <div class="course-code-chip">BIO 121</div>
+          <div class="course-title">Diversity of Invertebrates</div>
+          <div class="course-subtitle">NCE · Year 1</div>
+        </div>
+        <div class="card-body">
+          <div class="topics-preview">
+            <span class="topic-tag">Protozoa</span>
+            <span class="topic-tag">Porifera</span>
+            <span class="topic-tag">Platyhelminthes</span>
+            <span class="topic-tag">Annelida</span>
+            <span class="topic-tag">Arthropoda</span>
+            <span class="topic-tag">Mollusca</span>
+          </div>
+          <div class="card-progress-row">
+            <div class="progress-track"><div class="progress-fill" data-target="0"></div></div>
+            <span class="progress-pct" style="color:var(--text3)">0%</span>
+          </div>
+          <div class="card-stats">
+            <div class="card-stat"><span class="cs-num">15</span><span class="cs-label">Weeks</span></div>
+            <div class="card-stat"><span class="cs-num">15</span><span class="cs-label">Quizzes</span></div>
+            <div class="card-stat"><span class="cs-num">11</span><span class="cs-label">Diagrams</span></div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="status-pill coming"><div class="status-dot coming"></div>Building</div>
+          <div class="launch-btn">Preview <span class="launch-arrow">→</span></div>
+        </div>
+      </div>
+
+      <!-- BIO 221 -->
+      <div class="course-card theme-bio221" data-code="BIO221" data-sem="rain" data-prog="nce" onclick="openModal('bio221')">
+        <div class="card-accent"></div>
+        <div class="card-band">
+          <div class="card-icon-wrap">🌱</div>
+          <div class="course-code-chip">BIO 221</div>
+          <div class="course-title">Plant Physiology</div>
+          <div class="course-subtitle">NCE · Year 2</div>
+        </div>
+        <div class="card-body">
+          <div class="topics-preview">
+            <span class="topic-tag">Water relations</span>
+            <span class="topic-tag">Photosynthesis</span>
+            <span class="topic-tag">Mineral nutrition</span>
+            <span class="topic-tag">Translocation</span>
+            <span class="topic-tag">Plant hormones</span>
+            <span class="topic-tag">Photoperiodism</span>
+          </div>
+          <div class="card-progress-row">
+            <div class="progress-track"><div class="progress-fill" data-target="0"></div></div>
+            <span class="progress-pct" style="color:var(--text3)">0%</span>
+          </div>
+          <div class="card-stats">
+            <div class="card-stat"><span class="cs-num">15</span><span class="cs-label">Weeks</span></div>
+            <div class="card-stat"><span class="cs-num">15</span><span class="cs-label">Quizzes</span></div>
+            <div class="card-stat"><span class="cs-num">10</span><span class="cs-label">Diagrams</span></div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="status-pill coming"><div class="status-dot coming"></div>Building</div>
+          <div class="launch-btn">Preview <span class="launch-arrow">→</span></div>
+        </div>
+      </div>
+
+      <!-- BIO 222 -->
+      <div class="course-card theme-bio222" data-code="BIO222" data-sem="rain" data-prog="nce" onclick="openModal('bio222')">
+        <div class="card-accent"></div>
+        <div class="card-band">
+          <div class="card-icon-wrap">🦴</div>
+          <div class="course-code-chip">BIO 222</div>
+          <div class="course-title">Vertebrate Anatomy &amp; Physiology</div>
+          <div class="course-subtitle">NCE · Year 2</div>
+        </div>
+        <div class="card-body">
+          <div class="topics-preview">
+            <span class="topic-tag">Vertebrate classes</span>
+            <span class="topic-tag">Skeletal system</span>
+            <span class="topic-tag">Nervous system</span>
+            <span class="topic-tag">Sense organs</span>
+            <span class="topic-tag">Endocrine system</span>
+            <span class="topic-tag">Reproduction</span>
+          </div>
+          <div class="card-progress-row">
+            <div class="progress-track"><div class="progress-fill" data-target="0"></div></div>
+            <span class="progress-pct" style="color:var(--text3)">0%</span>
+          </div>
+          <div class="card-stats">
+            <div class="card-stat"><span class="cs-num">15</span><span class="cs-label">Weeks</span></div>
+            <div class="card-stat"><span class="cs-num">15</span><span class="cs-label">Quizzes</span></div>
+            <div class="card-stat"><span class="cs-num">13</span><span class="cs-label">Diagrams</span></div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="status-pill coming"><div class="status-dot coming"></div>Building</div>
+          <div class="launch-btn">Preview <span class="launch-arrow">→</span></div>
+        </div>
+      </div>
+
+    </div><!-- /nce grid rain -->
+  </section>
+
+  <!-- ── BOTTOM STATS BAR ── -->
+  <div class="bottom-bar reveal">
+    <div class="bstat">
+      <span class="bstat-num">8</span>
+      <span class="bstat-label">Courses Total</span>
+    </div>
+    <div class="bstat">
+      <span class="bstat-num"><span class="accent">1</span> / 8</span>
+      <span class="bstat-label">Interactive Notes Live</span>
+    </div>
+    <div class="bstat">
+      <span class="bstat-num">120</span>
+      <span class="bstat-label">Lecture Weeks</span>
+    </div>
+    <div class="bstat">
+      <span class="bstat-num">120</span>
+      <span class="bstat-label">Self-Check Quizzes</span>
+    </div>
+    <div class="bstat">
+      <span class="bstat-num"><span class="accent">86</span></span>
+      <span class="bstat-label">Total Diagrams</span>
+    </div>
+    <div class="bstat">
+      <span class="bstat-num">2</span>
+      <span class="bstat-label">Programmes (Degree+NCE)</span>
+    </div>
+  </div>
+
+  <!-- ── FOOTER ── -->
+  <footer class="site-footer">
+    <div class="footer-copy">© 2025 NeuroMatrix Biosystems · Interactive Learning Platform · Sikiru Adetona College of Education Science &amp; Technology, Ogun</div>
+    <div class="footer-links">
+      <a class="footer-link" href="#">neuromatrixbiosystems.com</a>
+      <a class="footer-link" href="#">NeuroTrack Pro</a>
+      <a class="footer-link" href="#">African NeuroHealth AI</a>
+      <a class="footer-link" href="#">Contact</a>
+    </div>
+  </footer>
+
+</div><!-- /#app -->
+
+<!-- ══════════════════════════════════════════
+     MODALS
+══════════════════════════════════════════ -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModalOutside(event)">
+  <div class="modal" id="modal-box">
+    <div class="modal-header" id="modal-header">
+      <div>
+        <div id="modal-chip" class="course-code-chip" style="display:inline-flex;margin-bottom:10px;"></div>
+        <div id="modal-title" style="font-family:var(--font-display);font-size:22px;color:var(--text);line-height:1.3;"></div>
+        <div id="modal-meta" style="font-size:11px;color:var(--text3);margin-top:4px;font-family:var(--font-ui);letter-spacing:0.5px;"></div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="modal-desc" style="font-size:13.5px;color:var(--text2);line-height:1.7;margin-bottom:20px;"></div>
+      <div style="font-family:var(--font-ui);font-size:10px;color:var(--text3);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">Learning Outcomes</div>
+      <ul class="modal-outcomes" id="modal-outcomes"></ul>
+      <div style="font-family:var(--font-ui);font-size:10px;color:var(--text3);letter-spacing:2px;text-transform:uppercase;margin:20px 0 10px;">Weekly Topics</div>
+      <div class="modal-weeks" id="modal-weeks"></div>
+      <div class="modal-cta" id="modal-cta"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── COURSE DATA ────────────────────────────────────────────
+const courseData = {
+  mcb221: {
+    title: "General Microbiology",
+    code: "MCB 221",
+    meta: "Degree · 1st Semester (Harmattan) · 2 Units",
+    chipColor: "rgba(0,212,255,0.1)", chipBorder: "rgba(0,212,255,0.3)", chipText: "#00d4ff",
+    desc: "An introduction to the diversity, structure, and biology of microorganisms — bacteria, viruses, fungi, and protozoa. Covers growth, metabolism, pathogenicity, and the principles of microbial control.",
+    outcomes: [
+      "Describe the structural differences between prokaryotic and eukaryotic cells",
+      "Explain bacterial growth curves and growth requirements",
+      "Classify viruses by structure and replication strategy",
+      "Explain the principles of sterilisation, disinfection, and antisepsis",
+      "Describe host-pathogen interactions and mechanisms of virulence",
+      "Outline the basic principles of the immune response",
+    ],
+    weeks: ["Cell biology","Prokaryotes","Eukaryotic microbes","Viruses I","Viruses II","Bacterial growth","Metabolism","Genetics","Control","Epidemiology","Pathogenicity","Immunity","Antimicrobials","Applied micro","Review"],
+    status: "building",
+    file: null,
+  },
+  bio203: {
+    title: "General Physiology",
+    code: "BIO 203",
+    meta: "Degree · 1st Semester (Harmattan) · 2 Units",
+    chipColor: "rgba(0,229,160,0.1)", chipBorder: "rgba(0,229,160,0.3)", chipText: "#00e5a0",
+    desc: "Systematic study of the functional mechanisms of living organisms at the cellular and systems level. Covers membrane transport, excitable cells, muscle physiology, digestive, cardiovascular, respiratory, renal, and endocrine systems.",
+    outcomes: [
+      "Explain the biophysical basis of membrane transport mechanisms",
+      "Describe the ionic basis of the resting and action potential",
+      "Explain synaptic transmission and neuromuscular junction physiology",
+      "Describe the cardiovascular cycle and its regulation",
+      "Explain the mechanics and regulation of breathing",
+      "Describe renal filtration, reabsorption, and homeostatic regulation",
+    ],
+    weeks: ["Cell physiology","Membrane transport","Bioelectricity","Nerve physiology","Muscle physiology","Blood","Heart","Circulation","Breathing","Gas exchange","Digestion","Absorption","Excretion","Endocrinology","Review"],
+    status: "building",
+    file: null,
+  },
+  bch201: {
+    title: "General Biochemistry I",
+    code: "BCH 201",
+    meta: "Degree · 1st Semester (Harmattan) · 2 Units",
+    chipColor: "rgba(240,192,64,0.1)", chipBorder: "rgba(240,192,64,0.3)", chipText: "#f0c040",
+    desc: "Covers the structure, properties, and functions of the four major classes of biological macromolecules — proteins, carbohydrates, lipids, and nucleic acids — and the principles of enzyme catalysis.",
+    outcomes: [
+      "Describe amino acid structure, classification, and properties",
+      "Explain protein structure at all four levels of organisation",
+      "Define enzyme kinetics and explain Michaelis-Menten theory",
+      "Describe the structure and biological roles of carbohydrates",
+      "Classify lipids and explain membrane lipid bilayer structure",
+      "Describe the structure of DNA and RNA and their biological roles",
+    ],
+    weeks: ["Water & buffers","Amino acids I","Amino acids II","Proteins I","Proteins II","Enzyme kinetics","Enzyme regulation","Carbohydrates I","Carbohydrates II","Lipids I","Lipids II","Membranes","Nucleic acids I","Nucleic acids II","Review"],
+    status: "building",
+    file: null,
+  },
+  bio113: {
+    title: "Virus, Bacteria & Lower Plants",
+    code: "BIO 113",
+    meta: "NCE · 1st Semester (Harmattan) · Year 1",
+    chipColor: "rgba(160,120,255,0.1)", chipBorder: "rgba(160,120,255,0.3)", chipText: "#a078ff",
+    desc: "A survey of the simplest forms of life — viruses, bacteria, algae, fungi, lichens, bryophytes, and pteridophytes. Emphasises morphology, reproduction, economic importance, and ecological roles.",
+    outcomes: [
+      "Describe the structure and classification of viruses",
+      "Classify and describe economically important bacteria",
+      "Describe the major groups of algae with examples",
+      "Classify fungi and describe their reproductive strategies",
+      "Describe the structure and life cycle of bryophytes",
+      "Explain the significance of pteridophytes in plant evolution",
+    ],
+    weeks: ["Viruses I","Viruses II","Bacteria I","Bacteria II","Algae I","Algae II","Fungi I","Fungi II","Lichens","Bryophytes I","Bryophytes II","Pteridophytes I","Pteridophytes II","Economic importance","Review"],
+    status: "building",
+    file: null,
+  },
+  bio306: {
+    title: "Systematic Biology",
+    code: "BIO 306",
+    meta: "Degree · 2nd Semester (Rain) · 2 Units · 300 Level",
+    chipColor: "rgba(0,229,160,0.1)", chipBorder: "rgba(0,229,160,0.3)", chipText: "#00e5a0",
+    desc: "From the first classifications of Aristotle to DNA barcoding and phylogenomics — BIO 306 covers the science of naming, classifying, and understanding the evolutionary relationships of all living organisms. Full interactive notes available.",
+    outcomes: [
+      "Describe Pre-Linnaean, Linnaean, and Darwinian taxonomic concepts",
+      "Explain and apply the binomial system of nomenclature",
+      "Classify organisms across all taxonomic hierarchical ranks",
+      "Apply ICZN and ICN rules to nomenclatural problems",
+      "Construct and use dichotomous identification keys",
+      "Apply numerical taxonomy and cladistic methods",
+      "Use DNA barcoding and integrative taxonomy approaches",
+    ],
+    weeks: ["Introduction","Linnaean taxonomy","Darwinian systematics","Major ranks","Infra/Supraspecific","Species concepts","Nomenclature","Midterm review","Numerical taxonomy I","Numerical taxonomy II","Cladistics","Molecular systematics","Keys — theory","Keys — practice","Synthesis"],
+    status: "ready",
+    file: "BIO306_Interactive_Lecture_Notes.html",
+  },
+  bio121: {
+    title: "Diversity of Invertebrates",
+    code: "BIO 121",
+    meta: "NCE · 2nd Semester (Rain) · Year 1",
+    chipColor: "rgba(255,107,107,0.1)", chipBorder: "rgba(255,107,107,0.3)", chipText: "#ff6b6b",
+    desc: "A systematic survey of all major invertebrate phyla — their body plans, reproduction, ecology, and economic importance. Covers Protozoa through Echinodermata with West African examples throughout.",
+    outcomes: [
+      "Describe the body plans of all major invertebrate phyla",
+      "Compare reproductive strategies across invertebrate groups",
+      "Identify representative species of each phylum",
+      "Explain the ecological roles of major invertebrate groups",
+      "Describe the economic importance of invertebrates in Nigeria",
+      "Construct a simple key to identify invertebrate specimens",
+    ],
+    weeks: ["Introduction","Protozoa I","Protozoa II","Porifera","Cnidaria","Platyhelminthes","Nematoda","Annelida","Mollusca I","Mollusca II","Arthropoda I","Arthropoda II","Arthropoda III","Echinodermata","Review"],
+    status: "building",
+    file: null,
+  },
+  bio221: {
+    title: "Plant Physiology",
+    code: "BIO 221",
+    meta: "NCE · 2nd Semester (Rain) · Year 2",
+    chipColor: "rgba(255,159,64,0.1)", chipBorder: "rgba(255,159,64,0.3)", chipText: "#ff9f40",
+    desc: "Covers the physiological processes of plants — water relations, mineral nutrition, photosynthesis, respiration, translocation, growth, and responses to the environment. Agricultural applications emphasised throughout.",
+    outcomes: [
+      "Explain osmosis, diffusion, and active transport in plants",
+      "Describe the light and dark reactions of photosynthesis",
+      "Explain the roles of essential mineral elements",
+      "Describe phloem and xylem translocation mechanisms",
+      "Explain the roles of plant hormones in growth and development",
+      "Describe photoperiodism and its significance in flowering",
+    ],
+    weeks: ["Water in plants","Osmosis & turgor","Mineral nutrition I","Mineral nutrition II","Photosynthesis I","Photosynthesis II","Respiration","Translocation","Hormones I","Hormones II","Growth","Tropisms","Photoperiodism","Environmental responses","Review"],
+    status: "building",
+    file: null,
+  },
+  bio222: {
+    title: "Vertebrate Anatomy & Physiology",
+    code: "BIO 222",
+    meta: "NCE · 2nd Semester (Rain) · Year 2",
+    chipColor: "rgba(160,120,255,0.1)", chipBorder: "rgba(160,120,255,0.3)", chipText: "#a078ff",
+    desc: "A comparative study of vertebrate anatomy and physiology across the five classes — fish, amphibia, reptiles, birds, and mammals. Emphasises structural adaptations and their functional significance.",
+    outcomes: [
+      "Compare the anatomy of representatives of all five vertebrate classes",
+      "Describe the structure and function of the vertebrate skeletal system",
+      "Explain the organisation of the vertebrate nervous system",
+      "Describe vertebrate sense organs and their transduction mechanisms",
+      "Explain hormonal regulation in vertebrates",
+      "Compare reproductive strategies across vertebrate classes",
+    ],
+    weeks: ["Vertebrate diversity","Fish anatomy","Amphibian anatomy","Reptile anatomy","Bird anatomy","Mammal anatomy","Integument","Skeleton I","Skeleton II","Muscle","Nervous system I","Nervous system II","Sense organs","Endocrine system","Review"],
+    status: "building",
+    file: null,
+  },
+};
+
+// ── MODAL ──────────────────────────────────────────────────
+function openModal(id) {
+  const d = courseData[id];
+  if (!d) return;
+
+  document.getElementById('modal-chip').textContent = d.code;
+  document.getElementById('modal-chip').style.color = d.chipText;
+  document.getElementById('modal-chip').style.borderColor = d.chipBorder;
+  document.getElementById('modal-chip').style.background = d.chipColor;
+  document.getElementById('modal-title').textContent = d.title;
+  document.getElementById('modal-meta').textContent = d.meta;
+  document.getElementById('modal-desc').textContent = d.desc;
+
+  const ol = document.getElementById('modal-outcomes');
+  ol.innerHTML = d.outcomes.map(o => `<li style="--c:${d.chipText}">${o}</li>`).join('');
+  ol.querySelectorAll('li').forEach(li => { li.style.setProperty('--c', d.chipText); });
+  ol.style.setProperty('--chip', d.chipText);
+
+  const ww = document.getElementById('modal-weeks');
+  ww.innerHTML = d.weeks.map((w, i) =>
+    `<div class="modal-week" style="${d.status==='ready' ? `background:${d.chipColor};border-color:${d.chipBorder};color:${d.chipText};` : ''}" title="Week ${i+1}: ${w}">W${i+1}</div>`
+  ).join('');
+
+  const cta = document.getElementById('modal-cta');
+  if (d.file) {
+    cta.innerHTML = `
+      <a href="${d.file}" class="modal-btn-primary" style="border-color:${d.chipBorder};background:${d.chipColor};color:${d.chipText}">
+        ⚡ Launch Interactive Notes
+      </a>
+      <button class="modal-btn-secondary" onclick="closeModal()">Close</button>
+    `;
+  } else {
+    cta.innerHTML = `
+      <div class="modal-btn-primary" style="border-color:${d.chipBorder};background:${d.chipColor};color:${d.chipText};cursor:default;opacity:0.6">
+        🔧 Notes in development
+      </div>
+      <button class="modal-btn-secondary" onclick="closeModal()">Close</button>
+    `;
+  }
+
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+}
+
+function closeModalOutside(e) {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// ── FILTERS ────────────────────────────────────────────────
+let activeSem = 'all', activeProg = 'all';
+
+function filterSem(sem) {
+  activeSem = sem;
+  ['all','harmattan','rain'].forEach(s => {
+    const btn = document.getElementById('btn-' + s);
+    if (btn) btn.className = 'filter-btn' + (s === sem ? (' active-' + (s === 'all' ? 'all' : s)) : '');
+  });
+  applyFilters();
+}
+
+function filterProg(prog) {
+  activeProg = prog;
+  ['degree','nce','prog-all'].forEach(p => {
+    const btn = document.getElementById('btn-' + p);
+    if (btn) btn.className = 'filter-btn' + (p === prog || (p === 'prog-all' && prog === 'all') ? ' active-all' : '');
+  });
+  applyFilters();
+}
+
+function applyFilters() {
+  const q = document.getElementById('search-input').value.toLowerCase();
+  document.querySelectorAll('.semester-block').forEach(block => {
+    const semId = block.id.replace('sem-','');
+    const show = activeSem === 'all' || activeSem === semId;
+    block.classList.toggle('hidden', !show);
+  });
+
+  document.querySelectorAll('.course-card').forEach(card => {
+    const sem = card.dataset.sem;
+    const prog = card.dataset.prog;
+    const code = (card.dataset.code || '').toLowerCase();
+    const titleEl = card.querySelector('.course-title, .featured-title');
+    const title = titleEl ? titleEl.textContent.toLowerCase() : '';
+    const matchSem = activeSem === 'all' || activeSem === sem;
+    const matchProg = activeProg === 'all' || activeProg === prog;
+    const matchQ = !q || code.includes(q) || title.includes(q);
+    card.style.display = matchSem && matchProg && matchQ ? '' : 'none';
+  });
+
+  // Hide empty prog-label sections
+  document.querySelectorAll('.prog-label').forEach(label => {
+    const grid = label.nextElementSibling;
+    if (!grid) return;
+    const visible = [...grid.querySelectorAll('.course-card')].some(c => c.style.display !== 'none');
+    label.style.display = visible ? '' : 'none';
+    if (grid) grid.style.display = visible ? '' : 'none';
+  });
+}
+
+function searchCourses(val) { applyFilters(); }
+
+// ── PROGRESS BARS ─────────────────────────────────────────
+function animateProgressBars() {
+  document.querySelectorAll('.progress-fill[data-target]').forEach(bar => {
+    const target = parseInt(bar.dataset.target || 0);
+    setTimeout(() => { bar.style.width = target + '%'; }, 300);
+    const pct = bar.closest('.card-progress-row')?.querySelector('.progress-pct');
+    if (pct && target > 0) pct.textContent = target + '%';
+  });
+}
+
+// ── SCROLL REVEAL ─────────────────────────────────────────
+function initReveal() {
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('vis'); obs.unobserve(e.target); } });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+}
+
+// ── NAV PILLS (visual only) ───────────────────────────────
+document.querySelectorAll('.nav-pill').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.nav-pill').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+
+// ── INIT ──────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  initReveal();
+  animateProgressBars();
+});
+
+initReveal();
+animateProgressBars();
+</script>
+</body>
+</html>
