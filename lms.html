@@ -86,14 +86,29 @@
     </div>
   </div>
 
-  <div class="iframe-container">
-    <iframe
-      src="https://ademideola-multi-lecture-dashboard.hf.space"
-      title="NeuroMatrix LMS"
-      allow="accelerometer; camera; microphone"
-      loading="lazy"
-    ></iframe>
-  </div>
+  <style>
+  .iframe-container {
+    position: relative;
+    width: 100%;
+    height: 100vh; /* FULL viewport height */
+    overflow: hidden;
+  }
+
+  .iframe-container iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+</style>
+
+<div class="iframe-container">
+  <iframe
+    src="https://ademideola-multi-lecture-dashboard.hf.space"
+    title="NeuroMatrix LMS"
+    allow="accelerometer; camera; microphone"
+    loading="lazy"
+  ></iframe>
+</div>
 
 </body>
 </html>
