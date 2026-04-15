@@ -97,6 +97,27 @@
     height: 100%;
     border: none;
   }
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+  }
+
+  .iframe-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100dvh; /* 🔥 KEY FIX */
+    overflow: hidden;
+  }
+
+  .iframe-container iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
 </style>
 
 <div class="iframe-container">
@@ -104,9 +125,7 @@
     src="https://ademideola-multi-lecture-dashboard.hf.space"
     title="NeuroMatrix LMS"
     allow="accelerometer; camera; microphone"
-    loading="lazy"
   ></iframe>
 </div>
-
 </body>
 </html>
