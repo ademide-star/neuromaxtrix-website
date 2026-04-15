@@ -2,8 +2,9 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
-    { "source": "/pricing",    "destination": "/pricing.html"    },
-    { "source": "/neurohealth","destination": "/neurohealth.html" },
-    { "source": "/lms",        "destination": "/lms.html"        }
+    { "source": "/pricing",      "destination": "/pricing.html"       },
+    { "source": "/neurohealth",  "destination": "/neurohealth.html"   },
+    { "source": "/lms",          "destination": "/lms-dashboard.html" },
+    { "source": "/NeuroMatrix_Interactive_Courses_Dashboard.html","destination": "/NeuroMatrix_Interactive_Courses_Dashboard.html" }
   ]
 }
