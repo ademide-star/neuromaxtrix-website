@@ -315,22 +315,41 @@
     }
 
     .faq-item {
-      border-bottom: 1px solid var(--border); padding: 20px 0; cursor: pointer;
+      border-bottom: 1px solid var(--border);
+      padding: 20px 0; cursor: pointer;
+      transition: padding 0.2s;
     }
+
+    .faq-item:hover { padding-left: 4px; }
 
     .faq-q {
       display: flex; justify-content: space-between; align-items: center;
-      font-size: 12px; color: var(--text); font-weight: 600;
+      font-size: 12px; color: var(--text); font-weight: 600; gap: 12px;
+    }
+
+    .faq-arrow {
+      transition: transform 0.3s ease;
+      color: var(--gold); flex-shrink: 0; font-size: 11px;
     }
 
     .faq-a {
       font-size: 11px; color: var(--muted); line-height: 1.8;
-      margin-top: 12px; display: none;
+      max-height: 0; overflow: hidden;
+      transition: max-height 0.4s ease, padding 0.3s ease;
+      padding: 0 4px;
     }
 
-    .faq-item.open .faq-a { display: block; }
-    .faq-item.open .faq-arrow { transform: rotate(180deg); }
-    .faq-arrow { transition: transform 0.2s; }
+    /* Works with both .open and .active */
+    .faq-item.open .faq-a,
+    .faq-item.active .faq-a {
+      max-height: 400px;
+      padding: 12px 4px 4px;
+    }
+
+    .faq-item.open .faq-arrow,
+    .faq-item.active .faq-arrow {
+      transform: rotate(180deg);
+    }
 
     /* ── MODAL ── */
     .modal-overlay {
@@ -586,7 +605,7 @@
 
     <div class="bank-note">
       📧 After payment, send proof of payment + your plan + full name to:<br />
-      <strong>neuromatrixbiosystem<!-- -->@gmail.com</strong>
+      <strong><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="046a6171766b696570766d7c666d6b777d77706169446369656d682a676b69">[email&#160;protected]</a></strong><br />
       Your license key will be emailed within <strong>24 hours</strong>.
     </div>
   </div>
@@ -608,7 +627,7 @@
       <button class="btn-verify" onclick="verifyLicense()">Verify →</button>
     </div>
     <div class="verify-result verify-success" id="verifySuccess">
-      ✅ License verified! <a href="https://neurotrack-ten.vercel.app" target="_blank" style="color:var(--green);text-decoration:underline;">Launch Web App →</a>
+      ✅ License verified! <a href="https://neurotrack.neuromatrixbiosystems.com" target="_blank" style="color:var(--green);text-decoration:underline;">Launch Web App →</a>
       &nbsp;|&nbsp; <a href="#download" style="color:var(--green);text-decoration:underline;">Download Desktop →</a>
     </div>
     <div class="verify-result verify-error" id="verifyError">
@@ -647,7 +666,7 @@
 
     <div class="faq-item" onclick="toggleFaq(this)">
       <div class="faq-q">What if I need a refund? <span class="faq-arrow">▼</span></div>
-      <div class="faq-a">We offer a 7-day refund policy if the software does not work as described. Contact <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="93fdf6e6e1fcfef2e7e1faebf1fafce0eae0e7f6fed3f4fef2faffbdf0fcfe">[email&#160;protected]</a> with your license key and reason.</div>
+      <div class="faq-a">We offer a 7-day refund policy if the software does not work as described. Contact neuromatrixbiosystem@gmail.com with your license key and reason.</div>
     </div>
 
   </div>
@@ -691,10 +710,18 @@
 <div class="footer">
   <span class="footer-text">© 2026 NeuroMatrix Biosystems — Adebimpe John Omolola E.</span>
   <span class="footer-text">neuromatrixbiosystems.com</span>
-  <span class="footer-text">Questions? neuromatrixbiosystem@gmail.com</span>
+  <span class="footer-text">Questions? <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="bfd1dacacdd0d2decbcdd6c7ddd6d0ccc6cccbdad2ffd8d2ded6d391dcd0d2">[email&#160;protected]</a></span>
 </div>
 
 <script>
+  // ── toggleFaq defined first so onclick can find it ──
+  function toggleFaq(el) {
+    const isOpen = el.classList.contains('open') || el.classList.contains('active');
+    document.querySelectorAll('.faq-item').forEach(function(item) {
+      item.classList.remove('open', 'active');
+    });
+    if (!isOpen) { el.classList.add('open', 'active'); }
+  }
   // ── Current selected plan ──
   let currentPlan = { name: '', usd: 0, ngn: 0, display: '' };
 
@@ -822,17 +849,11 @@
     });
   }
 
-  // ── FAQ toggle ──
-  function toggleFaq(el) {
-    document.querySelectorAll('.faq-item.open').forEach(function(item) {
-      if (item !== el) item.classList.remove('open');
-    });
-    el.classList.toggle('open');
-  }
-
   // ── Close modal on overlay click ──
-  document.getElementById('purchaseModal').addEventListener('click', function(e) {
-    if (e.target === this) closeModal();
+  document.getElementById('purchaseModal').addEventListener('click', function(event) {
+    if (event.target === this) {
+      closeModal();
+    }
   });
 
   // ── Close modal on Escape key ──
