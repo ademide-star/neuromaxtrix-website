@@ -1,0 +1,1435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BIO 222 — Vertebrate Anatomy & Physiology | Interactive Lecture Notes</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lora:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0F1A4F; --indigo:#1B2A6B; --slate:#2E4499; --blue:#4060CC;
+  --ice:#EEF2FF; --mist:#C7D2F8; --sky:#DBEAFE; --powder:#F0F4FF;
+  --cream:#F8F7F4; --parch:#EDE8DD; --ink:#0F1730; --gray:#3A4470;
+  --gold:#B8860B; --amber:#D4A820; --green:#2D6A4F; --red:#8B1A1A;
+  --sidebar-w:285px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Lora',Georgia,serif;background:var(--cream);color:var(--ink);display:flex;min-height:100vh;overflow-x:hidden}
+
+/* SIDEBAR */
+#sidebar{position:fixed;left:0;top:0;bottom:0;width:var(--sidebar-w);background:var(--navy);overflow-y:auto;z-index:100;display:flex;flex-direction:column;border-right:3px solid var(--amber)}
+#sidebar::-webkit-scrollbar{width:3px}
+#sidebar::-webkit-scrollbar-thumb{background:var(--amber);border-radius:2px}
+.sb-head{padding:26px 20px 18px;border-bottom:1px solid rgba(212,168,32,0.3)}
+.sb-code{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--amber);letter-spacing:3px;text-transform:uppercase;display:block;margin-bottom:5px}
+.sb-title{font-family:'Playfair Display',serif;color:var(--cream);font-size:13px;line-height:1.4;font-weight:600}
+.sb-prog{padding:10px 20px;border-bottom:1px solid rgba(212,168,32,0.2)}
+.sb-bar-bg{height:3px;background:rgba(255,255,255,0.12);border-radius:2px;margin-top:5px}
+.sb-bar-fill{height:100%;background:linear-gradient(90deg,var(--amber),#f0c040);border-radius:2px;transition:width 0.5s;width:0%}
+.sb-plbl{font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(255,255,255,0.5);letter-spacing:1px}
+.wk-nav{padding:6px 0;flex:1}
+.wi{display:flex;align-items:center;gap:8px;padding:8px 20px;cursor:pointer;transition:all 0.2s;border-left:3px solid transparent;text-decoration:none}
+.wi:hover{background:rgba(255,255,255,0.06);border-left-color:rgba(212,168,32,0.4)}
+.wi.active{background:rgba(212,168,32,0.12);border-left-color:var(--amber)}
+.wn{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--amber);min-width:28px;font-weight:500}
+.wt{font-family:'Lora',serif;font-size:11.5px;color:rgba(255,255,255,0.65);line-height:1.3}
+.wi.active .wt{color:var(--cream)}
+.wd{width:6px;height:6px;border-radius:50%;background:var(--green);margin-left:auto;flex-shrink:0;display:none}
+.wi.done .wd{display:block}
+
+/* MAIN */
+#main{margin-left:var(--sidebar-w);flex:1;min-height:100vh}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,var(--navy) 0%,var(--indigo) 40%,#0A1842 100%);padding:72px 60px 52px;position:relative;overflow:hidden;border-bottom:4px solid var(--amber)}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 10% 50%,rgba(64,96,204,0.2) 0%,transparent 60%),radial-gradient(circle at 90% 10%,rgba(212,168,32,0.08) 0%,transparent 50%)}
+.hero-glyph{position:absolute;right:50px;top:30px;font-size:200px;opacity:0.05;pointer-events:none;line-height:1}
+.hero-badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--amber);letter-spacing:3px;border:1px solid rgba(212,168,32,0.4);padding:5px 14px;border-radius:2px;margin-bottom:18px;animation:fd 0.6s ease both}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(34px,5vw,58px);color:var(--cream);line-height:1.1;margin-bottom:12px;animation:fd 0.7s ease 0.1s both}
+.hero h1 em{color:var(--amber);font-style:italic}
+.hero-sub{font-size:15px;color:rgba(255,255,255,0.6);font-style:italic;margin-bottom:32px;animation:fd 0.7s ease 0.2s both}
+.hero-stats{display:flex;gap:32px;flex-wrap:wrap;animation:fd 0.7s ease 0.3s both}
+.hs{border-left:2px solid rgba(212,168,32,0.4);padding-left:16px}
+.hs-n{font-family:'Playfair Display',serif;font-size:34px;color:var(--amber);display:block;line-height:1}
+.hs-l{font-size:11px;color:rgba(255,255,255,0.45);letter-spacing:1px;font-family:'Lora',serif}
+@keyframes fd{from{opacity:0;transform:translateY(-14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fi{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* SECTIONS */
+.sec{padding:60px;border-bottom:1px solid rgba(27,42,107,0.12);display:none;animation:fi 0.4s ease}
+.sec.active,.home-sec{display:block}
+.home-sec{padding:60px}
+
+/* WEEK HEADER */
+.wh{display:flex;align-items:flex-start;gap:20px;margin-bottom:40px;padding-bottom:24px;border-bottom:2px solid var(--ice)}
+.wb{background:var(--navy);color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;padding:6px 12px;border-radius:3px;white-space:nowrap;margin-top:6px;letter-spacing:2px}
+.wh-text h2{font-family:'Playfair Display',serif;font-size:30px;color:var(--indigo);line-height:1.2;margin-bottom:6px}
+.wh-text p{color:var(--slate);font-style:italic;font-size:14px}
+
+/* LO BOX */
+.lo{background:var(--navy);border-radius:8px;padding:22px 28px;margin-bottom:32px;position:relative;overflow:hidden}
+.lo::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--amber),#f0c040,var(--amber))}
+.lo h3{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--amber);letter-spacing:3px;text-transform:uppercase;margin-bottom:12px}
+.lo ul{list-style:none}
+.lo li{color:rgba(255,255,255,0.8);font-size:13.5px;padding:4px 0 4px 20px;position:relative;line-height:1.5}
+.lo li::before{content:'→';position:absolute;left:0;color:var(--amber);font-size:12px}
+
+/* CONTENT */
+.cb{margin-bottom:32px}
+.cb h3{font-family:'Playfair Display',serif;font-size:21px;color:var(--indigo);margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid rgba(27,42,107,0.15)}
+.cb p{font-size:15px;line-height:1.85;color:#1A1E3A;margin-bottom:12px}
+
+/* DEF TABLE */
+.dt{width:100%;border-collapse:collapse;margin:18px 0;border-radius:6px;overflow:hidden;box-shadow:0 2px 12px rgba(27,42,107,0.07)}
+.dt thead tr{background:var(--navy)}
+.dt thead th{padding:11px 14px;text-align:left;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--amber);letter-spacing:2px;text-transform:uppercase}
+.dt tbody tr:nth-child(even){background:var(--ice)}
+.dt tbody tr:hover{background:rgba(212,168,32,0.06)}
+.dt td{padding:10px 14px;font-size:13.5px;line-height:1.6;border-bottom:1px solid rgba(27,42,107,0.08);vertical-align:top}
+.dt td:first-child{font-weight:600;color:var(--indigo);white-space:nowrap;font-family:'Lora',serif}
+
+/* KEY BOX */
+.kb{background:linear-gradient(135deg,var(--cream),var(--powder));border:1px solid rgba(27,42,107,0.18);border-left:4px solid var(--indigo);border-radius:0 6px 6px 0;padding:16px 20px;margin:18px 0}
+.kb-t{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--indigo);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px}
+.kb ul{list-style:none}
+.kb li{padding:3px 0 3px 18px;position:relative;font-size:14px;line-height:1.6;color:var(--ink)}
+.kb li::before{content:'◆';position:absolute;left:0;color:var(--amber);font-size:8px;top:7px}
+
+/* NOTE BOX */
+.nb{background:rgba(27,42,107,0.04);border:1px solid rgba(27,42,107,0.18);border-radius:6px;padding:13px 17px;margin:14px 0;display:flex;gap:12px;align-items:flex-start}
+.nb .ni{font-size:18px;flex-shrink:0}
+.nb p{font-size:13.5px;line-height:1.65;color:var(--indigo);margin:0}
+
+/* DIAGRAM */
+.dgm{background:white;border:1px solid rgba(27,42,107,0.12);border-radius:8px;padding:26px;margin:22px 0;box-shadow:0 3px 16px rgba(27,42,107,0.06);text-align:center}
+.dgm-title{font-family:'Playfair Display',serif;font-size:14px;color:var(--indigo);margin-bottom:5px;font-weight:600}
+.dgm-cap{font-size:12px;color:#888;font-style:italic;margin-top:10px}
+
+/* FLOW DIAGRAM */
+.flow{display:flex;align-items:center;flex-wrap:wrap;gap:0;margin:18px 0;justify-content:center}
+.fs{background:white;border:1px solid rgba(27,42,107,0.2);border-radius:8px;padding:11px 14px;text-align:center;min-width:90px;flex-shrink:0}
+.fs-title{font-family:'Playfair Display',serif;font-size:11px;font-weight:600;color:var(--indigo);margin-bottom:3px}
+.fs-sub{font-size:9px;color:#666;font-style:italic}
+.fs-loc{font-size:8px;font-family:'JetBrains Mono',monospace;color:var(--slate);margin-top:3px;letter-spacing:0.5px}
+.fa{font-size:18px;color:var(--amber);padding:0 3px;align-self:center;font-weight:bold}
+
+/* CARDS */
+.cg{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:13px;margin:18px 0}
+.cc{background:white;border:1px solid rgba(27,42,107,0.12);border-radius:8px;padding:17px;cursor:pointer;transition:all 0.3s;position:relative;overflow:hidden}
+.cc::before{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--indigo),var(--blue));transform:scaleX(0);transition:transform 0.3s}
+.cc:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(27,42,107,0.1);border-color:var(--slate)}
+.cc:hover::before{transform:scaleX(1)}
+.cc-icon{font-size:26px;margin-bottom:8px}
+.cc-title{font-family:'Playfair Display',serif;font-size:14px;font-weight:600;color:var(--indigo);margin-bottom:5px}
+.cc-text{font-size:12.5px;color:#555;line-height:1.55}
+.cc-detail{margin-top:10px;padding-top:10px;border-top:1px solid var(--ice);font-size:12px;color:var(--indigo);line-height:1.6;display:none}
+.cc.exp .cc-detail{display:block}
+.cc-tog{position:absolute;top:10px;right:12px;font-size:15px;color:var(--amber);transition:transform 0.3s}
+.cc.exp .cc-tog{transform:rotate(45deg)}
+
+/* TABS */
+.tbar{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:0}
+.tbtn{padding:8px 16px;background:var(--ice);border:1px solid rgba(27,42,107,0.2);border-bottom:none;border-radius:6px 6px 0 0;cursor:pointer;font-family:'Lora',serif;font-size:13px;color:var(--indigo);transition:all 0.2s}
+.tbtn:hover{background:rgba(27,42,107,0.08)}
+.tbtn.active{background:var(--navy);color:var(--cream);border-color:var(--navy)}
+.tpanel{display:none;background:white;border:1px solid rgba(27,42,107,0.18);border-radius:0 6px 6px 6px;padding:20px}
+.tpanel.active{display:block}
+.tpanel p{font-size:14px;line-height:1.7;color:#1A1E3A;margin-bottom:10px}
+.tpanel ul{list-style:none;margin-top:8px}
+.tpanel li{font-size:13.5px;line-height:1.65;padding:3px 0 3px 16px;position:relative}
+.tpanel .str li::before{content:'+';position:absolute;left:0;color:var(--green);font-weight:700}
+.tpanel .wkn li::before{content:'−';position:absolute;left:0;color:var(--red);font-weight:700}
+
+/* QUIZ */
+.quiz{background:var(--navy);border-radius:10px;padding:24px;margin:30px 0;position:relative;overflow:hidden}
+.quiz::after{content:'?';position:absolute;right:18px;top:8px;font-family:'Playfair Display',serif;font-size:80px;color:rgba(255,255,255,0.03);pointer-events:none}
+.qlbl{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--amber);letter-spacing:3px;text-transform:uppercase;margin-bottom:13px}
+.qq{font-family:'Playfair Display',serif;font-size:17px;color:var(--cream);margin-bottom:17px;line-height:1.5}
+.qopts{display:flex;flex-direction:column;gap:8px}
+.qo{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:11px 14px;cursor:pointer;font-size:13.5px;color:rgba(255,255,255,0.75);transition:all 0.2s;text-align:left;font-family:'Lora',serif;display:flex;align-items:center;gap:10px}
+.qo:hover:not(.answered){background:rgba(255,255,255,0.12);border-color:rgba(212,168,32,0.4);color:white}
+.qo.correct{background:rgba(45,106,79,0.3);border-color:var(--green);color:#a8e6c0}
+.qo.wrong{background:rgba(139,26,26,0.3);border-color:var(--red);color:#f0a898}
+.ol{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--amber);min-width:18px}
+.qfb{margin-top:13px;padding:11px 15px;border-radius:6px;font-size:13.5px;line-height:1.6;display:none}
+.qfb.show{display:block}
+.qfb.cfb{background:rgba(45,106,79,0.2);color:#a8e6c0;border:1px solid var(--green)}
+.qfb.wfb{background:rgba(139,26,26,0.2);color:#f0a898;border:1px solid var(--red)}
+
+/* NAV BTNS */
+.nav-btns{display:flex;justify-content:space-between;align-items:center;margin-top:42px;padding-top:20px;border-top:1px solid var(--ice)}
+.nbtn{display:flex;align-items:center;gap:10px;padding:10px 20px;background:var(--navy);color:var(--cream);border:none;border-radius:6px;cursor:pointer;font-family:'Lora',serif;font-size:14px;transition:all 0.2s}
+.nbtn:hover{background:var(--indigo);transform:translateY(-1px)}
+.nbtn.dis{opacity:0.3;pointer-events:none}
+.nbtn-s{font-size:10px;color:rgba(255,255,255,0.5);display:block;font-family:'JetBrains Mono',monospace;letter-spacing:1px}
+.mcbtn{background:transparent;border:1px solid var(--green);color:var(--green);padding:9px 17px;border-radius:6px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;transition:all 0.2s}
+.mcbtn:hover,.mcbtn.done{background:var(--green);color:white}
+.mcbtn.done{cursor:default}
+
+/* HOME GRID */
+.hgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px;margin-top:26px}
+.hc{background:white;border:1px solid rgba(27,42,107,0.12);border-radius:8px;padding:15px;cursor:pointer;transition:all 0.25s;text-decoration:none;display:block}
+.hc:hover{border-color:var(--slate);transform:translateY(-2px);box-shadow:0 6px 18px rgba(27,42,107,0.1)}
+.hc-n{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--amber);letter-spacing:2px;margin-bottom:5px}
+.hc-t{font-family:'Playfair Display',serif;font-size:13px;color:var(--indigo);line-height:1.4;font-weight:600}
+.hc-s{font-size:11px;color:#888;margin-top:3px;font-style:italic}
+
+/* REVEAL */
+.rv{opacity:0;transform:translateY(16px);transition:opacity 0.6s ease,transform 0.6s ease}
+.rv.vis{opacity:1;transform:translateY(0)}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  #sidebar{transform:translateX(-100%);transition:transform 0.3s}
+  #sidebar.open{transform:translateX(0)}
+  #main{margin-left:0}
+  .sec,.home-sec{padding:32px 20px}
+  .hero{padding:40px 20px 32px}
+}
+.mob{display:none;position:fixed;top:14px;left:14px;z-index:200;background:var(--navy);color:var(--amber);border:1px solid var(--amber);border-radius:4px;padding:8px 12px;cursor:pointer;font-size:18px}
+@media(max-width:900px){.mob{display:block}}
+
+/* System color accents */
+.sys-dg{border-left-color:#C04020!important}
+.sys-circ{border-left-color:#8B1A1A!important}
+.sys-resp{border-left-color:#1A5278!important}
+.sys-exc{border-left-color:#1A6B3A!important}
+.sys-nerv{border-left-color:#4A1A8B!important}
+.sys-skel{border-left-color:#6B4A1A!important}
+.sys-endo{border-left-color:#8B6B1A!important}
+.sys-repro{border-left-color:#6B1A4A!important}
+</style>
+</head>
+<body>
+<button class="mob" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+
+<nav id="sidebar">
+  <div class="sb-head">
+    <span class="sb-code">BIO 222 · NCE Year 2</span>
+    <div class="sb-title">Vertebrate Anatomy &amp; Physiology</div>
+  </div>
+  <div class="sb-prog">
+    <div class="sb-plbl">Progress: <span id="ptxt">0 / 15</span></div>
+    <div class="sb-bar-bg"><div class="sb-bar-fill" id="pbar"></div></div>
+  </div>
+  <div class="wk-nav" id="wk-nav">
+    <a class="wi active" onclick="show('home')" href="#"><span class="wn">⌂</span><span class="wt">Course Home</span><span class="wd"></span></a>
+    <a class="wi" onclick="show('w1')" href="#"><span class="wn">W01</span><span class="wt">Introduction — Scope &amp; Organisation</span><span class="wd"></span></a>
+    <a class="wi" onclick="show('w2')" href="#"><span class="wn">W02</span><span class="wt">Nutrition, Diet &amp; Liver Function</span><span class="wd"></span></a>
+    <a class="wi" onclick="show('w3')" href="#"><span class="wn">W03</span><span class="wt">Enzymes I — Nature &amp; Classification</span><span class="wd"></span></a>
+    <a class="wi" onclick="show('w4')" href="#"><span class="wn">W04</span><span class="wt">Enzymes II — Mechanism &amp; Coenzymes</span><span class="wd"></span></a>
+    <a class="wi" onclick="show('w5')" href="#"><span class="wn">W05</span><span class="wt">Digestive System</span><span class="wd"></span></a>
+    <a class="wi" onclick="show('w6')" href="#"><span class="wn">W06</span><span class="wt">Circulatory System I — Heart</span><span class="wd"></span></a>
+    <a class="wi" onclick="show('w7')" href="#"><span class="wn">W07</span><span class="wt">Circulatory System II — Blood</span><span class="wd"></span></a>
+    <a class="wi" onclick="show('w8')" href="#"><span class="wn">W08</span><span class="wt">Mid-Semester Review</span><span class="wd"></span></a>
+    <a class="wi" onclick="show('w9')" href="#"><span class="wn">W09</span><span class="wt">Respiratory System</span><span class="wd"></span></a>
+    <a class="wi" onclick="show('w10')" href="#"><span class="wn">W10</span><span class="wt">Excretory System</span><span class="wd"></span></a>
+    <a class="wi" onclick="show('w11')" href="#"><span class="wn">W11</span><span class="wt">Nervous System I — Neuron &amp; Impulse</span><span class="wd"></span></a>
+    <a class="wi" onclick="show('w12')" href="#"><span class="wn">W12</span><span class="wt">Nervous System II — CNS &amp; Senses</span><span class="wd"></span></a>
+    <a class="wi" onclick="show('w13')" href="#"><span class="wn">W13</span><span class="wt">Skeletal System &amp; Muscle</span><span class="wd"></span></a>
+    <a class="wi" onclick="show('w14')" href="#"><span class="wn">W14</span><span class="wt">Endocrine System &amp; Hormones</span><span class="wd"></span></a>
+    <a class="wi" onclick="show('w15')" href="#"><span class="wn">W15</span><span class="wt">Reproductive System &amp; Synthesis</span><span class="wd"></span></a>
+  </div>
+</nav>
+
+<main id="main">
+<div class="hero">
+  <div class="hero-glyph">🫀</div>
+  <div class="hero-badge">NCE Year 2 · 2 Credits · Compulsory · Rain Semester</div>
+  <h1>BIO 222 — <em>Vertebrate</em><br>Anatomy &amp; Physiology</h1>
+  <p class="hero-sub">Structure meets function — 15 weeks of interactive anatomy, biochemistry, and physiology for Nigerian biology teachers</p>
+  <div class="hero-stats">
+    <div class="hs"><span class="hs-n">12</span><span class="hs-l">Body Systems</span></div>
+    <div class="hs"><span class="hs-n">15</span><span class="hs-l">Weeks</span></div>
+    <div class="hs"><span class="hs-n">15</span><span class="hs-l">Quizzes</span></div>
+    <div class="hs"><span class="hs-n">12</span><span class="hs-l">Diagrams</span></div>
+  </div>
+</div>
+
+<!-- HOME -->
+<section class="home-sec" id="home-sec">
+  <h2 style="font-family:'Playfair Display',serif;font-size:26px;color:var(--indigo);margin-bottom:8px">Welcome to BIO 222</h2>
+  <p style="font-size:15px;color:#666;font-style:italic;margin-bottom:20px">Select a week to begin. Progress saves automatically.</p>
+  <div class="kb"><div class="kb-t">🎯 Course Objectives</div><ul>
+    <li>Outline and explain the various organ systems of the vertebrate body</li>
+    <li>Describe the structure and functions of the digestive, circulatory, respiratory, excretory, nervous, skeletal, endocrine, and reproductive systems</li>
+    <li>Explain enzyme biochemistry, nutrition, and metabolic processes</li>
+    <li>Describe the reproductive systems and processes of fertilisation, gestation, and birth</li>
+  </ul></div>
+  <div class="hgrid">
+    <a class="hc" onclick="show('w1')" href="#"><div class="hc-n">WEEK 01</div><div class="hc-t">Introduction &amp; Organisation</div><div class="hc-s">Tissue types · Organ systems</div></a>
+    <a class="hc" onclick="show('w2')" href="#"><div class="hc-n">WEEK 02</div><div class="hc-t">Nutrition &amp; Liver</div><div class="hc-s">Food components · Deamination</div></a>
+    <a class="hc" onclick="show('w3')" href="#"><div class="hc-n">WEEK 03</div><div class="hc-t">Enzymes I</div><div class="hc-s">Nature · IUB classes · Naming</div></a>
+    <a class="hc" onclick="show('w4')" href="#"><div class="hc-n">WEEK 04</div><div class="hc-t">Enzymes II</div><div class="hc-s">Mechanism · Factors · Coenzymes</div></a>
+    <a class="hc" onclick="show('w5')" href="#"><div class="hc-n">WEEK 05</div><div class="hc-t">Digestive System</div><div class="hc-s">Organs · Enzymes · Absorption</div></a>
+    <a class="hc" onclick="show('w6')" href="#"><div class="hc-n">WEEK 06</div><div class="hc-t">Circulatory I — Heart</div><div class="hc-s">Chambers · Cardiac cycle · Control</div></a>
+    <a class="hc" onclick="show('w7')" href="#"><div class="hc-n">WEEK 07</div><div class="hc-t">Circulatory II — Blood</div><div class="hc-s">Components · Clotting · AIDS</div></a>
+    <a class="hc" onclick="show('w8')" href="#"><div class="hc-n">WEEK 08</div><div class="hc-t">Mid-Semester Review</div><div class="hc-s">Synthesis · Practice questions</div></a>
+    <a class="hc" onclick="show('w9')" href="#"><div class="hc-n">WEEK 09</div><div class="hc-t">Respiratory System</div><div class="hc-s">Breathing · Krebs cycle · ATP</div></a>
+    <a class="hc" onclick="show('w10')" href="#"><div class="hc-n">WEEK 10</div><div class="hc-t">Excretory System</div><div class="hc-s">Kidney nephron · Deamination</div></a>
+    <a class="hc" onclick="show('w11')" href="#"><div class="hc-n">WEEK 11</div><div class="hc-t">Nervous System I</div><div class="hc-s">Neuron · Action potential · Synapse</div></a>
+    <a class="hc" onclick="show('w12')" href="#"><div class="hc-n">WEEK 12</div><div class="hc-t">Nervous System II</div><div class="hc-s">Brain · Reflex arc · Sense organs</div></a>
+    <a class="hc" onclick="show('w13')" href="#"><div class="hc-n">WEEK 13</div><div class="hc-t">Skeletal &amp; Muscular</div><div class="hc-s">Skeleton · Sliding filament</div></a>
+    <a class="hc" onclick="show('w14')" href="#"><div class="hc-n">WEEK 14</div><div class="hc-t">Endocrine System</div><div class="hc-s">Pituitary · Thyroxine · Adrenaline</div></a>
+    <a class="hc" onclick="show('w15')" href="#"><div class="hc-n">WEEK 15</div><div class="hc-t">Reproductive System</div><div class="hc-s">Fertilisation · Birth · Menstrual cycle</div></a>
+  </div>
+</section>
+
+<!-- ═══ WEEK 1 ═══ -->
+<section class="sec" id="w1-sec">
+  <div class="wh"><span class="wb">WEEK 01</span><div class="wh-text"><h2>Introduction — Scope of Vertebrate Anatomy &amp; Physiology</h2><p>Definitions · Levels of organisation · Tissue types · Overview of systems</p></div></div>
+  <div class="lo"><h3>Learning Outcomes</h3><ul>
+    <li>Define anatomy, physiology, and their relationship</li>
+    <li>List the levels of biological organisation from chemical to organism</li>
+    <li>Describe the four tissue types in vertebrates</li>
+    <li>Name the major organ systems and their primary functions</li>
+  </ul></div>
+
+  <div class="cb rv">
+    <h3>1.1 Definitions</h3>
+    <p><strong>Anatomy</strong> is the scientific study of the structure of organisms and their component parts. It asks: "What is this?" and "Where is it?"</p>
+    <p><strong>Physiology</strong> is the study of the normal functions of living organisms and their parts. It asks: "What does it do?" and "How does it work?"</p>
+    <p>Together they form the foundation of all biomedical and biological science. Structure and function are inseparable — the shape of the heart's valves determines their pumping function; the shape of alveoli determines their gas exchange efficiency.</p>
+    <div class="nb"><span class="ni">🎯</span><p><strong>This course</strong> focuses primarily on mammals (human as the model) with comparative reference to amphibians (frog) — two vertebrate classes with contrasting physiological adaptations.</p></div>
+  </div>
+
+  <div class="cb rv">
+    <h3>1.2 Levels of Organisation</h3>
+    <div class="dgm">
+      <div class="dgm-title">Levels of Biological Organisation — hover each level</div>
+      <svg viewBox="0 0 700 180" width="100%" style="max-width:700px">
+        <defs><marker id="arr" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#1B2A6B"/></marker></defs>
+        <line x1="30" y1="90" x2="670" y2="90" stroke="#C7D2F8" stroke-width="1"/>
+        <g>
+          <rect x="10" y="55" width="78" height="70" rx="6" fill="#EEF2FF" stroke="#1B2A6B" stroke-width="1.5"/>
+          <text x="49" y="85" text-anchor="middle" font-family="Playfair Display,serif" font-size="11" fill="#1B2A6B" font-weight="600">Chemical</text>
+          <text x="49" y="100" text-anchor="middle" font-family="Lora,serif" font-size="9" fill="#666">Atoms,</text>
+          <text x="49" y="112" text-anchor="middle" font-family="Lora,serif" font-size="9" fill="#666">molecules</text>
+        </g>
+        <line x1="88" y1="90" x2="110" y2="90" stroke="#1B2A6B" stroke-width="1.5" marker-end="url(#arr)"/>
+        <g>
+          <rect x="112" y="55" width="78" height="70" rx="6" fill="#EEF2FF" stroke="#1B2A6B" stroke-width="1.5"/>
+          <text x="151" y="85" text-anchor="middle" font-family="Playfair Display,serif" font-size="11" fill="#1B2A6B" font-weight="600">Cellular</text>
+          <text x="151" y="100" text-anchor="middle" font-family="Lora,serif" font-size="9" fill="#666">Individual</text>
+          <text x="151" y="112" text-anchor="middle" font-family="Lora,serif" font-size="9" fill="#666">cells</text>
+        </g>
+        <line x1="190" y1="90" x2="212" y2="90" stroke="#1B2A6B" stroke-width="1.5" marker-end="url(#arr)"/>
+        <g>
+          <rect x="214" y="50" width="78" height="80" rx="6" fill="#DBEAFE" stroke="#1B2A6B" stroke-width="1.5"/>
+          <text x="253" y="82" text-anchor="middle" font-family="Playfair Display,serif" font-size="11" fill="#1B2A6B" font-weight="600">Tissue</text>
+          <text x="253" y="97" text-anchor="middle" font-family="Lora,serif" font-size="9" fill="#555">Groups of</text>
+          <text x="253" y="109" text-anchor="middle" font-family="Lora,serif" font-size="9" fill="#555">similar cells</text>
+          <text x="253" y="121" text-anchor="middle" font-family="Lora,serif" font-size="9" fill="#555">+ matrix</text>
+        </g>
+        <line x1="292" y1="90" x2="314" y2="90" stroke="#1B2A6B" stroke-width="1.5" marker-end="url(#arr)"/>
+        <g>
+          <rect x="316" y="44" width="78" height="92" rx="6" fill="#C7D2F8" stroke="#1B2A6B" stroke-width="2"/>
+          <text x="355" y="76" text-anchor="middle" font-family="Playfair Display,serif" font-size="11" fill="#1B2A6B" font-weight="600">Organ</text>
+          <text x="355" y="91" text-anchor="middle" font-family="Lora,serif" font-size="9" fill="#333">Two+ tissue</text>
+          <text x="355" y="103" text-anchor="middle" font-family="Lora,serif" font-size="9" fill="#333">types with</text>
+          <text x="355" y="115" text-anchor="middle" font-family="Lora,serif" font-size="9" fill="#333">specific function</text>
+          <text x="355" y="127" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8" fill="#1B2A6B">e.g. heart, liver</text>
+        </g>
+        <line x1="394" y1="90" x2="416" y2="90" stroke="#1B2A6B" stroke-width="1.5" marker-end="url(#arr)"/>
+        <g>
+          <rect x="418" y="36" width="80" height="108" rx="6" fill="#1B2A6B" stroke="#B8860B" stroke-width="2.5"/>
+          <text x="458" y="68" text-anchor="middle" font-family="Playfair Display,serif" font-size="11" fill="white" font-weight="600">Organ</text>
+          <text x="458" y="82" text-anchor="middle" font-family="Playfair Display,serif" font-size="11" fill="white" font-weight="600">System</text>
+          <text x="458" y="100" text-anchor="middle" font-family="Lora,serif" font-size="9" fill="#C7D2F8">Organs working</text>
+          <text x="458" y="112" text-anchor="middle" font-family="Lora,serif" font-size="9" fill="#C7D2F8">together</text>
+          <text x="458" y="130" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8" fill="#B8860B">e.g. digestive</text>
+        </g>
+        <line x1="498" y1="90" x2="520" y2="90" stroke="#1B2A6B" stroke-width="1.5" marker-end="url(#arr)"/>
+        <g>
+          <rect x="522" y="30" width="80" height="120" rx="6" fill="#B8860B" stroke="#B8860B" stroke-width="2"/>
+          <text x="562" y="70" text-anchor="middle" font-family="Playfair Display,serif" font-size="11" fill="white" font-weight="600">Organism</text>
+          <text x="562" y="90" text-anchor="middle" font-family="Lora,serif" font-size="9" fill="rgba(255,255,255,0.85)">All systems</text>
+          <text x="562" y="102" text-anchor="middle" font-family="Lora,serif" font-size="9" fill="rgba(255,255,255,0.85)">integrated</text>
+          <text x="562" y="118" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8" fill="rgba(255,255,255,0.7)">complete body</text>
+        </g>
+      </svg>
+      <div class="dgm-cap">Organisation increases upward in complexity. Each level depends on the levels below it. BIO 222 focuses mainly on the organ and organ-system levels.</div>
+    </div>
+  </div>
+
+  <div class="cb rv">
+    <h3>1.3 Four Tissue Types</h3>
+    <div class="cg">
+      <div class="cc" onclick="this.classList.toggle('exp')"><span class="cc-tog">+</span><div class="cc-icon">🧱</div><div class="cc-title">Epithelial Tissue</div><div class="cc-text">Lines surfaces; forms glands; covers body</div><div class="cc-detail">Functions: protection, secretion, absorption, sensory reception. Types: simple (one layer) or stratified (multilayer); squamous, cuboidal, or columnar. Examples: skin epidermis, intestinal lining, lung alveolar lining, kidney tubules.</div></div>
+      <div class="cc" onclick="this.classList.toggle('exp')"><span class="cc-tog">+</span><div class="cc-icon">🕸️</div><div class="cc-title">Connective Tissue</div><div class="cc-text">Supports, binds, connects, transports</div><div class="cc-detail">Most diverse tissue type. Functions: structural support, binding organs, transport (blood). Types: loose connective tissue, dense connective tissue, cartilage (hyaline, fibrous, elastic), bone, blood, adipose (fat) tissue.</div></div>
+      <div class="cc" onclick="this.classList.toggle('exp')"><span class="cc-tog">+</span><div class="cc-icon">💪</div><div class="cc-title">Muscular Tissue</div><div class="cc-text">Contracts to produce movement</div><div class="cc-detail">Three types: (1) Skeletal muscle — striated, voluntary, multinucleate; attached to bones by tendons. (2) Smooth muscle — non-striated, involuntary; walls of hollow organs (gut, blood vessels). (3) Cardiac muscle — striated, involuntary, intercalated discs; heart wall only.</div></div>
+      <div class="cc" onclick="this.classList.toggle('exp')"><span class="cc-tog">+</span><div class="cc-icon">⚡</div><div class="cc-title">Nervous Tissue</div><div class="cc-text">Detects stimuli; transmits signals</div><div class="cc-detail">Two cell types: (1) Neurons — excitable cells that generate and conduct electrical impulses. (2) Glial cells (neuroglia) — support, nourish, and protect neurons; Schwann cells (PNS), oligodendrocytes, astrocytes, microglia (CNS). Form brain, spinal cord, and all nerves.</div></div>
+    </div>
+  </div>
+
+  <div class="quiz rv">
+    <div class="qlbl">📝 Self-Check Quiz — Week 1</div>
+    <div class="qq">What is the correct hierarchical order of biological organisation from simplest to most complex?</div>
+    <div class="qopts" id="q1-opts">
+      <button class="qo" onclick="ans('q1','a','c')" data-id="a"><span class="ol">A</span>Organ → Tissue → Organ system → Organism</button>
+      <button class="qo" onclick="ans('q1','b','c')" data-id="b"><span class="ol">B</span>Chemical → Organ → Cellular → Tissue</button>
+      <button class="qo" onclick="ans('q1','c','c')" data-id="c"><span class="ol">C</span>Chemical → Cellular → Tissue → Organ → Organ system → Organism</button>
+      <button class="qo" onclick="ans('q1','d','c')" data-id="d"><span class="ol">D</span>Tissue → Cellular → Organ → Organism</button>
+    </div>
+    <div class="qfb" id="q1-fb"></div>
+  </div>
+  <div class="nav-btns"><button class="nbtn dis">← Previous</button><button class="mcbtn" onclick="done('w1',this)">Mark Complete ✓</button><button class="nbtn" onclick="show('w2')"><div><span class="nbtn-s">Next →</span><span>Nutrition &amp; Liver</span></div></button></div>
+</section>
+
+<!-- ═══ WEEK 2 ═══ -->
+<section class="sec" id="w2-sec">
+  <div class="wh"><span class="wb">WEEK 02</span><div class="wh-text"><h2>Nutrition, Balanced Diet &amp; Liver Function</h2><p>Components of food · Mineral requirements · Deamination · Urea synthesis</p></div></div>
+  <div class="lo"><h3>Learning Outcomes</h3><ul>
+    <li>State the six classes of food and the function of each</li>
+    <li>Define balanced diet and explain its importance</li>
+    <li>State the mineral requirements of animals with their sources and functions</li>
+    <li>Explain the function of the liver with emphasis on deamination and urea synthesis</li>
+  </ul></div>
+
+  <div class="cb rv">
+    <h3>2.1 Components of Food</h3>
+    <table class="dt"><thead><tr><th>Nutrient Class</th><th>Chemical Nature</th><th>Primary Function</th><th>Food Sources</th></tr></thead><tbody>
+      <tr><td>Carbohydrates</td><td>Sugars, starch, glycogen (C, H, O — H:O = 2:1)</td><td>Main energy source (4 kcal/g); glucose for cellular respiration</td><td>Yam, cassava, rice, plantain, maize</td></tr>
+      <tr><td>Proteins</td><td>Polypeptide chains of amino acids (C, H, O, N, S)</td><td>Growth and repair; enzymes and hormones; antibodies; transport (haemoglobin)</td><td>Beans, groundnut, fish, meat, eggs</td></tr>
+      <tr><td>Lipids (Fats &amp; Oils)</td><td>Glycerol + fatty acids; phospholipids, steroids</td><td>Energy store (9 kcal/g); cell membranes; fat-soluble vitamins; insulation</td><td>Palm oil, groundnut oil, butter, avocado</td></tr>
+      <tr><td>Vitamins</td><td>Organic compounds (varied structure); fat-soluble (A,D,E,K) or water-soluble (B complex, C)</td><td>Coenzymes in metabolic reactions; antioxidants; regulation</td><td>Vegetables, fruits, animal organs</td></tr>
+      <tr><td>Minerals</td><td>Inorganic ions</td><td>Structural (bones, teeth); regulatory (nerve impulse, pH)</td><td>See table below</td></tr>
+      <tr><td>Water</td><td>H₂O</td><td>Universal solvent; transport medium; reactant in hydrolysis; thermoregulation</td><td>Drinking water; fruits; all foods</td></tr>
+      <tr><td>Dietary Fibre</td><td>Non-digestible polysaccharides (cellulose, pectin)</td><td>Promotes gut motility; prevents constipation; feeds gut microbiome</td><td>Vegetables, whole grains, legumes</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="cb rv">
+    <h3>2.2 Mineral Requirements</h3>
+    <table class="dt"><thead><tr><th>Mineral</th><th>Function</th><th>Deficiency</th></tr></thead><tbody>
+      <tr><td>Calcium (Ca²⁺)</td><td>Bone and teeth mineralisation; muscle contraction; nerve impulse; blood clotting</td><td>Rickets (children), osteomalacia (adults), tetany</td></tr>
+      <tr><td>Phosphorus (PO₄³⁻)</td><td>Bone and teeth; ATP synthesis; DNA/RNA backbone; cell membranes</td><td>Bone weakness, impaired energy metabolism</td></tr>
+      <tr><td>Iron (Fe²⁺/Fe³⁺)</td><td>Haemoglobin (O₂ transport); myoglobin; cytochromes in electron transport chain</td><td>Iron-deficiency anaemia (very common in Nigeria)</td></tr>
+      <tr><td>Iodine (I⁻)</td><td>Essential component of thyroxine (thyroid hormone)</td><td>Goitre; cretinism in children (iodine deficiency common in inland Nigeria)</td></tr>
+      <tr><td>Sodium (Na⁺)</td><td>Resting membrane potential; action potential; osmotic balance; pH regulation</td><td>Hyponatraemia: cramps, weakness, seizures</td></tr>
+      <tr><td>Potassium (K⁺)</td><td>Resting membrane potential; inside cells; heart rhythm regulation</td><td>Hypokalaemia: muscle weakness, cardiac arrhythmia</td></tr>
+      <tr><td>Magnesium (Mg²⁺)</td><td>Cofactor for 300+ enzymes including ATP-dependent reactions; nerve and muscle function</td><td>Muscle cramps, anxiety, cardiac issues</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="cb rv">
+    <h3>2.3 Function of the Liver — Emphasis on Deamination</h3>
+    <div class="cg">
+      <div class="cc" onclick="this.classList.toggle('exp')"><span class="cc-tog">+</span><div class="cc-icon">🧪</div><div class="cc-title">Deamination &amp; Urea Synthesis</div><div class="cc-text">Removal of amino groups from excess amino acids</div><div class="cc-detail"><strong>Deamination:</strong> R–NH₂ + O₂ → R=O (keto acid) + NH₃. The keto acid enters the Krebs cycle for energy. The NH₃ (ammonia) is toxic. <strong>Urea cycle (ornithine cycle):</strong> NH₃ + CO₂ → carbamoyl phosphate → (via ornithine cycle) → urea → excreted in urine. This is the primary nitrogenous excretory product of mammals.</div></div>
+      <div class="cc" onclick="this.classList.toggle('exp')"><span class="cc-tog">+</span><div class="cc-icon">📦</div><div class="cc-title">Glycogen Storage</div><div class="cc-text">Regulates blood glucose homeostasis</div><div class="cc-detail">After a meal: excess glucose → glycogen (glycogenesis; stimulated by insulin). During fasting: glycogen → glucose (glycogenolysis; stimulated by glucagon). Also: gluconeogenesis — synthesis of new glucose from non-carbohydrate sources (amino acids, lactate, glycerol).</div></div>
+      <div class="cc" onclick="this.classList.toggle('exp')"><span class="cc-tog">+</span><div class="cc-icon">🟡</div><div class="cc-title">Bile Production</div><div class="cc-text">Emulsifies dietary fats for digestion</div><div class="cc-detail">Bile is produced in liver cells (hepatocytes) → stored in gall bladder → released into duodenum via bile duct. Contains: bile salts (emulsification), bile pigments (bilirubin, biliverdin — breakdown products of haemoglobin), cholesterol, water. Bile pigments colour faeces and urine.</div></div>
+      <div class="cc" onclick="this.classList.toggle('exp')"><span class="cc-tog">+</span><div class="cc-icon">🛡️</div><div class="cc-title">Detoxification</div><div class="cc-text">Breaks down alcohol, drugs, and hormones</div><div class="cc-detail">Liver Kupffer cells and hepatic enzymes (cytochrome P450 family) detoxify: alcohol (→ acetaldehyde → acetic acid → acetyl-CoA); drugs (paracetamol, antibiotics); hormones (oestrogen, cortisol). Excessive alcohol overwhelms this system → liver cirrhosis.</div></div>
+    </div>
+    <div class="dgm">
+      <div class="dgm-title">Deamination → Urea Cycle — Animated Flow</div>
+      <div class="flow" style="flex-wrap:wrap;gap:4px;">
+        <div class="fs" style="border-color:#C04020"><div class="fs-title">Amino Acid</div><div class="fs-sub">R–NH₂ (dietary excess)</div></div>
+        <div class="fa">→</div>
+        <div class="fs"><div class="fs-title">Deamination</div><div class="fs-sub">NH₂ removed in liver</div><div class="fs-loc">LIVER HEPATOCYTES</div></div>
+        <div class="fa">→</div>
+        <div class="fs" style="border-color:#1A5278;background:#EBF5FB"><div class="fs-title">Keto Acid</div><div class="fs-sub">Enters Krebs cycle → energy</div></div>
+        <div class="fa">+</div>
+        <div class="fs" style="border-color:#8B1A1A;background:#FDEDEC"><div class="fs-title">Ammonia (NH₃)</div><div class="fs-sub">TOXIC — must be converted</div></div>
+        <div class="fa">→</div>
+        <div class="fs"><div class="fs-title">Urea Cycle</div><div class="fs-sub">NH₃ + CO₂ → Urea</div><div class="fs-loc">ORNITHINE CYCLE</div></div>
+        <div class="fa">→</div>
+        <div class="fs" style="border-color:#1A6B3A;background:#EAFAF1"><div class="fs-title">Urea in Blood</div><div class="fs-sub">→ Kidney → Excreted in urine</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="quiz rv">
+    <div class="qlbl">📝 Self-Check Quiz — Week 2</div>
+    <div class="qq">Deamination of an amino acid produces two major products. Which are they?</div>
+    <div class="qopts" id="q2-opts">
+      <button class="qo" onclick="ans('q2','a','b')" data-id="a"><span class="ol">A</span>Glycogen and water</button>
+      <button class="qo" onclick="ans('q2','b','b')" data-id="b"><span class="ol">B</span>A keto acid (enters Krebs cycle) and ammonia (converted to urea)</button>
+      <button class="qo" onclick="ans('q2','c','b')" data-id="c"><span class="ol">C</span>Bile salts and bilirubin</button>
+      <button class="qo" onclick="ans('q2','d','b')" data-id="d"><span class="ol">D</span>Glucose and uric acid</button>
+    </div>
+    <div class="qfb" id="q2-fb"></div>
+  </div>
+  <div class="nav-btns"><button class="nbtn" onclick="show('w1')"><div><span class="nbtn-s">← Previous</span><span>Introduction</span></div></button><button class="mcbtn" onclick="done('w2',this)">Mark Complete ✓</button><button class="nbtn" onclick="show('w3')"><div><span class="nbtn-s">Next →</span><span>Enzymes I</span></div></button></div>
+</section>
+
+<!-- ═══ WEEK 3 ═══ -->
+<section class="sec" id="w3-sec">
+  <div class="wh"><span class="wb">WEEK 03</span><div class="wh-text"><h2>Enzymes I — Nature, Classification &amp; Naming</h2><p>Definition · Properties · IUB classes · Systematic naming</p></div></div>
+  <div class="lo"><h3>Learning Outcomes</h3><ul>
+    <li>Define enzyme and list five properties of enzymes</li>
+    <li>Name the six IUB classes of enzymes with one example each</li>
+    <li>Apply the systematic naming convention to given enzyme reactions</li>
+    <li>Distinguish enzyme from inorganic catalyst</li>
+  </ul></div>
+
+  <div class="cb rv">
+    <h3>3.1 Definition and Properties of Enzymes</h3>
+    <p>An enzyme is a biological catalyst — a protein molecule that speeds up a biochemical reaction without itself being consumed or permanently changed. Enzymes are essential for virtually every metabolic reaction; without them, life chemistry would proceed too slowly to sustain life.</p>
+    <div class="kb"><div class="kb-t">✦ Key Properties of Enzymes</div><ul>
+      <li><strong>Proteinaceous:</strong> All enzymes are proteins (with the exception of ribozymes — RNA enzymes). Their 3D shape is essential for function.</li>
+      <li><strong>Specific:</strong> Each enzyme catalyses one type of reaction on one type of substrate (or closely related substrates). This is due to the complementary shape of the active site and the substrate.</li>
+      <li><strong>Thermolabile:</strong> Sensitive to heat. High temperatures (above ~45°C in most mammalian enzymes) disrupt hydrogen bonds and ionic bonds → protein denaturation → permanent loss of activity.</li>
+      <li><strong>pH-sensitive:</strong> Each enzyme has an optimum pH. Extreme pH values disrupt the ionic charges that maintain the active site shape → denaturation.</li>
+      <li><strong>Reusable:</strong> Enzymes are not consumed in reactions — they can be used repeatedly. Present in tiny quantities.</li>
+      <li><strong>Reducible activation energy:</strong> Enzymes work by lowering the activation energy of a reaction — the minimum energy needed to start the reaction.</li>
+    </ul></div>
+  </div>
+
+  <div class="cb rv">
+    <h3>3.2 IUB Classification — Six Main Classes</h3>
+    <table class="dt"><thead><tr><th>Class (EC number)</th><th>Reaction Type</th><th>Example</th><th>Location</th></tr></thead><tbody>
+      <tr><td>1. Oxidoreductases</td><td>Oxidation-reduction (electron/hydrogen transfer)</td><td>Lactate dehydrogenase; cytochrome oxidase</td><td>Mitochondria; cytoplasm</td></tr>
+      <tr><td>2. Transferases</td><td>Transfer of a chemical group from one molecule to another</td><td>Transaminase (aminotransferase); kinases (ATP phosphate transfer)</td><td>Liver; cytoplasm</td></tr>
+      <tr><td>3. Hydrolases</td><td>Hydrolysis — cleavage by addition of water</td><td>Amylase, lipase, protease, sucrase, lactase</td><td>Digestive system; lysosomes</td></tr>
+      <tr><td>4. Lyases</td><td>Bond cleavage (other than hydrolysis); addition to double bonds</td><td>Carbonic anhydrase; aldolase (glycolysis)</td><td>RBCs; cytoplasm</td></tr>
+      <tr><td>5. Isomerases</td><td>Intramolecular rearrangement (isomerisation)</td><td>Phosphoglucose isomerase; triosephosphate isomerase</td><td>Cytoplasm (glycolysis)</td></tr>
+      <tr><td>6. Ligases (Synthetases)</td><td>Bond formation using ATP energy</td><td>DNA ligase; pyruvate carboxylase; aminoacyl-tRNA synthetase</td><td>Nucleus; mitochondria</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="cb rv">
+    <h3>3.3 Systematic Naming of Enzymes</h3>
+    <p>Enzymes are named by the substrate they act on + the reaction type + the suffix <strong>-ase</strong>. This gives a systematic name that immediately tells you what the enzyme does:</p>
+    <table class="dt"><thead><tr><th>Systematic Name</th><th>Substrate</th><th>Reaction</th><th>Common Name</th></tr></thead><tbody>
+      <tr><td>Lactate dehydrogenase</td><td>Lactate</td><td>Removes hydrogen (oxidation)</td><td>LDH</td></tr>
+      <tr><td>Sucrose hydrolase</td><td>Sucrose</td><td>Hydrolysis</td><td>Sucrase / invertase</td></tr>
+      <tr><td>Glucose oxidase</td><td>Glucose</td><td>Oxidation</td><td>GOx (used in glucose test strips)</td></tr>
+      <tr><td>DNA polymerase</td><td>dNTPs (DNA building blocks)</td><td>Polymerisation (ligase activity)</td><td>DNA pol I, II, III</td></tr>
+      <tr><td>Urease</td><td>Urea</td><td>Hydrolysis → NH₃ + CO₂</td><td>Urease</td></tr>
+    </tbody></table>
+    <div class="nb"><span class="ni">💡</span><p><strong>Mnemonic:</strong> "Oh To Have Lovely Iced Lemon" = Oxidoreductases, Transferases, Hydrolases, Lyases, Isomerases, Ligases.</p></div>
+  </div>
+
+  <div class="quiz rv">
+    <div class="qlbl">📝 Self-Check Quiz — Week 3</div>
+    <div class="qq">The enzyme <strong>amylase</strong> breaks down starch by adding water to the glycosidic bonds. Which IUB class does amylase belong to?</div>
+    <div class="qopts" id="q3-opts">
+      <button class="qo" onclick="ans('q3','a','c')" data-id="a"><span class="ol">A</span>Oxidoreductase — it transfers electrons from starch</button>
+      <button class="qo" onclick="ans('q3','b','c')" data-id="b"><span class="ol">B</span>Lyase — it cleaves bonds without water</button>
+      <button class="qo" onclick="ans('q3','c','c')" data-id="c"><span class="ol">C</span>Hydrolase — it cleaves bonds by adding water</button>
+      <button class="qo" onclick="ans('q3','d','c')" data-id="d"><span class="ol">D</span>Transferase — it transfers the starch molecule</button>
+    </div>
+    <div class="qfb" id="q3-fb"></div>
+  </div>
+  <div class="nav-btns"><button class="nbtn" onclick="show('w2')"><div><span class="nbtn-s">← Previous</span><span>Nutrition</span></div></button><button class="mcbtn" onclick="done('w3',this)">Mark Complete ✓</button><button class="nbtn" onclick="show('w4')"><div><span class="nbtn-s">Next →</span><span>Enzymes II</span></div></button></div>
+</section>
+
+<!-- ═══ WEEK 4 ═══ -->
+<section class="sec" id="w4-sec">
+  <div class="wh"><span class="wb">WEEK 04</span><div class="wh-text"><h2>Enzymes II — Mechanism, Factors &amp; Coenzymes</h2><p>Lock-and-key · Induced fit · Temperature · pH · Inhibition · Coenzymes · Prosthetic groups</p></div></div>
+  <div class="lo"><h3>Learning Outcomes</h3><ul>
+    <li>Explain the lock-and-key and induced-fit models of enzyme action</li>
+    <li>Explain how temperature, pH, substrate concentration, and inhibitors affect enzyme activity</li>
+    <li>Distinguish competitive from non-competitive inhibition</li>
+    <li>Define coenzyme and prosthetic group with examples</li>
+  </ul></div>
+
+  <div class="cb rv">
+    <h3>4.1 Mechanism of Enzyme Action</h3>
+    <div class="tbar">
+      <button class="tbtn active" onclick="swTab('mech','lk',this)">Lock-and-Key Model</button>
+      <button class="tbtn" onclick="swTab('mech','if',this)">Induced-Fit Model</button>
+    </div>
+    <div class="tpanel active" id="mech-lk">
+      <p><strong>Proposed by Emil Fischer (1894).</strong> The active site of the enzyme has a rigid, fixed shape that is exactly complementary to the shape of the substrate — like a lock and its key. Only the correct substrate can fit.</p>
+      <p><strong>Mechanism:</strong> Substrate (S) → binds to active site → enzyme-substrate complex (ES) → bonds in substrate broken/formed → products (P) released → enzyme (E) available again. E + S → ES → E + P.</p>
+      <ul><li>Strength: Simple; explains specificity well</li><li>Weakness: Oversimplistic — active sites are not completely rigid</li></ul>
+    </div>
+    <div class="tpanel" id="mech-if">
+      <p><strong>Proposed by Daniel Koshland (1958).</strong> The active site is flexible and changes shape when the substrate approaches — moulding around the substrate like a glove fitting a hand. Explains a wider range of enzyme behaviours.</p>
+      <p><strong>Key difference:</strong> In induced fit, binding of the substrate induces a conformational change in the enzyme that precisely positions catalytic residues around the substrate, improving catalytic efficiency.</p>
+      <ul><li>Strength: Explains allosteric regulation, cooperativity, and why some substrates are "competitive"</li><li>Now the accepted model in biochemistry</li></ul>
+    </div>
+  </div>
+
+  <div class="cb rv">
+    <h3>4.2 Factors Affecting Enzyme Activity</h3>
+    <div class="dgm">
+      <div class="dgm-title">Temperature and pH Effects on Enzyme Activity Rate</div>
+      <svg viewBox="0 0 680 260" width="100%" style="max-width:680px">
+        <!-- TEMPERATURE GRAPH -->
+        <rect x="20" y="20" width="300" height="220" rx="6" fill="white" stroke="#C7D2F8" stroke-width="1.5"/>
+        <text x="170" y="42" text-anchor="middle" font-family="Playfair Display,serif" font-size="12" fill="#1B2A6B" font-weight="600">Effect of Temperature</text>
+        <!-- Axes -->
+        <line x1="50" y1="60" x2="50" y2="200" stroke="#666" stroke-width="1.5"/>
+        <line x1="50" y1="200" x2="300" y2="200" stroke="#666" stroke-width="1.5"/>
+        <text x="30" y="130" text-anchor="middle" font-family="Lora,serif" font-size="10" fill="#666" transform="rotate(-90,30,130)">Rate of reaction</text>
+        <text x="175" y="218" text-anchor="middle" font-family="Lora,serif" font-size="10" fill="#666">Temperature (°C)</text>
+        <!-- Curve -->
+        <path d="M 55,190 C 80,185 100,165 130,130 C 150,108 160,95 175,92 C 190,89 200,92 215,105 C 240,130 265,170 290,195" fill="none" stroke="#1B2A6B" stroke-width="2.5"/>
+        <!-- Optimal point -->
+        <circle cx="175" cy="92" r="5" fill="#B8860B"/>
+        <line x1="175" y1="92" x2="175" y2="200" stroke="#B8860B" stroke-width="1" stroke-dasharray="4,3"/>
+        <text x="175" y="213" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#B8860B">37°C</text>
+        <!-- Labels -->
+        <text x="90" y="155" font-family="Lora,serif" font-size="9" fill="#1A5278" font-style="italic">↑ rate with</text>
+        <text x="90" y="167" font-family="Lora,serif" font-size="9" fill="#1A5278" font-style="italic">temperature</text>
+        <text x="210" y="128" font-family="Lora,serif" font-size="9" fill="#8B1A1A" font-style="italic">Denaturation</text>
+        <text x="210" y="140" font-family="Lora,serif" font-size="9" fill="#8B1A1A" font-style="italic">↓ rate</text>
+        <text x="163" y="80" font-family="JetBrains Mono,monospace" font-size="9" fill="#B8860B">Optimum</text>
+
+        <!-- pH GRAPH -->
+        <rect x="360" y="20" width="300" height="220" rx="6" fill="white" stroke="#C7D2F8" stroke-width="1.5"/>
+        <text x="510" y="42" text-anchor="middle" font-family="Playfair Display,serif" font-size="12" fill="#1B2A6B" font-weight="600">Effect of pH</text>
+        <line x1="390" y1="60" x2="390" y2="200" stroke="#666" stroke-width="1.5"/>
+        <line x1="390" y1="200" x2="640" y2="200" stroke="#666" stroke-width="1.5"/>
+        <text x="370" y="130" text-anchor="middle" font-family="Lora,serif" font-size="10" fill="#666" transform="rotate(-90,370,130)">Rate of reaction</text>
+        <text x="515" y="218" text-anchor="middle" font-family="Lora,serif" font-size="10" fill="#666">pH</text>
+        <!-- Pepsin curve (pH 2) -->
+        <path d="M 395,195 C 405,185 415,155 430,128 C 440,112 450,105 460,103 C 470,101 475,108 485,125 C 498,150 510,185 525,198" fill="none" stroke="#8B1A1A" stroke-width="2" stroke-dasharray="5,3"/>
+        <text x="450" y="96" font-family="JetBrains Mono,monospace" font-size="8" fill="#8B1A1A">Pepsin</text>
+        <text x="450" y="107" font-family="JetBrains Mono,monospace" font-size="8" fill="#8B1A1A">(pH 2)</text>
+        <!-- Amylase curve (pH 7) -->
+        <path d="M 430,198 C 450,185 470,155 490,122 C 505,102 515,94 525,91 C 535,88 545,94 558,112 C 572,135 588,175 610,198" fill="none" stroke="#1B2A6B" stroke-width="2.5"/>
+        <text x="518" y="80" font-family="JetBrains Mono,monospace" font-size="8" fill="#1B2A6B">Salivary amylase</text>
+        <text x="518" y="91" font-family="JetBrains Mono,monospace" font-size="8" fill="#1B2A6B">(pH 7)</text>
+        <!-- x-axis labels -->
+        <text x="395" y="213" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#666">1</text>
+        <text x="460" y="213" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#666">4</text>
+        <text x="525" y="213" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#666">7</text>
+        <text x="590" y="213" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#666">10</text>
+        <text x="635" y="213" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#666">13</text>
+      </svg>
+      <div class="dgm-cap">Left: Enzyme activity peaks at the optimum temperature (~37°C in mammals) then falls sharply due to denaturation. Right: Different enzymes have different optimal pH values — pepsin in the acidic stomach, salivary amylase at neutral pH.</div>
+    </div>
+
+    <table class="dt"><thead><tr><th>Factor</th><th>Effect on Rate</th><th>Explanation</th></tr></thead><tbody>
+      <tr><td>↑ Temperature (up to optimum)</td><td>Rate increases</td><td>More kinetic energy → more enzyme-substrate collisions per second</td></tr>
+      <tr><td>Temperature above optimum</td><td>Rate falls sharply → zero</td><td>Heat breaks H-bonds and ionic bonds → protein denaturation → active site loses shape</td></tr>
+      <tr><td>pH at optimum</td><td>Maximum rate</td><td>Ionic interactions in active site optimal; substrate binds perfectly</td></tr>
+      <tr><td>pH away from optimum</td><td>Rate decreases</td><td>H⁺/OH⁻ ions disrupt ionic/hydrogen bonds in active site → denaturation</td></tr>
+      <tr><td>↑ Substrate concentration</td><td>Rate increases → plateau (Vmax)</td><td>More substrate fills available active sites; at Vmax all active sites occupied → no further increase</td></tr>
+      <tr><td>Competitive inhibitor</td><td>Rate decreases; reversible by ↑[S]</td><td>Inhibitor has similar shape to substrate; competes for active site; can be overcome by increasing substrate</td></tr>
+      <tr><td>Non-competitive inhibitor</td><td>Rate decreases; NOT reversible by ↑[S]</td><td>Inhibitor binds allosteric site (not active site); changes enzyme shape → reduces activity regardless of substrate level</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="cb rv">
+    <h3>4.3 Coenzymes and Prosthetic Groups</h3>
+    <table class="dt"><thead><tr><th>Term</th><th>Definition</th><th>Example</th><th>Role</th></tr></thead><tbody>
+      <tr><td>Coenzyme</td><td>Non-protein organic molecule that loosely associates with an enzyme to assist catalysis; can be removed</td><td>NAD⁺ (from niacin/Vit B₃); FAD (from riboflavin/Vit B₂); Coenzyme A (from pantothenic acid)</td><td>NAD⁺/NADH carry hydrogen atoms in cellular respiration; CoA carries acyl groups</td></tr>
+      <tr><td>Prosthetic group</td><td>Non-protein component TIGHTLY (covalently) bound to the enzyme; cannot be removed without destroying enzyme function</td><td>Haem group in catalase and peroxidase; FAD in succinate dehydrogenase; biotin in carboxylases</td><td>Haem group participates directly in the catalytic reaction (e.g. iron in haem accepts/donates electrons)</td></tr>
+      <tr><td>Apoenzyme</td><td>The protein portion of the enzyme alone (without the cofactor); catalytically inactive</td><td>Apoenzyme of catalase (without haem)</td><td>Provides the specific substrate-binding structure</td></tr>
+      <tr><td>Holoenzyme</td><td>Complete, catalytically active enzyme = apoenzyme + cofactor</td><td>Catalase = apoenzyme + haem prosthetic group</td><td>Full enzymatic activity</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="quiz rv">
+    <div class="qlbl">📝 Self-Check Quiz — Week 4</div>
+    <div class="qq">A student adds a competitive inhibitor to an enzyme reaction. Increasing the substrate concentration will:</div>
+    <div class="qopts" id="q4-opts">
+      <button class="qo" onclick="ans('q4','a','c')" data-id="a"><span class="ol">A</span>Have no effect — competitive inhibitors cannot be reversed</button>
+      <button class="qo" onclick="ans('q4','b','c')" data-id="b"><span class="ol">B</span>Permanently denature the enzyme</button>
+      <button class="qo" onclick="ans('q4','c','c')" data-id="c"><span class="ol">C</span>Restore reaction rate — more substrate outcompetes the inhibitor for active sites</button>
+      <button class="qo" onclick="ans('q4','d','c')" data-id="d"><span class="ol">D</span>Decrease the reaction rate further</button>
+    </div>
+    <div class="qfb" id="q4-fb"></div>
+  </div>
+  <div class="nav-btns"><button class="nbtn" onclick="show('w3')"><div><span class="nbtn-s">← Previous</span><span>Enzymes I</span></div></button><button class="mcbtn" onclick="done('w4',this)">Mark Complete ✓</button><button class="nbtn" onclick="show('w5')"><div><span class="nbtn-s">Next →</span><span>Digestive System</span></div></button></div>
+</section>
+
+<!-- ═══ WEEK 5 ═══ -->
+<section class="sec" id="w5-sec">
+  <div class="wh"><span class="wb">WEEK 05</span><div class="wh-text"><h2>Digestive System</h2><p>Organs · Secretions · Enzymes · Absorption · Role of liver and pancreas</p></div></div>
+  <div class="lo"><h3>Learning Outcomes</h3><ul>
+    <li>Trace the path of food from mouth to anus, naming each organ</li>
+    <li>Name the digestive enzymes secreted at each site and their substrates/products</li>
+    <li>Explain the roles of bile and pancreatic juice in the duodenum</li>
+    <li>Describe absorption in the small intestine</li>
+  </ul></div>
+
+  <div class="cb rv">
+    <h3>5.1 Gross Anatomy of the Digestive Tract</h3>
+    <div class="flow" style="flex-wrap:wrap;gap:3px;">
+      <div class="fs" style="border-color:#C04020"><div class="fs-title">Mouth</div><div class="fs-sub">Mechanical digestion + amylase</div></div>
+      <div class="fa">→</div>
+      <div class="fs"><div class="fs-title">Pharynx</div><div class="fs-sub">Swallowing reflex</div></div>
+      <div class="fa">→</div>
+      <div class="fs"><div class="fs-title">Oesophagus</div><div class="fs-sub">Peristalsis; no digestion</div></div>
+      <div class="fa">→</div>
+      <div class="fs" style="border-color:#8B1A1A;background:#FEF0F0"><div class="fs-title">Stomach</div><div class="fs-sub">HCl + pepsin; chyme formed</div></div>
+      <div class="fa">→</div>
+      <div class="fs" style="border-color:#1B2A6B;background:#EEF2FF"><div class="fs-title">Duodenum</div><div class="fs-sub">Bile + pancreatic juice; major digestion</div></div>
+      <div class="fa">→</div>
+      <div class="fs"><div class="fs-title">Jejunum/Ileum</div><div class="fs-sub">Intestinal enzymes; absorption</div></div>
+      <div class="fa">→</div>
+      <div class="fs" style="border-color:#1A6B3A"><div class="fs-title">Large Intestine</div><div class="fs-sub">Water absorption; faeces formed</div></div>
+      <div class="fa">→</div>
+      <div class="fs"><div class="fs-title">Rectum/Anus</div><div class="fs-sub">Defaecation</div></div>
+    </div>
+  </div>
+
+  <div class="cb rv">
+    <h3>5.2 Digestive Enzymes — Complete Summary</h3>
+    <table class="dt"><thead><tr><th>Site</th><th>Secretion/Enzyme</th><th>Substrate</th><th>Product</th></tr></thead><tbody>
+      <tr><td>Mouth</td><td>Salivary amylase (ptyalin)</td><td>Starch (amylose/amylopectin)</td><td>Maltose + dextrins</td></tr>
+      <tr><td>Stomach</td><td>Pepsin (from pepsinogen, activated by HCl)</td><td>Proteins</td><td>Peptides (polypeptides)</td></tr>
+      <tr><td>Stomach</td><td>HCl (from parietal cells)</td><td>Denatures proteins; kills bacteria; activates pepsinogen → pepsin</td><td>Acidic environment (pH ~2)</td></tr>
+      <tr><td>Stomach</td><td>Gastric lipase</td><td>Triglycerides (minor contribution)</td><td>Fatty acids + glycerol</td></tr>
+      <tr><td>Duodenum</td><td>Bile salts (from liver/gall bladder)</td><td>Lipid droplets (emulsification)</td><td>Lipid micelles (↑ surface area for lipase)</td></tr>
+      <tr><td>Duodenum</td><td>Pancreatic amylase</td><td>Starch (remaining)</td><td>Maltose</td></tr>
+      <tr><td>Duodenum</td><td>Pancreatic lipase</td><td>Triglycerides</td><td>Fatty acids + monoglycerides</td></tr>
+      <tr><td>Duodenum</td><td>Trypsin + chymotrypsin (from trypsinogen)</td><td>Proteins and peptides</td><td>Shorter peptides</td></tr>
+      <tr><td>Duodenum</td><td>Pancreatic nucleases</td><td>DNA, RNA</td><td>Nucleotides</td></tr>
+      <tr><td>Small intestine</td><td>Maltase, sucrase, lactase</td><td>Maltose, sucrose, lactose</td><td>Glucose, fructose, galactose (monosaccharides)</td></tr>
+      <tr><td>Small intestine</td><td>Peptidases (dipeptidases, aminopeptidases)</td><td>Dipeptides, oligopeptides</td><td>Amino acids</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="cb rv">
+    <h3>5.3 Absorption in the Small Intestine</h3>
+    <p>The small intestine (ileum) is the primary site of nutrient absorption. Three structural adaptations maximise surface area: <strong>circular folds</strong> (plicae circulares), <strong>villi</strong> (finger-like projections), and <strong>microvilli</strong> (brush border on each villus cell) — together increasing area ~600× compared to a smooth tube.</p>
+    <div class="kb"><div class="kb-t">📥 Absorption Routes</div><ul>
+      <li><strong>Monosaccharides and amino acids:</strong> Active transport into villus epithelial cells → capillaries in villus → hepatic portal vein → liver</li>
+      <li><strong>Fatty acids and glycerol:</strong> Diffuse into epithelial cells → re-synthesised into triglycerides → packaged into chylomicrons → enter lacteals (lymph capillaries) → lymphatic system → thoracic duct → bloodstream (bypasses liver initially)</li>
+      <li><strong>Fat-soluble vitamins (A, D, E, K):</strong> Absorbed with fats via lacteals</li>
+      <li><strong>Water and minerals:</strong> Absorbed throughout small and large intestine</li>
+    </ul></div>
+  </div>
+
+  <div class="quiz rv">
+    <div class="qlbl">📝 Self-Check Quiz — Week 5</div>
+    <div class="qq">Bile does NOT contain digestive enzymes, yet it is essential for fat digestion. What is bile's precise role?</div>
+    <div class="qopts" id="q5-opts">
+      <button class="qo" onclick="ans('q5','a','b')" data-id="a"><span class="ol">A</span>It acidifies the duodenum to activate lipase</button>
+      <button class="qo" onclick="ans('q5','b','b')" data-id="b"><span class="ol">B</span>It emulsifies fat — breaking large lipid droplets into smaller ones to dramatically increase the surface area available for lipase action</button>
+      <button class="qo" onclick="ans('q5','c','b')" data-id="c"><span class="ol">C</span>It directly hydrolyses triglycerides into fatty acids</button>
+      <button class="qo" onclick="ans('q5','d','b')" data-id="d"><span class="ol">D</span>It neutralises excess lipase in the stomach</button>
+    </div>
+    <div class="qfb" id="q5-fb"></div>
+  </div>
+  <div class="nav-btns"><button class="nbtn" onclick="show('w4')"><div><span class="nbtn-s">← Previous</span><span>Enzymes II</span></div></button><button class="mcbtn" onclick="done('w5',this)">Mark Complete ✓</button><button class="nbtn" onclick="show('w6')"><div><span class="nbtn-s">Next →</span><span>Circulatory I</span></div></button></div>
+</section>
+
+<!-- WEEKS 6–15: All complete, condensed -->
+<section class="sec" id="w6-sec">
+  <div class="wh"><span class="wb">WEEK 06</span><div class="wh-text"><h2>Circulatory System I — Heart &amp; Blood Vessels</h2><p>Heart chambers · Cardiac cycle · SA node · Autonomic control · Blood pressure</p></div></div>
+  <div class="lo"><h3>Learning Outcomes</h3><ul>
+    <li>Describe the four chambers of the mammalian heart and their functions</li>
+    <li>Explain the cardiac cycle including systole and diastole</li>
+    <li>Describe the conduction system of the heart (SA node to Purkinje fibres)</li>
+    <li>Explain nervous and hormonal control of heart rate</li>
+  </ul></div>
+
+  <div class="cb rv"><h3>6.1 Mammalian Heart — Structure and Double Circulation</h3>
+    <div class="dgm">
+      <div class="dgm-title">Mammalian Heart — Four Chambers and Blood Flow</div>
+      <svg viewBox="0 0 560 340" width="100%" style="max-width:560px">
+        <!-- Left side of diagram = right side of heart (anatomical convention) -->
+        <rect x="20" y="20" width="240" height="300" rx="10" fill="#FEF0F0" stroke="#8B1A1A" stroke-width="1.5"/>
+        <text x="140" y="40" text-anchor="middle" font-family="Playfair Display,serif" font-size="12" fill="#8B1A1A" font-weight="600">RIGHT SIDE</text>
+        <text x="140" y="54" text-anchor="middle" font-family="Lora,serif" font-size="9" fill="#666">(receives deoxygenated blood)</text>
+
+        <!-- Right atrium -->
+        <rect x="40" y="70" width="190" height="80" rx="8" fill="#FDCFCF" stroke="#8B1A1A" stroke-width="1.5"/>
+        <text x="135" y="100" text-anchor="middle" font-family="Playfair Display,serif" font-size="12" fill="#8B1A1A" font-weight="600">Right Atrium</text>
+        <text x="135" y="115" text-anchor="middle" font-family="Lora,serif" font-size="10" fill="#666">Receives blood from</text>
+        <text x="135" y="128" text-anchor="middle" font-family="Lora,serif" font-size="10" fill="#666">superior + inferior vena cava</text>
+        <!-- Tricuspid valve -->
+        <text x="135" y="165" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#B8860B">▼ TRICUSPID VALVE ▼</text>
+        <!-- Right ventricle -->
+        <rect x="40" y="180" width="190" height="90" rx="8" fill="#F9ABAB" stroke="#8B1A1A" stroke-width="1.5"/>
+        <text x="135" y="210" text-anchor="middle" font-family="Playfair Display,serif" font-size="12" fill="#8B1A1A" font-weight="600">Right Ventricle</text>
+        <text x="135" y="225" text-anchor="middle" font-family="Lora,serif" font-size="10" fill="#666">Pumps blood to</text>
+        <text x="135" y="238" text-anchor="middle" font-family="Lora,serif" font-size="10" fill="#666">LUNGS (pulmonary artery)</text>
+        <text x="135" y="255" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#B8860B">Pulmonary artery →</text>
+
+        <!-- Right side of diagram = left side of heart -->
+        <rect x="300" y="20" width="240" height="300" rx="10" fill="#EEF5FF" stroke="#1B2A6B" stroke-width="1.5"/>
+        <text x="420" y="40" text-anchor="middle" font-family="Playfair Display,serif" font-size="12" fill="#1B2A6B" font-weight="600">LEFT SIDE</text>
+        <text x="420" y="54" text-anchor="middle" font-family="Lora,serif" font-size="9" fill="#666">(receives oxygenated blood)</text>
+
+        <!-- Left atrium -->
+        <rect x="320" y="70" width="190" height="80" rx="8" fill="#C7D2F8" stroke="#1B2A6B" stroke-width="1.5"/>
+        <text x="415" y="100" text-anchor="middle" font-family="Playfair Display,serif" font-size="12" fill="#1B2A6B" font-weight="600">Left Atrium</text>
+        <text x="415" y="115" text-anchor="middle" font-family="Lora,serif" font-size="10" fill="#333">Receives blood from</text>
+        <text x="415" y="128" text-anchor="middle" font-family="Lora,serif" font-size="10" fill="#333">4 pulmonary veins (from lungs)</text>
+        <!-- Bicuspid valve -->
+        <text x="415" y="165" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#B8860B">▼ BICUSPID (MITRAL) VALVE ▼</text>
+        <!-- Left ventricle -->
+        <rect x="320" y="180" width="190" height="90" rx="8" fill="#8FA8E8" stroke="#1B2A6B" stroke-width="2"/>
+        <text x="415" y="210" text-anchor="middle" font-family="Playfair Display,serif" font-size="12" fill="white" font-weight="600">Left Ventricle</text>
+        <text x="415" y="225" text-anchor="middle" font-family="Lora,serif" font-size="10" fill="rgba(255,255,255,0.9)">Thickest wall; pumps blood</text>
+        <text x="415" y="238" text-anchor="middle" font-family="Lora,serif" font-size="10" fill="rgba(255,255,255,0.9)">to BODY (aorta)</text>
+        <text x="415" y="255" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#B8860B">→ Aorta → Body</text>
+
+        <!-- Septum label -->
+        <text x="280" y="200" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#666" transform="rotate(90,280,200)">SEPTUM</text>
+
+        <!-- Flow arrows between sides -->
+        <path d="M 270,105 Q 285,105 300,105" fill="none" stroke="#B8860B" stroke-width="2" stroke-dasharray="4,3"/>
+        <text x="280" y="98" text-anchor="middle" font-family="Lora,serif" font-size="8" fill="#B8860B" font-style="italic">Via lungs</text>
+      </svg>
+      <div class="dgm-cap">The heart has two separate pumps separated by the interventricular septum. Right side handles pulmonary circulation (deoxygenated blood to lungs). Left side handles systemic circulation (oxygenated blood to body). Left ventricle wall is ~3× thicker than right — pumps blood much further.</div>
+    </div>
+  </div>
+
+  <div class="cb rv"><h3>6.2 Cardiac Conduction System</h3>
+    <table class="dt"><thead><tr><th>Structure</th><th>Location</th><th>Role</th></tr></thead><tbody>
+      <tr><td>SA Node (Sinoatrial)</td><td>Right atrium wall</td><td>"Pacemaker" — generates electrical impulse spontaneously (~70/min at rest); initiates each heartbeat</td></tr>
+      <tr><td>AV Node (Atrioventricular)</td><td>Base of right atrium</td><td>Receives impulse from SA node; delays it (~0.1 sec) allowing atria to finish contracting before ventricles</td></tr>
+      <tr><td>Bundle of His</td><td>Interventricular septum</td><td>Transmits impulse from AV node down the septum to ventricular walls</td></tr>
+      <tr><td>Purkinje Fibres</td><td>Ventricular walls</td><td>Rapidly spread impulse through ventricular muscle → simultaneous ventricular contraction from apex upward</td></tr>
+    </tbody></table>
+    <div class="nb"><span class="ni">💊</span><p><strong>Control of heart rate:</strong> Sympathetic nerves + adrenaline → INCREASE rate (in exercise, fear, fever). Vagus nerve (parasympathetic) → DECREASE rate (at rest, during relaxation). Blood O₂/CO₂ levels detected by chemoreceptors also modulate rate.</p></div>
+  </div>
+
+  <div class="quiz rv">
+    <div class="qlbl">📝 Self-Check Quiz — Week 6</div>
+    <div class="qq">Why is the wall of the left ventricle approximately three times thicker than the wall of the right ventricle?</div>
+    <div class="qopts" id="q6-opts">
+      <button class="qo" onclick="ans('q6','a','c')" data-id="a"><span class="ol">A</span>The left ventricle holds more blood than the right</button>
+      <button class="qo" onclick="ans('q6','b','c')" data-id="b"><span class="ol">B</span>The left ventricle pumps to the lungs, which require higher pressure</button>
+      <button class="qo" onclick="ans('q6','c','c')" data-id="c"><span class="ol">C</span>The left ventricle pumps oxygenated blood to the entire body at high pressure against greater resistance — requiring much more muscular force</button>
+      <button class="qo" onclick="ans('q6','d','c')" data-id="d"><span class="ol">D</span>The SA node is located in the left ventricle and generates more electrical activity there</button>
+    </div>
+    <div class="qfb" id="q6-fb"></div>
+  </div>
+  <div class="nav-btns"><button class="nbtn" onclick="show('w5')"><div><span class="nbtn-s">← Previous</span><span>Digestive System</span></div></button><button class="mcbtn" onclick="done('w6',this)">Mark Complete ✓</button><button class="nbtn" onclick="show('w7')"><div><span class="nbtn-s">Next →</span><span>Blood &amp; Clotting</span></div></button></div>
+</section>
+
+<section class="sec" id="w7-sec">
+  <div class="wh"><span class="wb">WEEK 07</span><div class="wh-text"><h2>Circulatory System II — Blood, Clotting &amp; Transfusion</h2><p>Blood components · Clotting cascade · ABO groups · AIDS · Blood screening</p></div></div>
+  <div class="lo"><h3>Learning Outcomes</h3><ul>
+    <li>Describe the structure and function of each blood component</li>
+    <li>Explain the blood clotting mechanism step by step</li>
+    <li>Explain ABO and Rh blood groups and their clinical importance</li>
+    <li>Describe HIV/AIDS and the importance of blood screening in Nigeria</li>
+  </ul></div>
+  <div class="cb rv"><h3>7.1 Blood Components and Functions</h3>
+    <table class="dt"><thead><tr><th>Component</th><th>% of Blood</th><th>Structure</th><th>Functions</th></tr></thead><tbody>
+      <tr><td>Red Blood Cells (Erythrocytes)</td><td>~45%</td><td>Biconcave disc; no nucleus; diameter ~8 μm; contains ~280 million haemoglobin molecules</td><td>O₂ transport (oxyhaemoglobin); CO₂ transport; buffering blood pH</td></tr>
+      <tr><td>White Blood Cells (Leukocytes)</td><td>~1%</td><td>Nucleated; 5 types: neutrophils (most common), lymphocytes (T and B cells), monocytes, eosinophils, basophils</td><td>Immunity: phagocytosis (neutrophils, monocytes); antibody production (B lymphocytes); cell-mediated immunity (T lymphocytes)</td></tr>
+      <tr><td>Platelets (Thrombocytes)</td><td>~1%</td><td>Cell fragments; no nucleus; formed from megakaryocytes; 150–400 × 10⁹/L</td><td>Blood clotting (haemostasis); release clotting factors; plug small wounds</td></tr>
+      <tr><td>Plasma</td><td>~55%</td><td>Liquid matrix: 90% water + plasma proteins (albumin, globulins, fibrinogen) + ions + glucose + hormones + wastes</td><td>Transport of all blood components; osmotic balance; immune proteins; clotting proteins; hormone transport</td></tr>
+    </tbody></table>
+  </div>
+  <div class="cb rv"><h3>7.2 Blood Clotting Cascade</h3>
+    <div class="flow" style="flex-wrap:wrap;gap:3px;">
+      <div class="fs" style="border-color:#8B1A1A"><div class="fs-title">Injury</div><div class="fs-sub">Blood vessel damaged</div></div>
+      <div class="fa">→</div>
+      <div class="fs"><div class="fs-title">Platelet Plug</div><div class="fs-sub">Platelets aggregate; release thromboplastin</div></div>
+      <div class="fa">→</div>
+      <div class="fs"><div class="fs-title">Prothrombin Activator</div><div class="fs-sub">Thromboplastin + Ca²⁺ + clotting factors</div></div>
+      <div class="fa">→</div>
+      <div class="fs" style="border-color:#1B2A6B"><div class="fs-title">Thrombin</div><div class="fs-sub">Prothrombin → Thrombin (active serine protease)</div></div>
+      <div class="fa">→</div>
+      <div class="fs"><div class="fs-title">Fibrin Net</div><div class="fs-sub">Fibrinogen (soluble) → Fibrin (insoluble threads)</div></div>
+      <div class="fa">→</div>
+      <div class="fs" style="border-color:#1A6B3A;background:#EAFAF1"><div class="fs-title">Blood Clot</div><div class="fs-sub">Fibrin traps RBCs + platelets → wound sealed</div></div>
+    </div>
+    <div class="nb"><span class="ni">⚠️</span><p><strong>Clotting disorders in Nigeria:</strong> Haemophilia A (factor VIII deficiency) — X-linked; males affected. Sickle-cell disease — altered Hb leads to RBC sickling, haemolytic anaemia, vaso-occlusive crises. Vitamin K deficiency impairs synthesis of clotting factors II, VII, IX, X.</p></div>
+  </div>
+  <div class="cb rv"><h3>7.3 Blood Groups, AIDS, and Screening</h3>
+    <table class="dt"><thead><tr><th>Blood Group</th><th>Antigen on RBC</th><th>Antibody in Plasma</th><th>Can Donate To</th><th>Can Receive From</th></tr></thead><tbody>
+      <tr><td>A</td><td>A antigen</td><td>Anti-B antibody</td><td>A, AB</td><td>A, O</td></tr>
+      <tr><td>B</td><td>B antigen</td><td>Anti-A antibody</td><td>B, AB</td><td>B, O</td></tr>
+      <tr><td>AB</td><td>A and B antigens</td><td>No antibodies</td><td>AB only</td><td>A, B, AB, O (Universal recipient)</td></tr>
+      <tr><td>O</td><td>No A or B antigen</td><td>Anti-A and Anti-B</td><td>A, B, AB, O (Universal donor — Rh−)</td><td>O only</td></tr>
+    </tbody></table>
+    <div class="kb"><div class="kb-t">🩸 Blood Screening Importance in Nigeria</div><ul>
+      <li><strong>HIV:</strong> Mandatory; window period of 3 months where ELISA may give false negative — modern NAT (nucleic acid test) reduces window to 10–14 days</li>
+      <li><strong>Hepatitis B and C:</strong> Very high prevalence in Nigeria (~10–15% HBV); major cause of liver cirrhosis and hepatocellular carcinoma</li>
+      <li><strong>Malaria:</strong> Plasmodium can be transmitted by blood transfusion; screening by thick blood film or RDT</li>
+      <li><strong>Sickle-cell trait:</strong> Screening prevents transfusion of sickle-cell trait blood</li>
+      <li><strong>Leukaemia detection:</strong> Differential WBC count reveals abnormal proportions of blast cells</li>
+      <li><strong>Cancer markers:</strong> PSA (prostate), CA-125 (ovarian), AFP (liver) detected in blood</li>
+    </ul></div>
+  </div>
+  <div class="quiz rv">
+    <div class="qlbl">📝 Self-Check Quiz — Week 7</div>
+    <div class="qq">A patient with blood group B receives group A blood in error. What will happen and why?</div>
+    <div class="qopts" id="q7-opts">
+      <button class="qo" onclick="ans('q7','a','c')" data-id="a"><span class="ol">A</span>Nothing — all blood groups are compatible for transfusion</button>
+      <button class="qo" onclick="ans('q7','b','c')" data-id="b"><span class="ol">B</span>The A blood will convert to B blood type over time</button>
+      <button class="qo" onclick="ans('q7','c','c')" data-id="c"><span class="ol">C</span>The patient's Anti-A antibodies will agglutinate (clump) the A donor cells → haemolytic transfusion reaction → potentially fatal</button>
+      <button class="qo" onclick="ans('q7','d','c')" data-id="d"><span class="ol">D</span>The patient's immune system will produce new antibodies only after one week</button>
+    </div>
+    <div class="qfb" id="q7-fb"></div>
+  </div>
+  <div class="nav-btns"><button class="nbtn" onclick="show('w6')"><div><span class="nbtn-s">← Previous</span><span>Heart</span></div></button><button class="mcbtn" onclick="done('w7',this)">Mark Complete ✓</button><button class="nbtn" onclick="show('w8')"><div><span class="nbtn-s">Next →</span><span>Mid-Semester Review</span></div></button></div>
+</section>
+
+<section class="sec" id="w8-sec">
+  <div class="wh"><span class="wb">WEEK 08</span><div class="wh-text"><h2>Mid-Semester Review</h2><p>Synthesis of Weeks 1–7 · Comparative summary · Practice questions</p></div></div>
+  <div class="lo"><h3>Review Focus</h3><ul><li>Integrate all content from introduction through circulatory system</li><li>Practise examination-style questions across all topics</li></ul></div>
+  <div class="cb rv"><h3>8.1 Synthesis Summary</h3>
+    <table class="dt"><thead><tr><th>Topic</th><th>Key Point 1</th><th>Key Point 2</th></tr></thead><tbody>
+      <tr><td>Organisation</td><td>Chemical → Cellular → Tissue → Organ → System → Organism</td><td>Four tissue types: epithelial, connective, muscular, nervous</td></tr>
+      <tr><td>Nutrition</td><td>6 food classes: carbohydrates, proteins, lipids, vitamins, minerals, water</td><td>Deamination in liver: R–NH₂ → keto acid + NH₃ → urea (ornithine cycle)</td></tr>
+      <tr><td>Enzymes</td><td>6 IUB classes: oxidoreductases, transferases, hydrolases, lyases, isomerases, ligases</td><td>Lock-and-key vs. induced-fit; competitive vs. non-competitive inhibition</td></tr>
+      <tr><td>Digestion</td><td>Amylase → starch; pepsin → protein; lipase → fats; specific enzyme at each site</td><td>Bile emulsifies fat; absorption via villi/microvilli; fats via lacteals</td></tr>
+      <tr><td>Circulation</td><td>SA node → AV node → Bundle of His → Purkinje fibres; double circulation</td><td>Blood components; clotting cascade; ABO groups; blood screening</td></tr>
+    </tbody></table>
+  </div>
+  <div class="cb rv"><h3>8.2 Practice Questions</h3>
+    <div class="kb"><div class="kb-t">📝 Attempt Before Continuing</div><ul>
+      <li>Distinguish anatomy from physiology. Why are they studied together?</li>
+      <li>Name the six classes of food with their functions. Which class provides the most energy per gram?</li>
+      <li>Explain why increasing temperature above 40°C destroys enzyme activity.</li>
+      <li>Trace a molecule of starch from the mouth to absorption in the ileum, naming every enzyme involved.</li>
+      <li>Why does the left ventricle have a thicker wall than the right ventricle?</li>
+      <li>Explain the blood clotting cascade in five steps.</li>
+      <li>Why is blood screening especially important in Nigeria?</li>
+    </ul></div>
+  </div>
+  <div class="quiz rv">
+    <div class="qlbl">📝 Review Quiz — Week 8</div>
+    <div class="qq">Which of the following correctly describes a NON-competitive enzyme inhibitor?</div>
+    <div class="qopts" id="q8-opts">
+      <button class="qo" onclick="ans('q8','a','c')" data-id="a"><span class="ol">A</span>It binds the active site and is overcome by adding more substrate</button>
+      <button class="qo" onclick="ans('q8','b','c')" data-id="b"><span class="ol">B</span>It permanently destroys the enzyme by cutting peptide bonds</button>
+      <button class="qo" onclick="ans('q8','c','c')" data-id="c"><span class="ol">C</span>It binds an allosteric site, changes enzyme shape, and reduces activity regardless of substrate concentration</button>
+      <button class="qo" onclick="ans('q8','d','c')" data-id="d"><span class="ol">D</span>It acts only at extreme pH values</button>
+    </div>
+    <div class="qfb" id="q8-fb"></div>
+  </div>
+  <div class="nav-btns"><button class="nbtn" onclick="show('w7')"><div><span class="nbtn-s">← Previous</span><span>Blood</span></div></button><button class="mcbtn" onclick="done('w8',this)">Mark Complete ✓</button><button class="nbtn" onclick="show('w9')"><div><span class="nbtn-s">Next →</span><span>Respiratory System</span></div></button></div>
+</section>
+
+<section class="sec" id="w9-sec">
+  <div class="wh"><span class="wb">WEEK 09</span><div class="wh-text"><h2>Respiratory System</h2><p>Breathing mechanism · Aerobic/Anaerobic respiration · Glycolysis · Krebs cycle · Significance</p></div></div>
+  <div class="lo"><h3>Learning Outcomes</h3><ul>
+    <li>Describe the structure of the respiratory system and alveoli</li>
+    <li>Explain the mechanics of inhalation and exhalation</li>
+    <li>Trace glucose through glycolysis, the link reaction, the Krebs cycle, and oxidative phosphorylation</li>
+    <li>Compare aerobic and anaerobic respiration; state the significance of respiration</li>
+  </ul></div>
+  <div class="cb rv"><h3>9.1 Respiratory Anatomy</h3>
+    <table class="dt"><thead><tr><th>Structure</th><th>Function</th></tr></thead><tbody>
+      <tr><td>Nostrils and nasal cavity</td><td>Filters (nasal hairs, mucus), warms, and humidifies air; olfaction</td></tr>
+      <tr><td>Pharynx</td><td>Common passage for air and food; contains tonsils</td></tr>
+      <tr><td>Larynx</td><td>Voice box; contains vocal cords; epiglottis closes during swallowing</td></tr>
+      <tr><td>Trachea</td><td>C-shaped cartilage rings maintain patency; ciliated epithelium moves mucus upward</td></tr>
+      <tr><td>Bronchi (primary)</td><td>Two main airways to left and right lungs</td></tr>
+      <tr><td>Bronchioles</td><td>Small airways without cartilage; smooth muscle allows vasoconstriction in asthma</td></tr>
+      <tr><td>Alveoli</td><td>Gas exchange; ~300 million per lung; ~70 m² total surface area; one cell thick; rich capillary network; moist surface</td></tr>
+    </tbody></table>
+  </div>
+  <div class="cb rv"><h3>9.2 Mechanism of Breathing</h3>
+    <div class="tbar">
+      <button class="tbtn active" onclick="swTab('bth','inh',this)">Inhalation</button>
+      <button class="tbtn" onclick="swTab('bth','exh',this)">Exhalation</button>
+    </div>
+    <div class="tpanel active" id="bth-inh">
+      <p><strong>Active process.</strong> Diaphragm contracts → flattens (moves inferiorly). External intercostal muscles contract → ribs move up and outward. Result: thoracic cavity volume increases → intrathoracic pressure drops below atmospheric pressure (approx. −2 to −3 mmHg) → pressure gradient drives air into lungs.</p>
+    </div>
+    <div class="tpanel" id="bth-exh">
+      <p><strong>Passive process at rest</strong> (active during exercise). Diaphragm relaxes → domes upward. Internal intercostal muscles and gravity pull ribs downward and inward. Result: thoracic cavity volume decreases → intrathoracic pressure rises above atmospheric → air pushed out of lungs. During forced expiration: abdominal muscles assist.</p>
+    </div>
+  </div>
+  <div class="cb rv"><h3>9.3 Aerobic Respiration — Stage by Stage</h3>
+    <div class="flow" style="flex-wrap:wrap;gap:3px;">
+      <div class="fs" style="border-color:#C04020"><div class="fs-title">Glucose (C₆H₁₂O₆)</div><div class="fs-sub">Starting material</div></div>
+      <div class="fa">→</div>
+      <div class="fs" style="border-color:#1A5278;background:#EBF5FB"><div class="fs-title">Glycolysis</div><div class="fs-sub">Glucose → 2 Pyruvate + 2 ATP + 2 NADH</div><div class="fs-loc">CYTOPLASM</div></div>
+      <div class="fa">→</div>
+      <div class="fs"><div class="fs-title">Link Reaction</div><div class="fs-sub">Pyruvate → Acetyl-CoA + CO₂ + NADH</div><div class="fs-loc">MITOCHONDRIAL MATRIX</div></div>
+      <div class="fa">→</div>
+      <div class="fs" style="border-color:#1A6B3A;background:#EAFAF1"><div class="fs-title">Krebs Cycle</div><div class="fs-sub">Acetyl-CoA → 2CO₂ + 3NADH + FADH₂ + ATP (×2 turns)</div><div class="fs-loc">MITOCHONDRIAL MATRIX</div></div>
+      <div class="fa">→</div>
+      <div class="fs" style="border-color:#1B2A6B;background:#EEF2FF"><div class="fs-title">Oxidative Phosphorylation</div><div class="fs-sub">NADH/FADH₂ → Electron transport → 34 ATP; O₂ → H₂O</div><div class="fs-loc">INNER MITOCHONDRIAL MEMBRANE</div></div>
+      <div class="fa">→</div>
+      <div class="fs" style="border-color:#B8860B;background:#FEF9EC"><div class="fs-title">Total: 38 ATP</div><div class="fs-sub">+ 6CO₂ + 6H₂O</div></div>
+    </div>
+    <div class="nb"><span class="ni">💡</span><p><strong>Anaerobic respiration:</strong> In muscle (no O₂): Glucose → 2 Lactic acid + 2 ATP. Lactic acid accumulates → muscle fatigue; repaid during recovery (oxygen debt). In yeast: Glucose → 2 Ethanol + 2 CO₂ + 2 ATP. Anaerobic yields only 2 ATP vs. 38 ATP in aerobic — 19× less efficient.</p></div>
+  </div>
+  <div class="quiz rv">
+    <div class="qlbl">📝 Self-Check Quiz — Week 9</div>
+    <div class="qq">Which part of aerobic respiration produces the MOST ATP per glucose molecule?</div>
+    <div class="qopts" id="q9-opts">
+      <button class="qo" onclick="ans('q9','a','d')" data-id="a"><span class="ol">A</span>Glycolysis — it produces ATP directly in the cytoplasm</button>
+      <button class="qo" onclick="ans('q9','b','d')" data-id="b"><span class="ol">B</span>The Krebs cycle — it produces ATP in the matrix</button>
+      <button class="qo" onclick="ans('q9','c','d')" data-id="c"><span class="ol">C</span>The link reaction — acetyl-CoA formation</button>
+      <button class="qo" onclick="ans('q9','d','d')" data-id="d"><span class="ol">D</span>Oxidative phosphorylation (electron transport chain) — produces ~34 of the 38 ATP via chemiosmosis</button>
+    </div>
+    <div class="qfb" id="q9-fb"></div>
+  </div>
+  <div class="nav-btns"><button class="nbtn" onclick="show('w8')"><div><span class="nbtn-s">← Previous</span><span>Mid-Semester Review</span></div></button><button class="mcbtn" onclick="done('w9',this)">Mark Complete ✓</button><button class="nbtn" onclick="show('w10')"><div><span class="nbtn-s">Next →</span><span>Excretory System</span></div></button></div>
+</section>
+
+<section class="sec" id="w10-sec">
+  <div class="wh"><span class="wb">WEEK 10</span><div class="wh-text"><h2>Excretory System</h2><p>Organs of excretion · Kidney nephron · Ultrafiltration · Nitrogenous wastes</p></div></div>
+  <div class="lo"><h3>Learning Outcomes</h3><ul>
+    <li>State the need for excretion and name the major metabolic wastes</li>
+    <li>Describe the structure and function of each excretory organ</li>
+    <li>Trace filtrate through a kidney nephron (ultrafiltration → selective reabsorption → secretion)</li>
+    <li>Distinguish nitrogenous excretion from gaseous excretion</li>
+  </ul></div>
+  <div class="cb rv"><h3>10.1 Why Excretion is Necessary</h3>
+    <p>Excretion is the removal of metabolic waste products from the body. Unlike egestion (removal of undigested food in faeces — these are not metabolic waste), excretion involves the elimination of substances produced by the body's own metabolic reactions. Failure to excrete these wastes causes metabolic poisoning: ammonia causes liver encephalopathy; CO₂ excess causes respiratory acidosis; urea excess causes uraemia.</p>
+    <table class="dt"><thead><tr><th>Waste Product</th><th>Origin</th><th>Excretory Organ</th></tr></thead><tbody>
+      <tr><td>Carbon dioxide (CO₂)</td><td>Aerobic respiration in all cells</td><td>Lungs (gaseous excretion)</td></tr>
+      <tr><td>Water (H₂O)</td><td>Aerobic respiration; metabolic reactions</td><td>Lungs, skin, kidneys</td></tr>
+      <tr><td>Urea (NH₂–CO–NH₂)</td><td>Deamination of amino acids in liver</td><td>Kidneys (primary nitrogenous excretion in mammals)</td></tr>
+      <tr><td>Salts (NaCl, KCl, etc.)</td><td>Excess dietary salts</td><td>Kidneys, skin (sweat)</td></tr>
+      <tr><td>Bile pigments (bilirubin)</td><td>Breakdown of haemoglobin in liver</td><td>Liver → bile → faeces; some via kidneys → urine (urobilinogen)</td></tr>
+      <tr><td>Creatinine</td><td>Breakdown of creatine phosphate in muscle</td><td>Kidneys</td></tr>
+    </tbody></table>
+  </div>
+  <div class="cb rv"><h3>10.2 The Kidney Nephron</h3>
+    <div class="kb"><div class="kb-t">🔬 Three Processes in the Nephron</div><ul>
+      <li><strong>Ultrafiltration (Bowman's capsule/glomerulus):</strong> High blood pressure in glomerular capillaries forces small molecules (water, glucose, amino acids, urea, salts, creatinine) through the filtration membrane into Bowman's space. Large molecules (proteins, blood cells) remain in blood. ~180 litres of filtrate formed per day.</li>
+      <li><strong>Selective reabsorption (PCT, loop of Henle, DCT):</strong> Useful molecules reabsorbed back into blood. PCT: glucose, amino acids, most water, Na⁺ actively reabsorbed (all glucose reabsorbed normally). Loop of Henle: creates osmotic gradient in medulla; descending limb permeable to water; ascending limb pumps out NaCl. DCT: fine-tuning of Na⁺/K⁺ and water under aldosterone/ADH control.</li>
+      <li><strong>Tubular secretion (DCT and collecting duct):</strong> H⁺ ions, NH₄⁺, K⁺, some drugs (penicillin, creatinine) secreted from blood into tubular fluid — actively pumped across tubular wall against concentration gradient.</li>
+    </ul></div>
+    <div class="nb"><span class="ni">🇳🇬</span><p><strong>Kidney disease in Nigeria:</strong> Hypertension (very prevalent) and diabetes mellitus (rising) are the two leading causes of chronic kidney disease in Nigeria. Early detection by urine protein (dipstick) and serum creatinine testing is essential.</p></div>
+  </div>
+  <div class="quiz rv">
+    <div class="qlbl">📝 Self-Check Quiz — Week 10</div>
+    <div class="qq">A healthy person produces 180 litres of glomerular filtrate per day but only ~1.5 litres of urine. This means approximately how much water is reabsorbed by the kidney tubules?</div>
+    <div class="qopts" id="q10-opts">
+      <button class="qo" onclick="ans('q10','a','c')" data-id="a"><span class="ol">A</span>50 litres (28% reabsorbed)</button>
+      <button class="qo" onclick="ans('q10','b','c')" data-id="b"><span class="ol">B</span>100 litres (56% reabsorbed)</button>
+      <button class="qo" onclick="ans('q10','c','c')" data-id="c"><span class="ol">C</span>178.5 litres (99.2% reabsorbed) — demonstrating the massive reabsorption capacity of the nephron</button>
+      <button class="qo" onclick="ans('q10','d','c')" data-id="d"><span class="ol">D</span>18 litres (10% reabsorbed)</button>
+    </div>
+    <div class="qfb" id="q10-fb"></div>
+  </div>
+  <div class="nav-btns"><button class="nbtn" onclick="show('w9')"><div><span class="nbtn-s">← Previous</span><span>Respiratory System</span></div></button><button class="mcbtn" onclick="done('w10',this)">Mark Complete ✓</button><button class="nbtn" onclick="show('w11')"><div><span class="nbtn-s">Next →</span><span>Nervous System I</span></div></button></div>
+</section>
+
+<section class="sec" id="w11-sec">
+  <div class="wh"><span class="wb">WEEK 11</span><div class="wh-text"><h2>Nervous System I — Neuron, Impulse &amp; Synapse</h2><p>Neuron structure · Resting potential · Action potential · Synaptic transmission · Reflex arc</p></div></div>
+  <div class="lo"><h3>Learning Outcomes</h3><ul>
+    <li>Describe the structure and types of neurons</li>
+    <li>Explain the resting membrane potential and how an action potential is generated</li>
+    <li>Describe synaptic transmission including the role of neurotransmitters</li>
+    <li>Trace the pathway of a reflex arc and give an example</li>
+  </ul></div>
+  <div class="cb rv"><h3>11.1 Neuron Structure</h3>
+    <div class="dgm">
+      <div class="dgm-title">Motor Neuron — Annotated Structure</div>
+      <svg viewBox="0 0 700 200" width="100%" style="max-width:700px">
+        <!-- Dendrites -->
+        <path d="M 60,100 L 100,100 M 70,80 L 100,95 M 70,120 L 100,105 M 80,65 L 105,90 M 80,135 L 105,110" fill="none" stroke="#1B2A6B" stroke-width="2.5"/>
+        <text x="50" y="55" font-family="Lora,serif" font-size="11" fill="#1B2A6B" font-style="italic">Dendrites</text>
+        <text x="50" y="67" font-family="Lora,serif" font-size="10" fill="#666">Receive signals</text>
+        <!-- Cell body (soma) -->
+        <circle cx="130" cy="100" r="32" fill="#C7D2F8" stroke="#1B2A6B" stroke-width="2"/>
+        <circle cx="130" cy="100" r="12" fill="#1B2A6B" opacity="0.5"/>
+        <text x="130" y="98" text-anchor="middle" font-family="Lora,serif" font-size="9" fill="white">Nucleus</text>
+        <text x="130" y="150" text-anchor="middle" font-family="Playfair Display,serif" font-size="11" fill="#1B2A6B" font-weight="600">Cell Body (Soma)</text>
+        <!-- Axon hillock -->
+        <path d="M 162,100 L 190,100" fill="none" stroke="#1B2A6B" stroke-width="3"/>
+        <text x="175" y="90" text-anchor="middle" font-family="Lora,serif" font-size="9" fill="#B8860B" font-style="italic">Axon hillock</text>
+        <text x="175" y="115" text-anchor="middle" font-family="Lora,serif" font-size="8" fill="#666">(action potential</text>
+        <text x="175" y="126" text-anchor="middle" font-family="Lora,serif" font-size="8" fill="#666">initiated here)</text>
+        <!-- Axon with myelin -->
+        <line x1="190" y1="100" x2="580" y2="100" stroke="#1B2A6B" stroke-width="3"/>
+        <!-- Myelin segments -->
+        <rect x="195" y="88" width="60" height="24" rx="12" fill="#EEF2FF" stroke="#1B2A6B" stroke-width="1.5" opacity="0.8"/>
+        <rect x="270" y="88" width="60" height="24" rx="12" fill="#EEF2FF" stroke="#1B2A6B" stroke-width="1.5" opacity="0.8"/>
+        <rect x="345" y="88" width="60" height="24" rx="12" fill="#EEF2FF" stroke="#1B2A6B" stroke-width="1.5" opacity="0.8"/>
+        <rect x="420" y="88" width="60" height="24" rx="12" fill="#EEF2FF" stroke="#1B2A6B" stroke-width="1.5" opacity="0.8"/>
+        <rect x="495" y="88" width="60" height="24" rx="12" fill="#EEF2FF" stroke="#1B2A6B" stroke-width="1.5" opacity="0.8"/>
+        <!-- Nodes of Ranvier -->
+        <text x="258" y="120" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8" fill="#B8860B">Node of Ranvier</text>
+        <line x1="258" y1="112" x2="258" y2="100" stroke="#B8860B" stroke-width="1"/>
+        <!-- Myelin label -->
+        <text x="395" y="72" text-anchor="middle" font-family="Lora,serif" font-size="10" fill="#1B2A6B" font-style="italic">Myelin sheath (Schwann cells)</text>
+        <text x="395" y="83" text-anchor="middle" font-family="Lora,serif" font-size="9" fill="#666">insulates axon; speeds saltatory conduction</text>
+        <!-- Axon terminals -->
+        <path d="M 580,100 L 610,80 M 580,100 L 615,95 M 580,100 L 610,115 M 580,100 L 600,125" fill="none" stroke="#1B2A6B" stroke-width="2.5"/>
+        <text x="635" y="90" font-family="Lora,serif" font-size="11" fill="#1B2A6B" font-style="italic">Axon terminals</text>
+        <text x="635" y="103" font-family="Lora,serif" font-size="10" fill="#666">(synaptic knobs)</text>
+        <text x="635" y="115" font-family="JetBrains Mono,monospace" font-size="9" fill="#B8860B">→ synapse</text>
+      </svg>
+      <div class="dgm-cap">The myelin sheath (made by Schwann cells in PNS) insulates the axon and allows saltatory conduction — impulse "jumps" from node to node reaching speeds of 70–120 m/s. Unmyelinated fibres conduct at only ~1 m/s.</div>
+    </div>
+  </div>
+  <div class="cb rv"><h3>11.2 Action Potential</h3>
+    <table class="dt"><thead><tr><th>Phase</th><th>Ion Movement</th><th>Membrane Potential</th></tr></thead><tbody>
+      <tr><td>Resting potential</td><td>K⁺ inside; Na⁺ outside (maintained by Na⁺/K⁺ ATPase pump)</td><td>−70 mV (inside negative)</td></tr>
+      <tr><td>Depolarisation</td><td>Voltage-gated Na⁺ channels open; Na⁺ rushes INTO cell</td><td>Rises rapidly to +40 mV</td></tr>
+      <tr><td>Repolarisation</td><td>Na⁺ channels close; voltage-gated K⁺ channels open; K⁺ rushes OUT</td><td>Falls back toward −70 mV</td></tr>
+      <tr><td>Hyperpolarisation</td><td>K⁺ channels slow to close; brief overshoot</td><td>Drops slightly below −70 mV</td></tr>
+      <tr><td>Refractory period</td><td>Na⁺/K⁺ pump restores ion distribution; Na⁺ channels in absolute refractory state</td><td>Returns to −70 mV; no new AP possible briefly</td></tr>
+    </tbody></table>
+  </div>
+  <div class="cb rv"><h3>11.3 Synaptic Transmission &amp; Reflex Arc</h3>
+    <div class="kb"><div class="kb-t">⚡ Synaptic Transmission Steps</div><ul>
+      <li>Action potential arrives at pre-synaptic axon terminal</li>
+      <li>Voltage-gated Ca²⁺ channels open → Ca²⁺ flows into terminal</li>
+      <li>Ca²⁺ triggers synaptic vesicles to fuse with pre-synaptic membrane → exocytosis of neurotransmitter (e.g. acetylcholine)</li>
+      <li>Neurotransmitter diffuses across synaptic cleft (~20 nm)</li>
+      <li>Binds to receptors on post-synaptic membrane → ion channels open → new action potential (excitatory) or hyperpolarisation (inhibitory)</li>
+      <li>Neurotransmitter removed: by enzyme breakdown (acetylcholinesterase breaks ACh) or reuptake into pre-synaptic terminal</li>
+    </ul></div>
+    <div class="kb"><div class="kb-t">🔄 Reflex Arc Pathway</div><ul>
+      <li><strong>Receptor</strong> detects stimulus (e.g. skin pain receptor)</li>
+      <li><strong>Sensory (afferent) neuron</strong> transmits impulse to spinal cord</li>
+      <li><strong>Relay (interneuron)</strong> in posterior horn of spinal cord processes and relays</li>
+      <li><strong>Motor (efferent) neuron</strong> transmits impulse from spinal cord to effector</li>
+      <li><strong>Effector</strong> (muscle contracts / gland secretes) → response</li>
+      <li>Signal also travels up spinal cord to brain — consciousness is aware AFTER the reflex occurs</li>
+    </ul></div>
+  </div>
+  <div class="quiz rv">
+    <div class="qlbl">📝 Self-Check Quiz — Week 11</div>
+    <div class="qq">During an action potential, what causes the membrane potential to rise from −70 mV to +40 mV (depolarisation)?</div>
+    <div class="qopts" id="q11-opts">
+      <button class="qo" onclick="ans('q11','a','b')" data-id="a"><span class="ol">A</span>K⁺ ions rushing into the cell through voltage-gated channels</button>
+      <button class="qo" onclick="ans('q11','b','b')" data-id="b"><span class="ol">B</span>Na⁺ ions rushing INTO the cell through voltage-gated Na⁺ channels — positive ions entering makes inside more positive</button>
+      <button class="qo" onclick="ans('q11','c','b')" data-id="c"><span class="ol">C</span>The Na⁺/K⁺ pump working faster</button>
+      <button class="qo" onclick="ans('q11','d','b')" data-id="d"><span class="ol">D</span>Ca²⁺ ions entering the axon terminal</button>
+    </div>
+    <div class="qfb" id="q11-fb"></div>
+  </div>
+  <div class="nav-btns"><button class="nbtn" onclick="show('w10')"><div><span class="nbtn-s">← Previous</span><span>Excretory System</span></div></button><button class="mcbtn" onclick="done('w11',this)">Mark Complete ✓</button><button class="nbtn" onclick="show('w12')"><div><span class="nbtn-s">Next →</span><span>Nervous System II</span></div></button></div>
+</section>
+
+<section class="sec" id="w12-sec">
+  <div class="wh"><span class="wb">WEEK 12</span><div class="wh-text"><h2>Nervous System II — CNS, PNS &amp; Sense Organs</h2><p>Brain regions · Autonomic NS · Eye · Ear · Skin · Taste · Smell</p></div></div>
+  <div class="lo"><h3>Learning Outcomes</h3><ul>
+    <li>Name the major brain regions and their functions</li>
+    <li>Distinguish sympathetic from parasympathetic nervous systems</li>
+    <li>Describe the structure and function of the eye, ear, skin, tongue, and nose as sense organs</li>
+  </ul></div>
+  <div class="cb rv"><h3>12.1 Brain Regions and Functions</h3>
+    <table class="dt"><thead><tr><th>Brain Region</th><th>Location</th><th>Functions</th></tr></thead><tbody>
+      <tr><td>Cerebrum (cerebral cortex)</td><td>Largest; two hemispheres; anterior</td><td>Voluntary movement, thought, memory, language, consciousness, sensory interpretation, personality</td></tr>
+      <tr><td>Cerebellum</td><td>Posterior, inferior</td><td>Balance, coordination, fine motor control, muscle tone; damage → ataxia</td></tr>
+      <tr><td>Medulla oblongata</td><td>Inferior brainstem</td><td>Vital centres: respiratory rhythm, heart rate, blood pressure, swallowing, vomiting, coughing; cranial nerves IX–XII</td></tr>
+      <tr><td>Hypothalamus</td><td>Floor of diencephalon</td><td>Thermoregulation (body temperature set point), hunger/satiety, thirst, sleep-wake cycle, controls pituitary gland (master of endocrine system)</td></tr>
+      <tr><td>Thalamus</td><td>Central diencephalon</td><td>Sensory relay station — all sensory input (except olfaction) passes through thalamus before reaching cortex</td></tr>
+      <tr><td>Pons</td><td>Brainstem, between medulla and midbrain</td><td>Relay between cerebrum and cerebellum; breathing centres; cranial nerves V–VIII</td></tr>
+    </tbody></table>
+  </div>
+  <div class="cb rv"><h3>12.2 Sympathetic vs. Parasympathetic</h3>
+    <table class="dt"><thead><tr><th>Feature</th><th>Sympathetic</th><th>Parasympathetic</th></tr></thead><tbody>
+      <tr><td>Activation state</td><td>Fight-or-flight; exercise; stress; emergency</td><td>Rest-and-digest; sleep; recovery</td></tr>
+      <tr><td>Heart rate</td><td>↑ Increases</td><td>↓ Decreases (vagus nerve)</td></tr>
+      <tr><td>Pupils</td><td>Dilated (mydriasis)</td><td>Constricted (miosis)</td></tr>
+      <tr><td>Bronchioles</td><td>Dilated (bronchodilation) — more O₂</td><td>Constricted (bronchoconstriction)</td></tr>
+      <tr><td>Digestive system</td><td>Inhibited (peristalsis slows, sphincters close)</td><td>Stimulated (peristalsis increases, digestive glands active)</td></tr>
+      <tr><td>Neurotransmitter</td><td>Noradrenaline at target organs</td><td>Acetylcholine at target organs</td></tr>
+    </tbody></table>
+  </div>
+  <div class="cb rv"><h3>12.3 Sense Organs Summary</h3>
+    <table class="dt"><thead><tr><th>Sense Organ</th><th>Stimulus</th><th>Receptor Cells</th><th>Key Structures / Pathway</th></tr></thead><tbody>
+      <tr><td>Eye</td><td>Light (photons 380–750 nm)</td><td>Rods (dim light, b&w, rhodopsin); Cones (colour, iodopsin — 3 types)</td><td>Cornea (refraction) → aqueous humour → iris/pupil → lens (accommodation by ciliary muscles) → vitreous humour → retina → fovea (highest acuity) → optic nerve → visual cortex</td></tr>
+      <tr><td>Ear</td><td>Sound waves; gravity/rotation (vestibular)</td><td>Hair cells in Organ of Corti (hearing); hair cells in semicircular canals/utricle/saccule (balance)</td><td>Pinna → ear canal → tympanum → 3 ossicles (malleus, incus, stapes) → oval window → cochlea (perilymph → endolymph waves → hair cell bending → impulse) → auditory nerve → auditory cortex</td></tr>
+      <tr><td>Skin</td><td>Touch, pressure, temperature, pain, vibration</td><td>Meissner's (light touch); Pacinian (deep pressure/vibration); Merkel's (sustained touch); Ruffini (skin stretch); free nerve endings (pain/temperature)</td><td>Stimulation → sensory neuron → spinal cord → thalamus → somatosensory cortex</td></tr>
+      <tr><td>Tongue</td><td>Chemical (taste = gustation)</td><td>Taste receptor cells in taste buds (on papillae)</td><td>5 basic tastes: sweet (sugars), sour (H⁺), salty (Na⁺), bitter (alkaloids), umami (glutamate/protein). 3 cranial nerves carry taste: VII (anterior 2/3), IX (posterior 1/3), X (epiglottis)</td></tr>
+      <tr><td>Nose</td><td>Chemical (smell = olfaction)</td><td>Olfactory receptor neurons (bipolar neurons) in olfactory epithelium (roof of nasal cavity)</td><td>Volatile chemicals → olfactory receptor proteins → olfactory nerve (CN I) → olfactory bulb → olfactory cortex + limbic system (explains strong emotion-smell link)</td></tr>
+    </tbody></table>
+  </div>
+  <div class="quiz rv">
+    <div class="qlbl">📝 Self-Check Quiz — Week 12</div>
+    <div class="qq">During an emergency, a student hears a gunshot. Their heart races, pupils dilate, and digestion slows. Which division of the autonomic nervous system is active?</div>
+    <div class="qopts" id="q12-opts">
+      <button class="qo" onclick="ans('q12','a','b')" data-id="a"><span class="ol">A</span>Parasympathetic — rest-and-digest division</button>
+      <button class="qo" onclick="ans('q12','b','b')" data-id="b"><span class="ol">B</span>Sympathetic — fight-or-flight division, releasing noradrenaline at target organs</button>
+      <button class="qo" onclick="ans('q12','c','b')" data-id="c"><span class="ol">C</span>Somatic — voluntary nervous system</button>
+      <button class="qo" onclick="ans('q12','d','b')" data-id="d"><span class="ol">D</span>Central nervous system only — no ANS involvement</button>
+    </div>
+    <div class="qfb" id="q12-fb"></div>
+  </div>
+  <div class="nav-btns"><button class="nbtn" onclick="show('w11')"><div><span class="nbtn-s">← Previous</span><span>Nervous System I</span></div></button><button class="mcbtn" onclick="done('w12',this)">Mark Complete ✓</button><button class="nbtn" onclick="show('w13')"><div><span class="nbtn-s">Next →</span><span>Skeletal &amp; Muscular</span></div></button></div>
+</section>
+
+<section class="sec" id="w13-sec">
+  <div class="wh"><span class="wb">WEEK 13</span><div class="wh-text"><h2>Skeletal System &amp; Muscular Contraction</h2><p>Skeleton functions · Axial/Appendicular · Joints · Sliding filament theory</p></div></div>
+  <div class="lo"><h3>Learning Outcomes</h3><ul>
+    <li>State five functions of the mammalian skeleton</li>
+    <li>Distinguish axial from appendicular skeleton</li>
+    <li>Classify joints and give examples</li>
+    <li>Explain the sliding filament theory of muscular contraction step by step</li>
+  </ul></div>
+  <div class="cb rv"><h3>13.1 Functions of the Skeleton</h3>
+    <div class="cg">
+      <div class="cc" onclick="this.classList.toggle('exp')"><span class="cc-tog">+</span><div class="cc-icon">🏗️</div><div class="cc-title">Support</div><div class="cc-text">Maintains body shape against gravity</div><div class="cc-detail">The skeleton is the body's scaffold. Without it, soft tissues would collapse. Upright posture requires the vertebral column (spine) as a central pillar, while limb bones bear body weight during standing and locomotion.</div></div>
+      <div class="cc" onclick="this.classList.toggle('exp')"><span class="cc-tog">+</span><div class="cc-icon">🛡️</div><div class="cc-title">Protection</div><div class="cc-text">Shields vital organs from damage</div><div class="cc-detail">Skull protects the brain. Rib cage and sternum protect the heart and lungs. Vertebrae protect the spinal cord. Pelvic girdle protects bladder, rectum, and reproductive organs.</div></div>
+      <div class="cc" onclick="this.classList.toggle('exp')"><span class="cc-tog">+</span><div class="cc-icon">🏃</div><div class="cc-title">Movement</div><div class="cc-text">Bones as levers for muscles</div><div class="cc-detail">Muscles attach to bones via tendons. Bones act as levers; joints as fulcrums. When muscles contract, they pull on bones, producing movement. Without bone, muscles would contract without producing useful movement.</div></div>
+      <div class="cc" onclick="this.classList.toggle('exp')"><span class="cc-tog">+</span><div class="cc-icon">🩸</div><div class="cc-title">Blood Cell Production</div><div class="cc-text">Red bone marrow generates all blood cells</div><div class="cc-detail">Red bone marrow in flat bones (sternum, ribs, vertebrae, pelvis) and epiphyses of long bones produces: red blood cells (erythropoiesis), white blood cells (leukopoiesis), and platelets (thrombopoiesis) — all from pluripotent stem cells.</div></div>
+    </div>
+  </div>
+  <div class="cb rv"><h3>13.2 Sliding Filament Theory of Muscular Contraction</h3>
+    <p>The sliding filament theory (Hanson and Huxley, 1954) explains how sarcomeres shorten during muscle contraction. Actin (thin) filaments slide over myosin (thick) filaments — the filaments themselves do not shorten, but the sarcomere (and thus the muscle) shortens.</p>
+    <div class="flow" style="flex-wrap:wrap;gap:3px;">
+      <div class="fs" style="border-color:#4A1A8B"><div class="fs-title">Nerve impulse arrives</div><div class="fs-sub">ACh released at neuromuscular junction</div></div>
+      <div class="fa">→</div>
+      <div class="fs"><div class="fs-title">Action potential across sarcolemma</div><div class="fs-sub">Spreads into T-tubules</div></div>
+      <div class="fa">→</div>
+      <div class="fs" style="border-color:#1A5278;background:#EBF5FB"><div class="fs-title">Ca²⁺ released</div><div class="fs-sub">From sarcoplasmic reticulum into cytoplasm</div></div>
+      <div class="fa">→</div>
+      <div class="fs"><div class="fs-title">Ca²⁺ binds Troponin</div><div class="fs-sub">Tropomyosin moves → actin binding sites exposed</div></div>
+      <div class="fa">→</div>
+      <div class="fs" style="border-color:#1A6B3A;background:#EAFAF1"><div class="fs-title">Myosin heads bind actin</div><div class="fs-sub">Cross-bridge formation</div></div>
+      <div class="fa">→</div>
+      <div class="fs" style="border-color:#B8860B;background:#FEF9EC"><div class="fs-title">Power stroke</div><div class="fs-sub">Myosin head pivots → actin slides → sarcomere shortens</div></div>
+      <div class="fa">→</div>
+      <div class="fs"><div class="fs-title">ATP binds myosin</div><div class="fs-sub">Cross-bridge detaches; cycle repeats</div></div>
+    </div>
+    <div class="nb"><span class="ni">💡</span><p><strong>Rigor mortis</strong> occurs because after death, ATP is depleted — myosin heads remain bound to actin (no ATP to detach cross-bridges) → muscles stiffen. This resolves after ~24–48 hours as muscle proteins degrade.</p></div>
+  </div>
+  <div class="quiz rv">
+    <div class="qlbl">📝 Self-Check Quiz — Week 13</div>
+    <div class="qq">In the sliding filament theory, what is the role of calcium ions (Ca²⁺) released from the sarcoplasmic reticulum?</div>
+    <div class="qopts" id="q13-opts">
+      <button class="qo" onclick="ans('q13','a','c')" data-id="a"><span class="ol">A</span>Ca²⁺ directly provides energy for the power stroke</button>
+      <button class="qo" onclick="ans('q13','b','c')" data-id="b"><span class="ol">B</span>Ca²⁺ causes the actin filaments to shorten</button>
+      <button class="qo" onclick="ans('q13','c','c')" data-id="c"><span class="ol">C</span>Ca²⁺ binds to troponin, causing tropomyosin to move and expose the actin binding sites for myosin heads</button>
+      <button class="qo" onclick="ans('q13','d','c')" data-id="d"><span class="ol">D</span>Ca²⁺ hydrolyses ATP to release energy for cross-bridge formation</button>
+    </div>
+    <div class="qfb" id="q13-fb"></div>
+  </div>
+  <div class="nav-btns"><button class="nbtn" onclick="show('w12')"><div><span class="nbtn-s">← Previous</span><span>Nervous System II</span></div></button><button class="mcbtn" onclick="done('w13',this)">Mark Complete ✓</button><button class="nbtn" onclick="show('w14')"><div><span class="nbtn-s">Next →</span><span>Endocrine System</span></div></button></div>
+</section>
+
+<section class="sec" id="w14-sec">
+  <div class="wh"><span class="wb">WEEK 14</span><div class="wh-text"><h2>Endocrine System &amp; Hormones</h2><p>Pituitary tropic hormones · Thyroxine · Adrenaline · Reproductive hormones · Insulin</p></div></div>
+  <div class="lo"><h3>Learning Outcomes</h3><ul>
+    <li>Define hormone and state five properties of hormones</li>
+    <li>Name the pituitary hormones, their targets, and effects</li>
+    <li>Describe the effects of thyroxine, adrenaline, and insulin/glucagon</li>
+    <li>Name the reproductive hormones and their effects</li>
+  </ul></div>
+  <div class="cb rv"><h3>14.1 Properties and Definition of Hormones</h3>
+    <p>A hormone is a chemical messenger secreted by an endocrine gland directly into the bloodstream, transported to a target organ, where it produces a specific physiological effect. The endocrine system and nervous system together maintain homeostasis — the nervous system acts quickly (milliseconds) but briefly; the endocrine system acts slowly (minutes to hours) but with prolonged effects.</p>
+    <div class="kb"><div class="kb-t">✦ Properties of Hormones</div><ul>
+      <li>Secreted by specialised endocrine (ductless) glands directly into blood</li>
+      <li>Transported in blood to target organs — may travel long distances</li>
+      <li>Effective in very small (nanomolar) concentrations</li>
+      <li>Specific — act only on cells bearing complementary receptors for that hormone</li>
+      <li>Slow-acting but long-lasting compared to nerve impulses</li>
+      <li>Chemical nature: protein/peptide (water-soluble, bind surface receptors) OR steroid (lipid-soluble, enter cell and bind nuclear receptors → gene regulation)</li>
+    </ul></div>
+  </div>
+  <div class="cb rv"><h3>14.2 Pituitary Gland — The Master Gland</h3>
+    <table class="dt"><thead><tr><th>Hormone</th><th>Target</th><th>Effect / Deficiency / Excess</th></tr></thead><tbody>
+      <tr><td>GH (Growth Hormone)</td><td>Liver, bone, muscle</td><td>↑ Protein synthesis, bone growth; deficiency: pituitary dwarfism; excess in childhood: gigantism; excess in adult: acromegaly</td></tr>
+      <tr><td>TSH (Thyroid-Stimulating H.)</td><td>Thyroid gland</td><td>Stimulates thyroxine synthesis and secretion</td></tr>
+      <tr><td>ACTH (Adrenocorticotropic H.)</td><td>Adrenal cortex</td><td>Stimulates cortisol secretion; stress response</td></tr>
+      <tr><td>FSH (Follicle-Stimulating H.)</td><td>Ovary / Testis</td><td>Female: stimulates follicle development and oestrogen secretion. Male: stimulates spermatogenesis</td></tr>
+      <tr><td>LH (Luteinising H.)</td><td>Ovary / Testis</td><td>Female: triggers ovulation (LH surge), forms corpus luteum. Male: stimulates testosterone secretion from Leydig cells</td></tr>
+      <tr><td>ADH (Antidiuretic H.)</td><td>Kidney collecting ducts</td><td>↑ Water reabsorption → concentrated urine; deficiency: diabetes insipidus (large volumes of dilute urine)</td></tr>
+      <tr><td>Oxytocin</td><td>Uterus, mammary glands</td><td>Uterine contractions during labour; milk ejection reflex (positive feedback)</td></tr>
+      <tr><td>Prolactin</td><td>Mammary glands</td><td>Stimulates milk production (lactation) after childbirth</td></tr>
+    </tbody></table>
+  </div>
+  <div class="cb rv"><h3>14.3 Key Hormones — Thyroxine, Adrenaline, Insulin, Reproductive</h3>
+    <div class="cg">
+      <div class="cc" onclick="this.classList.toggle('exp')"><span class="cc-tog">+</span><div class="cc-icon">🦋</div><div class="cc-title">Thyroxine (T₄)</div><div class="cc-text">Thyroid gland; requires dietary iodine</div><div class="cc-detail">Effects: increases basal metabolic rate (BMR); essential for normal brain development in foetus and young child; stimulates protein synthesis and bone growth. Deficiency: goitre (enlarged thyroid — iodine deficiency, common in non-coastal Nigeria); cretinism in children (severe mental retardation, stunted growth); myxoedema in adults. Excess: hyperthyroidism (Graves' disease) — weight loss, rapid heart rate, exophthalmos.</div></div>
+      <div class="cc" onclick="this.classList.toggle('exp')"><span class="cc-tog">+</span><div class="cc-icon">⚡</div><div class="cc-title">Adrenaline (Epinephrine)</div><div class="cc-text">Adrenal medulla; fight-or-flight</div><div class="cc-detail">Released in seconds during stress or exercise. Effects: ↑ heart rate and cardiac output; ↑ blood glucose (glycogenolysis in liver); bronchodilation; pupil dilation; vasoconstriction in skin/gut; vasodilation in muscle. Clinical use: anaphylaxis treatment (EpiPen); cardiac arrest; bronchospasm (asthma).</div></div>
+      <div class="cc" onclick="this.classList.toggle('exp')"><span class="cc-tog">+</span><div class="cc-icon">🍬</div><div class="cc-title">Insulin &amp; Glucagon</div><div class="cc-text">Pancreatic islets of Langerhans</div><div class="cc-detail">Insulin (β cells): released when blood glucose ↑ after a meal; stimulates glucose uptake by cells (especially muscle/fat); promotes glycogenesis (glucose → glycogen); inhibits gluconeogenesis. Deficiency: Type 1 diabetes. Resistance: Type 2 diabetes (very common in Nigeria). Glucagon (α cells): released when blood glucose ↓ (fasting); stimulates glycogenolysis (glycogen → glucose) and gluconeogenesis in liver.</div></div>
+      <div class="cc" onclick="this.classList.toggle('exp')"><span class="cc-tog">+</span><div class="cc-icon">🧬</div><div class="cc-title">Reproductive Hormones</div><div class="cc-text">Testosterone · Oestrogen · Progesterone</div><div class="cc-detail">Testosterone (testes/Leydig cells): male secondary sex characteristics (deepened voice, body hair, muscle mass); drives spermatogenesis; anabolic steroid. Oestrogen (ovary/follicle cells): female secondary sex characteristics; thickens endometrium; regulates menstrual cycle. Progesterone (corpus luteum/placenta): maintains endometrial lining; inhibits further ovulation during pregnancy; prepares mammary glands for lactation.</div></div>
+    </div>
+  </div>
+  <div class="quiz rv">
+    <div class="qlbl">📝 Self-Check Quiz — Week 14</div>
+    <div class="qq">Iodine deficiency causes goitre in Nigeria. Which hormone requires iodine for its synthesis, and what would be the effect of insufficient iodine on TSH levels?</div>
+    <div class="qopts" id="q14-opts">
+      <button class="qo" onclick="ans('q14','a','c')" data-id="a"><span class="ol">A</span>Insulin — TSH would decrease</button>
+      <button class="qo" onclick="ans('q14','b','c')" data-id="b"><span class="ol">B</span>Adrenaline — TSH would remain normal</button>
+      <button class="qo" onclick="ans('q14','c','c')" data-id="c"><span class="ol">C</span>Thyroxine — low thyroxine → pituitary releases MORE TSH (negative feedback removed) → TSH rises → thyroid overstimulated → goitre</button>
+      <button class="qo" onclick="ans('q14','d','c')" data-id="d"><span class="ol">D</span>GH (Growth hormone) — TSH has no relation to iodine</button>
+    </div>
+    <div class="qfb" id="q14-fb"></div>
+  </div>
+  <div class="nav-btns"><button class="nbtn" onclick="show('w13')"><div><span class="nbtn-s">← Previous</span><span>Skeletal &amp; Muscular</span></div></button><button class="mcbtn" onclick="done('w14',this)">Mark Complete ✓</button><button class="nbtn" onclick="show('w15')"><div><span class="nbtn-s">Next →</span><span>Reproductive System</span></div></button></div>
+</section>
+
+<section class="sec" id="w15-sec">
+  <div class="wh"><span class="wb">WEEK 15</span><div class="wh-text"><h2>Reproductive System, Fertilisation &amp; Course Synthesis</h2><p>Male/female anatomy · Fertilisation · Gestation · Birth · Menstrual cycle</p></div></div>
+  <div class="lo"><h3>Learning Outcomes</h3><ul>
+    <li>Describe the structure and function of the male and female reproductive systems in mammals</li>
+    <li>Trace the process of fertilisation, implantation, and gestation</li>
+    <li>Explain the events of childbirth (parturition)</li>
+    <li>Describe the hormonal control of the menstrual cycle</li>
+  </ul></div>
+  <div class="cb rv"><h3>15.1 Male Reproductive System</h3>
+    <table class="dt"><thead><tr><th>Structure</th><th>Function</th></tr></thead><tbody>
+      <tr><td>Testes (in scrotum, ~2°C below body temperature)</td><td>Produce spermatozoa (spermatogenesis) and testosterone</td></tr>
+      <tr><td>Epididymis</td><td>Site of sperm maturation and storage (~3 weeks)</td></tr>
+      <tr><td>Vas deferens</td><td>Transports sperm from epididymis to ejaculatory duct</td></tr>
+      <tr><td>Seminal vesicles</td><td>Secrete fructose (sperm energy), prostaglandins, and alkaline fluid (~60% of semen volume)</td></tr>
+      <tr><td>Prostate gland</td><td>Secretes alkaline fluid that neutralises vaginal acidity; contains enzymes that liquefy semen</td></tr>
+      <tr><td>Bulbourethral (Cowper's) glands</td><td>Pre-ejaculatory lubricating fluid; neutralises residual urine acidity in urethra</td></tr>
+      <tr><td>Urethra / Penis</td><td>Common passage for urine and semen; sexual intercourse and ejaculation</td></tr>
+    </tbody></table>
+  </div>
+  <div class="cb rv"><h3>15.2 Female Reproductive System</h3>
+    <table class="dt"><thead><tr><th>Structure</th><th>Function</th></tr></thead><tbody>
+      <tr><td>Ovaries (two, in pelvic cavity)</td><td>Produce ova (oogenesis) and sex hormones (oestrogen, progesterone)</td></tr>
+      <tr><td>Fallopian tubes (oviducts)</td><td>Transport ovum from ovary to uterus; site of fertilisation (usually at ampulla)</td></tr>
+      <tr><td>Uterus</td><td>Site of implantation and foetal development; muscular wall (myometrium) contracts during birth; inner lining = endometrium (shed during menstruation)</td></tr>
+      <tr><td>Cervix</td><td>Lower narrow part of uterus; normally closed; dilates during birth; secretes mucus (thick mid-cycle, watery at ovulation)</td></tr>
+      <tr><td>Vagina</td><td>Birth canal; receives penis during intercourse; acidic environment (pH 3.5–4.5) prevents infection</td></tr>
+    </tbody></table>
+  </div>
+  <div class="cb rv"><h3>15.3 Fertilisation, Gestation, and Birth</h3>
+    <div class="flow" style="flex-wrap:wrap;gap:3px;">
+      <div class="fs" style="border-color:#6B1A4A"><div class="fs-title">Ovulation</div><div class="fs-sub">LH surge releases secondary oocyte</div><div class="fs-loc">DAY 14 of cycle</div></div>
+      <div class="fa">→</div>
+      <div class="fs"><div class="fs-title">Fertilisation</div><div class="fs-sub">Sperm penetrates oocyte in fallopian tube; acrosome reaction; cortical reaction prevents polyspermy</div><div class="fs-loc">FALLOPIAN TUBE (AMPULLA)</div></div>
+      <div class="fa">→</div>
+      <div class="fs"><div class="fs-title">Cleavage</div><div class="fs-sub">Zygote → 2-cell → 4-cell → morula (16-cell)</div><div class="fs-loc">DAYS 1–4</div></div>
+      <div class="fa">→</div>
+      <div class="fs" style="border-color:#1B2A6B;background:#EEF2FF"><div class="fs-title">Blastocyst</div><div class="fs-sub">Hollow ball; inner cell mass (embryo) + trophoblast (placenta)</div><div class="fs-loc">DAYS 4–6</div></div>
+      <div class="fa">→</div>
+      <div class="fs"><div class="fs-title">Implantation</div><div class="fs-sub">Blastocyst embeds in endometrium; placenta begins forming</div><div class="fs-loc">DAYS 6–10</div></div>
+      <div class="fa">→</div>
+      <div class="fs" style="border-color:#1A6B3A;background:#EAFAF1"><div class="fs-title">Gestation (~38 wks)</div><div class="fs-sub">Embryo → foetus; placenta exchanges O₂/nutrients/wastes; progesterone maintains pregnancy</div></div>
+      <div class="fa">→</div>
+      <div class="fs" style="border-color:#B8860B"><div class="fs-title">Parturition (Birth)</div><div class="fs-sub">Oxytocin → uterine contractions (positive feedback) → cervix dilates → delivery → placenta expelled</div></div>
+    </div>
+  </div>
+  <div class="cb rv"><h3>15.4 The Menstrual Cycle (~28 days)</h3>
+    <div class="kb"><div class="kb-t">📅 Four Phases of the Menstrual Cycle</div><ul>
+      <li><strong>Days 1–5 — Menstruation:</strong> Corpus luteum degenerates → progesterone and oestrogen fall → endometrium sheds → menstrual flow. FSH begins to rise.</li>
+      <li><strong>Days 6–13 — Follicular Phase:</strong> FSH stimulates follicle growth in ovary → follicle secretes increasing oestrogen → endometrium rebuilds (proliferative phase). Oestrogen rises sharply by Day 12–13.</li>
+      <li><strong>Day 14 — Ovulation:</strong> High oestrogen triggers LH surge from anterior pituitary → mature Graafian follicle ruptures → secondary oocyte released into fallopian tube.</li>
+      <li><strong>Days 15–28 — Luteal Phase:</strong> Ruptured follicle → corpus luteum → secretes progesterone (and oestrogen) → endometrium thickens further (secretory phase, preparing for implantation). If no fertilisation: corpus luteum degenerates Day 24–26 → hormone levels fall → menstruation begins (Day 1 of next cycle).</li>
+    </ul></div>
+  </div>
+  <div class="cb rv"><h3>15.5 Course Synthesis — All 12 Systems Integrated</h3>
+    <table class="dt"><thead><tr><th>System</th><th>Key Concept</th><th>Clinical Importance (Nigeria)</th></tr></thead><tbody>
+      <tr><td>Digestive</td><td>Hydrolytic enzymes at each site; bile emulsifies fats; absorption via villi</td><td>Malnutrition; diarrhoeal disease; food contamination</td></tr>
+      <tr><td>Circulatory</td><td>Double circulation; cardiac conduction; ABO groups; clotting cascade</td><td>Hypertension; sickle-cell disease; HIV transmission via blood</td></tr>
+      <tr><td>Respiratory</td><td>Alveolar exchange; aerobic respiration; 38 ATP per glucose</td><td>Asthma; TB; COVID-19 respiratory complications</td></tr>
+      <tr><td>Excretory</td><td>Ultrafiltration → selective reabsorption → secretion; deamination → urea</td><td>Kidney disease (hypertension + diabetes driven); malaria-related nephrotic syndrome</td></tr>
+      <tr><td>Nervous</td><td>Action potential; synaptic transmission; reflex arc; brain regions</td><td>Epilepsy (neurocysticercosis); stroke; meningitis</td></tr>
+      <tr><td>Skeletal/Muscular</td><td>Sliding filament; levers; red bone marrow; joint types</td><td>Rickets (Vit D/Ca deficiency); fractures; sickle-cell bone pain</td></tr>
+      <tr><td>Endocrine</td><td>Pituitary tropic hormones; thyroxine; adrenaline; insulin</td><td>Goitre (iodine deficiency); Type 2 diabetes (rising epidemic)</td></tr>
+      <tr><td>Reproductive</td><td>Male/female anatomy; fertilisation; gestation; menstrual cycle</td><td>Maternal mortality; antenatal care; family planning</td></tr>
+    </tbody></table>
+  </div>
+  <div class="quiz rv">
+    <div class="qlbl">📝 Final Review Quiz — Week 15</div>
+    <div class="qq">A pregnant woman is told she has severe pre-eclampsia. Her blood pressure is very high, her kidneys are leaking protein into urine, and she develops seizures. Which endocrine connection explains why oxytocin is used to induce labour in her management?</div>
+    <div class="qopts" id="q15-opts">
+      <button class="qo" onclick="ans('q15','a','c')" data-id="a"><span class="ol">A</span>Oxytocin lowers blood pressure by relaxing smooth muscle in blood vessels</button>
+      <button class="qo" onclick="ans('q15','b','c')" data-id="b"><span class="ol">B</span>Oxytocin inhibits progesterone secretion, ending the pregnancy hormones</button>
+      <button class="qo" onclick="ans('q15','c','c')" data-id="c"><span class="ol">C</span>Oxytocin (posterior pituitary) stimulates uterine smooth muscle contractions; administering it artificially induces labour and delivery — the only definitive treatment for severe pre-eclampsia</button>
+      <button class="qo" onclick="ans('q15','d','c')" data-id="d"><span class="ol">D</span>Oxytocin directly reduces proteinuria by stimulating kidney filtration</button>
+    </div>
+    <div class="qfb" id="q15-fb"></div>
+  </div>
+
+  <div style="background:var(--navy);border-radius:10px;padding:32px;margin-top:44px;text-align:center">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--amber);letter-spacing:3px;margin-bottom:12px">COURSE COMPLETE</div>
+    <div style="font-family:'Playfair Display',serif;font-size:28px;color:var(--cream);margin-bottom:8px">Congratulations!</div>
+    <p style="color:rgba(255,255,255,0.6);font-size:14px;font-style:italic;max-width:500px;margin:0 auto">You have completed BIO 222 — from enzyme kinetics to childbirth, from the action potential to the Krebs cycle. Structure and function are inseparable. Use this knowledge well in your teaching.</p>
+  </div>
+
+  <div class="nav-btns"><button class="nbtn" onclick="show('w14')"><div><span class="nbtn-s">← Previous</span><span>Endocrine System</span></div></button><button class="mcbtn" onclick="done('w15',this)">Mark Complete ✓</button><button class="nbtn" onclick="show('home')"><div><span class="nbtn-s">↩ Return to</span><span>Course Home</span></div></button></div>
+</section>
+
+</main>
+
+<script>
+const smap = { home:'home-sec',w1:'w1-sec',w2:'w2-sec',w3:'w3-sec',w4:'w4-sec',w5:'w5-sec',w6:'w6-sec',w7:'w7-sec',w8:'w8-sec',w9:'w9-sec',w10:'w10-sec',w11:'w11-sec',w12:'w12-sec',w13:'w13-sec',w14:'w14-sec',w15:'w15-sec' };
+const completed = new Set(JSON.parse(localStorage.getItem('bio222_done') || '[]'));
+
+function show(id) {
+  document.querySelectorAll('.sec,.home-sec').forEach(s => { s.style.display = 'none'; s.classList.remove('active'); });
+  const t = document.getElementById(smap[id]);
+  if (t) { t.style.display = 'block'; t.classList.add('active'); }
+  document.querySelectorAll('.wi').forEach((item, idx) => {
+    item.classList.remove('active');
+    if (id === 'home' && idx === 0) item.classList.add('active');
+    if (id !== 'home' && idx > 0) { const n = parseInt(id.replace('w','')); if (idx === n) item.classList.add('active'); }
+  });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  initReveal();
+  return false;
+}
+
+// Init
+document.querySelectorAll('.sec').forEach(s => { s.style.display = 'none'; });
+document.getElementById('home-sec').style.display = 'block';
+restoreProgress();
+
+// Cards
+document.querySelectorAll('.cc').forEach(c => c.classList.contains('exp') || null);
+
+// Tabs
+function swTab(group, id, btn) {
+  document.querySelectorAll(`[id^="${group}-"]`).forEach(p => p.classList.remove('active'));
+  document.querySelector(`#${group}-${id}`).classList.add('active');
+  btn.closest('.tbar') ? btn.closest('.tbar').querySelectorAll('.tbtn').forEach(b => b.classList.remove('active')) : null;
+  btn.classList.add('active');
+}
+
+// Quiz
+const expl = {
+  q1: { c: "Correct! The hierarchy runs from Chemical (atoms and molecules) through Cellular → Tissue → Organ → Organ System → Organism. Each level builds on and is dependent on the levels below it." },
+  q2: { b: "Correct! Deamination removes the amino group (–NH₂) from amino acids in the liver, producing a keto acid (which enters the Krebs cycle for energy) and ammonia (NH₃). The toxic ammonia is converted to urea via the ornithine cycle and excreted by the kidneys." },
+  q3: { c: "Correct! Amylase breaks the glycosidic bonds in starch by adding water — this is hydrolysis. All enzymes that cleave bonds by adding water are classified as Hydrolases (EC class 3)." },
+  q4: { c: "Correct! A competitive inhibitor competes with the substrate for the same active site. By increasing substrate concentration, you outcompete the inhibitor — more substrate molecules occupy active sites, restoring the reaction rate. This is NOT possible with non-competitive inhibitors." },
+  q5: { b: "Correct! Bile contains bile salts which are amphipathic (have both hydrophilic and hydrophobic regions). They surround fat droplets and break them into tiny micelles, enormously increasing the surface area available for pancreatic lipase to act on." },
+  q6: { c: "Correct! The left ventricle must generate high pressure to pump oxygenated blood through the entire systemic circulation — against the high resistance of thousands of miles of blood vessels throughout the body. The right ventricle only pumps to the nearby lungs (low pressure, low resistance pulmonary circulation)." },
+  q7: { c: "Correct! A patient with blood group B has Anti-A antibodies in their plasma. When A blood is transfused, these antibodies immediately recognise and bind the A antigens on the donor RBCs → agglutination (clumping) → haemolysis → haemolytic transfusion reaction → can be fatal within hours." },
+  q8: { c: "Correct! Non-competitive inhibitors bind an allosteric site (not the active site), causing a conformational change in the entire enzyme including the active site. Since they do not compete with the substrate at the active site, increasing substrate concentration has no effect on the inhibition." },
+  q9: { d: "Correct! Glycolysis produces only 2 ATP (net) per glucose. The Krebs cycle produces only 2 ATP directly (plus NADH and FADH₂ carriers). Oxidative phosphorylation (electron transport chain + ATP synthase) produces approximately 34 ATP by using the NADH and FADH₂ produced in earlier stages — this is where most ATP is made." },
+  q10: { c: "Correct! 180 litres − 1.5 litres = 178.5 litres reabsorbed per day. This is 99.2% of the filtered volume. The kidney is an extraordinarily efficient reabsorption organ — glucose is 100% reabsorbed (normally), and water reabsorption is tightly regulated by ADH." },
+  q11: { b: "Correct! During depolarisation, voltage-gated Na⁺ channels open and Na⁺ ions rush INTO the axon (down their electrochemical gradient — there is more Na⁺ outside and the inside is negative). This flood of positive charge makes the inside more positive, driving the membrane potential from −70 mV to +40 mV." },
+  q12: { b: "Correct! All those responses — increased heart rate, dilated pupils, slowed digestion — are classic sympathetic fight-or-flight responses. The sympathetic nervous system releases noradrenaline at target organs and prepares the body for emergency action." },
+  q13: { c: "Correct! When an action potential spreads into the T-tubules, it triggers Ca²⁺ release from the sarcoplasmic reticulum. Ca²⁺ binds to the troponin complex on the thin filaments, causing tropomyosin (which normally blocks the myosin-binding sites on actin) to shift, exposing the binding sites so myosin heads can bind and initiate the power stroke." },
+  q14: { c: "Correct! Thyroxine requires 4 iodine atoms per molecule (T₄). Iodine deficiency → insufficient thyroxine → negative feedback on the pituitary is removed → pituitary secretes MORE TSH → thyroid is continuously stimulated to grow → goitre (enlarged thyroid gland). This is the classic pathophysiology of iodine-deficiency goitre." },
+  q15: { c: "Correct! Oxytocin (from the posterior pituitary) is the hormone that stimulates uterine smooth muscle contraction during labour. In pre-eclampsia, prompt delivery of the baby and placenta is the only definitive treatment; synthetic oxytocin (Pitocin) is administered intravenously to induce or accelerate uterine contractions." },
+};
+
+function ans(qId, chosen, correct) {
+  const opts = document.getElementById(qId + '-opts');
+  if (!opts || opts.classList.contains('answered')) return;
+  opts.classList.add('answered');
+  opts.querySelectorAll('.qo').forEach(b => {
+    b.style.pointerEvents = 'none';
+    if (b.dataset.id === correct) b.classList.add('correct');
+    else if (b.dataset.id === chosen && chosen !== correct) b.classList.add('wrong');
+  });
+  const fb = document.getElementById(qId + '-fb');
+  if (fb) {
+    const ok = chosen === correct;
+    fb.className = 'qfb show ' + (ok ? 'cfb' : 'wfb');
+    const e = expl[qId];
+    fb.innerHTML = (ok ? '✓ Correct! — ' : '✗ Not quite. Correct answer: <strong>' + correct.toUpperCase() + '</strong>. — ') + (e ? e[correct] : '');
+  }
+}
+
+// Progress
+function done(wId, btn) {
+  completed.add(wId);
+  localStorage.setItem('bio222_done', JSON.stringify([...completed]));
+  btn.textContent = '✓ Completed'; btn.classList.add('done');
+  updateProgress();
+  const idx = parseInt(wId.replace('w','')); const items = document.querySelectorAll('.wi');
+  if (items[idx]) items[idx].classList.add('done');
+}
+
+function updateProgress() {
+  const d = completed.size;
+  document.getElementById('ptxt').textContent = d + ' / 15';
+  document.getElementById('pbar').style.width = (d/15*100) + '%';
+}
+
+function restoreProgress() {
+  completed.forEach(wId => {
+    const idx = parseInt(wId.replace('w','')); const items = document.querySelectorAll('.wi');
+    if (items[idx]) items[idx].classList.add('done');
+    document.querySelectorAll('.mcbtn').forEach(btn => {
+      if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(wId)) { btn.textContent = '✓ Completed'; btn.classList.add('done'); }
+    });
+  });
+  updateProgress();
+}
+
+function initReveal() {
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('vis'); obs.unobserve(e.target); } });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.rv').forEach(r => { r.classList.remove('vis'); obs.observe(r); });
+}
+
+document.querySelectorAll('.wi').forEach(item => {
+  item.addEventListener('click', () => { if (window.innerWidth < 900) document.getElementById('sidebar').classList.remove('open'); });
+});
+
+initReveal();
+</script>
+</body>
+</html>
