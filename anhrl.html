@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ANHRL — African NeuroHealth Research Lab | NeuroMatrix Biosystems</title>
+  <meta name="description" content="African NeuroHealth Research Lab — mapping, modelling and mitigating neurological disease risk across Africa." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold:    #c9a84c;
+      --gold-d:  #c9a84c22;
+      --gold-m:  #c9a84c55;
+      --bg:      #070b16;
+      --surface: #0a0e1a;
+      --panel:   #0d1428;
+      --border:  #1e2a4a;
+      --text:    #e2e8f0;
+      --muted:   #4a5568;
+      --dim:     #2d3748;
+      --green:   #00f5c4;
+      --blue:    #63b3ed;
+      --purple:  #6c63ff;
+      --red:     #ff6b6b;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg); color: var(--text);
+      font-family: 'IBM Plex Mono', monospace;
+      overflow-x: hidden; line-height: 1.6;
+    }
+
+    ::selection { background: var(--gold-m); color: var(--bg); }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--gold-m); border-radius: 2px; }
+
+    /* ── NAV ── */
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 48px; height: 60px;
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 100;
+    }
+
+    .nav-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo { font-size: 20px; }
+    .nav-wordmark { font-size: 12px; font-weight: 600; color: var(--gold); letter-spacing: 0.15em; }
+    .nav-wordmark span { color: var(--text); }
+
+    .nav-links { display: flex; align-items: center; gap: 28px; list-style: none; }
+    .nav-links a { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--gold); }
+    .nav-back { display: flex; align-items: center; gap: 6px; font-size: 10px; color: var(--muted); text-decoration: none; transition: color 0.2s; letter-spacing: 0.1em; }
+    .nav-back:hover { color: var(--gold); }
+
+    /* ── HERO ── */
+    .hero {
+      padding: 100px 48px 60px;
+      position: relative; overflow: hidden;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, #c9a84c08 0%, transparent 70%);
+    }
+
+    .hero-grid {
+      position: absolute; inset: 0;
+      background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 0%, transparent 100%);
+      opacity: 0.2;
+    }
+
+    .hero-content { position: relative; z-index: 1; max-width: 800px; }
+
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--gold-d); border: 1px solid var(--gold-m);
+      color: var(--gold); font-size: 9px; letter-spacing: 0.2em;
+      text-transform: uppercase; padding: 5px 14px; border-radius: 20px;
+      margin-bottom: 24px;
+    }
+
+    .hero-eyebrow::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green); animation: pulse 2s infinite; }
+
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(40px, 6vw, 72px); font-weight: 300; line-height: 1.1;
+      color: var(--text); margin-bottom: 20px;
+    }
+
+    .hero-title em { font-style: italic; color: var(--gold); }
+
+    .hero-sub { font-size: 12px; color: var(--muted); line-height: 1.9; max-width: 560px; margin-bottom: 32px; }
+
+    .hero-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .tag {
+      background: var(--panel); border: 1px solid var(--border);
+      color: var(--muted); font-size: 9px; letter-spacing: 0.1em;
+      padding: 4px 12px; border-radius: 20px; text-transform: uppercase;
+    }
+
+    .tag.gold   { background: var(--gold-d); border-color: var(--gold-m); color: var(--gold); }
+    .tag.green  { background: #00f5c411; border-color: #00f5c444; color: var(--green); }
+    .tag.blue   { background: #63b3ed11; border-color: #63b3ed44; color: var(--blue); }
+    .tag.purple { background: #6c63ff11; border-color: #6c63ff44; color: var(--purple); }
+
+    /* ── SECTIONS ── */
+    section { padding: 80px 48px; position: relative; z-index: 1; }
+
+    .section-eyebrow {
+      font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 10px;
+      display: flex; align-items: center; gap: 10px;
+    }
+
+    .section-eyebrow::after { content: ''; flex: 0 0 36px; height: 1px; background: var(--gold-m); }
+
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(32px, 4vw, 48px); font-weight: 300;
+      color: var(--text); margin-bottom: 12px; line-height: 1.15;
+    }
+
+    .section-title em { font-style: italic; color: var(--gold); }
+    .section-sub { font-size: 11px; color: var(--muted); max-width: 500px; line-height: 1.8; margin-bottom: 40px; }
+
+    /* ── ABOUT ── */
+    #about { background: var(--surface); }
+
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+
+    .about-pillars { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+    .pillar {
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 12px; padding: 20px;
+      transition: border-color 0.3s;
+    }
+
+    .pillar:hover { border-color: var(--gold-m); }
+
+    .pillar-icon { font-size: 24px; margin-bottom: 10px; }
+    .pillar-title { font-size: 11px; font-weight: 600; color: var(--gold); letter-spacing: 0.08em; margin-bottom: 6px; }
+    .pillar-text { font-size: 10px; color: var(--muted); line-height: 1.7; }
+
+    .mission-box {
+      background: linear-gradient(135deg, var(--gold-d), transparent);
+      border: 1px solid var(--gold-m); border-radius: 16px; padding: 32px;
+      margin-bottom: 24px;
+    }
+
+    .mission-box p { font-size: 14px; color: var(--text); line-height: 1.8; font-family: 'Cormorant Garamond', serif; font-style: italic; }
+
+    .vision-box {
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 12px; padding: 20px;
+    }
+
+    .vision-label { font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--green); margin-bottom: 8px; }
+    .vision-text { font-size: 11px; color: var(--muted); line-height: 1.8; }
+
+    /* ── FIELDWORK ── */
+    #fieldwork { background: var(--bg); }
+
+    .fieldwork-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+
+    .report-card {
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 14px; overflow: hidden; transition: all 0.3s;
+      cursor: pointer; text-decoration: none; color: inherit; display: block;
+    }
+
+    .report-card:hover { transform: translateY(-4px); border-color: var(--card-color, var(--gold)); }
+
+    .report-img {
+      width: 100%; height: 200px; object-fit: cover;
+      background: var(--surface); display: flex; align-items: center; justify-content: center;
+      font-size: 48px; color: var(--muted);
+    }
+
+    .report-img img { width: 100%; height: 100%; object-fit: cover; }
+
+    .report-placeholder {
+      width: 100%; height: 200px; background: var(--surface);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 8px; border-bottom: 1px solid var(--border);
+    }
+
+    .report-placeholder-icon { font-size: 40px; opacity: 0.4; }
+    .report-placeholder-text { font-size: 9px; color: var(--dim); letter-spacing: 0.1em; text-transform: uppercase; }
+
+    .report-body { padding: 20px; }
+
+    .report-meta {
+      display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
+    }
+
+    .report-location {
+      font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .report-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px; font-weight: 600; color: var(--text);
+      margin-bottom: 8px; line-height: 1.3;
+    }
+
+    .report-excerpt { font-size: 10px; color: var(--muted); line-height: 1.7; margin-bottom: 16px; }
+
+    .report-footer {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 9px; color: var(--dim); padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    .report-read { color: var(--card-color, var(--gold)); font-weight: 600; letter-spacing: 0.05em; }
+
+    /* ── GALLERY ── */
+    #gallery { background: var(--surface); }
+
+    .masonry-grid {
+      columns: 3; column-gap: 16px;
+    }
+
+    .masonry-item {
+      break-inside: avoid; margin-bottom: 16px;
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 10px; overflow: hidden; cursor: pointer;
+      transition: border-color 0.2s;
+    }
+
+    .masonry-item:hover { border-color: var(--gold-m); }
+
+    .masonry-img { width: 100%; display: block; }
+
+    .masonry-caption {
+      padding: 10px 12px;
+    }
+
+    .masonry-caption-title { font-size: 10px; color: var(--text); margin-bottom: 2px; }
+    .masonry-caption-sub { font-size: 9px; color: var(--muted); }
+
+    /* ── TEAM ── */
+    #team { background: var(--bg); }
+
+    .team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+
+    .team-card {
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 12px; padding: 20px; text-align: center;
+      transition: all 0.3s;
+    }
+
+    .team-card:hover { border-color: var(--gold-m); transform: translateY(-2px); }
+
+    .team-avatar {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: var(--gold-d); border: 2px solid var(--gold-m);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px; margin: 0 auto 12px; overflow: hidden;
+    }
+
+    .team-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+    .team-name { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+    .team-role { font-size: 9px; color: var(--gold); letter-spacing: 0.08em; margin-bottom: 6px; text-transform: uppercase; }
+    .team-inst { font-size: 9px; color: var(--muted); line-height: 1.5; }
+
+    /* ── LIGHTBOX ── */
+    .lightbox {
+      display: none; position: fixed; inset: 0; z-index: 300;
+      background: rgba(0,0,0,0.95); align-items: center; justify-content: center;
+      flex-direction: column; gap: 16px;
+    }
+
+    .lightbox.open { display: flex; }
+
+    .lightbox-img { max-width: 90vw; max-height: 80vh; border-radius: 8px; object-fit: contain; }
+
+    .lightbox-caption { font-size: 11px; color: var(--muted); text-align: center; max-width: 600px; }
+
+    .lightbox-close {
+      position: absolute; top: 20px; right: 24px;
+      background: var(--panel); border: 1px solid var(--border);
+      color: var(--text); padding: 6px 16px; border-radius: 6px;
+      font-size: 11px; cursor: pointer; font-family: inherit;
+    }
+
+    /* ── FOOTER ── */
+    .footer {
+      background: var(--surface); border-top: 1px solid var(--border);
+      padding: 24px 48px; display: flex; justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-text { font-size: 9px; color: var(--dim); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:768px){
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      section { padding: 60px 20px; }
+      .hero { padding: 80px 20px 40px; }
+      .about-grid { grid-template-columns: 1fr; }
+      .about-pillars { grid-template-columns: 1fr; }
+      .masonry-grid { columns: 1; }
+      .footer { flex-direction: column; gap: 8px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <a href="/" class="nav-brand">
+    <span class="nav-logo">🧠</span>
+    <span class="nav-wordmark">NEURO<span>MATRIX</span></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#about">About ANHRL</a></li>
+    <li><a href="#fieldwork">Field Reports</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#team">Team</a></li>
+    <li><a href="/">← Main Site</a></li>
+  </ul>
+  <a href="/" class="nav-back">← Back to Home</a>
+</nav>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">African NeuroHealth Research Lab</div>
+    <h1 class="hero-title">
+      Mapping, Modelling &<br /><em>Mitigating</em> Neurological Risk
+    </h1>
+    <p class="hero-sub">
+      A multidisciplinary research unit dedicated to advancing brain health across Africa
+      through the integration of neuroscience, data science, and translational medicine.
+    </p>
+    <div class="hero-tags">
+      <span class="tag gold">ANHRL</span>
+      <span class="tag green">University of Ilorin</span>
+      <span class="tag blue">GRASP / NIH / DSI</span>
+      <span class="tag purple">TETFund AST&D</span>
+      <span class="tag">Stroke Research</span>
+      <span class="tag">Dementia</span>
+      <span class="tag">Brain Mapping</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── ABOUT ── -->
+<section id="about">
+  <div class="section-eyebrow">Who We Are</div>
+  <h2 class="section-title">About <em>ANHRL</em></h2>
+
+  <div class="about-grid reveal">
+    <div>
+      <div class="mission-box">
+        <p>"To map, model, and mitigate neurological disease risk in Africa by combining biological research, data analytics, and innovative digital solutions."</p>
+      </div>
+      <div class="vision-box">
+        <div class="vision-label">🌍 Our Vision</div>
+        <p class="vision-text">To become a leading African hub for neurohealth innovation, driving globally relevant research that improves brain health outcomes and informs policy, education, and clinical practice.</p>
+      </div>
+      <div style="margin-top:16px;padding:16px;background:var(--panel);border:1px solid var(--border);border-radius:10px;font-size:10px;color:var(--muted);line-height:1.8;">
+        <strong style="color:var(--gold);">💡 Our Approach</strong><br/>
+        At ANHRL, we believe the future of neuroscience lies in integration:<br/>
+        <strong style="color:var(--text);">biology + computation + visualization</strong><br/>
+        We do not just study the brain — we model it, map it, and translate it into solutions that matter.
+      </div>
+    </div>
+
+    <div class="about-pillars">
+      <div class="pillar">
+        <div class="pillar-icon">🧬</div>
+        <div class="pillar-title">Translational Neuroscience</div>
+        <p class="pillar-text">Investigating molecular and cellular mechanisms underlying neurodegenerative and cerebrovascular diseases — inflammation, oxidative stress, and neurotransmitter dynamics.</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">🧠</div>
+        <div class="pillar-title">Stroke & Dementia Research</div>
+        <p class="pillar-text">Developing population-specific insights into stroke risk, cognitive decline, and neurodegeneration — with a focus on early detection and prevention in African populations.</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">💻</div>
+        <div class="pillar-title">Computational Neuroscience</div>
+        <p class="pillar-text">Building predictive models and simulations to understand brain function and disease progression, integrating biomarkers such as cytokines and neural signaling pathways.</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">📊</div>
+        <div class="pillar-title">Scientific Visualization</div>
+        <p class="pillar-text">Designing high-quality research graphics, dashboards, and AI-driven tools that translate complex data into actionable insights for clinicians, researchers, and policymakers.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FIELD REPORTS ── -->
+<section id="fieldwork">
+  <div class="section-eyebrow">Research in Action</div>
+  <h2 class="section-title">Field <em>Reports</em></h2>
+  <p class="section-sub">Research outcomes, community brain mapping exercises and field activities from our students and researchers across southwestern Nigeria.</p>
+
+  <div class="fieldwork-grid reveal">
+
+    <!-- Report 1 — Abeokuta -->
+    <div class="report-card" style="--card-color:#00f5c4;">
+      <div class="report-placeholder">
+        <div class="report-placeholder-icon">🏙️</div>
+        <div class="report-placeholder-text">Upload photos from Abeokuta fieldwork</div>
+      </div>
+      <div class="report-body">
+        <div class="report-meta">
+          <span class="tag green">Brain Mapping</span>
+          <span class="report-location">📍 Abeokuta, Ogun State</span>
+        </div>
+        <div class="report-title">Neurohealth Screening Exercise — Abeokuta Community</div>
+        <p class="report-excerpt">Community-based brain health screening and stroke risk assessment conducted across selected communities in Abeokuta. Students administered validated cognitive assessment tools and collected demographic and clinical data.</p>
+        <div class="report-footer">
+          <span>Upload your report to populate</span>
+          <span class="report-read">Add Report →</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Report 2 — Ijebu-Ode -->
+    <div class="report-card" style="--card-color:#c9a84c;">
+      <div class="report-placeholder">
+        <div class="report-placeholder-icon">🌿</div>
+        <div class="report-placeholder-text">Upload photos from Ijebu-Ode fieldwork</div>
+      </div>
+      <div class="report-body">
+        <div class="report-meta">
+          <span class="tag gold">Field Survey</span>
+          <span class="report-location">📍 Ijebu-Ode, Ogun State</span>
+        </div>
+        <div class="report-title">Stroke Risk Factor Mapping — Ijebu-Ode</div>
+        <p class="report-excerpt">Survey of hypertension prevalence, lifestyle risk factors and neurological symptom awareness among residents of Ijebu-Ode. Data contributed to the African NeuroHealth AI Dashboard training dataset.</p>
+        <div class="report-footer">
+          <span>Upload your report to populate</span>
+          <span class="report-read">Add Report →</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Report 3 — Ewekoro -->
+    <div class="report-card" style="--card-color:#6c63ff;">
+      <div class="report-placeholder">
+        <div class="report-placeholder-icon">🏭</div>
+        <div class="report-placeholder-text">Upload photos from Ewekoro fieldwork</div>
+      </div>
+      <div class="report-body">
+        <div class="report-meta">
+          <span class="tag purple">Industrial Health</span>
+          <span class="report-location">📍 Ewekoro, Ogun State</span>
+        </div>
+        <div class="report-title">Occupational Neurotoxicity Assessment — Ewekoro</div>
+        <p class="report-excerpt">Assessment of neurotoxic exposure risk and cognitive health among industrial workers in Ewekoro. Evaluation of occupational risk factors for neurological disease in high-exposure communities.</p>
+        <div class="report-footer">
+          <span>Upload your report to populate</span>
+          <span class="report-read">Add Report →</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- How to add reports -->
+  <div style="margin-top:32px;padding:20px 24px;background:var(--panel);border:1px solid var(--gold-m);border-radius:12px;font-size:10px;color:var(--muted);line-height:1.9;">
+    <strong style="color:var(--gold);">📸 How to add field reports & photos:</strong><br/>
+    1. Upload photos to GitHub repo as <code style="color:var(--green);">img/fieldwork/abeokuta-01.jpg</code><br/>
+    2. Replace <code style="color:var(--green);">report-placeholder</code> div with <code style="color:var(--green);">&lt;img class="masonry-img" src="img/fieldwork/photo.jpg"&gt;</code><br/>
+    3. Update the report title, excerpt and date in the HTML<br/>
+    4. Commit to GitHub → Vercel redeploys automatically
+  </div>
+</section>
+
+<!-- ── GALLERY ── -->
+<section id="gallery">
+  <div class="section-eyebrow">Behind the Research</div>
+  <h2 class="section-title">Field & Lab <em>Gallery</em></h2>
+  <p class="section-sub">Photos from brain mapping exercises, fieldwork, lab sessions and conferences attended by the ANHRL team.</p>
+
+  <div class="masonry-grid reveal">
+
+    <div class="masonry-item" onclick="openLightbox('/conf-dsi-team.jpg','5th DS-I Africa Consortium Meeting — Accra, Ghana, August 2025')">
+      <img class="masonry-img" src="/conf-dsi-team.jpg" alt="DS-I Africa team" onerror="this.parentElement.innerHTML='<div style=padding:40px;text-align:center;color:var(--muted);font-size:10px>📸 conf-dsi-team.jpg</div>'" />
+      <div class="masonry-caption">
+        <div class="masonry-caption-title">DS-I Africa Consortium — Accra 2025</div>
+        <div class="masonry-caption-sub">5th Annual Meeting · August 2025</div>
+      </div>
+    </div>
+
+    <div class="masonry-item" onclick="openLightbox('/lab-team-formal.jpg','Research team with supervisor — University of Ilorin')">
+      <img class="masonry-img" src="/lab-team-formal.jpg" alt="Lab team formal" onerror="this.parentElement.innerHTML='<div style=padding:40px;text-align:center;color:var(--muted);font-size:10px>📸 lab-team-formal.jpg</div>'" />
+      <div class="masonry-caption">
+        <div class="masonry-caption-title">Research Team — University of Ilorin</div>
+        <div class="masonry-caption-sub">Neuroscience & Inflammation Unit</div>
+      </div>
+    </div>
+
+    <div class="masonry-item" onclick="openLightbox('/conf-dsi-solo.jpg','Principal researcher at DS-I Africa Consortium Meeting')">
+      <img class="masonry-img" src="/conf-dsi-solo.jpg" alt="DS-I Africa solo" onerror="this.parentElement.innerHTML='<div style=padding:40px;text-align:center;color:var(--muted);font-size:10px>📸 conf-dsi-solo.jpg</div>'" />
+      <div class="masonry-caption">
+        <div class="masonry-caption-title">DS-I Africa — Accra 2025</div>
+        <div class="masonry-caption-sub">Data Science for Health in Africa</div>
+      </div>
+    </div>
+
+    <div class="masonry-item" onclick="openLightbox('/conf-dsi-group.jpg','Full DS-I Africa delegate group — Accra 2025')">
+      <img class="masonry-img" src="/conf-dsi-group.jpg" alt="DS-I Africa group" onerror="this.parentElement.innerHTML='<div style=padding:40px;text-align:center;color:var(--muted);font-size:10px>📸 conf-dsi-group.jpg</div>'" />
+      <div class="masonry-caption">
+        <div class="masonry-caption-title">Full Consortium Group Photo</div>
+        <div class="masonry-caption-sub">DS-I Africa · Accra, Ghana 2025</div>
+      </div>
+    </div>
+
+    <div class="masonry-item" onclick="openLightbox('/lab-team-casual.jpg','Student research team in lab coats')">
+      <img class="masonry-img" src="/lab-team-casual.jpg" alt="Lab team casual" onerror="this.parentElement.innerHTML='<div style=padding:40px;text-align:center;color:var(--muted);font-size:10px>📸 lab-team-casual.jpg</div>'" />
+      <div class="masonry-caption">
+        <div class="masonry-caption-title">Student Research Team</div>
+        <div class="masonry-caption-sub">University of Ilorin · 2026</div>
+      </div>
+    </div>
+
+    <div class="masonry-item" onclick="openLightbox('/conf-inform-group.jpg','INFORM Africa group at DS-I Africa')">
+      <img class="masonry-img" src="/conf-inform-group.jpg" alt="INFORM Africa group" onerror="this.parentElement.innerHTML='<div style=padding:40px;text-align:center;color:var(--muted);font-size:10px>📸 conf-inform-group.jpg</div>'" />
+      <div class="masonry-caption">
+        <div class="masonry-caption-title">INFORM Africa Working Group</div>
+        <div class="masonry-caption-sub">DS-I Africa Consortium · 2025</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+  <button class="lightbox-close" onclick="closeLightbox()">✕ Close</button>
+  <img class="lightbox-img" id="lightbox-img" src="" alt="" />
+  <div class="lightbox-caption" id="lightbox-caption"></div>
+</div>
+
+<!-- ── TEAM ── -->
+<section id="team">
+  <div class="section-eyebrow">The People</div>
+  <h2 class="section-title">Our <em>Team</em></h2>
+  <p class="section-sub">Researchers, students and collaborators driving ANHRL's mission across Nigeria and the continent.</p>
+
+  <div class="team-grid reveal">
+
+    <div class="team-card">
+      <div class="team-avatar">👩🏾‍🔬</div>
+      <div class="team-name">Adebimpe John Omolola E.</div>
+      <div class="team-role">Principal Researcher</div>
+      <div class="team-inst">PhD Candidate<br/>University of Ilorin<br/>Founder, NeuroMatrix Biosystems</div>
+    </div>
+
+    <div class="team-card">
+      <div class="team-avatar">👨🏾‍🏫</div>
+      <div class="team-name">Prof. Bamidele V. Owoyele</div>
+      <div class="team-role">Principal Supervisor</div>
+      <div class="team-inst">Neuroscience & Inflammation Unit<br/>University of Ilorin</div>
+    </div>
+
+    <div class="team-card">
+      <div class="team-avatar">👨🏾‍⚕️</div>
+      <div class="team-name">Prof. Owolabi Mayowa</div>
+      <div class="team-role">Co-Supervisor</div>
+      <div class="team-inst">Department of Medicine<br/>University of Ibadan</div>
+    </div>
+
+    <div class="team-card" style="border-style:dashed;">
+      <div class="team-avatar" style="font-size:20px;">➕</div>
+      <div class="team-name">Add Team Member</div>
+      <div class="team-role">Student / Collaborator</div>
+      <div class="team-inst" style="font-size:9px;color:var(--dim);">Edit this HTML to add your students and collaborators</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<div class="footer">
+  <span class="footer-text">© 2026 African NeuroHealth Research Lab (ANHRL) · NeuroMatrix Biosystems</span>
+  <span class="footer-text">University of Ilorin · GRASP/NIH/DSI Program</span>
+  <span class="footer-text"><a href="/" style="color:var(--gold);text-decoration:none;">neuromatrixbiosystems.com</a></span>
+</div>
+
+<script>
+  // Scroll reveal
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Lightbox
+  function openLightbox(src, caption) {
+    document.getElementById('lightbox-img').src = src;
+    document.getElementById('lightbox-caption').textContent = caption;
+    document.getElementById('lightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox(e) {
+    if(e && e.target !== document.getElementById('lightbox') && !e.target.classList.contains('lightbox-close')) return;
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.addEventListener('keydown', e => {
+    if(e.key === 'Escape') closeLightbox();
+  });
+</script>
+
+</body>
+</html>
