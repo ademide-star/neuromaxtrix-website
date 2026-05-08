@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VOS 165 — Introduction to Fruit Juice | Interactive Lecture Notes</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lora:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --citrus: #d96b1a;
+  --tangerine: #e89224;
+  --mango: #f0b842;
+  --pineapple: #f5d048;
+  --berry: #8b2c4a;
+  --hibiscus: #b32d3a;
+  --leaf: #4a8b3a;
+  --leafdark: #2d5a23;
+  --cream: #fff8ec;
+  --parchment: #f7ecd0;
+  --gold: #c8960c;
+  --amber: #e8b84b;
+  --ink: #2a1a0e;
+  --bark: #6b3c1a;
+  --sky: #3a6b8a;
+  --sidebar-w: 280px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Lora', Georgia, serif; background: var(--cream); color: var(--ink); display: flex; min-height: 100vh; overflow-x: hidden; }
+#sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: var(--sidebar-w); background: var(--berry); overflow-y: auto; z-index: 100; display: flex; flex-direction: column; border-right: 3px solid var(--mango); }
+#sidebar::-webkit-scrollbar { width: 4px; }
+#sidebar::-webkit-scrollbar-track { background: var(--berry); }
+#sidebar::-webkit-scrollbar-thumb { background: var(--mango); border-radius: 2px; }
+.sidebar-header { padding: 28px 20px 20px; border-bottom: 1px solid rgba(240,184,66,0.3); }
+.sidebar-header .course-code { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--mango); letter-spacing: 3px; text-transform: uppercase; display: block; margin-bottom: 6px; }
+.sidebar-header h2 { font-family: 'Playfair Display', serif; color: var(--cream); font-size: 15px; line-height: 1.4; font-weight: 600; }
+.sidebar-progress { padding: 12px 20px; border-bottom: 1px solid rgba(240,184,66,0.2); }
+.progress-bar-bg { height: 3px; background: rgba(255,255,255,0.12); border-radius: 2px; margin-top: 6px; }
+.progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--mango), var(--pineapple)); border-radius: 2px; transition: width 0.5s ease; width: 0%; }
+.progress-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--pineapple); letter-spacing: 1px; }
+.week-nav { padding: 8px 0; flex: 1; }
+.week-nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 20px; cursor: pointer; transition: all 0.2s; border-left: 3px solid transparent; text-decoration: none; }
+.week-nav-item:hover { background: rgba(255,255,255,0.06); border-left-color: var(--pineapple); }
+.week-nav-item.active { background: rgba(240,184,66,0.14); border-left-color: var(--mango); }
+.week-num { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--mango); min-width: 30px; font-weight: 500; }
+.week-title { font-family: 'Lora', serif; font-size: 12px; color: var(--pineapple); line-height: 1.3; }
+.week-nav-item.active .week-title { color: var(--cream); }
+.week-done-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--leaf); margin-left: auto; flex-shrink: 0; display: none; }
+.week-nav-item.done .week-done-dot { display: block; }
+#main { margin-left: var(--sidebar-w); flex: 1; min-height: 100vh; }
+.hero { background: linear-gradient(135deg, var(--berry) 0%, var(--citrus) 50%, var(--tangerine) 100%); padding: 80px 60px 60px; position: relative; overflow: hidden; border-bottom: 4px solid var(--mango); }
+.hero::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(circle at 20% 50%, rgba(245,208,72,0.18) 0%, transparent 60%), radial-gradient(circle at 80% 20%, rgba(74,139,58,0.15) 0%, transparent 50%); }
+.hero-leaf { position: absolute; right: 60px; top: 40px; opacity: 0.10; font-size: 220px; line-height: 1; pointer-events: none; }
+.hero-badge { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--pineapple); letter-spacing: 3px; border: 1px solid rgba(245,208,72,0.5); padding: 5px 14px; border-radius: 2px; margin-bottom: 20px; text-transform: uppercase; animation: fadeInDown 0.6s ease both; }
+.hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(36px, 5vw, 58px); color: var(--cream); line-height: 1.1; margin-bottom: 12px; animation: fadeInDown 0.7s ease 0.1s both; }
+.hero h1 em { color: var(--pineapple); font-style: italic; }
+.hero-sub { font-family: 'Lora', serif; font-size: 16px; color: var(--parchment); font-style: italic; margin-bottom: 32px; animation: fadeInDown 0.7s ease 0.2s both; }
+.hero-stats { display: flex; gap: 32px; flex-wrap: wrap; animation: fadeInDown 0.7s ease 0.3s both; }
+.hero-stat { text-align: center; border-left: 2px solid rgba(245,208,72,0.5); padding-left: 16px; }
+.hero-stat-num { font-family: 'Playfair Display', serif; font-size: 32px; color: var(--mango); display: block; line-height: 1; }
+.hero-stat-label { font-family: 'Lora', serif; font-size: 11px; color: var(--parchment); letter-spacing: 1px; }
+.content-area { padding: 0; }
+.week-section { padding: 60px; border-bottom: 1px solid rgba(139,44,74,0.15); display: none; animation: fadeIn 0.4s ease; }
+.week-section.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeInDown { from { opacity: 0; transform: translateY(-16px); } to { opacity: 1; transform: translateY(0); } }
+.week-header { display: flex; align-items: flex-start; gap: 24px; margin-bottom: 40px; padding-bottom: 28px; border-bottom: 2px solid var(--parchment); }
+.week-number-badge { background: var(--berry); color: var(--mango); font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500; padding: 6px 12px; border-radius: 3px; white-space: nowrap; margin-top: 6px; letter-spacing: 2px; }
+.week-header-text h2 { font-family: 'Playfair Display', serif; font-size: 32px; color: var(--berry); line-height: 1.2; margin-bottom: 8px; }
+.week-header-text p { color: var(--citrus); font-style: italic; font-size: 15px; }
+.lo-box { background: var(--berry); border-radius: 8px; padding: 24px 28px; margin-bottom: 36px; position: relative; overflow: hidden; }
+.lo-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--mango), var(--pineapple), var(--mango)); }
+.lo-box h3 { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--mango); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 14px; }
+.lo-list { list-style: none; }
+.lo-list li { color: var(--pineapple); font-size: 13.5px; padding: 5px 0 5px 20px; position: relative; line-height: 1.5; }
+.lo-list li::before { content: '\2192'; position: absolute; left: 0; color: var(--mango); font-size: 12px; }
+.content-block { margin-bottom: 36px; }
+.content-block h3 { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--berry); margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid rgba(139,44,74,0.2); }
+.content-block p { font-size: 15px; line-height: 1.85; color: #2a2a1a; margin-bottom: 12px; }
+.def-table { width: 100%; border-collapse: collapse; margin: 20px 0; border-radius: 6px; overflow: hidden; box-shadow: 0 2px 12px rgba(139,44,74,0.10); }
+.def-table thead tr { background: var(--berry); }
+.def-table thead th { padding: 12px 16px; text-align: left; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--mango); letter-spacing: 2px; text-transform: uppercase; font-weight: 500; }
+.def-table tbody tr { transition: background 0.2s; }
+.def-table tbody tr:nth-child(even) { background: rgba(245,208,72,0.10); }
+.def-table tbody tr:hover { background: rgba(217,107,26,0.10); }
+.def-table td { padding: 12px 16px; font-size: 14px; line-height: 1.6; border-bottom: 1px solid rgba(139,44,74,0.10); vertical-align: top; }
+.def-table td:first-child { font-weight: 600; color: var(--berry); white-space: nowrap; font-family: 'Lora', serif; }
+.key-box { background: linear-gradient(135deg, #fff8ec 0%, #f7ecd0 100%); border: 1px solid rgba(217,107,26,0.35); border-left: 4px solid var(--citrus); border-radius: 0 6px 6px 0; padding: 20px 24px; margin: 24px 0; }
+.key-box .key-box-title { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--citrus); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.key-box ul { list-style: none; }
+.key-box li { padding: 4px 0 4px 18px; position: relative; font-size: 14px; line-height: 1.6; color: var(--ink); }
+.key-box li::before { content: '\2726'; position: absolute; left: 0; color: var(--citrus); font-size: 9px; top: 7px; }
+.note-box { background: rgba(74,139,58,0.10); border: 1px solid rgba(74,139,58,0.30); border-radius: 6px; padding: 16px 20px; margin: 20px 0; display: flex; gap: 14px; align-items: flex-start; }
+.note-box-icon { font-size: 22px; flex-shrink: 0; }
+.note-box-text { font-size: 14px; line-height: 1.7; color: var(--ink); }
+.note-box-text strong { color: var(--leafdark); }
+.practical-box { background: linear-gradient(135deg, #fff5e1 0%, #ffe6b8 100%); border: 1px solid rgba(217,107,26,0.55); border-left: 5px solid var(--citrus); border-radius: 0 8px 8px 0; padding: 22px 26px; margin: 30px 0; }
+.practical-box .practical-title { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--citrus); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 14px; display: flex; align-items: center; gap: 10px; font-weight: 600; }
+.practical-box h4 { font-family: 'Playfair Display', serif; color: var(--berry); font-size: 17px; margin: 14px 0 8px; }
+.practical-box ol, .practical-box ul { margin: 8px 0 12px 22px; }
+.practical-box li { padding: 5px 0; font-size: 14px; line-height: 1.65; color: var(--ink); }
+.assign-box { background: linear-gradient(135deg, #ffe9c2 0%, #ffd180 100%); border: 1px solid rgba(217,107,26,0.55); border-left: 5px solid var(--hibiscus); border-radius: 0 8px 8px 0; padding: 22px 26px; margin: 30px 0; }
+.assign-box .assign-title { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--hibiscus); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 14px; display: flex; align-items: center; gap: 10px; font-weight: 600; }
+.assign-box h4 { font-family: 'Playfair Display', serif; color: var(--berry); font-size: 17px; margin: 14px 0 8px; }
+.assign-box ol, .assign-box ul { margin: 8px 0 12px 22px; }
+.assign-box li { padding: 5px 0; font-size: 14px; line-height: 1.65; color: var(--ink); }
+.assign-box .assign-meta { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--hibiscus); letter-spacing: 1.5px; margin-top: 14px; padding-top: 12px; border-top: 1px dashed rgba(179,45,58,0.4); }
+.diagram-box { background: #fffefb; border: 1px dashed rgba(139,44,74,0.4); border-radius: 8px; padding: 24px; margin: 24px 0; text-align: center; }
+.diagram-box .diagram-caption { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--berry); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 14px; }
+.diagram-box svg { max-width: 100%; height: auto; }
+.brand-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; margin: 22px 0; }
+.brand-card { background: #fff; border: 1px solid rgba(217,107,26,0.30); border-left: 5px solid var(--mango); border-radius: 6px; padding: 16px 18px; transition: all 0.25s; }
+.brand-card:hover { transform: translateY(-3px); box-shadow: 0 6px 16px rgba(139,44,74,0.12); border-left-color: var(--citrus); }
+.brand-card .brand-name { font-family: 'Playfair Display', serif; color: var(--berry); font-size: 16px; margin-bottom: 6px; font-weight: 600; }
+.brand-card .brand-flavour { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--citrus); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; }
+.brand-card .brand-text { font-size: 13px; color: #444; line-height: 1.55; }
+.quiz-block { background: var(--cream); border: 2px solid var(--citrus); border-radius: 10px; padding: 26px 28px; margin: 36px 0; }
+.quiz-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--citrus); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 12px; }
+.quiz-question { font-family: 'Playfair Display', serif; font-size: 17px; color: var(--berry); line-height: 1.5; margin-bottom: 18px; }
+.quiz-options { display: flex; flex-direction: column; gap: 10px; }
+.quiz-option { background: #fff; border: 1.5px solid rgba(139,44,74,0.30); border-radius: 6px; padding: 12px 16px; text-align: left; cursor: pointer; font-family: 'Lora', serif; font-size: 14px; color: var(--ink); transition: all 0.2s; display: flex; align-items: center; gap: 12px; }
+.quiz-option:hover { background: rgba(217,107,26,0.10); border-color: var(--citrus); }
+.quiz-option .option-letter { background: var(--berry); color: var(--mango); width: 26px; height: 26px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 11px; flex-shrink: 0; }
+.quiz-option.correct { background: rgba(74,139,58,0.18); border-color: var(--leaf); }
+.quiz-option.correct .option-letter { background: var(--leaf); color: #fff; }
+.quiz-option.wrong { background: rgba(179,45,58,0.13); border-color: var(--hibiscus); }
+.quiz-option.wrong .option-letter { background: var(--hibiscus); color: #fff; }
+.quiz-feedback { margin-top: 14px; padding: 12px 14px; border-radius: 6px; font-size: 13.5px; line-height: 1.6; display: none; }
+.quiz-feedback.show { display: block; }
+.quiz-feedback.correct-fb { background: rgba(74,139,58,0.15); color: #1d4a17; border-left: 3px solid var(--leaf); }
+.quiz-feedback.wrong-fb { background: rgba(179,45,58,0.13); color: #5a1620; border-left: 3px solid var(--hibiscus); }
+.week-nav-btns { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-top: 50px; padding-top: 28px; border-top: 2px solid var(--parchment); flex-wrap: wrap; }
+.nav-btn { background: var(--cream); border: 1.5px solid var(--citrus); border-radius: 6px; padding: 12px 18px; cursor: pointer; font-family: 'Lora', serif; color: var(--berry); transition: all 0.2s; min-width: 200px; }
+.nav-btn:hover { background: var(--citrus); color: var(--cream); }
+.nav-btn .nav-btn-label { display: block; font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 2px; opacity: 0.75; margin-bottom: 3px; }
+.nav-btn .nav-btn-title { display: block; font-size: 14px; font-weight: 600; }
+.mark-complete-btn { background: var(--mango); color: var(--berry); border: none; padding: 13px 24px; border-radius: 6px; cursor: pointer; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; transition: all 0.2s; }
+.mark-complete-btn:hover { background: var(--pineapple); }
+.mark-complete-btn.done { background: var(--leaf); color: #fff; }
+.home-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 18px; margin: 30px 0; }
+.home-week-card { background: #fff; border: 1px solid rgba(139,44,74,0.20); border-radius: 8px; padding: 18px 20px; cursor: pointer; transition: all 0.25s; text-decoration: none; color: inherit; display: block; }
+.home-week-card:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(139,44,74,0.14); border-color: var(--citrus); }
+.home-card-num { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--citrus); letter-spacing: 2px; margin-bottom: 8px; }
+.home-card-title { font-family: 'Playfair Display', serif; font-size: 17px; color: var(--berry); margin-bottom: 6px; }
+.home-card-sub { font-size: 12.5px; color: var(--leafdark); font-style: italic; }
+.reveal { opacity: 0; transform: translateY(15px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.process-flow { display: flex; flex-wrap: wrap; gap: 10px; align-items: stretch; margin: 22px 0; }
+.process-step { flex: 1; min-width: 140px; background: var(--cream); border: 1px solid var(--citrus); border-radius: 8px; padding: 14px; text-align: center; position: relative; }
+.process-step .ps-num { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--citrus); letter-spacing: 2px; margin-bottom: 6px; }
+.process-step .ps-title { font-family: 'Playfair Display', serif; font-size: 14px; color: var(--berry); margin-bottom: 4px; }
+.process-step .ps-text { font-size: 12px; color: #444; line-height: 1.5; }
+.process-arrow { display: flex; align-items: center; color: var(--citrus); font-size: 22px; }
+@media (max-width: 900px) { #sidebar { transform: translateX(-100%); transition: transform 0.3s; } #sidebar.open { transform: translateX(0); } #main { margin-left: 0; } .hero { padding: 60px 24px 40px; } .week-section { padding: 36px 24px; } .week-header { flex-direction: column; gap: 12px; } }
+.menu-toggle { display: none; position: fixed; top: 14px; left: 14px; z-index: 200; background: var(--berry); color: var(--mango); border: none; padding: 8px 12px; border-radius: 4px; font-size: 18px; cursor: pointer; }
+@media (max-width: 900px) { .menu-toggle { display: block; } }
+</style>
+</head>
+<body>
+<button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+<nav id="sidebar">
+  <div class="sidebar-header">
+    <span class="course-code">VOS 165</span>
+    <h2>Introduction to Fruit Juice</h2>
+  </div>
+  <div class="sidebar-progress">
+    <span class="progress-label">Progress: <span id="progress-text">0 / 6</span></span>
+    <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-bar"></div></div>
+  </div>
+  <nav class="week-nav">
+    <a class="week-nav-item active" onclick="showSection('home')" href="#"><span class="week-num">⌂</span><span class="week-title">Course Home</span></a>
+    <a class="week-nav-item" onclick="showSection('w1')" href="#"><span class="week-num">U01</span><span class="week-title">Intro to Fruit Juice Production</span><span class="week-done-dot"></span></a>
+    <a class="week-nav-item" onclick="showSection('w2')" href="#"><span class="week-num">U02</span><span class="week-title">What are Fruits?</span><span class="week-done-dot"></span></a>
+    <a class="week-nav-item" onclick="showSection('w3')" href="#"><span class="week-num">U03</span><span class="week-title">Local Fruit Juices in SW Nigeria</span><span class="week-done-dot"></span></a>
+    <a class="week-nav-item" onclick="showSection('w4')" href="#"><span class="week-num">U04</span><span class="week-title">Production of Fruit Juice</span><span class="week-done-dot"></span></a>
+    <a class="week-nav-item" onclick="showSection('w5')" href="#"><span class="week-num">U05</span><span class="week-title">Bottling, Packaging &amp; Storage</span><span class="week-done-dot"></span></a>
+    <a class="week-nav-item" onclick="showSection('w6')" href="#"><span class="week-num">U06</span><span class="week-title">Traditional Juices &amp; Health Benefits</span><span class="week-done-dot"></span></a>
+  </nav>
+</nav>
+<main id="main">
+  <div class="hero" id="hero-bar">
+    <div class="hero-leaf">🍊</div>
+    <div class="hero-badge">Practical Course · 1 Credit · 100 Level</div>
+    <h1>VOS 165 — <em>Fruit Juice</em><br>&amp; Beverages</h1>
+    <p class="hero-sub">From orchard to bottle: fruits, processing, packaging, and traditional Nigerian beverages</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><span class="hero-stat-num">6</span><span class="hero-stat-label">Units</span></div>
+      <div class="hero-stat"><span class="hero-stat-num">15+</span><span class="hero-stat-label">Concepts</span></div>
+      <div class="hero-stat"><span class="hero-stat-num">6</span><span class="hero-stat-label">Practicals</span></div>
+      <div class="hero-stat"><span class="hero-stat-num">6</span><span class="hero-stat-label">Quizzes</span></div>
+    </div>
+  </div>
+  <div class="content-area">
+
+  <section id="home-section">
+    <h2 style="font-family:'Playfair Display',serif;font-size:28px;color:var(--berry);margin-bottom:8px;">Welcome to Fruit Juice &amp; Beverages</h2>
+    <p style="font-size:15px;color:#555;font-style:italic;margin-bottom:24px;">A practical-based, 1-credit course that walks you from the fruit on the tree to the bottle on the supermarket shelf. Each unit includes lecture content, a hands-on practical, a self-check quiz, and a classwork/assignment.</p>
+    <div class="key-box">
+      <div class="key-box-title">🎯 Course Learning Outcomes</div>
+      <ul>
+        <li>Explain the origin and meaning of fruit juice and beverages, and distinguish between them</li>
+        <li>Identify fruits, their parts, and select fruits suitable for juice production</li>
+        <li>Examine common locally manufactured fruit juices in southwestern Nigeria</li>
+        <li>Describe the unit operations of industrial fruit-juice production</li>
+        <li>Compare bottling, packaging, and storage methods used in the beverage industry</li>
+        <li>Prepare common traditional Nigerian fruit juices and discuss their health benefits</li>
+      </ul>
+    </div>
+    <div class="home-grid">
+      <a class="home-week-card" onclick="showSection('w1')" href="#"><div class="home-card-num">UNIT 01</div><div class="home-card-title">Introduction to Fruit Juice Production</div><div class="home-card-sub">Origin · Beverages · Juice vs. beverage</div></a>
+      <a class="home-week-card" onclick="showSection('w2')" href="#"><div class="home-card-num">UNIT 02</div><div class="home-card-title">What are Fruits?</div><div class="home-card-sub">Definition · Parts · Juicy parts · Suitable fruits</div></a>
+      <a class="home-week-card" onclick="showSection('w3')" href="#"><div class="home-card-num">UNIT 03</div><div class="home-card-title">Local Juices in SW Nigeria</div><div class="home-card-sub">Chivita · Fan Milk · Dansa · Beloxxi · Frutta</div></a>
+      <a class="home-week-card" onclick="showSection('w4')" href="#"><div class="home-card-num">UNIT 04</div><div class="home-card-title">Production of Fruit Juice</div><div class="home-card-sub">Selection · Extraction · Pasteurization</div></a>
+      <a class="home-week-card" onclick="showSection('w5')" href="#"><div class="home-card-num">UNIT 05</div><div class="home-card-title">Bottling, Packaging &amp; Storage</div><div class="home-card-sub">PET · Tetra Pak · Aseptic · Cold chain</div></a>
+      <a class="home-week-card" onclick="showSection('w6')" href="#"><div class="home-card-num">UNIT 06</div><div class="home-card-title">Traditional Juices &amp; Health</div><div class="home-card-sub">Zobo · Kunu · Orange · Pineapple</div></a>
+    </div>
+  </section>
+
+  <!-- UNIT 1 -->
+  <section class="week-section" id="w1-section">
+    <div class="week-header"><span class="week-number-badge">UNIT 01</span><div class="week-header-text"><h2>Introduction to Fruit Juice Production</h2><p>Origin of fruit juice · What are beverages · Differences between juice and beverages</p></div></div>
+    <div class="lo-box"><h3>Learning Outcomes</h3><ul class="lo-list">
+      <li>Define fruit juice and beverage and trace their historical origin</li>
+      <li>Classify beverages into alcoholic, non-alcoholic, hot and cold types</li>
+      <li>Distinguish fruit juice from a beverage using clear criteria</li>
+      <li>Appreciate the economic and nutritional importance of fruit juice in Nigeria</li>
+    </ul></div>
+    <div class="content-block reveal">
+      <h3>1.1 Origin of Fruit Juice Production</h3>
+      <p>Fruit juice production is as old as human civilisation. Archaeological evidence shows that as far back as <strong>~6000 BC</strong>, people in the Caucasus and Middle East crushed grapes, pomegranates and figs by foot or stone to release their juice. Ancient Egyptians, Greeks, and Romans drank pressed citrus, grape and pomegranate juice. In West Africa, traditional pressing of citrus, palm fruit and tamarind has been practised for centuries.</p>
+      <p>The <strong>industrial era of fruit-juice production</strong> began in the 19th century with Louis Pasteur's discovery of <em>pasteurization</em> (1864), which made it possible to preserve juice without fermentation. The 20th century brought aseptic packaging (Tetra Pak, 1951) and frozen concentrate, transforming juice into a global commodity.</p>
+      <table class="def-table">
+        <thead><tr><th>Era</th><th>Key Development</th></tr></thead>
+        <tbody>
+          <tr><td>~6000 BC</td><td>Pressing of grapes, figs, pomegranates by hand or stone</td></tr>
+          <tr><td>Ancient Egypt &amp; Rome</td><td>Citrus and grape juice in royal courts; first records of "must"</td></tr>
+          <tr><td>1864</td><td>Pasteur's heat treatment — birth of preserved bottled juice</td></tr>
+          <tr><td>1869</td><td>Dr. Thomas Welch produces first unfermented grape juice</td></tr>
+          <tr><td>1915–1930</td><td>Frozen orange-juice concentrate developed in the USA</td></tr>
+          <tr><td>1951</td><td>Tetra Pak aseptic carton invented</td></tr>
+          <tr><td>1970s–present</td><td>Modern Nigerian juice industry: Chivita (CHI Ltd, 1980), Dansa, Frutta, Beloxxi, etc.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="content-block reveal">
+      <h3>1.2 What are Beverages?</h3>
+      <p>A <strong>beverage</strong> is any drinkable liquid prepared for human consumption other than plain water. Beverages can be made from water, milk, fruits, grains, herbs, or chemical flavourings, and may be served hot or cold.</p>
+      <table class="def-table">
+        <thead><tr><th>Class</th><th>Sub-class</th><th>Examples</th></tr></thead>
+        <tbody>
+          <tr><td>Non-alcoholic</td><td>Fruit-based</td><td>Orange juice, mango nectar, zobo</td></tr>
+          <tr><td>Non-alcoholic</td><td>Cereal-based</td><td>Kunu, ogi/akamu, malt drinks (e.g., Maltina)</td></tr>
+          <tr><td>Non-alcoholic</td><td>Carbonated soft drinks</td><td>Coca-Cola, Pepsi, Fanta, 7-Up</td></tr>
+          <tr><td>Non-alcoholic</td><td>Hot beverages</td><td>Tea, coffee, cocoa, herbal infusions</td></tr>
+          <tr><td>Non-alcoholic</td><td>Dairy-based</td><td>Yoghurt drink, milk, fura da nono</td></tr>
+          <tr><td>Alcoholic</td><td>Fermented</td><td>Palm wine, beer, wine, burukutu</td></tr>
+          <tr><td>Alcoholic</td><td>Distilled</td><td>Ogogoro, gin, vodka, brandy</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="content-block reveal">
+      <h3>1.3 Differences between Fruit Juice and Beverages</h3>
+      <table class="def-table">
+        <thead><tr><th>Criterion</th><th>Fruit Juice</th><th>Beverage</th></tr></thead>
+        <tbody>
+          <tr><td>Definition</td><td>The liquid naturally extracted from fruits</td><td>Any drinkable liquid prepared for consumption</td></tr>
+          <tr><td>Source</td><td>Strictly from edible fruits</td><td>Fruits, cereals, milk, herbs, chemicals or any combination</td></tr>
+          <tr><td>Composition</td><td>Mostly fruit pulp/juice; may have some water</td><td>May contain water, sugar, flavourings, colours, preservatives, alcohol, gas</td></tr>
+          <tr><td>Nutritional value</td><td>Rich in vitamins (C, A), minerals, antioxidants, fibre</td><td>Variable — some are highly nutritious, others mostly sugar/empty calories</td></tr>
+          <tr><td>Examples</td><td>100% orange juice, fresh pineapple juice, mango juice</td><td>Coca-Cola, beer, tea, kunu, malt drink</td></tr>
+          <tr><td>Regulation</td><td>"100% juice" labels regulated by NAFDAC/Codex</td><td>Broader regulation depending on category</td></tr>
+        </tbody>
+      </table>
+      <div class="note-box"><div class="note-box-icon">ℹ️</div><div class="note-box-text"><strong>Rule of thumb:</strong> Every fruit juice is a beverage, but not every beverage is a fruit juice. A drink labelled "fruit drink", "nectar" or "juice cocktail" usually contains added water and sugar, and only a small fraction of real fruit juice.</div></div>
+    </div>
+    <div class="content-block reveal">
+      <h3>1.4 Why Study Fruit Juice Production?</h3>
+      <div class="key-box"><div class="key-box-title">🍍 Importance of the Sub-Sector</div><ul>
+        <li><strong>Health and nutrition:</strong> Juices supply vitamin C, vitamin A precursors, potassium, and antioxidants.</li>
+        <li><strong>Food preservation:</strong> Converting perishable fruits into shelf-stable juice reduces post-harvest losses (currently 30–40% in Nigeria).</li>
+        <li><strong>Employment &amp; entrepreneurship:</strong> Small and medium juice enterprises create jobs at every step — farming, processing, packaging, distribution.</li>
+        <li><strong>Foreign exchange:</strong> Local juice production reduces import dependence and saves foreign currency.</li>
+        <li><strong>Value addition:</strong> Adds significant economic value to raw fruits.</li>
+      </ul></div>
+    </div>
+    <div class="practical-box reveal">
+      <div class="practical-title">🧪 Practical Demonstration — Unit 1</div>
+      <h4>Beverage Identification &amp; Sorting</h4>
+      <ol>
+        <li>Each student brings two beverages (any kind) from home or the market.</li>
+        <li>In groups of five, sort the collected items into: (a) 100% fruit juice, (b) fruit drink/nectar, (c) carbonated soft drink, (d) cereal/dairy beverage, (e) alcoholic beverage.</li>
+        <li>Read the labels and record: brand name, declared juice content (%), added water, sweeteners, preservatives, NAFDAC number.</li>
+        <li>Discuss why some "juices" are actually drinks.</li>
+      </ol>
+    </div>
+    <div class="quiz-block reveal">
+      <div class="quiz-label">📝 Self-Check Quiz — Unit 1</div>
+      <div class="quiz-question">Which of the following is the most accurate definition of a fruit juice?</div>
+      <div class="quiz-options" id="q1-opts">
+        <button class="quiz-option" onclick="answerQ('q1','a','b')" data-id="a"><span class="option-letter">A</span> Any sweet drink containing some fruit flavour</button>
+        <button class="quiz-option" onclick="answerQ('q1','b','b')" data-id="b"><span class="option-letter">B</span> The liquid naturally extracted from edible fruits, with little or no added ingredients</button>
+        <button class="quiz-option" onclick="answerQ('q1','c','b')" data-id="c"><span class="option-letter">C</span> A carbonated soft drink with fruit colour</button>
+        <button class="quiz-option" onclick="answerQ('q1','d','b')" data-id="d"><span class="option-letter">D</span> Any beverage that has vitamin C added</button>
+      </div>
+      <div class="quiz-feedback" id="q1-feedback"></div>
+    </div>
+    <div class="assign-box reveal">
+      <div class="assign-title">📝 Classwork &amp; Assignment — Unit 1</div>
+      <h4>A. Classwork (in lecture, 15 min)</h4>
+      <ol>
+        <li>Define <em>fruit juice</em> and <em>beverage</em> in your own words.</li>
+        <li>Give two examples each of alcoholic and non-alcoholic beverages produced in Nigeria.</li>
+        <li>List four differences between fruit juice and a beverage.</li>
+      </ol>
+      <h4>B. Take-Home Assignment (due next class)</h4>
+      <ul>
+        <li>Write a short essay (300–400 words) titled <em>"From Pressing Stones to Tetra Pak: A Brief History of Fruit Juice."</em></li>
+        <li>Visit a local supermarket and list 10 different fruit-based beverages on sale. For each, record the name, claimed % juice, and price per litre. Tabulate your results.</li>
+      </ul>
+      <div class="assign-meta">Marks: 10 · Submit at the start of Unit 2</div>
+    </div>
+    <div class="week-nav-btns">
+      <button class="nav-btn" onclick="showSection('home')"><div><span class="nav-btn-label">↩ Return to</span><span class="nav-btn-title">Course Home</span></div></button>
+      <button class="mark-complete-btn" onclick="markDone('w1',this)">Mark Complete ✓</button>
+      <button class="nav-btn" onclick="showSection('w2')"><div><span class="nav-btn-label">Next →</span><span class="nav-btn-title">What are Fruits?</span></div></button>
+    </div>
+  </section>
+
+  <!-- UNIT 2 -->
+  <section class="week-section" id="w2-section">
+    <div class="week-header"><span class="week-number-badge">UNIT 02</span><div class="week-header-text"><h2>What are Fruits?</h2><p>Definition · Parts of a fruit · Juicy regions · Fruits suitable for juicing · Fruits of SW Nigeria</p></div></div>
+    <div class="lo-box"><h3>Learning Outcomes</h3><ul class="lo-list">
+      <li>Define a fruit in botanical and culinary terms</li>
+      <li>Identify the main parts of a typical fruit (pericarp layers)</li>
+      <li>Locate the juicy region of common fruits</li>
+      <li>Select fruits that are physically and economically suitable for juicing</li>
+      <li>List common fruits cultivated in southwestern Nigeria</li>
+    </ul></div>
+    <div class="content-block reveal">
+      <h3>2.1 Definition of a Fruit</h3>
+      <p>Botanically, a <strong>fruit</strong> is the mature, ripened ovary of a flowering plant, usually containing one or more seeds. In everyday or culinary terms, fruits are the fleshy, sweet or tart edible plant parts eaten as snacks or used to make juice, jam, wine, etc.</p>
+      <table class="def-table">
+        <thead><tr><th>Term</th><th>Definition</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td>True fruit</td><td>Develops only from the ovary of the flower</td><td>Mango, orange, grape</td></tr>
+          <tr><td>False / accessory fruit</td><td>Other floral parts (receptacle, bracts) form most of the fruit</td><td>Apple, cashew, strawberry</td></tr>
+          <tr><td>Simple fruit</td><td>From a single ovary</td><td>Mango, tomato, banana</td></tr>
+          <tr><td>Aggregate fruit</td><td>From many ovaries of one flower</td><td>Soursop, raspberry</td></tr>
+          <tr><td>Multiple / composite fruit</td><td>From many flowers fused together</td><td>Pineapple, breadfruit, fig</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="content-block reveal">
+      <h3>2.2 Parts of a Fruit</h3>
+      <p>The wall of a true fruit is called the <strong>pericarp</strong> and is divided into three layers:</p>
+      <table class="def-table">
+        <thead><tr><th>Layer</th><th>Position</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>Epicarp (exocarp)</td><td>Outermost</td><td>The skin or peel — protects the fruit (e.g., orange peel, mango skin)</td></tr>
+          <tr><td>Mesocarp</td><td>Middle</td><td>Usually the fleshy, juicy part (e.g., mango pulp)</td></tr>
+          <tr><td>Endocarp</td><td>Innermost</td><td>Surrounds the seed; can be hard (mango stone) or soft (orange juice sacs)</td></tr>
+        </tbody>
+      </table>
+      <div class="diagram-box">
+        <div class="diagram-caption">Figure 2.1 — Generic fleshy fruit structure</div>
+        <svg viewBox="0 0 600 230" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="300" cy="115" rx="220" ry="95" fill="#d96b1a"/>
+          <ellipse cx="300" cy="115" rx="200" ry="80" fill="#f0b842"/>
+          <ellipse cx="300" cy="115" rx="160" ry="55" fill="#fff5e1"/>
+          <ellipse cx="300" cy="115" rx="35" ry="22" fill="#6b3c1a"/>
+          <text x="300" y="118" text-anchor="middle" font-size="11" fill="#fff" font-weight="bold">Seed</text>
+          <line x1="120" y1="115" x2="60" y2="60" stroke="#2a1a0e" stroke-width="1"/><text x="20" y="55" font-size="11" fill="#2a1a0e">Epicarp (skin)</text>
+          <line x1="160" y1="115" x2="100" y2="170" stroke="#2a1a0e" stroke-width="1"/><text x="20" y="180" font-size="11" fill="#2a1a0e">Mesocarp (flesh)</text>
+          <line x1="220" y1="115" x2="280" y2="40" stroke="#2a1a0e" stroke-width="1"/><text x="290" y="35" font-size="11" fill="#2a1a0e">Endocarp</text>
+          <line x1="335" y1="115" x2="430" y2="40" stroke="#2a1a0e" stroke-width="1"/><text x="440" y="35" font-size="11" fill="#2a1a0e">Pericarp = epi + meso + endo</text>
+        </svg>
+      </div>
+    </div>
+    <div class="content-block reveal">
+      <h3>2.3 Juicy Parts of Fruits</h3>
+      <p>The juicy part of a fruit is the layer that contains the bulk of the cell sap (water, sugars, organic acids, vitamins, pigments). For most fruits this is the <strong>mesocarp</strong>, but in citrus it is specialised <strong>juice sacs</strong> within the endocarp.</p>
+      <table class="def-table">
+        <thead><tr><th>Fruit</th><th>Juicy Part</th><th>Note</th></tr></thead>
+        <tbody>
+          <tr><td>Orange / lemon / grapefruit</td><td>Endocarp — juice sacs (vesicles)</td><td>Yields 40–55% juice by weight</td></tr>
+          <tr><td>Mango</td><td>Mesocarp (yellow flesh)</td><td>Yields 35–55%</td></tr>
+          <tr><td>Pineapple</td><td>Fused mesocarp of many flowers</td><td>Yields 50–60%</td></tr>
+          <tr><td>Watermelon</td><td>Mesocarp + placental tissue</td><td>Yields 60–70%</td></tr>
+          <tr><td>Guava</td><td>Whole mesocarp + endocarp pulp</td><td>Highest vitamin C among common fruits</td></tr>
+          <tr><td>Tomato (botanical fruit)</td><td>Mesocarp + locular jelly</td><td>Yields 80%+ juice; mostly water</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="content-block reveal">
+      <h3>2.4 Fruits Suitable for Beverage Production</h3>
+      <p>Not every edible fruit is good for commercial juicing. The ideal candidate combines high yield with good flavour stability.</p>
+      <div class="key-box"><div class="key-box-title">✅ Selection Criteria</div><ul>
+        <li><strong>High juice yield (≥ 40%)</strong> by weight.</li>
+        <li><strong>Good flavour and aroma</strong> — sufficient sugars and aromatic volatiles.</li>
+        <li><strong>Bright, stable colour</strong> that survives heat treatment.</li>
+        <li><strong>Sufficient acidity</strong> (pH 3.5–4.5) for natural preservation.</li>
+        <li><strong>Easy to peel/extract</strong> with available equipment.</li>
+        <li><strong>Year-round or seasonal abundance</strong> at affordable price.</li>
+        <li><strong>Resistance to enzymatic browning and microbial spoilage.</strong></li>
+      </ul></div>
+      <table class="def-table">
+        <thead><tr><th>Fruit</th><th>Suitability</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr><td>Orange (Citrus sinensis)</td><td>Excellent</td><td>High yield, bright flavour, vitamin C</td></tr>
+          <tr><td>Pineapple (Ananas comosus)</td><td>Excellent</td><td>High sugar, distinctive aroma, acidity preserves juice</td></tr>
+          <tr><td>Mango (Mangifera indica)</td><td>Very good</td><td>Rich flavour and β-carotene; needs blending with water for thinner juice</td></tr>
+          <tr><td>Pawpaw (Carica papaya)</td><td>Good</td><td>Soft pulp; better as nectar than clear juice</td></tr>
+          <tr><td>Watermelon</td><td>Good</td><td>Refreshing but low acidity → short shelf life</td></tr>
+          <tr><td>Guava</td><td>Good</td><td>High vitamin C; gritty seeds need filtering</td></tr>
+          <tr><td>Banana</td><td>Limited</td><td>Pulpy; better for smoothies and shakes</td></tr>
+          <tr><td>Avocado</td><td>Limited</td><td>Fatty; not a true juice candidate</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="content-block reveal">
+      <h3>2.5 Common Fruits in Southwestern Nigeria</h3>
+      <p>Southwestern Nigeria (Lagos, Ogun, Oyo, Osun, Ondo, Ekiti) lies in the humid tropical belt and supports a wide range of fruits, both indigenous and exotic.</p>
+      <table class="def-table">
+        <thead><tr><th>Fruit</th><th>Yoruba name</th><th>Season (peak)</th></tr></thead>
+        <tbody>
+          <tr><td>Orange</td><td>Osàn</td><td>Nov–Mar</td></tr>
+          <tr><td>Tangerine</td><td>Osàn mɔsɒmbɔlu</td><td>Nov–Feb</td></tr>
+          <tr><td>Pineapple</td><td>Ẹdūn</td><td>All year, peak Mar–Jun</td></tr>
+          <tr><td>Mango</td><td>Mángòrò</td><td>Mar–Jul</td></tr>
+          <tr><td>Pawpaw / papaya</td><td>Ẹwedù</td><td>All year</td></tr>
+          <tr><td>Banana / plantain</td><td>Ògẹdẹ òmní / Ògẹdẹ agɔagɔ</td><td>All year</td></tr>
+          <tr><td>Watermelon</td><td>Bàrà</td><td>Dry season, Nov–Apr</td></tr>
+          <tr><td>Guava</td><td>Gólùaba</td><td>Aug–Nov</td></tr>
+          <tr><td>Coconut</td><td>Àgbọn</td><td>All year</td></tr>
+          <tr><td>African star apple</td><td>Agbalumo / udara</td><td>Dec–Mar</td></tr>
+          <tr><td>Soursop</td><td>Èwè edùn</td><td>Sep–Jan</td></tr>
+          <tr><td>Cashew apple</td><td>Kàshù</td><td>Feb–May</td></tr>
+          <tr><td>Avocado pear</td><td>Èwè òyìnbó</td><td>Jul–Oct</td></tr>
+          <tr><td>African velvet tamarind</td><td>Awin</td><td>Dec–Apr</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="practical-box reveal">
+      <div class="practical-title">🧪 Practical Demonstration — Unit 2</div>
+      <h4>Fruit Identification &amp; Dissection</h4>
+      <ol>
+        <li>Each group is given five fresh fruits common in southwestern Nigeria (e.g., orange, mango, pineapple, pawpaw, watermelon).</li>
+        <li>Wash and weigh each fruit. Cut a longitudinal section.</li>
+        <li>Identify and label epicarp, mesocarp and endocarp on each.</li>
+        <li>Mark the juicy part. Estimate the percentage of the fruit by weight that is juicy flesh.</li>
+        <li>Submit one labelled drawing per fruit.</li>
+      </ol>
+    </div>
+    <div class="quiz-block reveal">
+      <div class="quiz-label">📝 Self-Check Quiz — Unit 2</div>
+      <div class="quiz-question">In an orange, which part of the fruit contains the juicy vesicles that yield the juice?</div>
+      <div class="quiz-options" id="q2-opts">
+        <button class="quiz-option" onclick="answerQ('q2','a','c')" data-id="a"><span class="option-letter">A</span> Epicarp</button>
+        <button class="quiz-option" onclick="answerQ('q2','b','c')" data-id="b"><span class="option-letter">B</span> Mesocarp (white pith)</button>
+        <button class="quiz-option" onclick="answerQ('q2','c','c')" data-id="c"><span class="option-letter">C</span> Endocarp — specialised juice sacs</button>
+        <button class="quiz-option" onclick="answerQ('q2','d','c')" data-id="d"><span class="option-letter">D</span> Seed coat</button>
+      </div>
+      <div class="quiz-feedback" id="q2-feedback"></div>
+    </div>
+    <div class="assign-box reveal">
+      <div class="assign-title">📝 Classwork &amp; Assignment — Unit 2</div>
+      <h4>A. Classwork</h4>
+      <ol>
+        <li>Define a fruit (botanically and culinarily).</li>
+        <li>Label a diagram of a generic fleshy fruit.</li>
+        <li>List five fruits common in your locality and the season each is most abundant.</li>
+      </ol>
+      <h4>B. Take-Home Assignment</h4>
+      <ul>
+        <li>Prepare a one-page table titled <em>"Fruits Suitable for Juice Production in Southwestern Nigeria"</em> with columns: fruit, Yoruba name, peak season, juicy part, % yield, suitability for commercial juicing.</li>
+        <li>Mini-research: write a 250-word note on any one indigenous southwestern fruit (e.g., agbalumo, awin, soursop) and its juice potential.</li>
+      </ul>
+      <div class="assign-meta">Marks: 10 · Submit at the start of Unit 3</div>
+    </div>
+    <div class="week-nav-btns">
+      <button class="nav-btn" onclick="showSection('w1')"><div><span class="nav-btn-label">← Previous</span><span class="nav-btn-title">Intro to Fruit Juice</span></div></button>
+      <button class="mark-complete-btn" onclick="markDone('w2',this)">Mark Complete ✓</button>
+      <button class="nav-btn" onclick="showSection('w3')"><div><span class="nav-btn-label">Next →</span><span class="nav-btn-title">Local SW Nigeria Juices</span></div></button>
+    </div>
+  </section>
+
+  <!-- UNIT 3 -->
+  <section class="week-section" id="w3-section">
+    <div class="week-header"><span class="week-number-badge">UNIT 03</span><div class="week-header-text"><h2>Examination of Local Fruit Juices in Southwestern Nigeria</h2><p>Major brands · Flavours · Ingredients · Market positioning</p></div></div>
+    <div class="lo-box"><h3>Learning Outcomes</h3><ul class="lo-list">
+      <li>Identify the major fruit-juice brands manufactured and sold in southwestern Nigeria</li>
+      <li>Compare brands by flavour range, declared ingredients and packaging</li>
+      <li>Read and interpret a juice product label</li>
+      <li>Critically evaluate "100% juice" versus "fruit drink" claims</li>
+    </ul></div>
+    <div class="content-block reveal">
+      <h3>3.1 Overview of the Local Juice Market</h3>
+      <p>Southwestern Nigeria is the most active hub for the country's fruit-juice industry, with major manufacturers head-quartered in Lagos, Ogun and Oyo states. Brands are sold in supermarkets, neighbourhood shops, hawker stands and increasingly online. Most are produced locally from a mix of fresh fruit and imported concentrate.</p>
+    </div>
+    <div class="content-block reveal">
+      <h3>3.2 Major Local Fruit-Juice Brands</h3>
+      <div class="brand-grid">
+        <div class="brand-card">
+          <div class="brand-flavour">3.1 Premium juice</div>
+          <div class="brand-name">Chivita 100% Fruit Juice</div>
+          <div class="brand-text">Made from quality natural ingredients with no added preservatives or sweeteners. Available in flavours such as orange, pineapple, mango, apple and red grape.</div>
+        </div>
+        <div class="brand-card">
+          <div class="brand-flavour">3.2 Mass market</div>
+          <div class="brand-name">Fan Milk Fruit Juice</div>
+          <div class="brand-text">Offers small portion packs in flavours such as orange, pineapple, mango, apple and cranberry, with no artificial flavours or preservatives.</div>
+        </div>
+        <div class="brand-card">
+          <div class="brand-flavour">3.3 Locally sourced</div>
+          <div class="brand-name">Dansa Foods Fruit Juice</div>
+          <div class="brand-text">Made from locally grown fruits. Available in flavours including pineapple, orange, mango, apple and mixed fruit, with no added sugar or preservatives.</div>
+        </div>
+        <div class="brand-card">
+          <div class="brand-flavour">3.4 Ogun State</div>
+          <div class="brand-name">Beloxxi Fruit Juice</div>
+          <div class="brand-text">Produced in Ogun State and available in flavours such as orange, pineapple, mango, apple and cranberry, with no preservatives or artificial sweeteners.</div>
+        </div>
+        <div class="brand-card">
+          <div class="brand-flavour">3.5 Niche tropical blend</div>
+          <div class="brand-name">Tee &amp; Cee Pineapple Coconut Juice</div>
+          <div class="brand-text">A refreshing blend of pineapple and coconut, made with locally sourced fruits and no added sugar or preservatives.</div>
+        </div>
+        <div class="brand-card">
+          <div class="brand-flavour">3.6 Specialty single fruit</div>
+          <div class="brand-name">Frutta Tropica Passion Fruit Juice</div>
+          <div class="brand-text">Made from 100% pure passion fruit grown in Nigeria. Rich in antioxidants and vitamins.</div>
+        </div>
+      </div>
+      <p>These juices are widely available in supermarkets and stores across Southwestern Nigeria.</p>
+    </div>
+    <div class="content-block reveal">
+      <h3>3.3 Comparing Brands at a Glance</h3>
+      <table class="def-table">
+        <thead><tr><th>Brand</th><th>Origin</th><th>Typical Flavours</th><th>Selling Point</th></tr></thead>
+        <tbody>
+          <tr><td>Chivita</td><td>CHI Ltd, Lagos</td><td>Orange, pineapple, mango, apple, red grape</td><td>"100% fruit juice"; no preservatives or sweeteners</td></tr>
+          <tr><td>Fan Milk</td><td>Lagos</td><td>Orange, pineapple, mango, apple, cranberry</td><td>Small portion packs; no artificial flavours</td></tr>
+          <tr><td>Dansa Foods</td><td>Lagos / Ogun</td><td>Pineapple, orange, mango, apple, mixed fruit</td><td>Locally grown fruits; no added sugar</td></tr>
+          <tr><td>Beloxxi</td><td>Ogun State</td><td>Orange, pineapple, mango, apple, cranberry</td><td>No preservatives or artificial sweeteners</td></tr>
+          <tr><td>Tee &amp; Cee</td><td>SW Nigeria</td><td>Pineapple-coconut blend</td><td>Niche tropical blend; no added sugar</td></tr>
+          <tr><td>Frutta Tropica</td><td>Lagos</td><td>Passion fruit (single)</td><td>100% Nigerian passion fruit; rich in antioxidants</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="content-block reveal">
+      <h3>3.4 How to Read a Juice Label</h3>
+      <div class="key-box"><div class="key-box-title">🔎 Information You Must Find on the Pack</div><ul>
+        <li><strong>Product name &amp; type:</strong> "100% juice", "nectar", "fruit drink", "blend".</li>
+        <li><strong>Ingredients list:</strong> in descending order of weight.</li>
+        <li><strong>Declared juice content (%):</strong> e.g., "100%", "30%", "10% juice from concentrate".</li>
+        <li><strong>Nutritional information:</strong> energy, sugars, vitamin C, etc., per 100 ml and per serving.</li>
+        <li><strong>Manufacturer / address:</strong> tells you where the juice was packed.</li>
+        <li><strong>NAFDAC reg. no.:</strong> proof of regulatory clearance in Nigeria.</li>
+        <li><strong>Batch / production / expiry dates.</strong></li>
+        <li><strong>Storage instructions:</strong> "Refrigerate after opening", "Store in a cool dry place".</li>
+      </ul></div>
+    </div>
+    <div class="content-block reveal">
+      <h3>3.5 "100% Juice" vs "Fruit Drink" — Spotting the Difference</h3>
+      <table class="def-table">
+        <thead><tr><th>Feature</th><th>100% Juice</th><th>Nectar</th><th>Fruit Drink</th></tr></thead>
+        <tbody>
+          <tr><td>Juice content</td><td>100%</td><td>25–50%</td><td>5–10%</td></tr>
+          <tr><td>Added water?</td><td>No</td><td>Yes</td><td>Yes (mostly water)</td></tr>
+          <tr><td>Added sugar?</td><td>Usually no</td><td>Often yes</td><td>Yes</td></tr>
+          <tr><td>Preservatives?</td><td>Usually no (heat preserved)</td><td>Sometimes</td><td>Often</td></tr>
+          <tr><td>Typical price</td><td>Highest</td><td>Mid-range</td><td>Lowest</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="practical-box reveal">
+      <div class="practical-title">🧪 Practical Demonstration — Unit 3</div>
+      <h4>Market Survey &amp; Sensory Evaluation</h4>
+      <ol>
+        <li>In groups of four, visit a nearby supermarket or open market.</li>
+        <li>Photograph and record the labels of at least eight different fruit juices/drinks (including the six brands listed above).</li>
+        <li>Capture: brand, flavour, package type, declared juice %, list of ingredients, price, NAFDAC number.</li>
+        <li>Back in class, conduct a <strong>blind sensory test</strong> on three brands of orange juice. Each panelist scores the samples for: appearance, aroma, sweetness, sourness, overall acceptability (5-point scale).</li>
+        <li>Compute mean scores per brand and present findings.</li>
+      </ol>
+    </div>
+    <div class="quiz-block reveal">
+      <div class="quiz-label">📝 Self-Check Quiz — Unit 3</div>
+      <div class="quiz-question">A pack labelled "Fruit Drink — contains 10% juice from concentrate" should be classified as:</div>
+      <div class="quiz-options" id="q3-opts">
+        <button class="quiz-option" onclick="answerQ('q3','a','c')" data-id="a"><span class="option-letter">A</span> A 100% fruit juice</button>
+        <button class="quiz-option" onclick="answerQ('q3','b','c')" data-id="b"><span class="option-letter">B</span> A nectar</button>
+        <button class="quiz-option" onclick="answerQ('q3','c','c')" data-id="c"><span class="option-letter">C</span> A fruit drink/beverage — mostly water with added flavour and sugar</button>
+        <button class="quiz-option" onclick="answerQ('q3','d','c')" data-id="d"><span class="option-letter">D</span> A carbonated soft drink</button>
+      </div>
+      <div class="quiz-feedback" id="q3-feedback"></div>
+    </div>
+    <div class="assign-box reveal">
+      <div class="assign-title">📝 Classwork &amp; Assignment — Unit 3</div>
+      <h4>A. Classwork</h4>
+      <ol>
+        <li>List the six juice brands covered in this unit and one unique selling point of each.</li>
+        <li>Identify three pieces of information that must appear on every juice label.</li>
+        <li>Differentiate between "100% juice", "nectar" and "fruit drink".</li>
+      </ol>
+      <h4>B. Take-Home Assignment</h4>
+      <ul>
+        <li>Pick any two brands you surveyed in the practical and write a one-page comparison covering: ingredients, juice content, packaging, taste, price per litre, and value for money.</li>
+        <li>Recommend, with reasons, which of the two you would buy and why.</li>
+      </ul>
+      <div class="assign-meta">Marks: 15 · Submit before Unit 4 lecture</div>
+    </div>
+    <div class="week-nav-btns">
+      <button class="nav-btn" onclick="showSection('w2')"><div><span class="nav-btn-label">← Previous</span><span class="nav-btn-title">What are Fruits?</span></div></button>
+      <button class="mark-complete-btn" onclick="markDone('w3',this)">Mark Complete ✓</button>
+      <button class="nav-btn" onclick="showSection('w4')"><div><span class="nav-btn-label">Next →</span><span class="nav-btn-title">Production of Fruit Juice</span></div></button>
+    </div>
+  </section>
+
+  <!-- UNIT 4 -->
+  <section class="week-section" id="w4-section">
+    <div class="week-header"><span class="week-number-badge">UNIT 04</span><div class="week-header-text"><h2>Production of Fruit Juice</h2><p>Selection · Extraction · Filtering · Pasteurization · Bottling · Quality Control · Concentrate</p></div></div>
+    <div class="lo-box"><h3>Learning Outcomes</h3><ul class="lo-list">
+      <li>Outline the unit operations of an industrial fruit-juice line</li>
+      <li>Describe selection, washing and pre-treatment of fruits</li>
+      <li>Explain the principles of juice extraction, filtration and pasteurization</li>
+      <li>Distinguish juice made from fresh fruit from juice made from concentrate</li>
+      <li>Recognise key quality-control checks in juice production</li>
+    </ul></div>
+    <div class="content-block reveal">
+      <h3>4.0 The Production Flowchart</h3>
+      <div class="process-flow">
+        <div class="process-step"><div class="ps-num">STEP 1</div><div class="ps-title">Selection &amp; Preparation</div><div class="ps-text">Sort, wash, peel, de-stone</div></div>
+        <div class="process-arrow">→</div>
+        <div class="process-step"><div class="ps-num">STEP 2</div><div class="ps-title">Juice Extraction</div><div class="ps-text">Pressing, milling, reaming</div></div>
+        <div class="process-arrow">→</div>
+        <div class="process-step"><div class="ps-num">STEP 3</div><div class="ps-title">Filtering &amp; Batch Prep</div><div class="ps-text">Strain, deaerate, blend</div></div>
+        <div class="process-arrow">→</div>
+        <div class="process-step"><div class="ps-num">STEP 4</div><div class="ps-title">Pasteurization</div><div class="ps-text">Heat to kill microbes</div></div>
+        <div class="process-arrow">→</div>
+        <div class="process-step"><div class="ps-num">STEP 5</div><div class="ps-title">Filling &amp; Bottling</div><div class="ps-text">Hot fill / aseptic fill</div></div>
+        <div class="process-arrow">→</div>
+        <div class="process-step"><div class="ps-num">STEP 6</div><div class="ps-title">Quality Control</div><div class="ps-text">pH, Brix, microbial test</div></div>
+      </div>
+    </div>
+    <div class="content-block reveal">
+      <h3>4.1 Selection and Preparation</h3>
+      <p>Production begins with careful sourcing. Fruits should be <strong>fresh, firm, fully ripe and free from rot</strong>. Sorting removes damaged or under-ripe pieces. Selected fruits are then washed thoroughly with clean water, sometimes with mild chlorine solution, to remove dust, dirt, microbes and pesticide residues. Where required, fruits are peeled (orange, mango, pineapple) and de-stoned, de-seeded or cored.</p>
+      <table class="def-table">
+        <thead><tr><th>Activity</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td>Sorting / grading</td><td>Removes spoiled, under-ripe, over-ripe and damaged fruits</td></tr>
+          <tr><td>Washing</td><td>Removes soil, microbes and pesticide residues</td></tr>
+          <tr><td>Peeling / coring / de-stoning</td><td>Removes inedible parts that affect flavour and yield</td></tr>
+          <tr><td>Blanching (for some fruits)</td><td>Inactivates browning enzymes and softens tissue</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="content-block reveal">
+      <h3>4.2 Juice Extraction</h3>
+      <p>Different fruits require different extractors. The principle is the same: rupture the juice-bearing cells and collect the liquid while discarding skin, pith and seeds.</p>
+      <table class="def-table">
+        <thead><tr><th>Method</th><th>Best For</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>Hand reaming / squeezing</td><td>Citrus (small scale)</td><td>Half the fruit and twist over a reamer; gives clear juice</td></tr>
+          <tr><td>Mechanical citrus extractor</td><td>Industrial citrus</td><td>Cup-and-tube system squeezes whole fruit; juice channelled out</td></tr>
+          <tr><td>Pulper / finisher</td><td>Mango, guava, pawpaw</td><td>Fruit pushed through perforated screen; pulp passes, seeds rejected</td></tr>
+          <tr><td>Hammer mill / hydraulic press</td><td>Apple, pineapple</td><td>Crushed fruit pressed under pressure to release juice</td></tr>
+          <tr><td>Decanter centrifuge</td><td>Berries, cherries</td><td>Separates juice from solids by spinning</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="content-block reveal">
+      <h3>4.3 Filtering and Batch Preparation</h3>
+      <p>The raw juice contains pulp particles, seeds, fibres and air bubbles. <strong>Filtration / sieving / centrifugation</strong> remove unwanted solids depending on whether a clear juice (orange, apple) or a cloudy juice/nectar (mango, guava) is desired. <strong>Deaeration</strong> removes dissolved oxygen to prevent oxidation of vitamin C and colour pigments during heat treatment. Several batches may then be <strong>blended</strong> to standardise sugar (°Brix), acidity and flavour.</p>
+    </div>
+    <div class="content-block reveal">
+      <h3>4.4 Pasteurization</h3>
+      <p><strong>Pasteurization</strong> is a controlled heat treatment that kills spoilage microorganisms and inactivates enzymes, extending shelf life without significantly changing flavour or nutrition.</p>
+      <table class="def-table">
+        <thead><tr><th>Method</th><th>Temperature / Time</th><th>Use</th></tr></thead>
+        <tbody>
+          <tr><td>Low Temperature Long Time (LTLT)</td><td>63–65 °C for 30 min</td><td>Small-scale, batch</td></tr>
+          <tr><td>High Temperature Short Time (HTST)</td><td>72–85 °C for 15–30 s</td><td>Most industrial juice</td></tr>
+          <tr><td>Ultra High Temperature (UHT)</td><td>135–150 °C for 2–6 s</td><td>Long shelf-life aseptic juice (Tetra Pak)</td></tr>
+        </tbody>
+      </table>
+      <div class="note-box"><div class="note-box-icon">🌡️</div><div class="note-box-text">Pasteurization is named after <strong>Louis Pasteur</strong> who first applied controlled heat to wine and milk in the 1860s. Today, virtually all bottled juice in Nigeria is pasteurized.</div></div>
+    </div>
+    <div class="content-block reveal">
+      <h3>4.5 Filling and Bottling</h3>
+      <ul style="font-size:14px; line-height:1.8; padding-left:20px;">
+        <li><strong>Hot fill:</strong> juice is filled at ≅85 °C into clean bottles, capped, then cooled. Used for PET bottles and glass.</li>
+        <li><strong>Aseptic fill:</strong> juice and packaging are sterilised separately and combined under sterile conditions — standard for Tetra Pak.</li>
+        <li><strong>Cold fill with preservation:</strong> uses chemical preservatives; less common for branded juice today.</li>
+      </ul>
+    </div>
+    <div class="content-block reveal">
+      <h3>4.6 Quality Control</h3>
+      <table class="def-table">
+        <thead><tr><th>Parameter</th><th>Why measured</th><th>Typical target</th></tr></thead>
+        <tbody>
+          <tr><td>pH</td><td>Acidity controls microbial growth</td><td>3.5 – 4.2 for citrus</td></tr>
+          <tr><td>Brix (°Bx)</td><td>Soluble solids → sweetness</td><td>10 – 14 °Bx for orange juice</td></tr>
+          <tr><td>Titratable acidity</td><td>Sourness</td><td>0.5 – 1.5 % citric acid</td></tr>
+          <tr><td>Vitamin C content</td><td>Nutritional claim</td><td>30–50 mg / 100 ml (orange)</td></tr>
+          <tr><td>Microbial load</td><td>Safety, shelf life</td><td>Low coliform count, no pathogens</td></tr>
+          <tr><td>Sensory panel</td><td>Consumer acceptance</td><td>Score ≥ 7/10 for taste, aroma, colour</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="content-block reveal">
+      <h3>4.7 Juice from Concentrate</h3>
+      <p>Many bottled juices in Nigeria are made <em>from concentrate</em>. Fresh juice is heated under vacuum to evaporate water until the original 12 °Bx becomes ~65 °Bx — a thick, syrupy <strong>concentrate</strong>. This is easier to ship, freeze and store. At the bottling plant, water (and sometimes pulp and aroma) is added back to "reconstitute" the juice before pasteurization.</p>
+      <table class="def-table">
+        <thead><tr><th>Feature</th><th>Not from Concentrate (NFC)</th><th>From Concentrate (FC)</th></tr></thead>
+        <tbody>
+          <tr><td>Process</td><td>Pressed and pasteurized only</td><td>Pressed → concentrated → reconstituted</td></tr>
+          <tr><td>Volume to ship</td><td>Large</td><td>1/5 to 1/6</td></tr>
+          <tr><td>Cost</td><td>Higher</td><td>Lower</td></tr>
+          <tr><td>Flavour</td><td>Closer to fresh</td><td>Slightly altered — added "back-flavour" needed</td></tr>
+          <tr><td>Common label</td><td>"Not from concentrate"</td><td>"Made from concentrate"</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="practical-box reveal">
+      <div class="practical-title">🧪 Practical Demonstration — Unit 4</div>
+      <h4>Small-Scale Orange Juice Production</h4>
+      <ol>
+        <li><strong>Selection:</strong> pick 10 ripe oranges, sort out damaged ones, weigh.</li>
+        <li><strong>Washing:</strong> wash in clean water with a few drops of salt or chlorine, rinse.</li>
+        <li><strong>Extraction:</strong> halve the oranges and squeeze with a hand reamer or kitchen juicer. Collect juice in a clean stainless or food-grade plastic container. Weigh juice and calculate % yield.</li>
+        <li><strong>Filtering:</strong> pass juice through a clean muslin cloth to remove pulp and seeds.</li>
+        <li><strong>Pasteurization:</strong> heat juice in a stainless pot to 75 °C and hold for 30 s, monitoring with a thermometer.</li>
+        <li><strong>Hot fill:</strong> immediately fill clean, hot bottles to the brim, cap tightly and invert for 1 minute. Cool under running water.</li>
+        <li><strong>Quality check:</strong> measure pH (litmus or pH meter) and Brix (refractometer). Record colour and aroma.</li>
+        <li><strong>Storage:</strong> store half in fridge, half at room temperature. Re-examine after 1 week and discuss differences.</li>
+      </ol>
+    </div>
+    <div class="quiz-block reveal">
+      <div class="quiz-label">📝 Self-Check Quiz — Unit 4</div>
+      <div class="quiz-question">In an HTST pasteurizer, fruit juice is typically heated to:</div>
+      <div class="quiz-options" id="q4-opts">
+        <button class="quiz-option" onclick="answerQ('q4','a','b')" data-id="a"><span class="option-letter">A</span> 40–50 °C for 1 hour</button>
+        <button class="quiz-option" onclick="answerQ('q4','b','b')" data-id="b"><span class="option-letter">B</span> 72–85 °C for 15–30 seconds</button>
+        <button class="quiz-option" onclick="answerQ('q4','c','b')" data-id="c"><span class="option-letter">C</span> 100 °C for 30 minutes</button>
+        <button class="quiz-option" onclick="answerQ('q4','d','b')" data-id="d"><span class="option-letter">D</span> 150 °C for 30 minutes</button>
+      </div>
+      <div class="quiz-feedback" id="q4-feedback"></div>
+    </div>
+    <div class="assign-box reveal">
+      <div class="assign-title">📝 Classwork &amp; Assignment — Unit 4</div>
+      <h4>A. Classwork</h4>
+      <ol>
+        <li>Draw the seven-step flowchart of fruit-juice production.</li>
+        <li>State two equipment options for extracting juice from oranges and from mangoes respectively.</li>
+        <li>Define pasteurization and state the temperature/time for HTST.</li>
+      </ol>
+      <h4>B. Practical Lab Report</h4>
+      <ul>
+        <li>Submit a typed report on the small-scale orange juice you produced (Practical 4) covering: aim, materials, method, % juice yield, pH, Brix, sensory observations, discussion and conclusion.</li>
+        <li>Discuss the difference observed between the refrigerated and room-temperature samples after one week.</li>
+        <li>Maximum 1000 words.</li>
+      </ul>
+      <div class="assign-meta">Marks: 20 · Submit before Unit 5</div>
+    </div>
+    <div class="week-nav-btns">
+      <button class="nav-btn" onclick="showSection('w3')"><div><span class="nav-btn-label">← Previous</span><span class="nav-btn-title">Local Juices</span></div></button>
+      <button class="mark-complete-btn" onclick="markDone('w4',this)">Mark Complete ✓</button>
+      <button class="nav-btn" onclick="showSection('w5')"><div><span class="nav-btn-label">Next →</span><span class="nav-btn-title">Bottling &amp; Packaging</span></div></button>
+    </div>
+  </section>
+
+  <!-- UNIT 5 -->
+  <section class="week-section" id="w5-section">
+    <div class="week-header"><span class="week-number-badge">UNIT 05</span><div class="week-header-text"><h2>Bottling, Packaging &amp; Storage of Fruit Juice</h2><p>Bottle types · Label design · Aseptic packs · Storage conditions</p></div></div>
+    <div class="lo-box"><h3>Learning Outcomes</h3><ul class="lo-list">
+      <li>Identify the major packaging containers used for fruit juice</li>
+      <li>Compare PET, glass, Tetra Pak, pouches and cups</li>
+      <li>Describe the elements of an effective juice label</li>
+      <li>Match the right storage method to the right product</li>
+    </ul></div>
+    <div class="content-block reveal">
+      <h3>5.1 Bottling — The Container Choices</h3>
+      <p>The choice of pack affects shelf life, cost, transport and consumer appeal. Each material has trade-offs.</p>
+      <table class="def-table">
+        <thead><tr><th>Container</th><th>Pros</th><th>Cons</th><th>Typical Use</th></tr></thead>
+        <tbody>
+          <tr><td>PET (plastic) bottle</td><td>Light, unbreakable, cheap, recyclable</td><td>Less barrier to oxygen, can deform under heat</td><td>Most large-volume juices in Nigeria (1 L, 1.5 L)</td></tr>
+          <tr><td>Glass bottle</td><td>Excellent barrier, premium look, reusable</td><td>Heavy, breakable, expensive</td><td>Premium juices, export, kid sizes</td></tr>
+          <tr><td>Aseptic carton (Tetra Pak)</td><td>6–12 month shelf life without refrigeration; lightweight</td><td>Specialised filler needed; difficult to recycle</td><td>Long-life juice in 200 mL, 1 L</td></tr>
+          <tr><td>Pouches (sachets / stand-up)</td><td>Very low cost; small portions</td><td>Less protective; image of cheaper product</td><td>Mass-market, school packs, hawker trade</td></tr>
+          <tr><td>Plastic cups / jugs</td><td>Convenient single-serve</td><td>Short shelf life; leak risk</td><td>Frozen "ice juice", Fan Milk-type packs</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="content-block reveal">
+      <h3>5.2 Packaging — The Label Tells the Story</h3>
+      <p>Packaging is more than just a container — it is the silent salesperson. A good juice label must <strong>inform, attract and persuade</strong>.</p>
+      <div class="key-box"><div class="key-box-title">🏷️ Essential Label Elements</div><ul>
+        <li><strong>Brand name &amp; logo</strong> — distinctive identity.</li>
+        <li><strong>Product description</strong> — e.g., "100% Pineapple Juice", "Mango Nectar".</li>
+        <li><strong>List of ingredients</strong> in descending order of weight.</li>
+        <li><strong>Nutritional information</strong> per 100 mL and per serving (energy, sugars, vitamins).</li>
+        <li><strong>Net volume</strong> (e.g., 250 mL, 1 L).</li>
+        <li><strong>Manufacturer name &amp; address.</strong></li>
+        <li><strong>NAFDAC registration number.</strong></li>
+        <li><strong>Batch / production / expiry dates.</strong></li>
+        <li><strong>Storage instructions</strong> (e.g., "Refrigerate after opening").</li>
+        <li><strong>Bar code &amp; recycling symbol.</strong></li>
+        <li><strong>Attractive graphics</strong> — colours, fruit images, themes.</li>
+      </ul></div>
+    </div>
+    <div class="content-block reveal">
+      <h3>5.3 Storage of Fruit Juice</h3>
+      <p>Juice begins to lose flavour, vitamins and colour from the moment it is packaged. Correct storage extends shelf life.</p>
+      <table class="def-table">
+        <thead><tr><th>Storage Type</th><th>Conditions</th><th>Best For</th><th>Shelf Life</th></tr></thead>
+        <tbody>
+          <tr><td>Refrigerated storage</td><td>2–6 °C</td><td>Fresh juice, opened cartons, NFC juice</td><td>3–7 days (opened); up to 30 days unopened</td></tr>
+          <tr><td>Cool dry place</td><td>15–25 °C, away from sunlight</td><td>Pasteurized PET/glass juice unopened</td><td>3–6 months</td></tr>
+          <tr><td>Aseptic (ambient) storage</td><td>Up to 30 °C, sealed Tetra Pak</td><td>UHT-packed long-life juice</td><td>6–12 months</td></tr>
+          <tr><td>Freezer storage</td><td>−18 °C or lower</td><td>Frozen concentrate, fresh-squeezed juice</td><td>6–12 months</td></tr>
+        </tbody>
+      </table>
+      <div class="note-box"><div class="note-box-icon">⚠️</div><div class="note-box-text"><strong>Once opened</strong>, even long-life juice MUST be kept in the refrigerator and consumed within 3–5 days, because contact with air and microbes restarts spoilage.</div></div>
+    </div>
+    <div class="content-block reveal">
+      <h3>5.4 Spoilage Indicators</h3>
+      <ul style="font-size:14px; line-height:1.8; padding-left:20px;">
+        <li><strong>Swollen pack</strong> — gas formed by yeast/bacteria; do not consume.</li>
+        <li><strong>Off-odour</strong> (alcoholic, vinegary, "yeasty").</li>
+        <li><strong>Cloudy or layered appearance</strong> in clear juice.</li>
+        <li><strong>Mould growth</strong> on the surface or under the cap.</li>
+        <li><strong>Sour or fizzy taste</strong> in a juice that is not meant to be carbonated.</li>
+      </ul>
+    </div>
+    <div class="practical-box reveal">
+      <div class="practical-title">🧪 Practical Demonstration — Unit 5</div>
+      <h4>Packaging Survey &amp; Storage Trial</h4>
+      <ol>
+        <li>Collect five empty juice packs of different types: PET bottle, glass bottle, Tetra Pak, pouch, and plastic cup.</li>
+        <li>For each, record: material, weight, capacity, label elements present, and stated storage instructions.</li>
+        <li>Pour 50 mL of the orange juice you produced in Unit 4 into three identical clean bottles. Store one at room temperature in shade, one in direct sunlight, and one in the fridge.</li>
+        <li>Examine all three after 24 h, 72 h and 7 days. Record colour, smell, taste (if still safe) and any visible spoilage.</li>
+        <li>Submit a comparison table and a short discussion.</li>
+      </ol>
+    </div>
+    <div class="quiz-block reveal">
+      <div class="quiz-label">📝 Self-Check Quiz — Unit 5</div>
+      <div class="quiz-question">A juice in a Tetra Pak is found to be still safe at room temperature 8 months after production because:</div>
+      <div class="quiz-options" id="q5-opts">
+        <button class="quiz-option" onclick="answerQ('q5','a','c')" data-id="a"><span class="option-letter">A</span> Tetra Pak material releases preservatives into the juice</button>
+        <button class="quiz-option" onclick="answerQ('q5','b','c')" data-id="b"><span class="option-letter">B</span> The juice was treated with antibiotics</button>
+        <button class="quiz-option" onclick="answerQ('q5','c','c')" data-id="c"><span class="option-letter">C</span> The juice and the carton were sterilised separately, then filled aseptically</button>
+        <button class="quiz-option" onclick="answerQ('q5','d','c')" data-id="d"><span class="option-letter">D</span> The juice contains alcohol</button>
+      </div>
+      <div class="quiz-feedback" id="q5-feedback"></div>
+    </div>
+    <div class="assign-box reveal">
+      <div class="assign-title">📝 Classwork &amp; Assignment — Unit 5</div>
+      <h4>A. Classwork</h4>
+      <ol>
+        <li>List five packaging containers used for fruit juice with one advantage and one disadvantage of each.</li>
+        <li>State seven elements that must appear on a juice label.</li>
+        <li>Match each storage method (refrigerated, cool dry, aseptic, freezer) with one product example.</li>
+      </ol>
+      <h4>B. Take-Home / Design Assignment</h4>
+      <ul>
+        <li>Design a label (A4 size, hand-drawn or digital) for an imaginary fruit juice from any local fruit covered in Unit 2 (e.g., agbalumo, soursop, tamarind).</li>
+        <li>Your label MUST include all the essential elements listed in 5.2.</li>
+        <li>Write a 100-word description of your target customer and why your design will appeal to them.</li>
+      </ul>
+      <div class="assign-meta">Marks: 15 · Submit before Unit 6</div>
+    </div>
+    <div class="week-nav-btns">
+      <button class="nav-btn" onclick="showSection('w4')"><div><span class="nav-btn-label">← Previous</span><span class="nav-btn-title">Production</span></div></button>
+      <button class="mark-complete-btn" onclick="markDone('w5',this)">Mark Complete ✓</button>
+      <button class="nav-btn" onclick="showSection('w6')"><div><span class="nav-btn-label">Next →</span><span class="nav-btn-title">Traditional Juices &amp; Health</span></div></button>
+    </div>
+  </section>
+
+  <!-- UNIT 6 -->
+  <section class="week-section" id="w6-section">
+    <div class="week-header"><span class="week-number-badge">UNIT 06</span><div class="week-header-text"><h2>Traditional Fruit Juices &amp; Health Benefits</h2><p>Zobo · Kunu · Orange juice · Pineapple juice</p></div></div>
+    <div class="lo-box"><h3>Learning Outcomes</h3><ul class="lo-list">
+      <li>Identify common traditional Nigerian beverages</li>
+      <li>Prepare zobo, kunu, fresh orange and fresh pineapple juice safely</li>
+      <li>State the major health benefits of each drink</li>
+      <li>Discuss possible side effects and recommended intake</li>
+    </ul></div>
+    <div class="content-block reveal">
+      <h3>6.1 Zobo — <em>Hibiscus sabdariffa</em></h3>
+      <p>Zobo is a deep red drink prepared from the dried <strong>calyces (sepals)</strong> of <em>Hibiscus sabdariffa</em>. It is drunk widely in northern and southwestern Nigeria, often spiced with ginger, cloves, pineapple peels and a little sweetener.</p>
+      <table class="def-table">
+        <thead><tr><th>Item</th><th>Detail</th></tr></thead>
+        <tbody>
+          <tr><td>Source</td><td>Dried red hibiscus calyces (locally <em>zobo leaves</em>; Yoruba <em>Isóswò</em>; Hausa <em>Yakuwa</em>)</td></tr>
+          <tr><td>Method</td><td>Boil/steep calyces in water with ginger and cloves, sieve, sweeten lightly</td></tr>
+          <tr><td>Active compounds</td><td>Anthocyanins, polyphenols, organic acids, vitamin C</td></tr>
+          <tr><td>Health benefits</td><td>Lowers blood pressure, antioxidant, mild diuretic, supports liver health, aids digestion</td></tr>
+          <tr><td>Caution</td><td>Excess intake may interfere with blood-pressure medication; pregnant women advised to limit intake</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="content-block reveal">
+      <h3>6.2 Kunu (Kunun-zaki)</h3>
+      <p>Kunu is a non-alcoholic, lightly fermented or unfermented cereal-based drink popular across Nigeria. The most common variety, <strong>kunun-zaki</strong>, is made from millet, sorghum or maize, with ginger, cloves, sweet potato and sometimes tamarind.</p>
+      <table class="def-table">
+        <thead><tr><th>Item</th><th>Detail</th></tr></thead>
+        <tbody>
+          <tr><td>Source</td><td>Millet / sorghum / maize</td></tr>
+          <tr><td>Method</td><td>Soak grains overnight, wet-mill with ginger and spices, decant, cook the mix briefly, cool, sieve, add sugar to taste</td></tr>
+          <tr><td>Active compounds</td><td>Carbohydrates, B-vitamins, minerals, gingerol from ginger</td></tr>
+          <tr><td>Health benefits</td><td>Energy-rich, refreshing, hydrating, mildly probiotic when partially fermented, soothing to the stomach</td></tr>
+          <tr><td>Caution</td><td>Highly perishable — must be refrigerated and consumed within 24–48 h; risk of spoilage if poorly handled</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="content-block reveal">
+      <h3>6.3 Orange Juice</h3>
+      <p>Fresh orange juice is the world's most consumed fruit juice. It is squeezed from ripe sweet oranges (<em>Citrus sinensis</em>) and is best consumed soon after extraction.</p>
+      <table class="def-table">
+        <thead><tr><th>Item</th><th>Detail</th></tr></thead>
+        <tbody>
+          <tr><td>Source</td><td>Ripe sweet orange (Yoruba: <em>Osàn</em>)</td></tr>
+          <tr><td>Method</td><td>Wash, halve, ream/squeeze, strain, drink fresh or pasteurize</td></tr>
+          <tr><td>Active compounds</td><td>Vitamin C (~50 mg/100 mL), folate, potassium, hesperidin (flavonoid)</td></tr>
+          <tr><td>Health benefits</td><td>Boosts immune system, supports skin and gum health, aids iron absorption, good source of antioxidants</td></tr>
+          <tr><td>Caution</td><td>Naturally high in fruit sugar; large amounts can affect blood-glucose control in diabetics; acidity can erode teeth if consumed excessively</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="content-block reveal">
+      <h3>6.4 Pineapple Juice</h3>
+      <p>Pineapple juice is extracted from the fused mesocarp of <em>Ananas comosus</em>. It has a distinctive sweet-tart flavour and contains a unique enzyme called <strong>bromelain</strong>.</p>
+      <table class="def-table">
+        <thead><tr><th>Item</th><th>Detail</th></tr></thead>
+        <tbody>
+          <tr><td>Source</td><td>Ripe pineapple (Yoruba: <em>Ẹdūn</em>)</td></tr>
+          <tr><td>Method</td><td>Wash, peel, core, dice, blend or press, strain</td></tr>
+          <tr><td>Active compounds</td><td>Vitamin C, manganese, bromelain, carotenoids</td></tr>
+          <tr><td>Health benefits</td><td>Aids digestion of proteins (bromelain), anti-inflammatory, supports recovery from injury, boosts immunity</td></tr>
+          <tr><td>Caution</td><td>Acidic — may irritate mouth or sensitive stomachs; bromelain can interact with anticoagulant medication</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="content-block reveal">
+      <h3>6.5 Quick Comparison &amp; General Tips</h3>
+      <table class="def-table">
+        <thead><tr><th>Drink</th><th>Type</th><th>Top Benefit</th><th>Best Storage</th></tr></thead>
+        <tbody>
+          <tr><td>Zobo</td><td>Plant infusion</td><td>Blood-pressure support / antioxidant</td><td>Refrigerate; drink within 2–3 days</td></tr>
+          <tr><td>Kunu (zaki)</td><td>Cereal beverage</td><td>Energy and hydration</td><td>Refrigerate; drink within 24–48 h</td></tr>
+          <tr><td>Orange juice</td><td>Fresh fruit juice</td><td>Vitamin C / immune support</td><td>Refrigerate; drink fresh</td></tr>
+          <tr><td>Pineapple juice</td><td>Fresh fruit juice</td><td>Bromelain / digestion</td><td>Refrigerate; drink fresh</td></tr>
+        </tbody>
+      </table>
+      <div class="key-box"><div class="key-box-title">💡 General Healthy-Drinking Tips</div><ul>
+        <li>Drink fruit juice in moderation — one cup (250 mL) per day is enough.</li>
+        <li>Prefer freshly prepared or "100% juice" over fruit drinks.</li>
+        <li>Refrigerate immediately after preparation; do not leave standing for hours.</li>
+        <li>Use clean utensils, water and bottles to prevent contamination.</li>
+        <li>People on medication should consult a health professional before drinking large amounts of zobo, pineapple or grapefruit juice.</li>
+      </ul></div>
+    </div>
+    <div class="practical-box reveal">
+      <div class="practical-title">🧪 Practical Demonstration — Unit 6</div>
+      <h4>Preparation of Two Traditional Juices</h4>
+      <p><strong>Group A — Zobo Production</strong></p>
+      <ol>
+        <li>Materials: 100 g dried zobo leaves, 2 L water, 30 g ginger, 5 cloves, pineapple peels, sugar to taste.</li>
+        <li>Wash zobo leaves quickly in clean water to remove dust.</li>
+        <li>Boil water; add the leaves, ginger, cloves and pineapple peels; simmer 15–20 minutes.</li>
+        <li>Allow to steep for 30 minutes, sieve through clean muslin cloth.</li>
+        <li>Sweeten lightly, refrigerate and serve chilled. Record colour, taste and pH.</li>
+      </ol>
+      <p><strong>Group B — Kunun-zaki Production</strong></p>
+      <ol>
+        <li>Materials: 500 g millet (or sorghum), water, 30 g ginger, 5 cloves, 100 g sweet potato (optional), sugar.</li>
+        <li>Soak millet 6–12 h, drain.</li>
+        <li>Wet-mill millet with ginger and cloves into a smooth slurry.</li>
+        <li>Divide slurry into two: cook one half briefly to make a paste; mix with the raw half and stir well.</li>
+        <li>Sieve through fine cloth, sweeten lightly. Refrigerate. Record consistency, taste and shelf life.</li>
+      </ol>
+      <p><strong>Group C — Fresh Orange &amp; Pineapple Juice (parallel)</strong></p>
+      <ol>
+        <li>Wash, peel and squeeze/blend separately. Strain. Compare yield (% juice by weight).</li>
+        <li>Conduct sensory comparison among the four traditional juices using a 5-point scale for: colour, aroma, sweetness, sourness, overall acceptability.</li>
+      </ol>
+    </div>
+    <div class="quiz-block reveal">
+      <div class="quiz-label">📝 Self-Check Quiz — Unit 6</div>
+      <div class="quiz-question">The bioactive enzyme in pineapple juice that aids the digestion of proteins is:</div>
+      <div class="quiz-options" id="q6-opts">
+        <button class="quiz-option" onclick="answerQ('q6','a','c')" data-id="a"><span class="option-letter">A</span> Lactase</button>
+        <button class="quiz-option" onclick="answerQ('q6','b','c')" data-id="b"><span class="option-letter">B</span> Lipase</button>
+        <button class="quiz-option" onclick="answerQ('q6','c','c')" data-id="c"><span class="option-letter">C</span> Bromelain</button>
+        <button class="quiz-option" onclick="answerQ('q6','d','c')" data-id="d"><span class="option-letter">D</span> Catalase</button>
+      </div>
+      <div class="quiz-feedback" id="q6-feedback"></div>
+    </div>
+    <div class="assign-box reveal">
+      <div class="assign-title">📝 Classwork &amp; Final Assignment — Unit 6</div>
+      <h4>A. Classwork</h4>
+      <ol>
+        <li>State the source plant for zobo, kunu, orange juice and pineapple juice.</li>
+        <li>List two health benefits of each.</li>
+        <li>Mention one caution associated with each drink.</li>
+      </ol>
+      <h4>B. Final Course Project</h4>
+      <ul>
+        <li>Choose any one fruit juice or traditional beverage of your choice and write a 1500-word case study covering: source plant, common SW Nigerian name, full preparation procedure, ingredients, packaging suggestion, expected shelf life, three health benefits and any cautions.</li>
+        <li>Include at least one labelled diagram (preparation flowchart) and your own designed product label.</li>
+      </ul>
+      <div class="assign-meta">Marks: 30 · Counts toward CA · Submit by examination week</div>
+    </div>
+    <div style="background:var(--berry);border-radius:10px;padding:32px;margin-top:48px;text-align:center;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--mango);letter-spacing:3px;margin-bottom:12px;">COURSE COMPLETE</div>
+      <div style="font-family:'Playfair Display',serif;font-size:28px;color:var(--cream);margin-bottom:8px;">Congratulations!</div>
+      <p style="color:var(--pineapple);font-size:14px;font-style:italic;max-width:520px;margin:0 auto;">You have completed VOS 165 — Introduction to Fruit Juice. From orchard to bottle, from Pasteur's heat treatment to a chilled cup of zobo on a Saturday afternoon, you now understand how fruits become beverages. Take this knowledge forward into entrepreneurship, food science, and good nutrition.</p>
+    </div>
+    <div class="week-nav-btns">
+      <button class="nav-btn" onclick="showSection('w5')"><div><span class="nav-btn-label">← Previous</span><span class="nav-btn-title">Bottling &amp; Packaging</span></div></button>
+      <button class="mark-complete-btn" onclick="markDone('w6',this)">Mark Complete ✓</button>
+      <button class="nav-btn" onclick="showSection('home')"><div><span class="nav-btn-label">↩ Return to</span><span class="nav-btn-title">Course Home</span></div></button>
+    </div>
+  </section>
+
+  </div><!-- end content-area -->
+</main>
+
+<script>
+const completed = new Set(JSON.parse(localStorage.getItem('vos165_done') || '[]'));
+const sectionMap = {
+  home: 'home-section',
+  w1: 'w1-section', w2: 'w2-section', w3: 'w3-section',
+  w4: 'w4-section', w5: 'w5-section', w6: 'w6-section'
+};
+
+function showSection(id) {
+  document.querySelectorAll('.week-section, #home-section').forEach(s => {
+    s.classList.remove('active');
+    s.style.display = 'none';
+  });
+  const target = document.getElementById(sectionMap[id]);
+  if (target) {
+    target.style.display = 'block';
+    target.classList.add('active');
+  }
+  document.querySelectorAll('.week-nav-item').forEach((item, idx) => {
+    item.classList.remove('active');
+    if (idx === 0 && id === 'home') item.classList.add('active');
+    if (id !== 'home') {
+      const wNum = parseInt(id.replace('w',''));
+      if (idx === wNum) item.classList.add('active');
+    }
+  });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  initReveal();
+  return false;
+}
+
+document.querySelectorAll('.week-section').forEach(s => { s.style.display = 'none'; });
+document.getElementById('home-section').style.display = 'block';
+restoreProgress();
+
+const explanations = {
+  q1: { b: "Correct! A fruit juice is the liquid naturally extracted from edible fruits with little or no added ingredients. Drinks that merely contain a small amount of fruit flavour, colour or added vitamin C are properly classified as fruit drinks/beverages, not juice." },
+  q2: { c: "Correct! In citrus fruits like the orange, the juicy vesicles (juice sacs) are part of the endocarp — not the mesocarp (white pith) or epicarp (peel). This is why an orange yields clear juice when squeezed." },
+  q3: { c: "Correct! A pack containing only ~10% juice and the rest mostly water and sugar is properly classified as a fruit drink/beverage. Codex and NAFDAC guidelines reserve the term 'juice' for products with a much higher juice content." },
+  q4: { b: "Correct! High Temperature Short Time (HTST) pasteurization typically holds juice at 72–85 °C for 15–30 seconds — long enough to kill spoilage organisms but short enough to preserve flavour and vitamin C." },
+  q5: { c: "Correct! In aseptic filling — used by Tetra Pak — the juice is sterilised by UHT and the carton is sterilised separately (with hydrogen peroxide and heat). They are then combined under sterile air, giving 6–12 months of shelf life at room temperature without preservatives." },
+  q6: { c: "Correct! Bromelain is a proteolytic enzyme found naturally in pineapple. It helps break down dietary protein, has anti-inflammatory effects, and is the reason fresh pineapple cannot set with gelatin." }
+};
+
+function answerQ(qId, chosen, correct) {
+  const opts = document.getElementById(qId + '-opts');
+  if (!opts || opts.classList.contains('answered')) return;
+  opts.classList.add('answered');
+  opts.querySelectorAll('.quiz-option').forEach(btn => {
+    btn.style.pointerEvents = 'none';
+    if (btn.dataset.id === correct) btn.classList.add('correct');
+    else if (btn.dataset.id === chosen && chosen !== correct) btn.classList.add('wrong');
+  });
+  const fb = document.getElementById(qId + '-feedback');
+  if (fb) {
+    const isRight = chosen === correct;
+    fb.className = 'quiz-feedback show ' + (isRight ? 'correct-fb' : 'wrong-fb');
+    const exp = explanations[qId];
+    fb.innerHTML = (isRight ? '✓ Correct! — ' : '✗ Not quite. The correct answer is <strong>' + correct.toUpperCase() + '</strong>. — ') + (exp ? exp[correct] : '');
+  }
+}
+
+function markDone(weekId, btn) {
+  completed.add(weekId);
+  localStorage.setItem('vos165_done', JSON.stringify([...completed]));
+  btn.textContent = '✓ Completed';
+  btn.classList.add('done');
+  updateProgress();
+  const navItems = document.querySelectorAll('.week-nav-item');
+  const idx = parseInt(weekId.replace('w', ''));
+  if (navItems[idx]) navItems[idx].classList.add('done');
+}
+
+function updateProgress() {
+  const total = 6;
+  const done = completed.size;
+  document.getElementById('progress-text').textContent = done + ' / ' + total;
+  document.getElementById('progress-bar').style.width = (done / total * 100) + '%';
+}
+
+function restoreProgress() {
+  completed.forEach(weekId => {
+    const idx = parseInt(weekId.replace('w', ''));
+    const navItems = document.querySelectorAll('.week-nav-item');
+    if (navItems[idx]) navItems[idx].classList.add('done');
+    const btns = document.querySelectorAll('.mark-complete-btn');
+    btns.forEach(btn => {
+      if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes("'" + weekId + "'")) {
+        btn.textContent = '✓ Completed';
+        btn.classList.add('done');
+      }
+    });
+  });
+  updateProgress();
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+function initReveal() {
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  reveals.forEach(r => { r.classList.remove('visible'); observer.observe(r); });
+}
+
+initReveal();
+
+document.querySelectorAll('.week-nav-item').forEach(item => {
+  item.addEventListener('click', () => {
+    if (window.innerWidth <= 900) {
+      document.getElementById('sidebar').classList.remove('open');
+    }
+  });
+});
+</script>
+</body>
+</html>
