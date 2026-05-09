@@ -1,0 +1,1347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VOS 166 — Practical Solar Technology | Interactive Lecture Notes</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#0A0C0F; --carbon:#111417; --slate:#1A1E24; --graphite:#242930;
+  --amber:#F5A623; --gold:#FFD060; --solar:#FF8C00; --glow:#FFC847;
+  --teal:#00C9A7; --sky:#4FC3F7; --volt:#7FFF00; --red:#FF4444;
+  --cream:#F2EDE4; --warm:#C8B89A; --gray:#6B7280; --light:#9CA3AF;
+  --sw:280px;
+  --r:8px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Space Grotesk',sans-serif;background:var(--void);color:var(--cream);overflow-x:hidden;min-height:100vh;display:flex}
+
+/* ── SIDEBAR ── */
+#sidebar{position:fixed;left:0;top:0;bottom:0;width:var(--sw);background:var(--carbon);border-right:1px solid rgba(245,166,35,.15);overflow-y:auto;z-index:100;display:flex;flex-direction:column}
+#sidebar::-webkit-scrollbar{width:3px}
+#sidebar::-webkit-scrollbar-thumb{background:var(--amber);border-radius:2px}
+.sb-brand{padding:28px 22px 18px;border-bottom:1px solid rgba(245,166,35,.1)}
+.sb-code{font-family:'Fira Code',monospace;font-size:10px;color:var(--amber);letter-spacing:3px;text-transform:uppercase;display:block;margin-bottom:5px}
+.sb-name{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--cream);line-height:1.1;letter-spacing:1px}
+.sb-cred{font-size:11px;color:var(--gray);margin-top:4px;font-family:'Fira Code',monospace}
+.sb-prog{padding:12px 22px;border-bottom:1px solid rgba(245,166,35,.08)}
+.sb-plbl{font-size:10px;color:var(--gray);letter-spacing:1px;font-family:'Fira Code',monospace}
+.sb-bar{height:2px;background:var(--graphite);border-radius:1px;margin-top:6px;overflow:hidden}
+.sb-fill{height:100%;background:linear-gradient(90deg,var(--amber),var(--gold));border-radius:1px;transition:width .6s ease;width:0%}
+.sb-nav{padding:8px 0;flex:1}
+.wi{display:flex;align-items:center;gap:10px;padding:9px 22px;cursor:pointer;border-left:2px solid transparent;text-decoration:none;transition:all .2s}
+.wi:hover{background:rgba(245,166,35,.06);border-left-color:rgba(245,166,35,.4)}
+.wi.active{background:rgba(245,166,35,.1);border-left-color:var(--amber)}
+.wn{font-family:'Fira Code',monospace;font-size:10px;color:var(--amber);min-width:32px;font-weight:500}
+.wt{font-size:11.5px;color:var(--light);line-height:1.3}
+.wi.active .wt{color:var(--cream)}
+.wd{width:5px;height:5px;border-radius:50%;background:var(--teal);margin-left:auto;flex-shrink:0;display:none}
+.wi.done .wd{display:block}
+
+/* ── MAIN ── */
+#main{margin-left:var(--sw);flex:1;min-height:100vh}
+
+/* ── HERO ── */
+.hero{position:relative;background:var(--carbon);overflow:hidden;padding:80px 64px 64px;border-bottom:1px solid rgba(245,166,35,.2)}
+.hero-bg{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(245,166,35,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(245,166,35,.04) 1px,transparent 1px);background-size:40px 40px}
+.hero-sun{position:absolute;right:-60px;top:-60px;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(255,200,71,.15) 0%,rgba(245,166,35,.04) 40%,transparent 70%);animation:pulse-sun 4s ease-in-out infinite}
+@keyframes pulse-sun{0%,100%{transform:scale(1);opacity:.8}50%{transform:scale(1.05);opacity:1}}
+.hero-badge{display:inline-block;font-family:'Fira Code',monospace;font-size:11px;color:var(--amber);letter-spacing:3px;border:1px solid rgba(245,166,35,.4);padding:6px 14px;border-radius:2px;margin-bottom:20px;animation:fadeUp .6s ease both}
+.hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(52px,7vw,90px);color:var(--cream);line-height:1;margin-bottom:6px;animation:fadeUp .7s ease .1s both;letter-spacing:2px}
+.hero h1 span{color:var(--amber)}
+.hero-sub{font-family:'Crimson Pro',serif;font-size:20px;color:var(--warm);font-style:italic;margin-bottom:36px;animation:fadeUp .7s ease .2s both;line-height:1.5}
+.hero-stats{display:flex;gap:36px;flex-wrap:wrap;animation:fadeUp .7s ease .3s both}
+.hs{border-left:2px solid var(--amber);padding-left:16px}
+.hs-n{font-family:'Bebas Neue',sans-serif;font-size:38px;color:var(--amber);display:block;line-height:1}
+.hs-l{font-size:11px;color:var(--gray);letter-spacing:2px;text-transform:uppercase;font-family:'Fira Code',monospace}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── SECTIONS ── */
+.sec{padding:64px;border-bottom:1px solid rgba(255,255,255,.06);display:none;animation:fadeIn .4s ease}
+.sec.active,.home-sec{display:block}
+.home-sec{padding:64px}
+@media(max-width:900px){.sec,.home-sec{padding:28px 20px}.hero{padding:48px 20px 40px}}
+
+/* ── WEEK HEADER ── */
+.wh{display:flex;align-items:flex-start;gap:20px;margin-bottom:44px;padding-bottom:28px;border-bottom:1px solid rgba(245,166,35,.2)}
+.wb{background:linear-gradient(135deg,var(--amber),var(--gold));color:var(--void);font-family:'Bebas Neue',sans-serif;font-size:13px;padding:8px 14px;border-radius:3px;white-space:nowrap;margin-top:6px;letter-spacing:2px;font-weight:700}
+.wh-txt h2{font-family:'Bebas Neue',sans-serif;font-size:38px;color:var(--cream);letter-spacing:1px;line-height:1.1;margin-bottom:6px}
+.wh-txt p{color:var(--amber);font-size:13px;font-family:'Fira Code',monospace;letter-spacing:1px}
+
+/* ── CONTENT ── */
+.cb{margin-bottom:36px}
+.cb h3{font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--amber);letter-spacing:1px;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.cb h3::before{content:'';width:4px;height:24px;background:var(--amber);border-radius:2px;flex-shrink:0}
+.cb p{font-size:15px;line-height:1.85;color:var(--warm);margin-bottom:12px}
+.cb p strong{color:var(--cream);font-weight:600}
+
+/* ── KEY BOX ── */
+.kb{background:var(--slate);border:1px solid rgba(245,166,35,.2);border-left:3px solid var(--amber);border-radius:0 var(--r) var(--r) 0;padding:18px 22px;margin:18px 0}
+.kb-t{font-family:'Fira Code',monospace;font-size:10px;color:var(--amber);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
+.kb ul{list-style:none}
+.kb li{padding:3px 0 3px 18px;position:relative;font-size:14px;line-height:1.65;color:var(--warm)}
+.kb li::before{content:'▶';position:absolute;left:0;color:var(--amber);font-size:8px;top:8px}
+
+/* ── NOTE BOX ── */
+.nb{background:rgba(0,201,167,.08);border:1px solid rgba(0,201,167,.25);border-radius:var(--r);padding:14px 18px;margin:14px 0;display:flex;gap:12px;align-items:flex-start}
+.nb .ni{font-size:20px;flex-shrink:0;margin-top:1px}
+.nb p{font-size:13.5px;line-height:1.65;color:var(--teal);margin:0}
+.nb.warn{background:rgba(255,68,68,.06);border-color:rgba(255,68,68,.25)}
+.nb.warn p{color:#ff9999}
+
+/* ── DIAGRAM ── */
+.dgm{background:var(--carbon);border:1px solid rgba(245,166,35,.15);border-radius:var(--r);padding:28px;margin:22px 0;text-align:center;position:relative;overflow:hidden}
+.dgm::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(245,166,35,.04) 0%,transparent 60%);pointer-events:none}
+.dgm-title{font-family:'Fira Code',monospace;font-size:11px;color:var(--amber);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+.dgm-cap{font-size:12px;color:var(--gray);font-style:italic;margin-top:10px}
+
+/* ── FORMULA BOX ── */
+.formula{background:var(--graphite);border:1px solid rgba(127,255,0,.2);border-radius:var(--r);padding:20px 24px;margin:16px 0;font-family:'Fira Code',monospace;font-size:16px;color:var(--volt);text-align:center;letter-spacing:2px;position:relative}
+.formula-lbl{position:absolute;top:8px;left:12px;font-size:9px;color:var(--gray);letter-spacing:2px;text-transform:uppercase}
+.formula-note{font-size:11px;color:var(--gray);letter-spacing:0;margin-top:8px;font-family:'Space Grotesk',sans-serif;text-align:left}
+
+/* ── CARDS ── */
+.cg{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:18px 0}
+.cc{background:var(--slate);border:1px solid rgba(255,255,255,.08);border-radius:var(--r);padding:18px;cursor:pointer;transition:all .3s;position:relative;overflow:hidden}
+.cc::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--amber),var(--gold));transform:scaleX(0);transition:transform .3s;transform-origin:left}
+.cc:hover{border-color:rgba(245,166,35,.3);transform:translateY(-3px)}
+.cc:hover::after{transform:scaleX(1)}
+.cc-icon{font-size:28px;margin-bottom:10px}
+.cc-title{font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--cream);letter-spacing:1px;margin-bottom:6px}
+.cc-text{font-size:13px;color:var(--gray);line-height:1.55}
+.cc-detail{margin-top:10px;padding-top:10px;border-top:1px solid var(--graphite);font-size:12.5px;color:var(--amber);line-height:1.6;display:none}
+.cc.exp .cc-detail{display:block}
+.cc-tog{position:absolute;top:12px;right:14px;font-size:14px;color:var(--amber);transition:transform .3s}
+.cc.exp .cc-tog{transform:rotate(45deg)}
+
+/* ── STEPS ── */
+.steps{display:flex;flex-direction:column;gap:0;margin:18px 0}
+.step{display:flex;gap:18px;align-items:flex-start;padding:16px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.step:last-child{border-bottom:none}
+.step-num{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--amber),var(--gold));display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--void);flex-shrink:0;box-shadow:0 0 16px rgba(245,166,35,.3)}
+.step-body h4{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;color:var(--cream);margin-bottom:4px}
+.step-body p{font-size:13px;color:var(--gray);line-height:1.6}
+
+/* ── TABLE ── */
+.dt{width:100%;border-collapse:collapse;margin:18px 0;border-radius:var(--r);overflow:hidden}
+.dt thead tr{background:linear-gradient(135deg,rgba(245,166,35,.2),rgba(245,166,35,.1))}
+.dt thead th{padding:12px 16px;text-align:left;font-family:'Fira Code',monospace;font-size:10px;color:var(--amber);letter-spacing:2px;text-transform:uppercase;border-bottom:1px solid rgba(245,166,35,.2)}
+.dt tbody tr:nth-child(even){background:rgba(255,255,255,.02)}
+.dt tbody tr:hover{background:rgba(245,166,35,.05)}
+.dt td{padding:10px 16px;font-size:13.5px;line-height:1.6;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:top;color:var(--warm)}
+.dt td:first-child{color:var(--cream);font-weight:500}
+
+/* ── TABS ── */
+.tbar{display:flex;gap:2px;border-bottom:1px solid var(--graphite);margin-bottom:0}
+.tbtn{padding:10px 18px;background:transparent;border:none;border-bottom:2px solid transparent;cursor:pointer;font-family:'Space Grotesk',sans-serif;font-size:13px;color:var(--gray);transition:all .2s;letter-spacing:.5px}
+.tbtn:hover{color:var(--cream)}
+.tbtn.active{color:var(--amber);border-bottom-color:var(--amber)}
+.tpanel{display:none;background:var(--slate);border:1px solid rgba(255,255,255,.06);border-top:none;border-radius:0 0 var(--r) var(--r);padding:22px}
+.tpanel.active{display:block}
+.tpanel p{font-size:14px;line-height:1.7;color:var(--warm);margin-bottom:10px}
+
+/* ── QUIZ ── */
+.quiz{background:var(--slate);border:1px solid rgba(245,166,35,.2);border-radius:var(--r);padding:26px;margin:32px 0;position:relative;overflow:hidden}
+.quiz::before{content:'?';position:absolute;right:16px;top:8px;font-family:'Bebas Neue',sans-serif;font-size:100px;color:rgba(245,166,35,.04);pointer-events:none}
+.qlbl{font-family:'Fira Code',monospace;font-size:10px;color:var(--amber);letter-spacing:3px;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.qlbl::before{content:'';width:20px;height:1px;background:var(--amber)}
+.qq{font-family:'Crimson Pro',serif;font-size:19px;color:var(--cream);margin-bottom:18px;line-height:1.5}
+.qopts{display:flex;flex-direction:column;gap:8px}
+.qo{background:var(--graphite);border:1px solid rgba(255,255,255,.06);border-radius:6px;padding:12px 16px;cursor:pointer;font-size:14px;color:var(--light);transition:all .2s;text-align:left;font-family:'Space Grotesk',sans-serif;display:flex;align-items:center;gap:12px}
+.qo:hover:not(.answered){background:rgba(245,166,35,.08);border-color:rgba(245,166,35,.3);color:var(--cream)}
+.qo.correct{background:rgba(0,201,167,.1);border-color:var(--teal);color:#7fffe0}
+.qo.wrong{background:rgba(255,68,68,.1);border-color:var(--red);color:#ffaaaa}
+.ol{font-family:'Fira Code',monospace;font-size:11px;color:var(--amber);min-width:18px;font-weight:500}
+.qfb{margin-top:14px;padding:12px 16px;border-radius:6px;font-size:14px;line-height:1.6;display:none}
+.qfb.show{display:block}
+.qfb.cfb{background:rgba(0,201,167,.08);color:#7fffe0;border:1px solid rgba(0,201,167,.25)}
+.qfb.wfb{background:rgba(255,68,68,.08);color:#ffaaaa;border:1px solid rgba(255,68,68,.25)}
+
+/* ── PRACTICAL BOX ── */
+.prac{background:linear-gradient(135deg,rgba(79,195,247,.06),rgba(0,201,167,.04));border:1px solid rgba(79,195,247,.2);border-radius:var(--r);padding:22px;margin:22px 0}
+.prac-hdr{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--sky);letter-spacing:2px;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.prac-hdr::before{content:'🔧'}
+.prac-item{display:flex;align-items:flex-start;gap:10px;padding:6px 0}
+.prac-cb{width:16px;height:16px;border:1px solid var(--sky);border-radius:3px;flex-shrink:0;margin-top:2px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;font-size:10px;color:transparent}
+.prac-cb.chk{background:var(--sky);color:var(--void)}
+.prac-label{font-size:13.5px;color:var(--light);line-height:1.5}
+
+/* ── FLOW ── */
+.flow{display:flex;align-items:center;flex-wrap:wrap;gap:0;margin:18px 0;justify-content:center}
+.fl{background:var(--slate);border:1px solid rgba(245,166,35,.2);border-radius:var(--r);padding:12px 16px;text-align:center;min-width:90px;flex-shrink:0}
+.fl-t{font-family:'Bebas Neue',sans-serif;font-size:13px;color:var(--amber);letter-spacing:1px;margin-bottom:3px}
+.fl-s{font-size:9px;color:var(--gray);font-family:'Fira Code',monospace}
+.fl-a{font-size:20px;color:var(--amber);padding:0 6px;align-self:center;font-weight:bold}
+
+/* ── NAV BTNS ── */
+.nav-btns{display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:1px solid rgba(255,255,255,.06)}
+.nbtn{display:flex;align-items:center;gap:10px;padding:12px 24px;background:linear-gradient(135deg,var(--amber),var(--gold));color:var(--void);border:none;border-radius:6px;cursor:pointer;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;transition:all .2s}
+.nbtn:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(245,166,35,.3)}
+.nbtn.dis{opacity:.3;pointer-events:none}
+.nbtn.outline{background:transparent;border:1px solid var(--amber);color:var(--amber)}
+.nbtn.outline:hover{background:rgba(245,166,35,.1)}
+.mcbtn{background:transparent;border:1px solid var(--teal);color:var(--teal);padding:10px 18px;border-radius:6px;cursor:pointer;font-family:'Fira Code',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;transition:all .2s}
+.mcbtn:hover,.mcbtn.done{background:var(--teal);color:var(--void)}
+
+/* ── HOME GRID ── */
+.hgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin-top:28px}
+.hc{background:var(--slate);border:1px solid rgba(255,255,255,.06);border-radius:var(--r);padding:18px;cursor:pointer;transition:all .25s;text-decoration:none;display:block;position:relative;overflow:hidden}
+.hc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--amber),var(--gold));transform:scaleX(0);transition:transform .3s;transform-origin:left}
+.hc:hover{border-color:rgba(245,166,35,.3);transform:translateY(-2px)}
+.hc:hover::before{transform:scaleX(1)}
+.hc-n{font-family:'Fira Code',monospace;font-size:10px;color:var(--amber);letter-spacing:2px;margin-bottom:6px}
+.hc-t{font-family:'Bebas Neue',sans-serif;font-size:15px;color:var(--cream);line-height:1.3;letter-spacing:.5px}
+.hc-s{font-size:11px;color:var(--gray);margin-top:4px;font-family:'Fira Code',monospace}
+
+/* ── REVEAL ── */
+.rv{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+.rv.vis{opacity:1;transform:translateY(0)}
+
+/* ── MOBILE ── */
+@media(max-width:900px){
+  #sidebar{transform:translateX(-100%);transition:transform .3s}
+  #sidebar.open{transform:translateX(0)}
+  #main{margin-left:0}
+}
+.mob{display:none;position:fixed;top:14px;left:14px;z-index:200;background:var(--amber);color:var(--void);border:none;border-radius:4px;padding:9px 13px;cursor:pointer;font-size:18px;font-weight:700}
+@media(max-width:900px){.mob{display:block}}
+
+/* ── SPECIAL COMPONENTS ── */
+.component-tag{display:inline-block;background:rgba(245,166,35,.12);border:1px solid rgba(245,166,35,.3);border-radius:4px;padding:2px 8px;font-family:'Fira Code',monospace;font-size:12px;color:var(--amber);margin:2px}
+.outcome{display:flex;gap:10px;padding:8px 0;align-items:flex-start}
+.outcome-icon{font-size:18px;flex-shrink:0}
+.outcome-text{font-size:13.5px;color:var(--warm);line-height:1.55}
+.build-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(127,255,0,.08);border:1px solid rgba(127,255,0,.25);border-radius:20px;padding:6px 14px;font-size:13px;color:var(--volt);font-family:'Space Grotesk',sans-serif;font-weight:500}
+.lo-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin:18px 0}
+.lo-card{background:var(--slate);border:1px solid rgba(255,255,255,.06);border-radius:var(--r);padding:16px}
+.lo-card h4{font-family:'Bebas Neue',sans-serif;font-size:15px;color:var(--amber);letter-spacing:1px;margin-bottom:10px}
+.lo-card ul{list-style:none}
+.lo-card li{font-size:12.5px;color:var(--gray);padding:3px 0 3px 14px;position:relative;line-height:1.5}
+.lo-card li::before{content:'→';position:absolute;left:0;color:var(--amber);font-size:10px}
+@media(max-width:700px){.lo-grid{grid-template-columns:1fr}}
+
+/* ── CIRCUIT ANIMATION ── */
+@keyframes dash{to{stroke-dashoffset:-20}}
+@keyframes glow-pulse{0%,100%{opacity:.6}50%{opacity:1}}
+@keyframes electron-flow{0%{transform:translateX(0%)}100%{transform:translateX(100%)}}
+</style>
+</head>
+<body>
+<button class="mob" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+
+<nav id="sidebar">
+  <div class="sb-brand">
+    <span class="sb-code">VOS 166 · 100 Level</span>
+    <div class="sb-name">Practical Solar Technology</div>
+    <div class="sb-cred">2 Credits · Practical Course</div>
+  </div>
+  <div class="sb-prog">
+    <div class="sb-plbl">PROGRESS: <span id="ptxt">0/8</span></div>
+    <div class="sb-bar"><div class="sb-fill" id="pbar"></div></div>
+  </div>
+  <div class="sb-nav">
+    <a class="wi active" onclick="show('home')" href="#"><span class="wn">⌂</span><span class="wt">Course Overview</span><span class="wd"></span></a>
+    <a class="wi" onclick="show('m1')" href="#"><span class="wn">M01</span><span class="wt">Introduction to Solar Energy</span><span class="wd"></span></a>
+    <a class="wi" onclick="show('m2')" href="#"><span class="wn">M02</span><span class="wt">Fundamentals of Electricity</span><span class="wd"></span></a>
+    <a class="wi" onclick="show('m3')" href="#"><span class="wn">M03</span><span class="wt">Solar Component Identification</span><span class="wd"></span></a>
+    <a class="wi" onclick="show('m4')" href="#"><span class="wn">M04</span><span class="wt">Electrical Workshop Skills</span><span class="wd"></span></a>
+    <a class="wi" onclick="show('m5')" href="#"><span class="wn">M05</span><span class="wt">Project A: Solar Lamp</span><span class="wd"></span></a>
+    <a class="wi" onclick="show('m6')" href="#"><span class="wn">M06</span><span class="wt">Project B: Solar Mini Fan</span><span class="wd"></span></a>
+    <a class="wi" onclick="show('m7')" href="#"><span class="wn">M07</span><span class="wt">Project C: Solar Power Bank</span><span class="wd"></span></a>
+    <a class="wi" onclick="show('m8')" href="#"><span class="wn">M08</span><span class="wt">Testing, Troubleshooting & Design</span><span class="wd"></span></a>
+  </div>
+</nav>
+
+<main id="main">
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg"><div class="hero-grid"></div><div class="hero-sun"></div></div>
+  <div class="hero-badge">VOS 166 · 100 LEVEL · PRACTICAL SOLAR TECHNOLOGY</div>
+  <h1><span>SOLAR</span><br>TECHNOLOGY</h1>
+  <p class="hero-sub">Portable Solar Device Construction — from photons to functional gadgets</p>
+  <div class="hero-stats">
+    <div class="hs"><span class="hs-n">8</span><span class="hs-l">Modules</span></div>
+    <div class="hs"><span class="hs-n">15</span><span class="hs-l">Weeks</span></div>
+    <div class="hs"><span class="hs-n">3</span><span class="hs-l">Build Projects</span></div>
+    <div class="hs"><span class="hs-n">8</span><span class="hs-l">Quizzes</span></div>
+  </div>
+</div>
+
+<!-- HOME -->
+<section class="home-sec" id="home-sec">
+  <h2 style="font-family:'Bebas Neue',sans-serif;font-size:34px;color:var(--cream);letter-spacing:1px;margin-bottom:10px">Welcome to VOS 166</h2>
+  <p style="font-size:15px;color:var(--gray);margin-bottom:24px;font-family:'Fira Code',monospace">SELECT A MODULE TO BEGIN · PROGRESS SAVES AUTOMATICALLY</p>
+  <div class="kb"><div class="kb-t">🎯 Course Objective</div><ul>
+    <li>Understand the photovoltaic effect and how solar panels generate electricity</li>
+    <li>Identify and correctly wire solar system components</li>
+    <li>Master safe soldering, wiring, and circuit assembly techniques</li>
+    <li>Build three functional solar devices: Lamp, Fan, and Power Bank</li>
+    <li>Test, troubleshoot, and package solar gadgets for sale or community use</li>
+  </ul></div>
+
+  <div class="lo-grid">
+    <div class="lo-card"><h4>Cognitive Skills</h4><ul>
+      <li>Explain photovoltaic effect</li><li>Calculate V, I, and Power</li><li>Explain battery storage</li><li>Identify circuit modules</li><li>Understand charging cycles</li><li>Explain circuit protection</li>
+    </ul></div>
+    <div class="lo-card"><h4>Practical Skills</h4><ul>
+      <li>Solder correctly</li><li>Wire series &amp; parallel circuits</li><li>Use a multimeter</li><li>Assemble solar systems</li><li>Build solar lamps</li><li>Fabricate power banks</li>
+    </ul></div>
+    <div class="lo-card"><h4>Transferable Skills</h4><ul>
+      <li>Teamwork</li><li>Design thinking</li><li>Technical drawing</li><li>Entrepreneurship</li><li>Problem solving</li><li>Repair &amp; maintenance</li>
+    </ul></div>
+  </div>
+
+  <div class="hgrid">
+    <a class="hc" onclick="show('m1')" href="#"><div class="hc-n">MODULE 01 · WK 1–2</div><div class="hc-t">Introduction to Solar Energy</div><div class="hc-s">Renewables · History · Applications</div></a>
+    <a class="hc" onclick="show('m2')" href="#"><div class="hc-n">MODULE 02 · WK 3–4</div><div class="hc-t">Electricity Fundamentals</div><div class="hc-s">V · I · R · P · Ohm's Law</div></a>
+    <a class="hc" onclick="show('m3')" href="#"><div class="hc-n">MODULE 03 · WK 5–6</div><div class="hc-t">Component Identification</div><div class="hc-s">Panels · Batteries · Controllers · BMS</div></a>
+    <a class="hc" onclick="show('m4')" href="#"><div class="hc-n">MODULE 04 · WK 7–8</div><div class="hc-t">Workshop Skills</div><div class="hc-s">Soldering · Wiring · Breadboard</div></a>
+    <a class="hc" onclick="show('m5')" href="#"><div class="hc-n">MODULE 05 · WK 9–10</div><div class="hc-t">Project A: Solar Lamp</div><div class="hc-s">Build · Wire · Test</div></a>
+    <a class="hc" onclick="show('m6')" href="#"><div class="hc-n">MODULE 06 · WK 11–12</div><div class="hc-t">Project B: Solar Fan</div><div class="hc-s">DC Motor · Propeller · Battery</div></a>
+    <a class="hc" onclick="show('m7')" href="#"><div class="hc-n">MODULE 07 · WK 13–14</div><div class="hc-t">Project C: Power Bank</div><div class="hc-s">18650 · TP4056 · BMS · USB</div></a>
+    <a class="hc" onclick="show('m8')" href="#"><div class="hc-n">MODULE 08 · WK 15</div><div class="hc-t">Testing & Product Design</div><div class="hc-s">Fault finding · Packaging · Market</div></a>
+  </div>
+</section>
+
+<!-- ═══ MODULE 1 ═══ -->
+<section class="sec" id="m1-sec">
+  <div class="wh"><span class="wb">MODULE 01 · WEEKS 1–2</span><div class="wh-txt"><h2>Introduction to Solar Energy</h2><p>ENERGY SOURCES · HISTORY · APPLICATIONS · PV BASICS</p></div></div>
+
+  <div class="cb rv">
+    <h3>1.1 Energy Sources — Renewable vs. Non-Renewable</h3>
+    <p>Energy is the capacity to do work. The world's energy sources fall into two fundamental categories based on whether they can be replenished naturally:</p>
+    <div class="dgm">
+      <div class="dgm-title">ENERGY SOURCES CLASSIFICATION</div>
+      <svg viewBox="0 0 680 260" width="100%" style="max-width:680px">
+        <!-- Non-renewable side -->
+        <rect x="20" y="30" width="290" height="200" rx="10" fill="rgba(255,68,68,.06)" stroke="rgba(255,68,68,.3)" stroke-width="1.5"/>
+        <text x="165" y="58" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="16" fill="#ff6666" letter-spacing="2">NON-RENEWABLE</text>
+        <text x="165" y="72" text-anchor="middle" font-family="'Fira Code',monospace" font-size="10" fill="#666">⚠ FINITE RESOURCES</text>
+        <circle cx="80" cy="115" r="22" fill="rgba(255,68,68,.12)" stroke="rgba(255,68,68,.3)" stroke-width="1"/>
+        <text x="80" y="113" text-anchor="middle" font-size="20">🛢️</text>
+        <text x="80" y="128" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="10" fill="#ccc">Oil</text>
+        <circle cx="160" cy="115" r="22" fill="rgba(255,68,68,.12)" stroke="rgba(255,68,68,.3)" stroke-width="1"/>
+        <text x="160" y="113" text-anchor="middle" font-size="20">⛏️</text>
+        <text x="160" y="128" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="10" fill="#ccc">Coal</text>
+        <circle cx="240" cy="115" r="22" fill="rgba(255,68,68,.12)" stroke="rgba(255,68,68,.3)" stroke-width="1"/>
+        <text x="240" y="113" text-anchor="middle" font-size="20">💨</text>
+        <text x="240" y="128" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="10" fill="#ccc">Gas</text>
+        <text x="165" y="165" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="11" fill="#ff8888">✗ Causes pollution</text>
+        <text x="165" y="180" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="11" fill="#ff8888">✗ Will eventually run out</text>
+        <text x="165" y="195" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="11" fill="#ff8888">✗ Price is volatile</text>
+        <text x="165" y="215" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="11" fill="#ff8888">✗ Import dependency</text>
+
+        <!-- VS -->
+        <text x="340" y="145" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="22" fill="rgba(245,166,35,.5)">VS</text>
+
+        <!-- Renewable side -->
+        <rect x="370" y="30" width="290" height="200" rx="10" fill="rgba(0,201,167,.06)" stroke="rgba(0,201,167,.3)" stroke-width="1.5"/>
+        <text x="515" y="58" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="16" fill="#00c9a7" letter-spacing="2">RENEWABLE</text>
+        <text x="515" y="72" text-anchor="middle" font-family="'Fira Code',monospace" font-size="10" fill="#666">♻ ENDLESS RESOURCES</text>
+        <circle cx="430" cy="115" r="22" fill="rgba(245,166,35,.12)" stroke="rgba(245,166,35,.3)" stroke-width="1"/>
+        <text x="430" y="113" text-anchor="middle" font-size="20">☀️</text>
+        <text x="430" y="128" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="10" fill="#ccc">Solar</text>
+        <circle cx="515" cy="115" r="22" fill="rgba(0,201,167,.12)" stroke="rgba(0,201,167,.3)" stroke-width="1"/>
+        <text x="515" y="113" text-anchor="middle" font-size="20">💨</text>
+        <text x="515" y="128" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="10" fill="#ccc">Wind</text>
+        <circle cx="600" cy="115" r="22" fill="rgba(79,195,247,.12)" stroke="rgba(79,195,247,.3)" stroke-width="1"/>
+        <text x="600" y="113" text-anchor="middle" font-size="20">💧</text>
+        <text x="600" y="128" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="10" fill="#ccc">Hydro</text>
+        <text x="515" y="165" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="11" fill="#7fffe0">✓ Zero emissions</text>
+        <text x="515" y="180" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="11" fill="#7fffe0">✓ Inexhaustible</text>
+        <text x="515" y="195" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="11" fill="#7fffe0">✓ Falling prices</text>
+        <text x="515" y="215" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="11" fill="#7fffe0">✓ Local generation</text>
+      </svg>
+      <div class="dgm-cap">Nigeria imports over 70% of its energy as fossil fuels. Solar energy is the most abundant renewable resource available across all Nigerian states — 365 days of sunshine opportunity.</div>
+    </div>
+  </div>
+
+  <div class="cb rv">
+    <h3>1.2 The Photovoltaic Effect — How Solar Panels Work</h3>
+    <p>The <strong>photovoltaic (PV) effect</strong> was discovered by Edmund Becquerel in 1839. It describes the generation of voltage and current in a material when it is exposed to light. Solar panels exploit this effect using silicon semiconductor cells.</p>
+    <div class="dgm">
+      <div class="dgm-title">THE PHOTOVOLTAIC EFFECT — ANIMATED</div>
+      <svg viewBox="0 0 660 300" width="100%" style="max-width:660px" id="pv-svg">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <polygon points="0 0,8 3,0 6" fill="#F5A623"/>
+          </marker>
+          <marker id="earr" markerWidth="6" markerHeight="5" refX="6" refY="2.5" orient="auto">
+            <polygon points="0 0,6 2.5,0 5" fill="#00c9a7"/>
+          </marker>
+        </defs>
+        <!-- Sun -->
+        <circle cx="80" cy="60" r="35" fill="rgba(255,200,71,.15)" stroke="rgba(245,166,35,.4)" stroke-width="1.5"/>
+        <circle cx="80" cy="60" r="22" fill="rgba(255,200,71,.3)" stroke="#F5A623" stroke-width="2"/>
+        <text x="80" y="66" text-anchor="middle" font-size="20">☀️</text>
+        <!-- Photon rays (animated) -->
+        <g id="rays" opacity="0.9">
+          <line x1="108" y1="50" x2="190" y2="80" stroke="#F5A623" stroke-width="2" stroke-dasharray="4,3">
+            <animate attributeName="opacity" values="0.4;1;0.4" dur="1.5s" repeatCount="indefinite"/>
+          </line>
+          <line x1="110" y1="62" x2="195" y2="100" stroke="#FFD060" stroke-width="2" stroke-dasharray="4,3">
+            <animate attributeName="opacity" values="1;0.4;1" dur="1.5s" repeatCount="indefinite"/>
+          </line>
+          <line x1="108" y1="72" x2="192" y2="118" stroke="#F5A623" stroke-width="2" stroke-dasharray="4,3">
+            <animate attributeName="opacity" values="0.6;1;0.6" dur="1.8s" repeatCount="indefinite"/>
+          </line>
+        </g>
+        <text x="80" y="15" text-anchor="middle" font-family="'Fira Code',monospace" font-size="10" fill="#F5A623">PHOTONS</text>
+        <text x="80" y="27" text-anchor="middle" font-family="'Fira Code',monospace" font-size="9" fill="#888">(light particles)</text>
+
+        <!-- Solar cell layers -->
+        <!-- N-type -->
+        <rect x="195" y="65" width="240" height="45" rx="4" fill="rgba(79,195,247,.15)" stroke="rgba(79,195,247,.4)" stroke-width="1.5"/>
+        <text x="315" y="84" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="13" fill="#4FC3F7" letter-spacing="1">N-TYPE SILICON</text>
+        <text x="315" y="99" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="10" fill="#6B7280">Extra electrons (negative)</text>
+        <!-- P-N junction -->
+        <rect x="195" y="110" width="240" height="4" fill="#F5A623" opacity="0.8"/>
+        <text x="445" y="115" font-family="'Fira Code',monospace" font-size="9" fill="#F5A623">P-N JUNCTION</text>
+        <!-- P-type -->
+        <rect x="195" y="114" width="240" height="45" rx="4" fill="rgba(245,166,35,.12)" stroke="rgba(245,166,35,.3)" stroke-width="1.5"/>
+        <text x="315" y="133" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="13" fill="#F5A623" letter-spacing="1">P-TYPE SILICON</text>
+        <text x="315" y="148" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="10" fill="#6B7280">Holes (positive charge)</text>
+        <!-- Electron animation -->
+        <circle cx="210" cy="87" r="5" fill="#4FC3F7" opacity="0.9">
+          <animate attributeName="cx" values="210;430;210" dur="3s" repeatCount="indefinite"/>
+          <animate attributeName="cy" values="87;180;87" dur="3s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="250" cy="90" r="5" fill="#00c9a7" opacity="0.8">
+          <animate attributeName="cx" values="250;380;250" dur="2.5s" repeatCount="indefinite" begin="0.5s"/>
+          <animate attributeName="cy" values="90;175;90" dur="2.5s" repeatCount="indefinite" begin="0.5s"/>
+        </circle>
+        <!-- Wire circuit -->
+        <path d="M 195,87 L 130,87 L 130,200 L 445,200 L 445,137" fill="none" stroke="rgba(0,201,167,.6)" stroke-width="2.5" stroke-dasharray="6,4">
+          <animate attributeName="stroke-dashoffset" values="0;-20" dur="1s" repeatCount="indefinite"/>
+        </path>
+        <!-- Bulb -->
+        <circle cx="130" cy="200" r="0" fill="none"/>
+        <rect x="90" y="185" width="80" height="30" rx="6" fill="rgba(245,166,35,.1)" stroke="rgba(245,166,35,.3)" stroke-width="1.5"/>
+        <text x="130" y="203" text-anchor="middle" font-size="16">💡</text>
+        <text x="130" y="232" text-anchor="middle" font-family="'Fira Code',monospace" font-size="9" fill="#F5A623">LOAD (bulb)</text>
+        <!-- Labels -->
+        <text x="315" y="175" text-anchor="middle" font-family="'Fira Code',monospace" font-size="9" fill="#666">electric field separates charges</text>
+        <!-- Electron flow arrow -->
+        <text x="445" y="180" font-family="'Fira Code',monospace" font-size="9" fill="#00c9a7">↓ conventional current</text>
+        <!-- Output -->
+        <rect x="510" y="100" width="120" height="60" rx="6" fill="rgba(127,255,0,.08)" stroke="rgba(127,255,0,.25)" stroke-width="1.5"/>
+        <text x="570" y="122" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="14" fill="#7fff00" letter-spacing="1">OUTPUT</text>
+        <text x="570" y="138" text-anchor="middle" font-family="'Fira Code',monospace" font-size="11" fill="#7fff00">~0.5V / cell</text>
+        <text x="570" y="152" text-anchor="middle" font-family="'Fira Code',monospace" font-size="10" fill="#888">DC electricity</text>
+        <line x1="445" y1="130" x2="510" y2="130" stroke="rgba(127,255,0,.4)" stroke-width="2" marker-end="url(#arr)"/>
+      </svg>
+      <div class="dgm-cap">When photons from sunlight strike the solar cell, they knock electrons free from their atoms. The P-N junction creates an electric field that separates these electrons, causing them to flow in one direction — creating direct current (DC) electricity. Many cells connected together form a solar panel.</div>
+    </div>
+  </div>
+
+  <div class="cb rv">
+    <h3>1.3 Solar Energy in Africa — Why It Matters</h3>
+    <div class="cg">
+      <div class="cc" onclick="this.classList.toggle('exp')"><span class="cc-tog">+</span><div class="cc-icon">🌍</div><div class="cc-title">Africa's Solar Advantage</div><div class="cc-text">Africa receives some of the world's highest solar irradiance</div><div class="cc-detail">Nigeria receives 3.5–7.0 kWh/m²/day of solar irradiance. This means a 1m² solar panel can generate 3.5–7 units of electricity daily — enough to charge phones, power lamps, and run fans for an average household. Sub-Saharan Africa has more solar potential than any other region on Earth.</div></div>
+      <div class="cc" onclick="this.classList.toggle('exp')"><span class="cc-tog">+</span><div class="cc-icon">🔋</div><div class="cc-title">Energy Access Crisis</div><div class="cc-text">Over 90 million Nigerians lack reliable electricity access</div><div class="cc-detail">Nigeria's national grid frequently supplies less than 4,000 MW for a population of 220 million people — far below the required 30,000+ MW. Solar energy offers a decentralised solution: each household or community can generate its own power without waiting for grid extension.</div></div>
+      <div class="cc" onclick="this.classList.toggle('exp')"><span class="cc-tog">+</span><div class="cc-icon">💰</div><div class="cc-title">Falling Costs</div><div class="cc-text">Solar panel prices have dropped 89% since 2010</div><div class="cc-detail">In 2010, a solar panel cost approximately $100 per watt. By 2024, this had fallen to under $0.25 per watt — making solar cheaper than fossil fuels in most applications. A complete solar lamp system costs less than ₦5,000 and lasts 3–5 years with no fuel cost.</div></div>
+      <div class="cc" onclick="this.classList.toggle('exp')"><span class="cc-tog">+</span><div class="cc-icon">🚀</div><div class="cc-title">Entrepreneurship Opportunity</div><div class="cc-text">Solar repair and fabrication is a growing market</div><div class="cc-detail">There are over 10,000 solar technicians needed across Nigeria's rural communities alone. Students who complete this course can set up solar fabrication businesses, offering solar lamps, chargers, and power banks — starting with as little as ₦50,000 in equipment and generating monthly revenues of ₦150,000+.</div></div>
+    </div>
+  </div>
+
+  <div class="cb rv">
+    <h3>1.4 Solar Applications</h3>
+    <table class="dt"><thead><tr><th>Application</th><th>Solar Device Used</th><th>Impact</th></tr></thead><tbody>
+      <tr><td>Street lighting</td><td>Solar lantern + LED + battery</td><td>Community safety; no electricity bill</td></tr>
+      <tr><td>Phone charging</td><td>Solar panel + USB converter</td><td>Communication in off-grid areas</td></tr>
+      <tr><td>Home lighting</td><td>Solar lamp system</td><td>Extended study hours; kerosene saved</td></tr>
+      <tr><td>Irrigation pump</td><td>Solar pump system</td><td>Year-round farming; food security</td></tr>
+      <tr><td>Medical equipment</td><td>Solar power system</td><td>Vaccine refrigeration in rural clinics</td></tr>
+      <tr><td>Education</td><td>Solar-charged tablets, lamps</td><td>Night study for students</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="prac rv">
+    <div class="prac-hdr">PRACTICAL ACTIVITIES — WEEKS 1–2</div>
+    <div class="prac-item"><div class="prac-cb" onclick="this.classList.toggle('chk');this.textContent=this.classList.contains('chk')?'✓':''">✓</div><div class="prac-label">Examine 3 different solar devices (lamp, charger, calculator) and sketch their components in your lab notebook</div></div>
+    <div class="prac-item"><div class="prac-cb" onclick="this.classList.toggle('chk');this.textContent=this.classList.contains('chk')?'✓':''">✓</div><div class="prac-label">Identify and label parts of a solar lamp: panel, battery, LED board, switch, charge controller</div></div>
+    <div class="prac-item"><div class="prac-cb" onclick="this.classList.toggle('chk');this.textContent=this.classList.contains('chk')?'✓':''">✓</div><div class="prac-label">Carefully dismantle a small solar toy; draw and label all components found inside</div></div>
+    <div class="prac-item"><div class="prac-cb" onclick="this.classList.toggle('chk');this.textContent=this.classList.contains('chk')?'✓':''">✓</div><div class="prac-label">Take a solar panel outdoors; use a multimeter to measure its open-circuit voltage in full sunlight, partial shade, and indoor lighting</div></div>
+    <div class="prac-item"><div class="prac-cb" onclick="this.classList.toggle('chk');this.textContent=this.classList.contains('chk')?'✓':''">✓</div><div class="prac-label">Record results in lab notebook; sketch the panel and write its rated vs. measured voltage</div></div>
+  </div>
+
+  <div class="quiz rv">
+    <div class="qlbl">QUIZ — MODULE 1</div>
+    <div class="qq">What is the photovoltaic effect?</div>
+    <div class="qopts" id="q1-opts">
+      <button class="qo" onclick="ans('q1','a','b')" data-id="a"><span class="ol">A</span>The process of converting electricity into light</button>
+      <button class="qo" onclick="ans('q1','b','b')" data-id="b"><span class="ol">B</span>The generation of voltage and electric current in a material when it is exposed to light</button>
+      <button class="qo" onclick="ans('q1','c','b')" data-id="c"><span class="ol">C</span>The reflection of light from a solar panel surface</button>
+      <button class="qo" onclick="ans('q1','d','b')" data-id="d"><span class="ol">D</span>The storage of solar energy in a battery</button>
+    </div>
+    <div class="qfb" id="q1-fb"></div>
+  </div>
+
+  <div class="nav-btns"><button class="nbtn dis outline">← Previous</button><button class="mcbtn" onclick="done('m1',this)">Mark Complete ✓</button><button class="nbtn" onclick="show('m2')">Module 2 →</button></div>
+</section>
+
+<!-- ═══ MODULE 2 ═══ -->
+<section class="sec" id="m2-sec">
+  <div class="wh"><span class="wb">MODULE 02 · WEEKS 3–4</span><div class="wh-txt"><h2>Fundamentals of Electricity</h2><p>VOLTAGE · CURRENT · RESISTANCE · POWER · OHM'S LAW</p></div></div>
+
+  <div class="cb rv">
+    <h3>2.1 The "Solar Language" — Key Electrical Quantities</h3>
+    <div class="cg">
+      <div class="cc" onclick="this.classList.toggle('exp')"><span class="cc-tog">+</span><div class="cc-icon">⚡</div><div class="cc-title">Voltage (V)</div><div class="cc-text">The electrical "push" or pressure — measured in Volts (V)</div><div class="cc-detail">Think of voltage like water pressure in a pipe. The higher the voltage, the harder electrons are being pushed around the circuit. Solar panels produce voltages like 5V, 6V, 12V, 18V. A USB charger outputs 5V. A car battery is 12V. The symbol is V and it's measured with a voltmeter (red probe to + terminal).</div></div>
+      <div class="cc" onclick="this.classList.toggle('exp')"><span class="cc-tog">+</span><div class="cc-icon">🌊</div><div class="cc-title">Current (I)</div><div class="cc-text">The flow rate of electrons — measured in Amperes (A)</div><div class="cc-detail">Current is like the volume of water flowing through a pipe. A phone charger draws ~1A. An LED lamp draws ~0.3A. A motor might draw 2–5A. Current is measured with an ammeter (placed in series with the circuit). Always check the maximum current rating of your solar panel and charge controller!</div></div>
+      <div class="cc" onclick="this.classList.toggle('exp')"><span class="cc-tog">+</span><div class="cc-icon">🚧</div><div class="cc-title">Resistance (R)</div><div class="cc-text">Opposition to current flow — measured in Ohms (Ω)</div><div class="cc-detail">Resistance is like a narrow section of pipe that restricts water flow. Every component in a circuit has some resistance. Resistors are used deliberately to control current. A burnt component often shows very high resistance (open circuit) while a short circuit shows nearly zero resistance. R = V/I.</div></div>
+      <div class="cc" onclick="this.classList.toggle('exp')"><span class="cc-tog">+</span><div class="cc-icon">💪</div><div class="cc-title">Power (P)</div><div class="cc-text">Rate of energy use or generation — measured in Watts (W)</div><div class="cc-detail">P = V × I. A 5V panel producing 1A of current generates 5 watts of power. An LED rated 5W at 5V draws 1A. Power tells you how much energy is consumed per second. A 10W solar panel in good sunlight generates 10 joules of energy every second.</div></div>
+    </div>
+  </div>
+
+  <div class="cb rv">
+    <h3>2.2 Ohm's Law — The Master Equation</h3>
+    <p>Ohm's Law describes the relationship between voltage, current, and resistance. It is the single most important equation in electrical engineering:</p>
+    <div class="formula"><span class="formula-lbl">OHM'S LAW</span>V = I × R<br><span style="font-size:13px;color:#888"> &nbsp; also: &nbsp; I = V/R &nbsp; and &nbsp; R = V/I</span><div class="formula-note">V = Voltage (Volts) &nbsp;|&nbsp; I = Current (Amperes) &nbsp;|&nbsp; R = Resistance (Ohms)</div></div>
+
+    <div class="dgm">
+      <div class="dgm-title">OHM'S LAW TRIANGLE — COVER ANY ONE TO FIND THE FORMULA</div>
+      <svg viewBox="0 0 400 220" width="100%" style="max-width:400px">
+        <!-- Triangle -->
+        <polygon points="200,20 60,180 340,180" fill="rgba(245,166,35,.08)" stroke="rgba(245,166,35,.4)" stroke-width="2"/>
+        <!-- Dividing line -->
+        <line x1="60" y1="180" x2="340" y2="180" stroke="rgba(245,166,35,.6)" stroke-width="2"/>
+        <line x1="130" y1="180" x2="200" y2="70" stroke="rgba(245,166,35,.4)" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <!-- V at top -->
+        <text x="200" y="55" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="36" fill="#F5A623">V</text>
+        <text x="200" y="72" text-anchor="middle" font-family="'Fira Code',monospace" font-size="10" fill="#888">Volts</text>
+        <!-- I at bottom left -->
+        <text x="105" y="175" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="34" fill="#4FC3F7">I</text>
+        <text x="105" y="192" text-anchor="middle" font-family="'Fira Code',monospace" font-size="10" fill="#888">Amps</text>
+        <!-- R at bottom right -->
+        <text x="295" y="175" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="34" fill="#00c9a7">R</text>
+        <text x="295" y="192" text-anchor="middle" font-family="'Fira Code',monospace" font-size="10" fill="#888">Ohms</text>
+        <!-- Formulas outside -->
+        <text x="40" y="130" font-family="'Fira Code',monospace" font-size="11" fill="#F5A623">V = I × R</text>
+        <text x="220" y="220" font-family="'Fira Code',monospace" font-size="11" fill="#4FC3F7">I = V ÷ R</text>
+        <text x="330" y="130" font-family="'Fira Code',monospace" font-size="11" fill="#00c9a7">R = V ÷ I</text>
+      </svg>
+      <div class="dgm-cap">To use the triangle: Cover the quantity you want to find — the remaining two show the formula. Example: Find Current (I) → cover I → see V above R → I = V ÷ R</div>
+    </div>
+  </div>
+
+  <div class="cb rv">
+    <h3>2.3 Power and Energy Calculations</h3>
+    <div class="formula"><span class="formula-lbl">POWER</span>P = V × I &nbsp;&nbsp; (Watts = Volts × Amperes)<div class="formula-note">Example: Solar panel output = 6V × 0.5A = 3 Watts</div></div>
+    <div class="formula"><span class="formula-lbl">ENERGY</span>Energy (Wh) = Power (W) × Time (hours)<div class="formula-note">Example: 3W panel × 5 hours sunlight = 15 Wh stored in battery</div></div>
+
+    <div class="kb"><div class="kb-t">📊 Worked Example — Solar Lamp Calculation</div><ul>
+      <li><strong>LED lamp power:</strong> 5W (runs at 5V, draws 1A)</li>
+      <li><strong>Battery capacity:</strong> 3.7V, 3000mAh = 11.1 Wh of stored energy</li>
+      <li><strong>Runtime:</strong> 11.1 Wh ÷ 5W = 2.2 hours per charge</li>
+      <li><strong>To charge battery:</strong> Need 11.1 Wh ÷ (6V × 0.3A) = ~6.2 hours of sunlight with a 1.8W panel</li>
+      <li><strong>Better panel:</strong> Use a 5W panel → charge time = 11.1 Wh ÷ 5W = 2.2 hours!</li>
+    </ul></div>
+  </div>
+
+  <div class="cb rv">
+    <h3>2.4 Series vs. Parallel Circuits</h3>
+    <div class="dgm">
+      <div class="dgm-title">SERIES vs. PARALLEL — VOLTAGE AND CURRENT BEHAVIOUR</div>
+      <svg viewBox="0 0 660 250" width="100%" style="max-width:660px">
+        <!-- SERIES -->
+        <text x="165" y="22" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="16" fill="#F5A623" letter-spacing="2">SERIES CIRCUIT</text>
+        <text x="165" y="38" text-anchor="middle" font-family="'Fira Code',monospace" font-size="9" fill="#888">Voltages ADD · Same current</text>
+        <!-- Battery -->
+        <rect x="20" y="55" width="30" height="50" rx="3" fill="rgba(245,166,35,.2)" stroke="#F5A623" stroke-width="2"/>
+        <text x="35" y="78" text-anchor="middle" font-size="14">🔋</text>
+        <text x="35" y="92" text-anchor="middle" font-family="'Fira Code',monospace" font-size="9" fill="#F5A623">6V</text>
+        <!-- Series wire -->
+        <line x1="50" y1="70" x2="80" y2="70" stroke="#F5A623" stroke-width="2"/>
+        <rect x="80" y="58" width="40" height="24" rx="4" fill="rgba(79,195,247,.15)" stroke="#4FC3F7" stroke-width="1.5"/>
+        <text x="100" y="74" text-anchor="middle" font-family="'Fira Code',monospace" font-size="10" fill="#4FC3F7">LED1</text>
+        <line x1="120" y1="70" x2="155" y2="70" stroke="#F5A623" stroke-width="2"/>
+        <rect x="155" y="58" width="40" height="24" rx="4" fill="rgba(79,195,247,.15)" stroke="#4FC3F7" stroke-width="1.5"/>
+        <text x="175" y="74" text-anchor="middle" font-family="'Fira Code',monospace" font-size="10" fill="#4FC3F7">LED2</text>
+        <line x1="195" y1="70" x2="230" y2="70" stroke="#F5A623" stroke-width="2"/>
+        <rect x="230" y="58" width="40" height="24" rx="4" fill="rgba(79,195,247,.15)" stroke="#4FC3F7" stroke-width="1.5"/>
+        <text x="250" y="74" text-anchor="middle" font-family="'Fira Code',monospace" font-size="10" fill="#4FC3F7">LED3</text>
+        <line x1="270" y1="70" x2="295" y2="70" stroke="#F5A623" stroke-width="2"/>
+        <line x1="295" y1="70" x2="295" y2="115" stroke="#F5A623" stroke-width="2"/>
+        <line x1="295" y1="115" x2="20" y2="115" stroke="#F5A623" stroke-width="2"/>
+        <line x1="20" y1="115" x2="20" y2="105" stroke="#F5A623" stroke-width="2"/>
+        <!-- Series labels -->
+        <text x="165" y="145" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="12" fill="#00c9a7">✓ Voltage adds: 2V+2V+2V = 6V</text>
+        <text x="165" y="162" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="12" fill="#00c9a7">✓ Same current through all</text>
+        <text x="165" y="179" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="12" fill="#ff8888">✗ If one LED fails — all go out</text>
+        <text x="165" y="196" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="12" fill="#888">Used: for higher voltage panels</text>
+
+        <!-- PARALLEL -->
+        <text x="495" y="22" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="16" fill="#00c9a7" letter-spacing="2">PARALLEL CIRCUIT</text>
+        <text x="495" y="38" text-anchor="middle" font-family="'Fira Code',monospace" font-size="9" fill="#888">Same voltage · Currents ADD</text>
+        <!-- Parallel battery -->
+        <rect x="360" y="55" width="30" height="50" rx="3" fill="rgba(0,201,167,.12)" stroke="#00c9a7" stroke-width="2"/>
+        <text x="375" y="78" text-anchor="middle" font-size="14">🔋</text>
+        <text x="375" y="92" text-anchor="middle" font-family="'Fira Code',monospace" font-size="9" fill="#00c9a7">6V</text>
+        <!-- Main wires -->
+        <line x1="390" y1="65" x2="420" y2="65" stroke="#00c9a7" stroke-width="2"/>
+        <line x1="420" y1="65" x2="420" y2="200" stroke="#00c9a7" stroke-width="2"/>
+        <line x1="390" y1="105" x2="420" y2="105" stroke="#00c9a7" stroke-width="2"/>
+        <!-- Parallel branches -->
+        <line x1="420" y1="85" x2="450" y2="85"/>
+        <rect x="450" y="73" width="40" height="24" rx="4" fill="rgba(245,166,35,.15)" stroke="#F5A623" stroke-width="1.5"/>
+        <text x="470" y="89" text-anchor="middle" font-family="'Fira Code',monospace" font-size="10" fill="#F5A623">LED1</text>
+        <line x1="490" y1="85" x2="530" y2="85" stroke="#00c9a7" stroke-width="2"/>
+
+        <line x1="420" y1="130" x2="450" y2="130" stroke="#00c9a7" stroke-width="2"/>
+        <rect x="450" y="118" width="40" height="24" rx="4" fill="rgba(245,166,35,.15)" stroke="#F5A623" stroke-width="1.5"/>
+        <text x="470" y="134" text-anchor="middle" font-family="'Fira Code',monospace" font-size="10" fill="#F5A623">LED2</text>
+        <line x1="490" y1="130" x2="530" y2="130" stroke="#00c9a7" stroke-width="2"/>
+
+        <line x1="420" y1="175" x2="450" y2="175" stroke="#00c9a7" stroke-width="2"/>
+        <rect x="450" y="163" width="40" height="24" rx="4" fill="rgba(245,166,35,.15)" stroke="#F5A623" stroke-width="1.5"/>
+        <text x="470" y="179" text-anchor="middle" font-family="'Fira Code',monospace" font-size="10" fill="#F5A623">LED3</text>
+        <line x1="490" y1="175" x2="530" y2="175" stroke="#00c9a7" stroke-width="2"/>
+
+        <line x1="530" y1="85" x2="530" y2="200" stroke="#00c9a7" stroke-width="2"/>
+        <line x1="530" y1="200" x2="360" y2="200" stroke="#00c9a7" stroke-width="2"/>
+        <line x1="360" y1="200" x2="360" y2="105" stroke="#00c9a7" stroke-width="2"/>
+        <!-- Parallel labels -->
+        <text x="620" y="160" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="11" fill="#00c9a7">✓ Same V: 6V each</text>
+        <text x="620" y="175" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="11" fill="#00c9a7">✓ Current adds: 3×more</text>
+        <text x="620" y="192" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="11" fill="#7fff00">✓ One fails — others work!</text>
+      </svg>
+      <div class="dgm-cap">In solar systems: panels connected in SERIES increase voltage (e.g. two 12V panels → 24V). Panels in PARALLEL increase current (more charging power). Batteries in PARALLEL increase capacity. Always used PARALLEL for LED arrays in solar lamps — if one LED fails, the others continue working.</div>
+    </div>
+  </div>
+
+  <div class="prac rv">
+    <div class="prac-hdr">PRACTICAL ACTIVITIES — WEEKS 3–4</div>
+    <div class="prac-item"><div class="prac-cb" onclick="this.classList.toggle('chk');this.textContent=this.classList.contains('chk')?'✓':''">✓</div><div class="prac-label">Use a multimeter to measure voltage output of the solar panel at various light intensities (full sun, shade, indoors)</div></div>
+    <div class="prac-item"><div class="prac-cb" onclick="this.classList.toggle('chk');this.textContent=this.classList.contains('chk')?'✓':''">✓</div><div class="prac-label">Connect an LED to the panel; measure current with ammeter in series; calculate power (P = V × I)</div></div>
+    <div class="prac-item"><div class="prac-cb" onclick="this.classList.toggle('chk');this.textContent=this.classList.contains('chk')?'✓':''">✓</div><div class="prac-label">Build a series circuit with 3 LEDs; measure voltage across each; verify they add up to total voltage</div></div>
+    <div class="prac-item"><div class="prac-cb" onclick="this.classList.toggle('chk');this.textContent=this.classList.contains('chk')?'✓':''">✓</div><div class="prac-label">Build a parallel circuit with 3 LEDs; measure current through each branch; verify currents add</div></div>
+    <div class="prac-item"><div class="prac-cb" onclick="this.classList.toggle('chk');this.textContent=this.classList.contains('chk')?'✓':''">✓</div><div class="prac-label">Calculate charging time for a 3000mAh battery using a 5V/1W solar panel (show working)</div></div>
+  </div>
+
+  <div class="quiz rv">
+    <div class="qlbl">QUIZ — MODULE 2</div>
+    <div class="qq">A solar panel produces 6V and 0.5A. What is its power output?</div>
+    <div class="qopts" id="q2-opts">
+      <button class="qo" onclick="ans('q2','a','c')" data-id="a"><span class="ol">A</span>12 Watts</button>
+      <button class="qo" onclick="ans('q2','b','c')" data-id="b"><span class="ol">B</span>0.083 Watts</button>
+      <button class="qo" onclick="ans('q2','c','c')" data-id="c"><span class="ol">C</span>3 Watts (P = 6V × 0.5A = 3W)</button>
+      <button class="qo" onclick="ans('q2','d','c')" data-id="d"><span class="ol">D</span>6.5 Watts</button>
+    </div>
+    <div class="qfb" id="q2-fb"></div>
+  </div>
+
+  <div class="nav-btns"><button class="nbtn outline" onclick="show('m1')">← Module 1</button><button class="mcbtn" onclick="done('m2',this)">Mark Complete ✓</button><button class="nbtn" onclick="show('m3')">Module 3 →</button></div>
+</section>
+
+<!-- ═══ MODULE 3 ═══ -->
+<section class="sec" id="m3-sec">
+  <div class="wh"><span class="wb">MODULE 03 · WEEKS 5–6</span><div class="wh-txt"><h2>Solar Component Identification</h2><p>PANELS · BATTERIES · CHARGE CONTROLLERS · BMS · WIRING</p></div></div>
+
+  <div class="cb rv">
+    <h3>3.1 Solar Panel Types</h3>
+    <table class="dt"><thead><tr><th>Type</th><th>Appearance</th><th>Efficiency</th><th>Best For</th><th>Cost</th></tr></thead><tbody>
+      <tr><td>Monocrystalline</td><td>Uniform black/dark colour; octagonal cells</td><td>17–22%</td><td>Limited space; high-efficiency needed</td><td>Highest</td></tr>
+      <tr><td>Polycrystalline</td><td>Blue, speckled appearance; square cells</td><td>13–17%</td><td>Budget solar systems; wide use</td><td>Medium</td></tr>
+      <tr><td>Thin Film (CIGS/CdTe)</td><td>Thin, flexible sheets; dark uniform</td><td>10–13%</td><td>Portable/curved surfaces</td><td>Lowest</td></tr>
+    </tbody></table>
+    <div class="nb"><span class="ni">💡</span><p>For our projects, we will use <strong>5V/6V monocrystalline mini panels</strong> — they are small, efficient, and produce sufficient voltage to charge lithium-ion batteries via the TP4056 charging module.</p></div>
+  </div>
+
+  <div class="cb rv">
+    <h3>3.2 Battery Types</h3>
+    <div class="dgm">
+      <div class="dgm-title">BATTERY COMPARISON — SOLAR PROJECT APPLICATIONS</div>
+      <svg viewBox="0 0 680 220" width="100%" style="max-width:680px">
+        <!-- Li-ion (18650) -->
+        <rect x="20" y="30" width="140" height="170" rx="8" fill="rgba(245,166,35,.06)" stroke="rgba(245,166,35,.3)" stroke-width="1.5"/>
+        <text x="90" y="55" text-anchor="middle" font-size="30">🔋</text>
+        <text x="90" y="78" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="14" fill="#F5A623" letter-spacing="1">LITHIUM-ION</text>
+        <text x="90" y="92" text-anchor="middle" font-family="'Fira Code',monospace" font-size="10" fill="#888">18650 cell</text>
+        <text x="90" y="112" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="11" fill="#ccc">3.7V nominal</text>
+        <text x="90" y="128" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="11" fill="#ccc">2000–3500 mAh</text>
+        <text x="90" y="144" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="11" fill="#7fff00">Best for:</text>
+        <text x="90" y="160" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="10" fill="#888">Power banks, lamps</text>
+        <text x="90" y="190" text-anchor="middle" font-family="'Fira Code',monospace" font-size="9" fill="#F5A623">★★★★★</text>
+
+        <!-- LiPo -->
+        <rect x="185" y="30" width="140" height="170" rx="8" fill="rgba(79,195,247,.06)" stroke="rgba(79,195,247,.25)" stroke-width="1.5"/>
+        <text x="255" y="55" text-anchor="middle" font-size="30">🔋</text>
+        <text x="255" y="78" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="14" fill="#4FC3F7" letter-spacing="1">LI-POLYMER</text>
+        <text x="255" y="92" text-anchor="middle" font-family="'Fira Code',monospace" font-size="10" fill="#888">LiPo pouch</text>
+        <text x="255" y="112" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="11" fill="#ccc">3.7V nominal</text>
+        <text x="255" y="128" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="11" fill="#ccc">1000–5000 mAh</text>
+        <text x="255" y="144" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="11" fill="#7fff00">Best for:</text>
+        <text x="255" y="160" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="10" fill="#888">Thin devices, lamps</text>
+        <text x="255" y="190" text-anchor="middle" font-family="'Fira Code',monospace" font-size="9" fill="#4FC3F7">★★★★☆</text>
+
+        <!-- Lead Acid -->
+        <rect x="350" y="30" width="140" height="170" rx="8" fill="rgba(0,201,167,.06)" stroke="rgba(0,201,167,.25)" stroke-width="1.5"/>
+        <text x="420" y="55" text-anchor="middle" font-size="30">🪫</text>
+        <text x="420" y="78" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="14" fill="#00c9a7" letter-spacing="1">LEAD ACID</text>
+        <text x="420" y="92" text-anchor="middle" font-family="'Fira Code',monospace" font-size="10" fill="#888">SLA / gel</text>
+        <text x="420" y="112" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="11" fill="#ccc">12V (6×2V cells)</text>
+        <text x="420" y="128" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="11" fill="#ccc">5–100 Ah</text>
+        <text x="420" y="144" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="11" fill="#7fff00">Best for:</text>
+        <text x="420" y="160" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="10" fill="#888">Home systems, pumps</text>
+        <text x="420" y="190" text-anchor="middle" font-family="'Fira Code',monospace" font-size="9" fill="#00c9a7">★★★☆☆</text>
+
+        <!-- NiMH -->
+        <rect x="515" y="30" width="140" height="170" rx="8" fill="rgba(127,255,0,.06)" stroke="rgba(127,255,0,.2)" stroke-width="1.5"/>
+        <text x="585" y="55" text-anchor="middle" font-size="30">🔋</text>
+        <text x="585" y="78" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="14" fill="#7fff00" letter-spacing="1">NiMH</text>
+        <text x="585" y="92" text-anchor="middle" font-family="'Fira Code',monospace" font-size="10" fill="#888">AA/AAA size</text>
+        <text x="585" y="112" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="11" fill="#ccc">1.2V per cell</text>
+        <text x="585" y="128" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="11" fill="#ccc">600–2800 mAh</text>
+        <text x="585" y="144" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="11" fill="#7fff00">Best for:</text>
+        <text x="585" y="160" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="10" fill="#888">Solar garden lights</text>
+        <text x="585" y="190" text-anchor="middle" font-family="'Fira Code',monospace" font-size="9" fill="#7fff00">★★★☆☆</text>
+      </svg>
+      <div class="dgm-cap">For our three projects, we will primarily use <strong>18650 Lithium-Ion cells</strong> (for the power bank) and <strong>lithium polymer (LiPo) packs</strong> (for the lamp and fan). Always check polarity before connecting and NEVER short-circuit a lithium battery — it can cause fire.</div>
+    </div>
+  </div>
+
+  <div class="cb rv">
+    <h3>3.3 Charge Controllers and Protection Modules</h3>
+    <div class="dgm">
+      <div class="dgm-title">THE TP4056 CHARGER MODULE — YOUR MOST IMPORTANT COMPONENT</div>
+      <svg viewBox="0 0 580 200" width="100%" style="max-width:580px">
+        <!-- PCB board -->
+        <rect x="180" y="40" width="220" height="120" rx="6" fill="#1a1a1a" stroke="#333" stroke-width="2"/>
+        <rect x="185" y="45" width="210" height="110" rx="4" fill="#0d1a0d"/>
+        <!-- TP4056 chip -->
+        <rect x="245" y="75" width="90" height="50" rx="3" fill="#2a2a2a" stroke="#444" stroke-width="1"/>
+        <text x="290" y="98" text-anchor="middle" font-family="'Fira Code',monospace" font-size="11" fill="#888">TP4056</text>
+        <text x="290" y="112" text-anchor="middle" font-family="'Fira Code',monospace" font-size="9" fill="#666">Charger IC</text>
+        <!-- LEDs -->
+        <circle cx="210" cy="65" r="5" fill="#ff0000" opacity="0.8"><animate attributeName="opacity" values="0.3;1;0.3" dur="1.5s" repeatCount="indefinite"/></circle>
+        <text x="210" y="82" text-anchor="middle" font-family="'Fira Code',monospace" font-size="8" fill="#666">CHRG</text>
+        <circle cx="230" cy="65" r="5" fill="#00ff00" opacity="0.5"/>
+        <text x="230" y="82" text-anchor="middle" font-family="'Fira Code',monospace" font-size="8" fill="#666">FULL</text>
+        <!-- Pads -->
+        <text x="200" y="115" text-anchor="middle" font-family="'Fira Code',monospace" font-size="9" fill="#F5A623">IN+</text>
+        <text x="200" y="130" text-anchor="middle" font-family="'Fira Code',monospace" font-size="9" fill="#4FC3F7">IN−</text>
+        <text x="375" y="115" text-anchor="middle" font-family="'Fira Code',monospace" font-size="9" fill="#F5A623">B+</text>
+        <text x="375" y="130" text-anchor="middle" font-family="'Fira Code',monospace" font-size="9" fill="#4FC3F7">B−</text>
+        <!-- Input arrow (solar) -->
+        <line x1="50" y1="100" x2="175" y2="100" stroke="#F5A623" stroke-width="2" marker-end="url(#arr)"/>
+        <rect x="10" y="80" width="40" height="40" rx="4" fill="rgba(245,166,35,.1)" stroke="rgba(245,166,35,.3)" stroke-width="1"/>
+        <text x="30" y="102" text-anchor="middle" font-size="20">☀️</text>
+        <text x="105" y="90" text-anchor="middle" font-family="'Fira Code',monospace" font-size="9" fill="#F5A623">5V Solar</text>
+        <text x="105" y="115" text-anchor="middle" font-family="'Fira Code',monospace" font-size="9" fill="#F5A623">IN+ IN−</text>
+        <!-- Output arrow (battery) -->
+        <line x1="405" y1="100" x2="520" y2="100" stroke="#7fff00" stroke-width="2" marker-end="url(#arr)"/>
+        <rect x="520" y="80" width="40" height="40" rx="4" fill="rgba(127,255,0,.08)" stroke="rgba(127,255,0,.25)" stroke-width="1"/>
+        <text x="540" y="102" text-anchor="middle" font-size="20">🔋</text>
+        <text x="462" y="90" text-anchor="middle" font-family="'Fira Code',monospace" font-size="9" fill="#7fff00">3.7V Li</text>
+        <text x="462" y="115" text-anchor="middle" font-family="'Fira Code',monospace" font-size="9" fill="#7fff00">B+ B−</text>
+        <!-- Features -->
+        <text x="290" y="175" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="11" fill="#ccc">Input: 4.5V–5.5V &nbsp;|&nbsp; Output: 4.2V max &nbsp;|&nbsp; Charge current: 1A max</text>
+        <text x="290" y="190" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="11" fill="#888">RED LED = Charging &nbsp;|&nbsp; GREEN LED = Fully Charged</text>
+      </svg>
+      <div class="dgm-cap">The TP4056 is the heart of our solar charging projects. It safely charges a single lithium cell from a 5V solar panel. It automatically stops charging when the battery reaches 4.2V, preventing overcharge damage. Cost: ~₦300–₦500 per module.</div>
+    </div>
+    <div class="kb"><div class="kb-t">⚡ Protection Devices — Why They Matter</div><ul>
+      <li><strong>Blocking diode:</strong> Prevents battery from discharging back through the solar panel at night</li>
+      <li><strong>Fuse:</strong> Breaks the circuit if too much current flows — prevents fire and component damage</li>
+      <li><strong>Voltage regulator:</strong> Maintains steady output voltage even when input changes</li>
+      <li><strong>BMS (Battery Management System):</strong> Protects lithium battery from overcharge, over-discharge, over-temperature, and short circuit</li>
+    </ul></div>
+  </div>
+
+  <div class="prac rv">
+    <div class="prac-hdr">PRACTICAL ACTIVITIES — WEEKS 5–6</div>
+    <div class="prac-item"><div class="prac-cb" onclick="this.classList.toggle('chk');this.textContent=this.classList.contains('chk')?'✓':''">✓</div><div class="prac-label">Identify 5 solar panel samples: state type (mono/poly/thin film), rated voltage, rated current, polarity</div></div>
+    <div class="prac-item"><div class="prac-cb" onclick="this.classList.toggle('chk');this.textContent=this.classList.contains('chk')?'✓':''">✓</div><div class="prac-label">Examine 3 different battery types; record nominal voltage, capacity, charge voltage, discharge cut-off voltage</div></div>
+    <div class="prac-item"><div class="prac-cb" onclick="this.classList.toggle('chk');this.textContent=this.classList.contains('chk')?'✓':''">✓</div><div class="prac-label">Connect a TP4056 module to a 5V solar panel; connect a 3.7V LiPo battery; observe charge indicators (red/green LEDs)</div></div>
+    <div class="prac-item"><div class="prac-cb" onclick="this.classList.toggle('chk');this.textContent=this.classList.contains('chk')?'✓':''">✓</div><div class="prac-label">Identify and sketch in lab notebook: USB converter, LED driver, blocking diode, fuse, boost converter module</div></div>
+  </div>
+
+  <div class="quiz rv">
+    <div class="qlbl">QUIZ — MODULE 3</div>
+    <div class="qq">What does the RED LED on a TP4056 charging module indicate?</div>
+    <div class="qopts" id="q3-opts">
+      <button class="qo" onclick="ans('q3','a','b')" data-id="a"><span class="ol">A</span>The battery is fully charged</button>
+      <button class="qo" onclick="ans('q3','b','b')" data-id="b"><span class="ol">B</span>The battery is currently charging</button>
+      <button class="qo" onclick="ans('q3','c','b')" data-id="c"><span class="ol">C</span>There is a fault or short circuit</button>
+      <button class="qo" onclick="ans('q3','d','b')" data-id="d"><span class="ol">D</span>The panel voltage is too low</button>
+    </div>
+    <div class="qfb" id="q3-fb"></div>
+  </div>
+
+  <div class="nav-btns"><button class="nbtn outline" onclick="show('m2')">← Module 2</button><button class="mcbtn" onclick="done('m3',this)">Mark Complete ✓</button><button class="nbtn" onclick="show('m4')">Module 4 →</button></div>
+</section>
+
+<!-- ═══ MODULE 4 ═══ -->
+<section class="sec" id="m4-sec">
+  <div class="wh"><span class="wb">MODULE 04 · WEEKS 7–8</span><div class="wh-txt"><h2>Electrical Workshop Skills</h2><p>SOLDERING · WIRING · BREADBOARD · SAFETY</p></div></div>
+
+  <div class="cb rv">
+    <h3>4.1 Soldering — The Fundamental Skill</h3>
+    <p>Soldering is the process of joining metal components using a filler metal (solder) that melts at a relatively low temperature. Good solder joints are shiny, smooth, and cone-shaped. Bad joints are dull, grainy (cold joints), or blobby.</p>
+    <div class="nb warn"><span class="ni">⚠️</span><p><strong>SAFETY FIRST:</strong> Always wear safety goggles. Keep the iron in its stand when not in use. Never touch the tip — it reaches 350–400°C. Work in a ventilated area (solder fumes are toxic). Never rest the iron on flammable surfaces.</p></div>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Tin the iron tip</h4><p>Apply a small amount of solder to the clean iron tip. Wipe excess on a damp sponge. The tip should be shiny silver — this is called "tinning" and ensures good heat transfer.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Heat the joint (not the solder)</h4><p>Place the iron tip so it touches BOTH the wire and the pad/surface simultaneously. Hold for 2–3 seconds to heat the joint to soldering temperature.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Apply solder to the joint</h4><p>Touch the solder wire to the junction (NOT to the iron tip directly). It should melt and flow smoothly into the joint. Use just enough — a cone shape about the size of a grain of rice.</p></div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body"><h4>Remove iron; hold still</h4><p>Remove the iron but do NOT move the joint for 3–5 seconds while the solder solidifies. Movement creates cold joints (dull, grainy, unreliable connections).</p></div></div>
+      <div class="step"><div class="step-num">5</div><div class="step-body"><h4>Inspect and test</h4><p>A good joint is shiny and smooth, cone-shaped. Test with a multimeter for continuity. If dull or grainy, reheat and add a tiny amount of fresh solder.</p></div></div>
+    </div>
+  </div>
+
+  <div class="cb rv">
+    <h3>4.2 Using the Multimeter</h3>
+    <div class="dgm">
+      <div class="dgm-title">MULTIMETER FUNCTIONS AND HOW TO USE THEM</div>
+      <svg viewBox="0 0 600 260" width="100%" style="max-width:600px">
+        <!-- Multimeter body -->
+        <rect x="200" y="10" width="130" height="200" rx="12" fill="#1a1a1a" stroke="#333" stroke-width="2"/>
+        <!-- Display -->
+        <rect x="212" y="22" width="106" height="45" rx="4" fill="#0d2b0d"/>
+        <text x="265" y="42" text-anchor="middle" font-family="'Fira Code',monospace" font-size="18" fill="#7fff00">12.6</text>
+        <text x="265" y="60" text-anchor="middle" font-family="'Fira Code',monospace" font-size="10" fill="#00c9a7">V DC</text>
+        <!-- Dial -->
+        <circle cx="265" cy="120" r="30" fill="#222" stroke="#444" stroke-width="2"/>
+        <text x="265" y="116" text-anchor="middle" font-family="'Fira Code',monospace" font-size="8" fill="#F5A623">V DC</text>
+        <text x="265" y="126" text-anchor="middle" font-family="'Fira Code',monospace" font-size="8" fill="#4FC3F7">A DC</text>
+        <text x="265" y="136" text-anchor="middle" font-family="'Fira Code',monospace" font-size="8" fill="#00c9a7">Ω</text>
+        <!-- Probes -->
+        <line x1="252" y1="210" x2="252" y2="250" stroke="#ff4444" stroke-width="3"/>
+        <line x1="278" y1="210" x2="278" y2="250" stroke="#333" stroke-width="3"/>
+        <text x="252" y="260" text-anchor="middle" font-family="'Fira Code',monospace" font-size="9" fill="#ff4444">+ RED</text>
+        <text x="278" y="260" text-anchor="middle" font-family="'Fira Code',monospace" font-size="9" fill="#888">− BLK</text>
+
+        <!-- Measurement guide -->
+        <rect x="360" y="10" width="220" height="240" rx="8" fill="var(--slate)" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+        <text x="470" y="35" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="16" fill="#F5A623" letter-spacing="1">MEASUREMENT GUIDE</text>
+        <!-- Voltage -->
+        <text x="375" y="65" font-family="'Fira Code',monospace" font-size="11" fill="#F5A623">VOLTAGE (V DC)</text>
+        <text x="375" y="80" font-family="'Space Grotesk',sans-serif" font-size="11" fill="#888">Set dial to V DC range</text>
+        <text x="375" y="94" font-family="'Space Grotesk',sans-serif" font-size="11" fill="#888">Red → + terminal; Black → −</text>
+        <text x="375" y="108" font-family="'Space Grotesk',sans-serif" font-size="11" fill="#888">Probes touch IN PARALLEL</text>
+        <!-- Current -->
+        <line x1="370" y1="118" x2="570" y2="118" stroke="rgba(255,255,255,.06)" stroke-width="1"/>
+        <text x="375" y="133" font-family="'Fira Code',monospace" font-size="11" fill="#4FC3F7">CURRENT (A DC)</text>
+        <text x="375" y="148" font-family="'Space Grotesk',sans-serif" font-size="11" fill="#888">Set dial to A DC range</text>
+        <text x="375" y="162" font-family="'Space Grotesk',sans-serif" font-size="11" fill="#888">Break circuit; insert meter IN SERIES</text>
+        <text x="375" y="176" font-family="'Space Grotesk',sans-serif" font-size="11" fill="#ff8888">⚠ Never measure current in parallel!</text>
+        <!-- Resistance -->
+        <line x1="370" y1="186" x2="570" y2="186" stroke="rgba(255,255,255,.06)" stroke-width="1"/>
+        <text x="375" y="201" font-family="'Fira Code',monospace" font-size="11" fill="#00c9a7">RESISTANCE (Ω)</text>
+        <text x="375" y="216" font-family="'Space Grotesk',sans-serif" font-size="11" fill="#888">Set dial to Ω range</text>
+        <text x="375" y="230" font-family="'Space Grotesk',sans-serif" font-size="11" fill="#888">POWER OFF the circuit first!</text>
+        <text x="375" y="244" font-family="'Space Grotesk',sans-serif" font-size="11" fill="#888">Probes touch component terminals</text>
+      </svg>
+      <div class="dgm-cap">The multimeter is your most important diagnostic tool. Memorise the three key rules: (1) Voltage — measure in PARALLEL; (2) Current — measure in SERIES; (3) Resistance — circuit must be POWERED OFF. Breaking these rules can damage the meter or create a short circuit.</div>
+    </div>
+  </div>
+
+  <div class="prac rv">
+    <div class="prac-hdr">PRACTICAL ACTIVITIES — WEEKS 7–8</div>
+    <div class="prac-item"><div class="prac-cb" onclick="this.classList.toggle('chk');this.textContent=this.classList.contains('chk')?'✓':''">✓</div><div class="prac-label">Practice 20 solder joints on a prototype board — instructor evaluates shine, shape, and continuity</div></div>
+    <div class="prac-item"><div class="prac-cb" onclick="this.classList.toggle('chk');this.textContent=this.classList.contains('chk')?'✓':''">✓</div><div class="prac-label">Strip and tin 10 wires of different gauges; solder two wires together; heat-shrink the joint</div></div>
+    <div class="prac-item"><div class="prac-cb" onclick="this.classList.toggle('chk');this.textContent=this.classList.contains('chk')?'✓':''">✓</div><div class="prac-label">Desolder a component from a discarded PCB without damaging surrounding components</div></div>
+    <div class="prac-item"><div class="prac-cb" onclick="this.classList.toggle('chk');this.textContent=this.classList.contains('chk')?'✓':''">✓</div><div class="prac-label">Build a simple LED + resistor circuit on breadboard; verify with multimeter; transfer to PCB and solder</div></div>
+    <div class="prac-item"><div class="prac-cb" onclick="this.classList.toggle('chk');this.textContent=this.classList.contains('chk')?'✓':''">✓</div><div class="prac-label">Test continuity of 5 different circuits using multimeter; check polarity; record results in lab notebook</div></div>
+  </div>
+
+  <div class="quiz rv">
+    <div class="qlbl">QUIZ — MODULE 4</div>
+    <div class="qq">When measuring voltage with a multimeter, how should the probes be connected to the circuit?</div>
+    <div class="qopts" id="q4-opts">
+      <button class="qo" onclick="ans('q4','a','c')" data-id="a"><span class="ol">A</span>In series — break the circuit and insert the meter</button>
+      <button class="qo" onclick="ans('q4','b','c')" data-id="b"><span class="ol">B</span>Across the power supply only</button>
+      <button class="qo" onclick="ans('q4','c','c')" data-id="c"><span class="ol">C</span>In parallel — touch both probes to the two points where you want to measure voltage, without breaking the circuit</button>
+      <button class="qo" onclick="ans('q4','d','c')" data-id="d"><span class="ol">D</span>Disconnect the load first, then measure</button>
+    </div>
+    <div class="qfb" id="q4-fb"></div>
+  </div>
+
+  <div class="nav-btns"><button class="nbtn outline" onclick="show('m3')">← Module 3</button><button class="mcbtn" onclick="done('m4',this)">Mark Complete ✓</button><button class="nbtn" onclick="show('m5')">Module 5 →</button></div>
+</section>
+
+<!-- ═══ MODULE 5 ═══ -->
+<section class="sec" id="m5-sec">
+  <div class="wh"><span class="wb">MODULE 05 · WEEKS 9–10</span><div class="wh-txt"><h2>Project A: Solar Emergency Lamp</h2><p>BUILD · WIRE · TEST · PACKAGE</p></div></div>
+
+  <div class="cb rv">
+    <h3>5.1 System Overview</h3>
+    <div class="flow">
+      <div class="fl" style="border-color:rgba(245,166,35,.4)"><div class="fl-t">SOLAR PANEL</div><div class="fl-s">5V / 1W</div></div>
+      <div class="fl-a">→</div>
+      <div class="fl"><div class="fl-t">TP4056</div><div class="fl-s">Charge module</div></div>
+      <div class="fl-a">→</div>
+      <div class="fl" style="border-color:rgba(127,255,0,.3)"><div class="fl-t">3.7V BATTERY</div><div class="fl-s">2000mAh LiPo</div></div>
+      <div class="fl-a">→</div>
+      <div class="fl"><div class="fl-t">SWITCH</div><div class="fl-s">ON / OFF</div></div>
+      <div class="fl-a">→</div>
+      <div class="fl" style="border-color:rgba(245,166,35,.5)"><div class="fl-t">LED BOARD</div><div class="fl-s">Parallel array</div></div>
+    </div>
+  </div>
+
+  <div class="cb rv">
+    <h3>5.2 Circuit Diagram</h3>
+    <div class="dgm">
+      <div class="dgm-title">SOLAR LAMP — COMPLETE CIRCUIT DIAGRAM</div>
+      <svg viewBox="0 0 700 280" width="100%" style="max-width:700px">
+        <defs>
+          <marker id="ar2" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto">
+            <polygon points="0 0,7 2.5,0 5" fill="#F5A623"/>
+          </marker>
+        </defs>
+        <!-- Solar Panel -->
+        <rect x="20" y="80" width="80" height="100" rx="6" fill="rgba(245,166,35,.12)" stroke="#F5A623" stroke-width="2"/>
+        <line x1="30" y1="90" x2="90" y2="90" stroke="rgba(245,166,35,.3)" stroke-width="1"/>
+        <line x1="30" y1="105" x2="90" y2="105" stroke="rgba(245,166,35,.3)" stroke-width="1"/>
+        <line x1="30" y1="120" x2="90" y2="120" stroke="rgba(245,166,35,.3)" stroke-width="1"/>
+        <line x1="30" y1="135" x2="90" y2="135" stroke="rgba(245,166,35,.3)" stroke-width="1"/>
+        <line x1="30" y1="150" x2="90" y2="150" stroke="rgba(245,166,35,.3)" stroke-width="1"/>
+        <line x1="55" y1="90" x2="55" y2="175" stroke="rgba(245,166,35,.3)" stroke-width="1"/>
+        <line x1="70" y1="90" x2="70" y2="175" stroke="rgba(245,166,35,.3)" stroke-width="1"/>
+        <text x="60" y="195" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="12" fill="#F5A623" letter-spacing="1">SOLAR</text>
+        <text x="60" y="208" text-anchor="middle" font-family="'Fira Code',monospace" font-size="9" fill="#888">5V / 1W</text>
+        <!-- Sun rays -->
+        <text x="60" y="60" text-anchor="middle" font-size="22">☀️</text>
+        <line x1="45" y1="70" x2="45" y2="80" stroke="#F5A623" stroke-width="1.5" stroke-dasharray="2,2"/>
+        <line x1="60" y1="68" x2="60" y2="80" stroke="#F5A623" stroke-width="1.5" stroke-dasharray="2,2"/>
+        <line x1="75" y1="70" x2="75" y2="80" stroke="#F5A623" stroke-width="1.5" stroke-dasharray="2,2"/>
+
+        <!-- Wire to TP4056 -->
+        <line x1="100" y1="100" x2="155" y2="100" stroke="#ff6666" stroke-width="2.5"/>
+        <line x1="100" y1="160" x2="155" y2="160" stroke="#333" stroke-width="2.5"/>
+        <text x="127" y="90" text-anchor="middle" font-family="'Fira Code',monospace" font-size="9" fill="#ff6666">IN+</text>
+        <text x="127" y="175" text-anchor="middle" font-family="'Fira Code',monospace" font-size="9" fill="#888">IN−</text>
+
+        <!-- TP4056 Board -->
+        <rect x="155" y="75" width="100" height="110" rx="6" fill="#0a1a0a" stroke="#333" stroke-width="2"/>
+        <text x="205" y="110" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="13" fill="#00c9a7" letter-spacing="1">TP4056</text>
+        <circle cx="178" cy="130" r="5" fill="#ff0000"><animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite"/></circle>
+        <circle cx="195" cy="130" r="5" fill="#00ff00" opacity="0.3"/>
+        <text x="205" y="148" text-anchor="middle" font-family="'Fira Code',monospace" font-size="8" fill="#666">Charger Module</text>
+        <text x="205" y="175" text-anchor="middle" font-family="'Fira Code',monospace" font-size="8" fill="#888">B+  B−</text>
+
+        <!-- Wire to battery -->
+        <line x1="255" y1="100" x2="310" y2="100" stroke="#F5A623" stroke-width="2.5"/>
+        <line x1="255" y1="160" x2="310" y2="160" stroke="#333" stroke-width="2.5"/>
+        <text x="282" y="90" text-anchor="middle" font-family="'Fira Code',monospace" font-size="9" fill="#F5A623">B+</text>
+        <text x="282" y="175" text-anchor="middle" font-family="'Fira Code',monospace" font-size="9" fill="#888">B−</text>
+
+        <!-- Battery -->
+        <rect x="310" y="80" width="80" height="100" rx="6" fill="rgba(0,201,167,.1)" stroke="#00c9a7" stroke-width="2"/>
+        <rect x="355" y="72" width="20" height="8" rx="2" fill="#00c9a7"/>
+        <text x="350" y="128" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="13" fill="#00c9a7" letter-spacing="1">BATTERY</text>
+        <text x="350" y="145" text-anchor="middle" font-family="'Fira Code',monospace" font-size="9" fill="#888">3.7V LiPo</text>
+        <text x="350" y="160" text-anchor="middle" font-family="'Fira Code',monospace" font-size="9" fill="#888">2000mAh</text>
+
+        <!-- Wire to switch -->
+        <line x1="390" y1="100" x2="430" y2="100" stroke="#F5A623" stroke-width="2.5"/>
+        <line x1="390" y1="160" x2="500" y2="160" stroke="#333" stroke-width="2.5"/>
+
+        <!-- Switch -->
+        <rect x="430" y="88" width="50" height="24" rx="4" fill="#222" stroke="#555" stroke-width="1.5"/>
+        <circle cx="448" cy="100" r="8" fill="#333" stroke="#555" stroke-width="1"/>
+        <circle cx="465" cy="100" r="8" fill="#F5A623" opacity="0.7"/>
+        <text x="455" y="126" text-anchor="middle" font-family="'Fira Code',monospace" font-size="9" fill="#888">SWITCH</text>
+        <line x1="480" y1="100" x2="510" y2="100" stroke="#F5A623" stroke-width="2.5"/>
+
+        <!-- LED array -->
+        <rect x="510" y="75" width="100" height="110" rx="6" fill="rgba(255,220,50,.06)" stroke="rgba(245,166,35,.4)" stroke-width="2"/>
+        <circle cx="540" cy="102" r="8" fill="rgba(255,220,50,.4)" stroke="#F5A623" stroke-width="1"><animate attributeName="opacity" values="0.5;1;0.5" dur="1.5s" repeatCount="indefinite"/></circle>
+        <circle cx="560" cy="102" r="8" fill="rgba(255,220,50,.4)" stroke="#F5A623" stroke-width="1"><animate attributeName="opacity" values="1;0.5;1" dur="1.5s" repeatCount="indefinite"/></circle>
+        <circle cx="580" cy="102" r="8" fill="rgba(255,220,50,.4)" stroke="#F5A623" stroke-width="1"><animate attributeName="opacity" values="0.7;1;0.7" dur="1.8s" repeatCount="indefinite"/></circle>
+        <circle cx="540" cy="128" r="8" fill="rgba(255,220,50,.4)" stroke="#F5A623" stroke-width="1"><animate attributeName="opacity" values="0.4;0.9;0.4" dur="2s" repeatCount="indefinite"/></circle>
+        <circle cx="560" cy="128" r="8" fill="rgba(255,220,50,.4)" stroke="#F5A623" stroke-width="1"><animate attributeName="opacity" values="0.9;0.4;0.9" dur="1.7s" repeatCount="indefinite"/></circle>
+        <circle cx="580" cy="128" r="8" fill="rgba(255,220,50,.4)" stroke="#F5A623" stroke-width="1"><animate attributeName="opacity" values="0.6;1;0.6" dur="1.4s" repeatCount="indefinite"/></circle>
+        <text x="560" y="165" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="12" fill="#F5A623" letter-spacing="1">LED ARRAY</text>
+        <text x="560" y="178" text-anchor="middle" font-family="'Fira Code',monospace" font-size="9" fill="#888">Parallel, 3.7V</text>
+        <!-- Return wire -->
+        <line x1="610" y1="160" x2="650" y2="160" stroke="#333" stroke-width="2"/>
+        <line x1="650" y1="160" x2="650" y2="260" stroke="#333" stroke-width="2"/>
+        <line x1="650" y1="260" x2="30" y2="260" stroke="#333" stroke-width="2"/>
+        <line x1="30" y1="260" x2="30" y2="160" stroke="#333" stroke-width="2"/>
+      </svg>
+      <div class="dgm-cap">The animated LEDs show the parallel arrangement. In parallel, if one LED fails, the rest continue glowing. The blocking diode (not shown) prevents battery discharge back into the solar panel at night. Always test with a multimeter before sealing the enclosure.</div>
+    </div>
+  </div>
+
+  <div class="cb rv">
+    <h3>5.3 Construction Steps</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Connect the solar panel to TP4056 IN+ and IN−</h4><p>Check polarity! Red wire = IN+, Black wire = IN−. Use heat shrink on all solder joints. Test: cover panel — measure IN voltage should be 0V. Uncover — measure ~5V.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Connect the LiPo battery to TP4056 B+ and B−</h4><p>Connect battery. Red LED should illuminate (charging). Check battery voltage: it should be between 3.0V and 4.2V. NEVER connect with reversed polarity — this instantly destroys the module.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Wire the switch between battery positive and LED board</h4><p>Cut the positive wire from battery to LED board. Insert the switch inline. Test: switch ON → LED lights. Switch OFF → LED off. Secure all joints.</p></div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body"><h4>Arrange LEDs in parallel on the LED board</h4><p>All LED positive terminals connect to the + rail. All negative terminals connect to the − rail. Add a current-limiting resistor (150–470Ω for white LEDs at 3.7V). Connect LED board negative to battery negative.</p></div></div>
+      <div class="step"><div class="step-num">5</div><div class="step-body"><h4>Mount components in enclosure</h4><p>Use glue gun to secure PCB, battery, and switch. Cut a window for the panel. Drill a hole for the switch. Ensure no bare wires can touch the enclosure or each other.</p></div></div>
+      <div class="step"><div class="step-num">6</div><div class="step-body"><h4>Test fully assembled lamp</h4><p>Test in sunlight: panel charges (red LED on TP4056). Test lamp: switch on → LEDs illuminate. Measure battery voltage after 3 hours in sun. Record all results in lab notebook.</p></div></div>
+    </div>
+  </div>
+
+  <div class="prac rv">
+    <div class="prac-hdr">PRACTICAL OUTCOME — WEEKS 9–10</div>
+    <div class="prac-item"><div class="prac-cb" onclick="this.classList.toggle('chk');this.textContent=this.classList.contains('chk')?'✓':''">✓</div><div class="prac-label">Each student fabricates ONE functional solar emergency lamp that charges in sunlight and illuminates for minimum 2 hours</div></div>
+    <div class="prac-item"><div class="prac-cb" onclick="this.classList.toggle('chk');this.textContent=this.classList.contains('chk')?'✓':''">✓</div><div class="prac-label">Submit a completed lab report with circuit diagram, component list, measurements (voltage, current, brightness estimation), and reflection</div></div>
+  </div>
+
+  <div style="text-align:center;margin:24px 0"><span class="build-badge">✅ PROJECT A OUTCOME: Functional Solar Emergency Lamp</span></div>
+
+  <div class="quiz rv">
+    <div class="qlbl">QUIZ — MODULE 5</div>
+    <div class="qq">In the solar lamp circuit, the LEDs are connected in parallel. What is the PRIMARY advantage of this arrangement?</div>
+    <div class="qopts" id="q5-opts">
+      <button class="qo" onclick="ans('q5','a','c')" data-id="a"><span class="ol">A</span>It increases the total voltage across each LED</button>
+      <button class="qo" onclick="ans('q5','b','c')" data-id="b"><span class="ol">B</span>It reduces the current drawn, making the battery last longer</button>
+      <button class="qo" onclick="ans('q5','c','c')" data-id="c"><span class="ol">C</span>If one LED fails, the others continue to work — making the lamp more reliable</button>
+      <button class="qo" onclick="ans('q5','d','c')" data-id="d"><span class="ol">D</span>Parallel LEDs are brighter than series LEDs at the same voltage</button>
+    </div>
+    <div class="qfb" id="q5-fb"></div>
+  </div>
+
+  <div class="nav-btns"><button class="nbtn outline" onclick="show('m4')">← Module 4</button><button class="mcbtn" onclick="done('m5',this)">Mark Complete ✓</button><button class="nbtn" onclick="show('m6')">Module 6 →</button></div>
+</section>
+
+<!-- ═══ MODULE 6 ═══ -->
+<section class="sec" id="m6-sec">
+  <div class="wh"><span class="wb">MODULE 06 · WEEKS 11–12</span><div class="wh-txt"><h2>Project B: Mini Solar Fan</h2><p>DC MOTOR · PROPELLER · BATTERY · DIRECT AND BATTERY MODES</p></div></div>
+
+  <div class="cb rv">
+    <h3>6.1 DC Motor Fundamentals</h3>
+    <p>A DC (Direct Current) motor converts electrical energy into mechanical rotation. When current flows through the motor windings, it creates a magnetic field that interacts with permanent magnets inside the motor, producing torque (rotational force).</p>
+    <table class="dt"><thead><tr><th>Property</th><th>Description</th><th>Solar Fan Implication</th></tr></thead><tbody>
+      <tr><td>Start-up current</td><td>A DC motor draws MORE current when starting than when running</td><td>Ensure battery/panel can supply the peak start-up current (2–3× running current)</td></tr>
+      <tr><td>Operating voltage</td><td>Motor speed is proportional to voltage</td><td>At low solar panel output (cloudy), fan runs slowly — acceptable behaviour</td></tr>
+      <tr><td>Motor efficiency</td><td>Varies with load and speed</td><td>A balanced propeller runs most efficiently; imbalanced blades waste energy</td></tr>
+      <tr><td>Reverse polarity</td><td>Reversing + and − reverses motor direction</td><td>Double-check polarity before connecting — reversed polarity can damage motor windings</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="cb rv">
+    <h3>6.2 Two Operating Modes</h3>
+    <div class="tbar">
+      <button class="tbtn active" onclick="swTab('fan','direct',this)">Direct Sun Mode</button>
+      <button class="tbtn" onclick="swTab('fan','battery',this)">Battery Storage Mode</button>
+    </div>
+    <div class="tpanel active" id="fan-direct">
+      <p><strong>Direct Sun Mode:</strong> The solar panel connects directly to the DC motor (with a diode for protection). The fan runs only when there is sufficient sunlight — it slows or stops in clouds and shade.</p>
+      <div class="flow" style="margin-top:12px">
+        <div class="fl" style="border-color:rgba(245,166,35,.4)"><div class="fl-t">SOLAR PANEL</div><div class="fl-s">6V / 1W</div></div>
+        <div class="fl-a">→</div>
+        <div class="fl"><div class="fl-t">DIODE</div><div class="fl-s">1N4007</div></div>
+        <div class="fl-a">→</div>
+        <div class="fl"><div class="fl-t">SWITCH</div><div class="fl-s">ON/OFF</div></div>
+        <div class="fl-a">→</div>
+        <div class="fl" style="border-color:rgba(79,195,247,.4)"><div class="fl-t">DC MOTOR</div><div class="fl-s">+ Propeller</div></div>
+      </div>
+      <p style="margin-top:14px;font-size:13px;color:var(--gray)">Advantage: Simple, no battery needed. Disadvantage: Only works in sunlight.</p>
+    </div>
+    <div class="tpanel" id="fan-battery">
+      <p><strong>Battery Storage Mode:</strong> Full solar charging system — the panel charges a battery during the day via a TP4056 module. The fan draws power from the battery and can run even when there's no sunlight.</p>
+      <div class="flow" style="margin-top:12px">
+        <div class="fl" style="border-color:rgba(245,166,35,.4)"><div class="fl-t">SOLAR PANEL</div><div class="fl-s">5V</div></div>
+        <div class="fl-a">→</div>
+        <div class="fl"><div class="fl-t">TP4056</div><div class="fl-s">Charger</div></div>
+        <div class="fl-a">→</div>
+        <div class="fl" style="border-color:rgba(0,201,167,.4)"><div class="fl-t">BATTERY</div><div class="fl-s">3.7V</div></div>
+        <div class="fl-a">→</div>
+        <div class="fl"><div class="fl-t">SWITCH</div><div class="fl-s">ON/OFF</div></div>
+        <div class="fl-a">→</div>
+        <div class="fl" style="border-color:rgba(79,195,247,.4)"><div class="fl-t">DC MOTOR</div><div class="fl-s">+ Propeller</div></div>
+      </div>
+      <p style="margin-top:14px;font-size:13px;color:var(--gray)">Advantage: Runs day and night. Better for real-world use. Our students will build this version.</p>
+    </div>
+  </div>
+
+  <div class="cb rv">
+    <h3>6.3 Blade Balancing</h3>
+    <div class="nb"><span class="ni">⚙️</span><p>An unbalanced propeller vibrates excessively, wasting energy, creating noise, and reducing motor life. To balance: attach propeller to motor shaft and spin slowly — observe which blade dips down (heavier side). Sand the heavy blade slightly on the back surface. Re-test until the propeller hovers balanced at any position.</p></div>
+  </div>
+
+  <div style="text-align:center;margin:24px 0"><span class="build-badge">✅ PROJECT B OUTCOME: Portable Solar Mini Fan (battery storage mode)</span></div>
+
+  <div class="quiz rv">
+    <div class="qlbl">QUIZ — MODULE 6</div>
+    <div class="qq">A solar fan in "direct sun mode" stops spinning when a cloud passes over the panel. How would you redesign the system to make the fan run even when clouds reduce panel output?</div>
+    <div class="qopts" id="q6-opts">
+      <button class="qo" onclick="ans('q6','a','c')" data-id="a"><span class="ol">A</span>Use a bigger propeller blade</button>
+      <button class="qo" onclick="ans('q6','b','c')" data-id="b"><span class="ol">B</span>Connect two panels in series to double the voltage</button>
+      <button class="qo" onclick="ans('q6','c','c')" data-id="c"><span class="ol">C</span>Add a rechargeable battery and TP4056 charging module — the battery stores solar energy during sunshine and powers the motor continuously, including during cloudy periods</button>
+      <button class="qo" onclick="ans('q6','d','c')" data-id="d"><span class="ol">D</span>Install a larger DC motor with higher efficiency</button>
+    </div>
+    <div class="qfb" id="q6-fb"></div>
+  </div>
+
+  <div class="nav-btns"><button class="nbtn outline" onclick="show('m5')">← Module 5</button><button class="mcbtn" onclick="done('m6',this)">Mark Complete ✓</button><button class="nbtn" onclick="show('m7')">Module 7 →</button></div>
+</section>
+
+<!-- ═══ MODULE 7 ═══ -->
+<section class="sec" id="m7-sec">
+  <div class="wh"><span class="wb">MODULE 07 · WEEKS 13–14</span><div class="wh-txt"><h2>Project C: DIY Solar Power Bank</h2><p>18650 · TP4056 · BMS · BOOST CONVERTER · USB OUTPUT</p></div></div>
+
+  <div class="cb rv">
+    <h3>7.1 The Power Bank Architecture</h3>
+    <div class="flow" style="flex-wrap:wrap;gap:3px;">
+      <div class="fl" style="border-color:rgba(245,166,35,.5)"><div class="fl-t">☀️ SOLAR</div><div class="fl-s">5V panel</div></div>
+      <div class="fl-a">→</div>
+      <div class="fl"><div class="fl-t">TP4056</div><div class="fl-s">Li charger IC</div></div>
+      <div class="fl-a">→</div>
+      <div class="fl" style="border-color:rgba(0,201,167,.4)"><div class="fl-t">18650 CELL</div><div class="fl-s">3.7V Li-ion</div></div>
+      <div class="fl-a">→</div>
+      <div class="fl"><div class="fl-t">BMS BOARD</div><div class="fl-s">Protection</div></div>
+      <div class="fl-a">→</div>
+      <div class="fl"><div class="fl-t">BOOST CONV.</div><div class="fl-s">3.7V → 5V</div></div>
+      <div class="fl-a">→</div>
+      <div class="fl" style="border-color:rgba(127,255,0,.4)"><div class="fl-t">USB OUTPUT</div><div class="fl-s">Charges phones</div></div>
+    </div>
+    <div class="nb"><span class="ni">🔑</span><p>The <strong>boost converter</strong> is the key difference from the lamp and fan projects. A phone requires 5V USB output, but our 18650 battery only provides 3.7V. The boost converter steps the voltage UP from 3.7V to a stable 5V output — this is how all commercial power banks work.</p></div>
+  </div>
+
+  <div class="cb rv">
+    <h3>7.2 The BMS (Battery Management System)</h3>
+    <div class="dgm">
+      <div class="dgm-title">BMS PROTECTION FUNCTIONS</div>
+      <svg viewBox="0 0 600 200" width="100%" style="max-width:600px">
+        <rect x="20" y="20" width="560" height="160" rx="10" fill="rgba(0,201,167,.04)" stroke="rgba(0,201,167,.2)" stroke-width="1.5"/>
+        <text x="300" y="50" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="20" fill="#00c9a7" letter-spacing="2">BATTERY MANAGEMENT SYSTEM</text>
+        <!-- Functions -->
+        <rect x="40" y="65" width="120" height="80" rx="6" fill="rgba(255,68,68,.08)" stroke="rgba(255,68,68,.2)" stroke-width="1"/>
+        <text x="100" y="90" text-anchor="middle" font-size="22">🛑</text>
+        <text x="100" y="108" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="11" fill="#ff8888">Overcharge</text>
+        <text x="100" y="122" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="11" fill="#ff8888">Protection</text>
+        <text x="100" y="136" text-anchor="middle" font-family="'Fira Code',monospace" font-size="9" fill="#888">cuts off at 4.25V</text>
+
+        <rect x="180" y="65" width="120" height="80" rx="6" fill="rgba(245,166,35,.08)" stroke="rgba(245,166,35,.2)" stroke-width="1"/>
+        <text x="240" y="90" text-anchor="middle" font-size="22">⚡</text>
+        <text x="240" y="108" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="11" fill="#F5A623">Over-discharge</text>
+        <text x="240" y="122" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="11" fill="#F5A623">Protection</text>
+        <text x="240" y="136" text-anchor="middle" font-family="'Fira Code',monospace" font-size="9" fill="#888">cuts off at 2.5V</text>
+
+        <rect x="320" y="65" width="120" height="80" rx="6" fill="rgba(79,195,247,.08)" stroke="rgba(79,195,247,.2)" stroke-width="1"/>
+        <text x="380" y="90" text-anchor="middle" font-size="22">💥</text>
+        <text x="380" y="108" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="11" fill="#4FC3F7">Short Circuit</text>
+        <text x="380" y="122" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="11" fill="#4FC3F7">Protection</text>
+        <text x="380" y="136" text-anchor="middle" font-family="'Fira Code',monospace" font-size="9" fill="#888">instant disconnect</text>
+
+        <rect x="460" y="65" width="100" height="80" rx="6" fill="rgba(127,255,0,.08)" stroke="rgba(127,255,0,.2)" stroke-width="1"/>
+        <text x="510" y="90" text-anchor="middle" font-size="22">🌡️</text>
+        <text x="510" y="108" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="11" fill="#7fff00">Thermal</text>
+        <text x="510" y="122" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="11" fill="#7fff00">Protection</text>
+        <text x="510" y="136" text-anchor="middle" font-family="'Fira Code',monospace" font-size="9" fill="#888">trip at 70–90°C</text>
+      </svg>
+      <div class="dgm-cap">The BMS board connects between the raw 18650 cell and the boost converter output. NEVER omit the BMS — a lithium battery without protection can overheat and cause a fire or explosion if overcharged, short-circuited, or deeply discharged.</div>
+    </div>
+  </div>
+
+  <div class="cb rv">
+    <h3>7.3 Assembly Steps</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Solder the 18650 cell holder</h4><p>Use a spring-loaded cell holder. Solder red wire to + terminal, black wire to − terminal. Measure cell voltage with multimeter before connecting anything else (should be 3.0–4.2V).</p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Connect cell to TP4056 B+ and B−</h4><p>This allows the solar panel to charge the 18650 cell safely. The TP4056 limits charge voltage to 4.2V and charge current to 1A. Red LED = charging in progress.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Connect cell (via BMS) to boost converter input</h4><p>The BMS B+ and B− connect to the cell. The BMS output (P+ and P−) connects to the boost converter input. The BMS sits between the cell and all outputs, providing all four protections.</p></div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body"><h4>Connect boost converter output to USB module</h4><p>The boost converter output is 5V. Connect to the USB port module (+5V and GND). Use a multimeter to confirm 5V output before connecting any phone — incorrect voltage can damage the phone's charging circuit.</p></div></div>
+      <div class="step"><div class="step-num">5</div><div class="step-body"><h4>Connect solar panel to TP4056 IN+ and IN−</h4><p>The 5V solar panel connects to the TP4056 input. In sunlight, the panel charges the battery. The USB output can simultaneously deliver power to a phone (the TP4056 handles pass-through charging).</p></div></div>
+      <div class="step"><div class="step-num">6</div><div class="step-body"><h4>Mount in enclosure; conduct phone charging test</h4><p>Secure all components with hot glue. Mount panel on top. Label: input/output ports, capacity, student name. Plug in a real phone and confirm it charges. Record milliamp delivered over 30 minutes.</p></div></div>
+    </div>
+  </div>
+
+  <div style="text-align:center;margin:24px 0"><span class="build-badge">✅ PROJECT C OUTCOME: Working Solar Power Bank — Phone Charging Test Confirmed</span></div>
+
+  <div class="quiz rv">
+    <div class="qlbl">QUIZ — MODULE 7</div>
+    <div class="qq">Why is a boost converter necessary in the solar power bank circuit?</div>
+    <div class="qopts" id="q7-opts">
+      <button class="qo" onclick="ans('q7','a','b')" data-id="a"><span class="ol">A</span>To protect the battery from overcharge</button>
+      <button class="qo" onclick="ans('q7','b','b')" data-id="b"><span class="ol">B</span>To step the battery voltage UP from 3.7V to the 5V required for USB phone charging — phones need stable 5V; the 18650 cell alone only provides 3.7V which is insufficient</button>
+      <button class="qo" onclick="ans('q7','c','b')" data-id="c"><span class="ol">C</span>To increase the current output of the solar panel</button>
+      <button class="qo" onclick="ans('q7','d','b')" data-id="d"><span class="ol">D</span>To regulate the charging current from the solar panel</button>
+    </div>
+    <div class="qfb" id="q7-fb"></div>
+  </div>
+
+  <div class="nav-btns"><button class="nbtn outline" onclick="show('m6')">← Module 6</button><button class="mcbtn" onclick="done('m7',this)">Mark Complete ✓</button><button class="nbtn" onclick="show('m8')">Module 8 →</button></div>
+</section>
+
+<!-- ═══ MODULE 8 ═══ -->
+<section class="sec" id="m8-sec">
+  <div class="wh"><span class="wb">MODULE 08 · WEEK 15</span><div class="wh-txt"><h2>Testing, Troubleshooting & Product Design</h2><p>FAULT FINDING · TESTING PROTOCOLS · PACKAGING · COMMERCIALISATION</p></div></div>
+
+  <div class="cb rv">
+    <h3>8.1 Systematic Fault Finding</h3>
+    <table class="dt"><thead><tr><th>Symptom</th><th>Possible Cause</th><th>Diagnostic Test</th><th>Fix</th></tr></thead><tbody>
+      <tr><td>No output from circuit</td><td>Open circuit, dead battery, blown fuse</td><td>Measure voltage at each stage; test continuity</td><td>Re-solder joints; replace fuse; charge battery</td></tr>
+      <tr><td>Reversed polarity damage</td><td>+ and − wires swapped</td><td>Check component orientation; test with multimeter</td><td>Desolder and rewire correctly; replace damaged IC</td></tr>
+      <tr><td>Weak/no charging</td><td>Panel partially shaded; inadequate light; damaged panel cell</td><td>Measure panel Voc in open sun; compare to rated value</td><td>Reposition panel; clean surface; replace cracked cell</td></tr>
+      <tr><td>Overheating components</td><td>Short circuit; too much current; inadequate heat dissipation</td><td>Touch-test components (carefully!); measure current draw</td><td>Disconnect power; find and fix short; add heatsink</td></tr>
+      <tr><td>Loose joint (intermittent)</td><td>Cold solder joint; physical stress on wire</td><td>Wiggle wires; observe if circuit flickers; test continuity</td><td>Reheat joint with fresh solder; strain-relieve wire</td></tr>
+      <tr><td>Battery drains rapidly</td><td>Battery degraded; excessive load; self-discharge</td><td>Measure battery capacity with discharge test; check load current</td><td>Replace battery; reduce LED count; check for leakage current</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="cb rv">
+    <h3>8.2 Testing Protocols</h3>
+    <div class="kb"><div class="kb-t">✅ Complete Testing Checklist Before Product Submission</div><ul>
+      <li><strong>Open-circuit voltage (Voc):</strong> Measure panel voltage with nothing connected — should match rated voltage (±10%)</li>
+      <li><strong>Load voltage (Vload):</strong> Measure voltage across LED/motor with circuit running — voltage drops slightly under load</li>
+      <li><strong>Charging current:</strong> Use ammeter in series between panel and TP4056 — should be 0.3–1A in full sun</li>
+      <li><strong>Battery health:</strong> Charge battery fully; then discharge through a known load; measure time — compare with rated capacity</li>
+      <li><strong>USB output voltage:</strong> For power bank — must be 4.9–5.1V under load; use a phone with USB voltage display app</li>
+      <li><strong>Runtime test:</strong> Charge fully; switch on lamp/fan; record time until output fails — compare with calculated estimate</li>
+    </ul></div>
+  </div>
+
+  <div class="cb rv">
+    <h3>8.3 Product Design and Entrepreneurship</h3>
+    <div class="cg">
+      <div class="cc" onclick="this.classList.toggle('exp')"><span class="cc-tog">+</span><div class="cc-icon">📦</div><div class="cc-title">Packaging</div><div class="cc-text">Professional packaging increases perceived value and protects components</div><div class="cc-detail">Use PVC enclosures, acrylic boxes, or repurposed plastic containers. Seal all seams with waterproof silicone. Label the product with: product name, voltage/capacity specs, your brand, "Made in Nigeria" label. A well-packaged ₦2,000 lamp can sell for ₦5,000.</div></div>
+      <div class="cc" onclick="this.classList.toggle('exp')"><span class="cc-tog">+</span><div class="cc-icon">🏷️</div><div class="cc-title">Branding</div><div class="cc-text">Create your own solar brand identity</div><div class="cc-detail">Design a logo using free tools like Canva. Print labels on adhesive paper. Include: brand name, product specs, warranty statement ("30 day replacement"), your contact number. A strong brand differentiates your product in a crowded market.</div></div>
+      <div class="cc" onclick="this.classList.toggle('exp')"><span class="cc-tog">+</span><div class="cc-icon">💹</div><div class="cc-title">Cost Analysis</div><div class="cc-text">Know your costs, set a profitable price</div><div class="cc-detail">Solar Lamp: Panel ₦1500 + Battery ₦800 + TP4056 ₦400 + LEDs ₦200 + casing ₦500 + labour ₦500 = Cost ₦3,900. Selling price ₦7,000–₦8,000. Profit margin ~50%. 10 lamps/month = ₦30,000–₦40,000 profit.</div></div>
+      <div class="cc" onclick="this.classList.toggle('exp')"><span class="cc-tog">+</span><div class="cc-icon">🚀</div><div class="cc-title">Market Opportunities</div><div class="cc-text">Who are your customers?</div><div class="cc-detail">Students in hostels without steady power. Rural households. Roadside vendors. Market traders (solar insect killers). Small churches and mosques. Health centres. Start with your school community — offer a maintenance warranty to build trust. Scale to communities within 30km. Partner with NGOs for bulk orders.</div></div>
+    </div>
+  </div>
+
+  <div class="cb rv">
+    <h3>8.4 Entrepreneurship Product Ideas</h3>
+    <table class="dt"><thead><tr><th>Product</th><th>Components Needed</th><th>Market Price Range</th><th>Difficulty</th></tr></thead><tbody>
+      <tr><td>Solar reading lamp</td><td>Panel + LiPo + TP4056 + LEDs + switch</td><td>₦5,000 – ₦10,000</td><td>⭐⭐</td></tr>
+      <tr><td>Solar phone charger</td><td>Panel + 18650 + TP4056 + BMS + boost + USB</td><td>₦6,000 – ₦12,000</td><td>⭐⭐⭐</td></tr>
+      <tr><td>Rechargeable lantern</td><td>Panel + lead-acid + PWM + LED bar</td><td>₦8,000 – ₦15,000</td><td>⭐⭐⭐</td></tr>
+      <tr><td>Solar insect killer</td><td>Panel + battery + UV LED + mesh enclosure</td><td>₦4,000 – ₦8,000</td><td>⭐⭐</td></tr>
+      <tr><td>Solar garden light</td><td>Panel + NiMH + solar charge IC + LED</td><td>₦2,500 – ₦5,000</td><td>⭐</td></tr>
+      <tr><td>Solar mini radio charger</td><td>Panel + battery + boost + audio amp</td><td>₦10,000 – ₦20,000</td><td>⭐⭐⭐⭐</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="quiz rv">
+    <div class="qlbl">QUIZ — MODULE 8</div>
+    <div class="qq">A student's solar lamp shows intermittent flickering — it works when held in one position but flickers when moved. What is the MOST LIKELY cause?</div>
+    <div class="qopts" id="q8-opts">
+      <button class="qo" onclick="ans('q8','a','b')" data-id="a"><span class="ol">A</span>The battery capacity is too low</button>
+      <button class="qo" onclick="ans('q8','b','b')" data-id="b"><span class="ol">B</span>A cold (bad) solder joint or a loose wire connection — when moved, the joint makes and breaks contact, causing the flickering. Identified by wiggling wires and observing the flicker; fixed by re-soldering the suspect joint.</button>
+      <button class="qo" onclick="ans('q8','c','b')" data-id="c"><span class="ol">C</span>The solar panel is generating too much current</button>
+      <button class="qo" onclick="ans('q8','d','b')" data-id="d"><span class="ol">D</span>The TP4056 module has failed and needs replacement</button>
+    </div>
+    <div class="qfb" id="q8-fb"></div>
+  </div>
+
+  <!-- COURSE COMPLETION -->
+  <div style="background:linear-gradient(135deg,rgba(245,166,35,.1),rgba(255,200,71,.05));border:1px solid rgba(245,166,35,.3);border-radius:12px;padding:36px;margin-top:44px;text-align:center">
+    <div style="font-family:'Fira Code',monospace;font-size:11px;color:var(--amber);letter-spacing:3px;margin-bottom:14px">COURSE COMPLETE ☀️</div>
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:42px;color:var(--cream);letter-spacing:2px;margin-bottom:10px">You Are Now a Solar Maker</div>
+    <p style="color:var(--warm);font-size:15px;font-style:italic;max-width:500px;margin:0 auto">You can design, build, test, and troubleshoot solar-powered devices. You have the skills to start a solar gadget business. The sun rises every day in Nigeria — your sunlight factory is open 365 days a year. 🌞🔋⚙️</p>
+    <div style="display:flex;gap:24px;justify-content:center;margin-top:28px;flex-wrap:wrap">
+      <span class="build-badge">✅ Solar Emergency Lamp Built</span>
+      <span class="build-badge">✅ Solar Mini Fan Built</span>
+      <span class="build-badge">✅ Solar Power Bank Built</span>
+    </div>
+  </div>
+
+  <div class="nav-btns"><button class="nbtn outline" onclick="show('m7')">← Module 7</button><button class="mcbtn" onclick="done('m8',this)">Mark Complete ✓</button><button class="nbtn" onclick="show('home')">↩ Course Home</button></div>
+</section>
+</main>
+
+<script>
+var smap={home:'home-sec',m1:'m1-sec',m2:'m2-sec',m3:'m3-sec',m4:'m4-sec',m5:'m5-sec',m6:'m6-sec',m7:'m7-sec',m8:'m8-sec'};
+var completed=new Set(JSON.parse(localStorage.getItem('vos166_done')||'[]'));
+
+function show(id){
+  document.querySelectorAll('.sec,.home-sec').forEach(function(s){s.style.display='none';s.classList.remove('active');});
+  var t=document.getElementById(smap[id]);
+  if(t){t.style.display='block';t.classList.add('active');}
+  document.querySelectorAll('.wi').forEach(function(item,idx){
+    item.classList.remove('active');
+    var keys=['home','m1','m2','m3','m4','m5','m6','m7','m8'];
+    if(keys[idx]===id)item.classList.add('active');
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+  initReveal();
+  if(window.innerWidth<900)document.getElementById('sidebar').classList.remove('open');
+  return false;
+}
+
+document.querySelectorAll('.sec').forEach(function(s){s.style.display='none'});
+document.getElementById('home-sec').style.display='block';
+restoreProgress();
+
+function swTab(group,id,btn){
+  document.querySelectorAll('[id^="'+group+'-"]').forEach(function(p){p.classList.remove('active')});
+  var el=document.querySelector('#'+group+'-'+id);
+  if(el)el.classList.add('active');
+  var bar=btn.closest('.tbar');
+  if(bar)bar.querySelectorAll('.tbtn').forEach(function(b){b.classList.remove('active')});
+  btn.classList.add('active');
+}
+
+var expl={
+  q1:{b:"Correct! The photovoltaic effect is the generation of voltage and electric current in a semiconductor material (silicon) when it is exposed to light photons. Edmund Becquerel discovered this in 1839. Solar panels exploit this effect — each silicon cell generates about 0.5V when illuminated."},
+  q2:{c:"Correct! P = V × I = 6V × 0.5A = 3 Watts. This is the most fundamental calculation in solar system design. Always check: does the panel produce enough power for the load? A 3W panel charging a 3000mAh battery at 3.7V stores about 11.1 Wh — it would take approximately 3.7 hours of full sun to fully charge."},
+  q3:{b:"Correct! On the TP4056 module: RED LED = battery is currently CHARGING (receiving power from the solar panel). GREEN LED = battery is FULLY CHARGED (reached 4.2V; charger has stopped). If no LED lights, check your solar panel connection and confirm sufficient light intensity."},
+  q4:{c:"Correct! Voltage is always measured IN PARALLEL — place the red probe on the positive point and the black probe on the negative point without breaking the circuit. Current is measured IN SERIES (break the circuit). Resistance is measured with the circuit POWERED OFF."},
+  q5:{c:"Correct! LEDs in parallel are independent — each LED has its own path to the power supply. If one LED fails (open circuit), the others continue to receive current through their own paths and keep glowing. In series, one failure breaks the entire circuit."},
+  q6:{c:"Correct! Adding a rechargeable battery (with a TP4056 charging module) creates an energy storage system. The panel charges the battery during daylight hours. The battery powers the motor continuously — even at night or during cloudy periods. This is the 'battery storage mode' which is always preferred for practical real-world use."},
+  q7:{b:"Correct! The boost converter is a DC-DC voltage step-UP converter. An 18650 lithium cell provides 3.7V nominal (3.0V discharged to 4.2V fully charged). USB charging requires exactly 5V. The boost converter continuously monitors output voltage and adjusts switching frequency to maintain a stable 5.0V — regardless of battery charge level."},
+  q8:{b:"Correct! Intermittent flickering when the circuit is physically moved is the classic symptom of a cold (bad) solder joint or a loose wire connection. The mechanical stress of movement briefly opens and closes the connection. Solution: systematically wiggle each wire while observing the fault — when wiggling a specific wire causes the flicker, that joint needs re-soldering."},
+};
+
+function ans(qId,chosen,correct){
+  var opts=document.getElementById(qId+'-opts');
+  if(!opts||opts.classList.contains('answered'))return;
+  opts.classList.add('answered');
+  opts.querySelectorAll('.qo').forEach(function(b){
+    b.style.pointerEvents='none';
+    if(b.dataset.id===correct)b.classList.add('correct');
+    else if(b.dataset.id===chosen&&chosen!==correct)b.classList.add('wrong');
+  });
+  var fb=document.getElementById(qId+'-fb');
+  if(fb){
+    var ok=chosen===correct;
+    fb.className='qfb show '+(ok?'cfb':'wfb');
+    var e=expl[qId];
+    fb.innerHTML=(ok?'✓ Correct! — ':'✗ Not quite. The correct answer is <strong>'+correct.toUpperCase()+'</strong>. — ')+(e?e[correct]:'');
+  }
+}
+
+function done(mId,btn){
+  completed.add(mId);
+  localStorage.setItem('vos166_done',JSON.stringify([...completed]));
+  btn.textContent='✓ Completed';btn.classList.add('done');
+  updateProgress();
+  var keys=['home','m1','m2','m3','m4','m5','m6','m7','m8'];
+  var idx=keys.indexOf(mId);
+  var items=document.querySelectorAll('.wi');
+  if(items[idx])items[idx].classList.add('done');
+}
+
+function updateProgress(){
+  var d=completed.size;
+  document.getElementById('ptxt').textContent=d+'/8';
+  document.getElementById('pbar').style.width=(d/8*100)+'%';
+}
+
+function restoreProgress(){
+  completed.forEach(function(mId){
+    var keys=['home','m1','m2','m3','m4','m5','m6','m7','m8'];
+    var idx=keys.indexOf(mId);
+    var items=document.querySelectorAll('.wi');
+    if(items[idx])items[idx].classList.add('done');
+    document.querySelectorAll('.mcbtn').forEach(function(btn){
+      if(btn.getAttribute('onclick')&&btn.getAttribute('onclick').indexOf(mId)>=0){btn.textContent='✓ Completed';btn.classList.add('done');}
+    });
+  });
+  updateProgress();
+}
+
+function initReveal(){
+  var obs=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('vis');obs.unobserve(e.target);}});
+  },{threshold:0.06});
+  document.querySelectorAll('.rv').forEach(function(r){r.classList.remove('vis');obs.observe(r);});
+}
+document.querySelectorAll('.wi').forEach(function(item){
+  item.addEventListener('click',function(){if(window.innerWidth<900)document.getElementById('sidebar').classList.remove('open');});
+});
+initReveal();
+</script>
+</body>
+</html>
