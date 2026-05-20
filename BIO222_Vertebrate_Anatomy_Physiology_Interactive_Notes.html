@@ -969,50 +969,41 @@ body{font-family:'Lora',Georgia,serif;background:var(--cream);color:var(--ink);d
     </tbody></table>
   </div>
   <div class="cb rv">
-  <h3>10.2 The Kidney Nephron</h3>
-
-  <div class="kb">
-    <div class="kb-t">🔬 Three Processes in the Nephron</div>
-
-    <!-- Image -->
-    <div style="text-align:center; margin:15px 0;">
-      <img 
-        src="images/Selective-Reabsorption.webp" 
-        alt="Selective Reabsorption"
-        width="500"
-        style="border-radius:10px; max-width:100%; height:auto;"
-      >
+    <h3>10.2 The Kidney Nephron</h3>
+    <div class="kb">
+      <div class="kb-t">🔬 Three Processes in the Nephron</div>
+      <!-- IMAGE FIX: Using raw GitHub URL for Selective-Reabsorption.webp -->
+      <div style="text-align:center; margin:15px 0;">
+        <img 
+          src="https://raw.githubusercontent.com/ademide-star/neuromaxtrix-website/main/Selective-Reabsorption.webp" 
+          alt="Selective Reabsorption in the kidney nephron"
+          width="550"
+          style="border-radius:10px; max-width:100%; height:auto; box-shadow:0 2px 8px rgba(0,0,0,0.1);"
+          onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/ademide-star/neuromaxtrix-website/main/Selective-Reabsorption.webp'; this.alt='Diagram: Selective reabsorption (if offline, ensure internet connection)';"
+        >
+      </div>
+      <ul>
+        <li><strong>Ultrafiltration (Bowman's capsule/glomerulus):</strong> High blood pressure in glomerular capillaries forces small molecules (water, glucose, amino acids, urea, salts, creatinine) through the filtration membrane into Bowman's space.</li>
+        <li><strong>Selective reabsorption (PCT, loop of Henle, DCT):</strong> Useful molecules reabsorbed back into blood.</li>
+        <li><strong>Tubular secretion (DCT and collecting duct):</strong> H⁺ ions, NH₄⁺, K⁺, some drugs secreted from blood into tubular fluid.</li>
+      </ul>
     </div>
-
-    <!-- Notes -->
-    <ul>
-      <li>
-        <strong>Ultrafiltration (Bowman's capsule/glomerulus):</strong>
-        High blood pressure in glomerular capillaries forces small molecules
-        (water, glucose, amino acids, urea, salts, creatinine) through the
-        filtration membrane into Bowman's space.
-      </li>
-
-      <li>
-        <strong>Selective reabsorption (PCT, loop of Henle, DCT):</strong>
-        Useful molecules reabsorbed back into blood.
-      </li>
-
-      <li>
-        <strong>Tubular secretion (DCT and collecting duct):</strong>
-        H⁺ ions, NH₄⁺, K⁺, some drugs secreted from blood into tubular fluid.
-      </li>
-    </ul>
+    <div class="nb">
+      <span class="ni">🇳🇬</span>
+      <p><strong>Kidney disease in Nigeria:</strong> Hypertension and diabetes mellitus are leading causes of chronic kidney disease.</p>
+    </div>
   </div>
-
-  <div class="nb">
-    <span class="ni">🇳🇬</span>
-    <p>
-      <strong>Kidney disease in Nigeria:</strong>
-      Hypertension and diabetes mellitus are leading causes of chronic kidney disease.
-    </p>
+  <div class="quiz rv">
+    <div class="qlbl">📝 Self-Check Quiz — Week 10</div>
+    <div class="qq">Approximately 180 litres of fluid are filtered by the kidneys each day, but only about 1.5 litres are excreted as urine. What explains the difference?</div>
+    <div class="qopts" id="q10-opts">
+      <button class="qo" onclick="ans('q10','a','c')" data-id="a"><span class="ol">A</span>The kidneys only filter blood for 10 minutes per hour</button>
+      <button class="qo" onclick="ans('q10','b','c')" data-id="b"><span class="ol">B</span>Most filtered fluid is stored temporarily in the bladder before reabsorption</button>
+      <button class="qo" onclick="ans('q10','c','c')" data-id="c"><span class="ol">C</span>Selective reabsorption returns 99% of filtered water, glucose, and ions to the bloodstream — only waste and excess water become urine</button>
+      <button class="qo" onclick="ans('q10','d','c')" data-id="d"><span class="ol">D</span>The filtrate evaporates inside the kidney tubules</button>
+    </div>
+    <div class="qfb" id="q10-fb"></div>
   </div>
-</div>
   <div class="nav-btns"><button class="nbtn" onclick="show('w9')"><div><span class="nbtn-s">← Previous</span><span>Respiratory System</span></div></button><button class="mcbtn" onclick="done('w10',this)">Mark Complete ✓</button><button class="nbtn" onclick="show('w11')"><div><span class="nbtn-s">Next →</span><span>Nervous System I</span></div></button></div>
 </section>
 
