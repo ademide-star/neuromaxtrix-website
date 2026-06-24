@@ -1,0 +1,1696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NeuroMatrix LMS for VOS — Sikiru Adetona College of Education Science and Technology</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
+  :root{
+    --bg:#f0fdf4;--surface:#ffffff;--card:#ffffff;--panel:#f0fdf4;
+    --border:#bbf7d0;--border2:#86efac;
+    --text:#14532d;--dim:#4d7c5f;--muted:#a7c4b0;
+    --green:#16a34a;--green-dim:#dcfce7;
+    --blue:#2563eb;--blue-dim:#dbeafe;
+    --amber:#d97706;--amber-dim:#fef3c7;
+    --red:#dc2626;--red-dim:#fee2e2;
+    --cyan:#0891b2;--cyan-dim:#cffafe;
+    --violet:#7c3aed;--violet-dim:#ede9fe;
+    --orange:#ea580c;--orange-dim:#ffedd5;
+    --accent:#16a34a;
+    --radius:12px;--radius-sm:8px;
+    --shadow:0 4px 24px rgba(0,80,0,.1);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.6;}
+  h1,h2,h3{font-weight:600;line-height:1.3;}
+  #app{display:flex;flex-direction:column;min-height:100vh;}
+  header{background:#16a34a;border-bottom:2px solid #15803d;padding:.85rem 1.5rem;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:100;}
+  header .logo{font-size:1.1rem;font-weight:700;letter-spacing:-.5px;color:#ffffff;}
+  header .logo span{color:#bbf7d0;font-weight:400;}
+  header .hright{margin-left:auto;display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;}
+  .ub{font-size:.78rem;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);padding:.3rem .75rem;border-radius:20px;color:#e0fce8;}
+  .ub strong{color:#ffffff;}
+  main{flex:1;padding:1.5rem;max-width:1000px;margin:0 auto;width:100%;}
+  .tabs{display:flex;gap:.3rem;margin-bottom:1.5rem;background:#fff;padding:.35rem;border-radius:var(--radius);border:1px solid var(--border);flex-wrap:wrap;box-shadow:0 1px 4px rgba(22,163,74,.08);}
+  .tab{padding:.45rem 1rem;border-radius:var(--radius-sm);cursor:pointer;font-size:.83rem;font-weight:500;color:var(--dim);transition:all .15s;border:none;background:transparent;}
+  .tab:hover{color:var(--green);}
+  .tab.on{background:var(--green);color:#fff;}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.2rem;margin-bottom:1rem;box-shadow:0 1px 6px rgba(22,163,74,.06);}
+  .card-title{font-size:.9rem;font-weight:600;color:#16a34a;text-transform:uppercase;letter-spacing:.06em;margin-bottom:1rem;}
+  .ph{margin-bottom:1.5rem;}
+  .ph h2{font-size:1.4rem;}
+  .ph p{color:var(--dim);font-size:.87rem;margin-top:.3rem;}
+  .field{margin-bottom:.9rem;}
+  .field label{display:block;font-size:.78rem;font-weight:500;color:var(--dim);margin-bottom:.35rem;text-transform:uppercase;letter-spacing:.05em;}
+  input,select,textarea{width:100%;background:#f8fffe;border:1px solid var(--border2);border-radius:var(--radius-sm);padding:.6rem .85rem;color:var(--text);font-family:inherit;font-size:.88rem;transition:border .15s;}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(22,163,74,.1);}
+  input[type=file]{padding:.45rem .7rem;font-size:.8rem;color:var(--dim);}
+  input[type=radio]{width:auto;margin-right:.4rem;}
+  textarea{resize:vertical;}
+  .fr{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;}
+  .fr3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.9rem;}
+  @media(max-width:560px){.fr,.fr3{grid-template-columns:1fr;}}
+  select option{background:#ffffff;}
+  .btn{padding:.55rem 1.1rem;border-radius:var(--radius-sm);border:none;cursor:pointer;font-family:inherit;font-size:.84rem;font-weight:600;transition:all .15s;display:inline-flex;align-items:center;gap:.4rem;}
+  .btn-p{background:var(--accent);color:#fff;}
+  .btn-p:hover{filter:brightness(1.1);}
+  .btn-g{background:var(--green);color:#000;}
+  .btn-g:hover{filter:brightness(1.1);}
+  .btn-d{background:var(--red-dim);color:var(--red);border:1px solid var(--red);}
+  .btn-d:hover{background:var(--red);color:#fff;}
+  .btn-o{background:transparent;color:var(--dim);border:1px solid var(--border2);}
+  .btn-o:hover{color:var(--text);}
+  .btn-v{background:var(--violet-dim);color:var(--violet);border:1px solid var(--violet);}
+  .btn-v:hover{background:var(--violet);color:#fff;}
+  .btn-a{background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber);}
+  .btn.sm{padding:.35rem .75rem;font-size:.78rem;}
+  .btn-row{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.7rem;}
+  .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:.7rem;margin-bottom:1.2rem;}
+  @media(max-width:600px){.metrics{grid-template-columns:repeat(2,1fr);}}
+  .metric{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:.9rem 1rem;}
+  .mv{font-size:1.6rem;font-weight:700;color:var(--green);}
+  .ml{font-size:.72rem;color:var(--dim);margin-top:.15rem;text-transform:uppercase;letter-spacing:.05em;}
+  .badge{display:inline-flex;align-items:center;padding:.2rem .6rem;border-radius:20px;font-size:.74rem;font-weight:600;}
+  .bg{background:var(--green-dim);color:var(--green);}
+  .ba{background:var(--amber-dim);color:var(--amber);}
+  .br{background:var(--red-dim);color:var(--red);}
+  .bv{background:var(--violet-dim);color:var(--violet);}
+  .bc{background:var(--cyan-dim);color:var(--cyan);}
+  .bo{background:var(--orange-dim);color:var(--orange);}
+  .al{padding:.7rem 1rem;border-radius:var(--radius-sm);font-size:.84rem;margin-bottom:.8rem;}
+  .as{background:var(--green-dim);border:1px solid var(--green);color:var(--green);}
+  .ai{background:var(--blue-dim);border:1px solid var(--blue);color:var(--blue);}
+  .aw{background:var(--amber-dim);border:1px solid var(--amber);color:var(--amber);}
+  .ae{background:var(--red-dim);border:1px solid var(--red);color:var(--red);}
+  #toast{position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;display:flex;flex-direction:column;gap:.5rem;}
+  .toast-item{background:var(--card);border:1px solid var(--border);padding:.7rem 1.1rem;border-radius:var(--radius-sm);font-size:.84rem;max-width:320px;box-shadow:var(--shadow);animation:toastin .2s ease;}
+  .toast-item.success{border-color:var(--green);color:var(--green);}
+  .toast-item.error{border-color:var(--red);color:var(--red);}
+  .toast-item.info{border-color:var(--blue);color:var(--blue);}
+  @keyframes toastin{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+  #login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:1.5rem;background:linear-gradient(160deg,#f0fdf4 0%,#dcfce7 60%,#bbf7d0 100%);}
+  .login-box{background:#ffffff;border:1px solid var(--border);border-radius:16px;padding:2.5rem 2rem;width:100%;max-width:440px;box-shadow:0 8px 40px rgba(22,163,74,.12);}
+  .login-box h1{font-size:1.5rem;margin-bottom:.3rem;color:var(--text);}
+  .login-box p{color:var(--dim);font-size:.87rem;margin-bottom:1.8rem;}
+  .login-box-header{background:linear-gradient(135deg,#16a34a,#15803d);margin:-2.5rem -2rem 1.5rem;padding:1.5rem 2rem;border-radius:14px 14px 0 0;text-align:center;}
+  .login-box-header .lbh-icon{font-size:2.5rem;margin-bottom:.4rem;}
+  .login-box-header h1{color:#fff;font-size:1.4rem;margin-bottom:.2rem;}
+  .login-box-header p{color:#bbf7d0;font-size:.83rem;margin-bottom:0;}
+  .login-tabs{display:flex;gap:.3rem;margin-bottom:1.5rem;background:#f0fdf4;padding:.3rem;border-radius:var(--radius-sm);}
+  .login-tab{flex:1;padding:.45rem;border-radius:6px;text-align:center;cursor:pointer;font-size:.83rem;font-weight:500;color:var(--dim);transition:all .15s;}
+  .login-tab.on{background:var(--green);color:#fff;}
+  .divider{text-align:center;color:var(--muted);font-size:.78rem;margin:.6rem 0;position:relative;}
+  .divider::before,.divider::after{content:'';position:absolute;top:50%;width:42%;height:1px;background:var(--border);}
+  .divider::before{left:0;}.divider::after{right:0;}
+  .prog-toggle{display:flex;gap:.5rem;margin-bottom:.2rem;}
+  .tbl-wrap{overflow-x:auto;}
+  table{width:100%;border-collapse:collapse;font-size:.83rem;}
+  th{background:#f0fdf4;padding:.6rem .9rem;text-align:left;color:#16a34a;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em;border-bottom:2px solid var(--border);}
+  td{padding:.6rem .9rem;border-bottom:1px solid var(--border);vertical-align:top;color:var(--text);}
+  tr:last-child td{border-bottom:none;}
+  tr:hover td{background:#f0fdf4;}
+  .week-grid{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.8rem;}
+  .wpill{padding:.3rem .75rem;border-radius:20px;font-size:.78rem;font-weight:500;cursor:pointer;border:1px solid var(--border2);color:var(--dim);transition:all .15s;}
+  .wpill:hover{border-color:var(--accent);color:var(--text);}
+  .wpill.on{background:var(--accent);color:#fff;border-color:var(--accent);}
+  .wpill.graded{border-color:var(--green);color:var(--green);}
+  .wpill.graded.on{background:var(--green);color:#000;}
+  .wpill.submitted{border-color:var(--amber);color:var(--amber);}
+  .student-row{display:flex;align-items:center;gap:.8rem;padding:.65rem 0;border-bottom:1px solid var(--border);}
+  .student-row:last-child{border-bottom:none;}
+  .s-avatar{width:34px;height:34px;border-radius:50%;background:var(--blue-dim);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;color:var(--blue);flex-shrink:0;}
+  .s-name{font-weight:500;font-size:.88rem;}
+  .s-matric{font-size:.76rem;color:var(--dim);font-family:'DM Mono',monospace;}
+  .s-ml{margin-left:auto;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;}
+  .att-week-row{display:flex;align-items:center;gap:.5rem;padding:.5rem 0;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+  .att-week-row:last-child{border-bottom:none;}
+  .att-week-label{font-size:.78rem;color:var(--dim);min-width:60px;font-family:'DM Mono',monospace;}
+  .photo-preview{max-width:220px;border-radius:var(--radius-sm);border:1px solid var(--border);margin-top:.5rem;}
+  .recipe-card{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--cyan);border-radius:var(--radius);padding:1.1rem;margin-bottom:.9rem;}
+  .recipe-card .rc-header{display:flex;justify-content:space-between;align-items:flex-start;gap:.8rem;flex-wrap:wrap;}
+  .recipe-card .rc-title{font-weight:600;font-size:.95rem;}
+  .recipe-card .rc-sub{font-size:.78rem;color:var(--dim);margin-top:.2rem;}
+  .recipe-section{margin-top:.7rem;}
+  .recipe-section .label{font-size:.72rem;color:var(--dim);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.25rem;}
+  .recipe-section .val{font-size:.83rem;background:var(--panel);padding:.6rem .8rem;border-radius:var(--radius-sm);white-space:pre-wrap;line-height:1.7;border:1px solid var(--border);}
+  .section-scroll{max-height:680px;overflow-y:auto;padding-right:.3rem;}
+  .empty{text-align:center;padding:3rem 1rem;color:var(--muted);}
+  .empty .ei{font-size:2.5rem;margin-bottom:.5rem;}
+  .empty p{font-size:.87rem;}
+  .mono{font-family:'DM Mono',monospace;font-size:.82rem;}
+  .group-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:.5rem;margin-bottom:1rem;}
+  @media(max-width:500px){.group-grid{grid-template-columns:repeat(4,1fr);}}
+  .gpill{padding:.5rem;border-radius:var(--radius-sm);text-align:center;cursor:pointer;font-size:.8rem;font-weight:600;border:1px solid var(--border2);color:var(--dim);transition:all .15s;}
+  .gpill:hover{border-color:var(--accent);color:var(--text);}
+  .gpill.on{background:var(--accent);color:#fff;border-color:var(--accent);}
+
+  /* ── CBT styles ── */
+  .cbt-q{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem 1.2rem;margin-bottom:.9rem;}
+  .cbt-q-num{font-size:.72rem;color:var(--dim);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.35rem;}
+  .cbt-q-text{font-size:.93rem;font-weight:500;margin-bottom:.85rem;line-height:1.6;}
+  .cbt-options{display:flex;flex-direction:column;gap:.45rem;}
+  .cbt-opt{display:flex;align-items:flex-start;gap:.7rem;padding:.6rem .85rem;border-radius:var(--radius-sm);border:1px solid var(--border2);cursor:pointer;transition:all .15s;font-size:.87rem;background:#f8fffe;}
+  .cbt-opt:hover{border-color:var(--green);}
+  .cbt-opt.selected{border-color:var(--green);background:var(--green-dim);}
+  .cbt-opt.correct{border-color:var(--green);background:var(--green-dim);color:var(--green);}
+  .cbt-opt.wrong{border-color:var(--red);background:var(--red-dim);color:var(--red);}
+  .cbt-opt input[type=radio]{flex-shrink:0;margin-top:.15rem;accent-color:var(--green);}
+  .cbt-timer{font-family:'DM Mono',monospace;font-size:1.2rem;font-weight:700;color:var(--amber);background:var(--panel);border:1px solid var(--border);padding:.4rem .9rem;border-radius:var(--radius-sm);display:inline-block;}
+  .cbt-timer.urgent{color:var(--red);animation:pulse 1s infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.5;}}
+  .cbt-score-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;text-align:center;margin-bottom:1rem;}
+  .cbt-score-big{font-size:3rem;font-weight:700;margin:.5rem 0;}
+  .cbt-status-bar{height:8px;border-radius:4px;background:var(--panel);overflow:hidden;margin:.8rem 0;}
+  .cbt-status-fill{height:100%;border-radius:4px;background:var(--green);transition:width .5s;}
+  .cbt-nav{display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:1rem;}
+  .cbt-nav-dot{width:30px;height:30px;border-radius:50%;border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;cursor:pointer;transition:all .15s;color:var(--dim);}
+  .cbt-nav-dot:hover{border-color:var(--accent);}
+  .cbt-nav-dot.answered{background:var(--blue-dim);border-color:var(--blue);color:var(--blue);}
+  .cbt-nav-dot.current{background:var(--accent);border-color:var(--accent);color:#fff;}
+  .q-editor{background:#f8fffe;border:1px solid var(--border);border-radius:var(--radius-sm);padding:1rem;margin-bottom:.8rem;border-left:3px solid var(--green);}
+  .q-editor-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:.7rem;}
+  .q-editor-num{font-size:.78rem;color:var(--dim);font-weight:600;}
+  /* ── Bulk Import ── */
+  .import-drop{border:2px dashed var(--border2);border-radius:var(--radius);padding:1.5rem;text-align:center;background:#f8fffe;cursor:pointer;transition:all .2s;}
+  .import-drop:hover,.import-drop.drag-over{border-color:var(--green);background:var(--green-dim);}
+  .import-drop .di-icon{font-size:2rem;margin-bottom:.4rem;}
+  .import-drop p{font-size:.84rem;color:var(--dim);margin:.2rem 0;}
+  .import-drop strong{color:var(--green);}
+  .import-preview{max-height:260px;overflow-y:auto;margin-top:.8rem;}
+  .hidden{display:none!important;}
+  /* ── prog-btn light ── */
+  .prog-btn{flex:1;padding:.55rem;border-radius:var(--radius-sm);border:1px solid var(--border2);background:#f8fffe;color:var(--dim);cursor:pointer;font-size:.85rem;font-weight:600;text-align:center;transition:all .15s;}
+  .prog-btn.on{background:var(--green);color:#fff;border-color:var(--green);}
+
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-box-header">
+      <div class="lbh-icon">🍽️</div>
+      <h1>VOS Practical Portal</h1>
+      <p>Sikiru Adetona College of Education, Science &amp; Technology — powered by NeuroMatrix.</p>
+    </div>
+    <div class="login-tabs">
+      <div class="login-tab on" onclick="loginTabSwitch('student')">Student</div>
+      <div class="login-tab" onclick="loginTabSwitch('leader')">Group Leader</div>
+      <div class="login-tab" onclick="loginTabSwitch('admin')">Admin</div>
+    </div>
+
+    <!-- Student -->
+    <div id="lt-student">
+      <div class="fr">
+        <div class="field"><label>Full Name</label><input id="sl-name" placeholder="Your full name"></div>
+        <div class="field"><label>Matric Number</label><input id="sl-matric" placeholder="e.g. VOS/2023/001"></div>
+      </div>
+      <div class="field"><label>Programme Type</label>
+        <div class="prog-toggle">
+          <div class="prog-btn on" id="prog-nce" onclick="selProg('NCE')">NCE</div>
+          <div class="prog-btn" id="prog-degree" onclick="selProg('Degree')">Degree</div>
+        </div>
+        <input type="hidden" id="sl-prog" value="NCE">
+      </div>
+      <div class="field"><label>Department</label>
+        <select id="sl-dept">
+          <option value="">— Select department —</option>
+        </select>
+      </div>
+      <div class="fr">
+        <div class="field"><label>Level</label>
+          <select id="sl-level">
+            <option value="">— Level —</option>
+            <option>100</option><option>200</option><option>300</option><option>400</option>
+          </select>
+        </div>
+        <div class="field"><label>Group</label>
+          <select id="sl-group">
+            <option value="">— Group —</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-p" style="width:100%;justify-content:center" onclick="loginStudent()">Register &amp; Continue</button>
+    </div>
+
+    <!-- Leader -->
+    <div id="lt-leader" class="hidden">
+      <div class="al ai" style="margin-bottom:1rem">Group leaders use a PIN set by the admin. Contact your coordinator if you don't have one.</div>
+      <div class="fr">
+        <div class="field"><label>Group</label>
+          <select id="ll-group"><option value="">— Group —</option></select>
+        </div>
+        <div class="field"><label>Group PIN</label><input id="ll-pin" type="password" placeholder="PIN"></div>
+      </div>
+      <div class="fr">
+        <div class="field"><label>Leader Name</label><input id="ll-name" placeholder="Full name"></div>
+        <div class="field"><label>Matric Number</label><input id="ll-matric" placeholder="Matric"></div>
+      </div>
+      <button class="btn btn-p" style="width:100%;justify-content:center" onclick="loginLeader()">Access Group Portal</button>
+    </div>
+
+    <!-- Admin -->
+    <div id="lt-admin" class="hidden">
+      <div class="field"><label>Admin Password</label><input id="al-pw" type="password" placeholder="Password"></div>
+      <button class="btn btn-p" style="width:100%;justify-content:center" onclick="loginAdmin()">Admin Login</button>
+      <div class="divider">default</div>
+      <div class="mono" style="text-align:center;color:var(--dim);font-size:.78rem">Password: <strong style="color:var(--amber)">admin2024</strong></div>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" class="hidden">
+  <header>
+    <div class="logo">🍽️ VOS Practical <span>Portal</span></div>
+    <div class="hright">
+      <div class="ub"><strong id="h-name">—</strong> · <span id="h-role">—</span></div>
+      <button class="btn btn-o sm" onclick="logout()">Log out</button>
+    </div>
+  </header>
+  <main>
+    <div class="tabs" id="main-tabs"></div>
+    <div id="view"></div>
+  </main>
+</div>
+<div id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// DATA & CONSTANTS
+// ═══════════════════════════════════════════════════════
+const S={
+  get(k,def=null){try{const v=localStorage.getItem(k);return v==null?def:JSON.parse(v);}catch{return def;}},
+  set(k,v){localStorage.setItem(k,JSON.stringify(v));},
+  arr(k){return S.get(k,[])||[];}
+};
+const ADMIN_PW='admin2024';
+const GROUPS=Array.from({length:20},(_,i)=>i+1);
+const VOS_DEPTS=["Agricultural Science","Biology","Business Education","Chemistry","Computer Science","Creative Art","Early Childhood Education","Economics","English","Entrepreneurship","Fine & Applied Arts","Guidance and Counselling","Health Education","Human Kinetics","Library and Information","Mathematics","Physics","Political Science","Primary Education","Social Studies"];
+const VOS_LEVELS=["100","200","300","400"];
+let APP={user:null};
+let CBT={active:false,questions:[],answers:{},currentQ:0,startTime:null,timerInterval:null,submitted:false,testId:null,duration:0};
+
+// ═══════════════════════════════════════════════════════
+// LOGIN HELPERS
+// ═══════════════════════════════════════════════════════
+function selProg(p){
+  document.getElementById('sl-prog').value=p;
+  document.getElementById('prog-nce').classList.toggle('on',p==='NCE');
+  document.getElementById('prog-degree').classList.toggle('on',p==='Degree');
+}
+
+(function initLoginDropdowns(){
+  const deptSel=document.getElementById('sl-dept');
+  VOS_DEPTS.forEach(d=>{const o=document.createElement('option');o.value=d;o.textContent=d;deptSel.appendChild(o);});
+  ['sl-group','ll-group'].forEach(id=>{
+    const el=document.getElementById(id);
+    GROUPS.forEach(g=>{const o=document.createElement('option');o.value=g;o.textContent='Group '+g;el.appendChild(o);});
+  });
+})();
+
+function loginTabSwitch(t){
+  ['student','leader','admin'].forEach(x=>document.getElementById('lt-'+x).classList.toggle('hidden',x!==t));
+  document.querySelectorAll('.login-tab').forEach((el,i)=>el.classList.toggle('on',['student','leader','admin'][i]===t));
+}
+
+function loginStudent(){
+  const name=document.getElementById('sl-name').value.trim();
+  const matric=document.getElementById('sl-matric').value.trim().toUpperCase();
+  const prog=document.getElementById('sl-prog').value;
+  const dept=document.getElementById('sl-dept').value;
+  const level=document.getElementById('sl-level').value;
+  const group=parseInt(document.getElementById('sl-group').value);
+  if(!name||!matric||!dept||!level||!group){toast('Fill all fields','error');return;}
+  const students=S.arr('students');
+  const idx=students.findIndex(s=>s.matric===matric);
+  const rec={matric,name,prog,dept,level,group,registeredAt:new Date().toISOString()};
+  if(idx>=0) students[idx]={...students[idx],...rec};
+  else students.push(rec);
+  S.set('students',students);
+  APP.user={role:'student',name,matric,prog,dept,level,group};
+  launchApp();
+}
+
+function loginLeader(){
+  const group=parseInt(document.getElementById('ll-group').value);
+  const name=document.getElementById('ll-name').value.trim();
+  const matric=document.getElementById('ll-matric').value.trim().toUpperCase();
+  const pin=document.getElementById('ll-pin').value.trim();
+  if(!group||!name||!matric||!pin){toast('Fill all fields','error');return;}
+  const pins=S.get('group_pins',{});
+  if(!pins[group]){toast('No PIN set for Group '+group,'error');return;}
+  if(pin!==String(pins[group])){toast('Incorrect PIN','error');return;}
+  APP.user={role:'leader',name,matric,group};
+  launchApp();
+}
+
+function loginAdmin(){
+  if(document.getElementById('al-pw').value!==ADMIN_PW){toast('Wrong password','error');return;}
+  APP.user={role:'admin',name:'Administrator',group:null};
+  launchApp();
+}
+
+function logout(){
+  if(CBT.timerInterval) clearInterval(CBT.timerInterval);
+  APP.user=null;
+  document.getElementById('app').classList.add('hidden');
+  document.getElementById('login-screen').classList.remove('hidden');
+}
+
+function launchApp(){
+  document.getElementById('login-screen').classList.add('hidden');
+  document.getElementById('app').classList.remove('hidden');
+  document.getElementById('h-name').textContent=APP.user.name;
+  document.getElementById('h-role').textContent=
+    APP.user.role==='admin'?'Admin':
+    APP.user.role==='leader'?'Group '+APP.user.group+' Leader':
+    APP.user.prog+' · '+APP.user.dept+' L'+APP.user.level+' · G'+APP.user.group;
+  buildTabs();
+}
+
+// ═══════════════════════════════════════════════════════
+// TABS & ROUTING
+// ═══════════════════════════════════════════════════════
+const TAB_SETS={
+  student:[
+    {id:'my-attendance',label:'📋 Attendance'},
+    {id:'my-cbt',label:'📝 Mid-Test CBT'},
+    {id:'recipes',label:'🍳 Recipes'},
+  ],
+  leader:[
+    {id:'group-students',label:'👥 Members'},
+    {id:'take-attendance',label:'📋 Attendance'},
+    {id:'submit-recipe',label:'🍳 Submit Recipe'},
+    {id:'recipes',label:'📂 Our Recipes'},
+  ],
+  admin:[
+    {id:'admin-overview',label:'🏠 Overview'},
+    {id:'admin-groups',label:'👥 Groups'},
+    {id:'admin-students',label:'🧑 Students'},
+    {id:'admin-attendance',label:'📋 Attendance'},
+    {id:'admin-recipes',label:'🍳 Recipes'},
+    {id:'admin-cbt',label:'📝 CBT Tests'},
+    {id:'admin-settings',label:'⚙️ Settings'},
+  ]
+};
+let activeTab='';
+
+function buildTabs(){
+  const tabs=TAB_SETS[APP.user.role];
+  document.getElementById('main-tabs').innerHTML=tabs.map(t=>`<div class="tab" id="tab-${t.id}" onclick="switchTab('${t.id}')">${t.label}</div>`).join('');
+  switchTab(tabs[0].id);
+}
+
+function switchTab(id){
+  if(CBT.active&&id!=='my-cbt'){if(!confirm('Leave the CBT test? Your progress will be lost.'))return;cbtReset();}
+  activeTab=id;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',t.id==='tab-'+id));
+  render();
+}
+
+function render(){
+  const v=document.getElementById('view');
+  const fn={
+    'my-attendance':vMyAttendance,'recipes':vMyRecipes,'my-cbt':vMyCBT,
+    'group-students':vGroupStudents,'take-attendance':vTakeAttendance,'submit-recipe':vSubmitRecipe,
+    'admin-overview':vaOverview,'admin-groups':vaGroups,'admin-students':vaStudents,
+    'admin-attendance':vaAttendance,'admin-recipes':vaRecipes,
+    'admin-cbt':vaCBT,'admin-settings':vaSettings,
+  }[activeTab];
+  v.innerHTML=fn?fn():'<div class="empty"><div class="ei">🚧</div><p>Coming soon</p></div>';
+}
+
+// ═══════════════════════════════════════════════════════
+// UTILITIES
+// ═══════════════════════════════════════════════════════
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function toast(msg,type='info',dur=3200){
+  const el=document.createElement('div');
+  el.className='toast-item '+type;el.textContent=msg;
+  document.getElementById('toast').appendChild(el);
+  setTimeout(()=>el.remove(),dur);
+}
+function ph(title,sub){return `<div class="ph"><h2>${title}</h2><p>${esc(sub)}</p></div>`;}
+function getPracticals(){return S.arr('practicals');}
+function getWeeks(){return S.arr('att_weeks');}
+function getStudents(){return S.arr('students');}
+function getGroupStudents(g){return getStudents().filter(s=>s.group==g);}
+function getRecipes(){return S.arr('recipes');}
+function getAttendance(){return S.arr('attendance');}
+function getCBTTests(){return S.arr('cbt_tests');}
+function getCBTResults(){return S.arr('cbt_results');}
+
+// ═══════════════════════════════════════════════════════
+// STUDENT — ATTENDANCE
+// ═══════════════════════════════════════════════════════
+function vMyAttendance(){
+  const u=APP.user;
+  const weeks=getWeeks();
+  const att=getAttendance().filter(a=>a.matric===u.matric);
+  const present=att.filter(a=>a.status==='present').length;
+  const total=weeks.length;
+  const pct=total?Math.round(present/total*100):0;
+  return ph('📋 My Attendance','Your weekly attendance — '+u.prog+' '+u.dept+' L'+u.level)+`
+  <div class="metrics">
+    <div class="metric"><div class="mv">${total}</div><div class="ml">Weeks Tracked</div></div>
+    <div class="metric"><div class="mv">${present}</div><div class="ml">Present</div></div>
+    <div class="metric"><div class="mv">${total-present}</div><div class="ml">Absent</div></div>
+    <div class="metric"><div class="mv" style="color:${pct>=70?'var(--green)':pct>=50?'var(--amber)':'var(--red)'}">${pct}%</div><div class="ml">Rate</div></div>
+  </div>
+  <div class="card">
+    ${weeks.length===0?'<div class="empty" style="padding:1.5rem"><div class="ei">📅</div><p>No weeks set yet. Your admin will add them.</p></div>':
+    weeks.map(w=>{
+      const a=att.find(x=>x.week===w);
+      return `<div class="att-week-row">
+        <div class="att-week-label">${esc(w)}</div>
+        <span class="badge ${a?.status==='present'?'bg':'br'}">${a?.status==='present'?'✓ Present':'✗ Absent'}</span>
+        ${a?.markedAt?`<span style="font-size:.72rem;color:var(--muted);margin-left:.5rem">${new Date(a.markedAt).toLocaleDateString('en-NG')}</span>`:''}
+      </div>`;
+    }).join('')}
+  </div>`;
+}
+
+// ═══════════════════════════════════════════════════════
+// STUDENT — RECIPES
+// ═══════════════════════════════════════════════════════
+function vMyRecipes(){
+  const u=APP.user;
+  const mine=getRecipes().filter(r=>r.group==u.group);
+  const practicals=getPracticals();
+  const graded=mine.filter(r=>typeof r.score==='number');
+  const avg=graded.length?Math.round(graded.reduce((s,r)=>s+(r.percent||0),0)/graded.length):0;
+  return ph('🍳 Group Recipes','Recipes submitted by Group '+u.group)+`
+  <div class="metrics">
+    <div class="metric"><div class="mv">${mine.length}</div><div class="ml">Submitted</div></div>
+    <div class="metric"><div class="mv">${graded.length}</div><div class="ml">Graded</div></div>
+    <div class="metric"><div class="mv">${Math.max(0,practicals.length-mine.length)}</div><div class="ml">Remaining</div></div>
+    <div class="metric"><div class="mv">${graded.length?avg+'%':'—'}</div><div class="ml">Avg Score</div></div>
+  </div>
+  ${mine.length===0?'<div class="card"><div class="empty" style="padding:1.5rem"><div class="ei">🍴</div><p>No recipes yet. Your group leader submits recipes.</p></div></div>':
+  mine.map(r=>`<div class="recipe-card">
+    <div class="rc-header">
+      <div><div class="rc-title">🍴 ${esc(r.title)}</div><div class="rc-sub">${esc(r.practical)} · ${new Date(r.submittedAt).toLocaleDateString('en-NG')}</div></div>
+      <span class="badge ${typeof r.score==='number'?(r.percent>=70?'bg':r.percent>=50?'ba':'br'):'bv'}">${typeof r.score==='number'?`${r.score}/${r.maxScore||100} (${r.percent}%)`:'Pending'}</span>
+    </div>
+    ${typeof r.score==='number'&&r.feedback?`<div class="al as" style="margin-top:.7rem;font-size:.82rem">Feedback: ${esc(r.feedback)}</div>`:''}
+    ${r.photo?`<img src="${r.photo}" class="photo-preview" style="margin-top:.7rem">`:''}
+  </div>`).join('')}`;
+}
+
+// ═══════════════════════════════════════════════════════
+// STUDENT — CBT MID-TEST
+// ═══════════════════════════════════════════════════════
+function vMyCBT(){
+  const u=APP.user;
+  const tests=getCBTTests().filter(t=>t.active);
+  const results=getCBTResults().filter(r=>r.matric===u.matric);
+
+  if(CBT.active) return cbtTestView();
+
+  return ph('📝 CBT Mid-Test','Computer-Based Tests for '+u.prog+' · '+u.dept)+`
+  <div class="card">
+    <div class="card-title">Available Tests</div>
+    ${tests.length===0?`<div class="empty" style="padding:1.5rem"><div class="ei">🔒</div><p>No active tests right now. Check back later.</p></div>`:
+    tests.map(t=>{
+      const myResult=results.find(r=>r.testId===t.id);
+      const canRetake=t.allowRetake||!myResult;
+      return `<div style="display:flex;align-items:center;justify-content:space-between;gap:.8rem;flex-wrap:wrap;padding:.7rem 0;border-bottom:1px solid var(--border)">
+        <div>
+          <div style="font-weight:600;font-size:.9rem">${esc(t.title)}</div>
+          <div style="font-size:.76rem;color:var(--dim);margin-top:.2rem">${t.questions.length} questions · ${t.duration} minutes${t.allowRetake?' · Retake allowed':''}</div>
+          ${myResult?`<div style="font-size:.76rem;margin-top:.3rem"><span class="badge ${myResult.percent>=50?'bg':'br'}">${myResult.score}/${myResult.total} (${myResult.percent}%)</span> <span style="color:var(--muted)">${new Date(myResult.submittedAt).toLocaleDateString('en-NG')}</span></div>`:''}
+        </div>
+        <div>
+          ${canRetake?`<button class="btn btn-p sm" onclick="startCBT('${t.id}')">▶ Start Test</button>`:
+          `<span class="badge bg">✓ Completed</span>`}
+        </div>
+      </div>`;
+    }).join('')}
+  </div>
+  ${results.length>0?`
+  <div class="card">
+    <div class="card-title">My Results</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Test</th><th>Score</th><th>%</th><th>Date</th></tr></thead>
+      <tbody>
+        ${results.map(r=>{
+          const t=getCBTTests().find(x=>x.id===r.testId);
+          return `<tr>
+            <td>${esc(t?.title||r.testId)}</td>
+            <td class="mono">${r.score}/${r.total}</td>
+            <td><span class="badge ${r.percent>=70?'bg':r.percent>=50?'ba':'br'}">${r.percent}%</span></td>
+            <td style="font-size:.76rem;color:var(--dim)">${new Date(r.submittedAt).toLocaleDateString('en-NG')}</td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table></div>
+  </div>`:''}`;
+}
+
+function startCBT(testId){
+  const test=getCBTTests().find(t=>t.id===testId);
+  if(!test){toast('Test not found','error');return;}
+  if(!test.questions.length){toast('This test has no questions yet','error');return;}
+  if(!confirm(`Start "${test.title}"?\n${test.questions.length} questions · ${test.duration} minutes\n\nOnce started, the timer will begin.`))return;
+  CBT={active:true,questions:test.questions,answers:{},currentQ:0,startTime:Date.now(),timerInterval:null,submitted:false,testId,duration:test.duration*60,timeLeft:test.duration*60};
+  CBT.timerInterval=setInterval(()=>{
+    CBT.timeLeft--;
+    const el=document.getElementById('cbt-timer');
+    if(el){
+      const m=Math.floor(CBT.timeLeft/60);const s=CBT.timeLeft%60;
+      el.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+      el.className='cbt-timer'+(CBT.timeLeft<=60?' urgent':'');
+    }
+    if(CBT.timeLeft<=0){clearInterval(CBT.timerInterval);submitCBT(true);}
+  },1000);
+  render();
+}
+
+function cbtTestView(){
+  const q=CBT.questions[CBT.currentQ];
+  const answered=Object.keys(CBT.answers).length;
+  const total=CBT.questions.length;
+  const m=Math.floor(CBT.timeLeft/60);const s=CBT.timeLeft%60;
+  return `<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.7rem;margin-bottom:1rem">
+    <div>
+      <div style="font-weight:600">📝 ${esc(getCBTTests().find(t=>t.id===CBT.testId)?.title||'CBT Test')}</div>
+      <div style="font-size:.78rem;color:var(--dim)">Question ${CBT.currentQ+1} of ${total} · ${answered} answered</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:.7rem">
+      <span class="cbt-timer${CBT.timeLeft<=60?' urgent':''}" id="cbt-timer">${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}</span>
+      <button class="btn btn-d sm" onclick="if(confirm('Submit test now?'))submitCBT(false)">Submit</button>
+    </div>
+  </div>
+  <div class="cbt-nav">
+    ${CBT.questions.map((_,i)=>`<div class="cbt-nav-dot ${CBT.answers[i]!==undefined?'answered':''} ${i===CBT.currentQ?'current':''}" onclick="CBT.currentQ=${i};render()">${i+1}</div>`).join('')}
+  </div>
+  <div class="cbt-q">
+    <div class="cbt-q-num">Question ${CBT.currentQ+1}</div>
+    <div class="cbt-q-text">${esc(q.text)}</div>
+    <div class="cbt-options">
+      ${q.options.map((opt,oi)=>`
+        <label class="cbt-opt ${CBT.answers[CBT.currentQ]===oi?'selected':''}">
+          <input type="radio" name="cbt-opt" value="${oi}" ${CBT.answers[CBT.currentQ]===oi?'checked':''} onchange="CBT.answers[${CBT.currentQ}]=${oi};render()">
+          <span>${esc(opt)}</span>
+        </label>`).join('')}
+    </div>
+  </div>
+  <div style="display:flex;justify-content:space-between;gap:.7rem;flex-wrap:wrap">
+    <button class="btn btn-o" onclick="CBT.currentQ=Math.max(0,CBT.currentQ-1);render()" ${CBT.currentQ===0?'disabled':''}>← Previous</button>
+    ${CBT.currentQ<CBT.questions.length-1?
+      `<button class="btn btn-p" onclick="CBT.currentQ++;render()">Next →</button>`:
+      `<button class="btn btn-g" onclick="if(confirm('Submit the test?'))submitCBT(false)">✅ Submit Test</button>`}
+  </div>`;
+}
+
+function submitCBT(timeout=false){
+  clearInterval(CBT.timerInterval);
+  const test=getCBTTests().find(t=>t.id===CBT.testId);
+  let correct=0;
+  CBT.questions.forEach((q,i)=>{if(CBT.answers[i]===q.answer) correct++;});
+  const total=CBT.questions.length;
+  const percent=Math.round(correct/total*100);
+  const result={
+    id:'cbtr_'+Date.now(),testId:CBT.testId,
+    matric:APP.user.matric,name:APP.user.name,
+    prog:APP.user.prog,dept:APP.user.dept,level:APP.user.level,group:APP.user.group,
+    score:correct,total,percent,
+    answers:{...CBT.answers},
+    timeTaken:Math.round((Date.now()-CBT.startTime)/1000),
+    submittedAt:new Date().toISOString(),timedOut:timeout
+  };
+  const all=getCBTResults();
+  all.push(result);
+  S.set('cbt_results',all);
+  CBT.active=false;CBT.lastResult=result;CBT.lastTest=test;
+  activeTab='my-cbt';render();
+  toast(timeout?'Time up! Test submitted.':'Test submitted ✅','success');
+}
+
+function cbtReset(){
+  clearInterval(CBT.timerInterval);
+  CBT={active:false,questions:[],answers:{},currentQ:0,startTime:null,timerInterval:null,submitted:false,testId:null,duration:0,timeLeft:0};
+}
+
+// ═══════════════════════════════════════════════════════
+// LEADER — GROUP MEMBERS
+// ═══════════════════════════════════════════════════════
+function vGroupStudents(){
+  const g=APP.user.group;
+  const students=getGroupStudents(g);
+  return ph('👥 Group '+g+' Members','Students registered under your group')+`
+  <div class="card">
+    <div class="card-title">Registered Members (${students.length})</div>
+    ${students.length===0?`<div class="empty" style="padding:1.5rem"><div class="ei">👤</div><p>No students yet. Students register via the Student login.</p></div>`:
+    students.map(s=>`<div class="student-row">
+      <div class="s-avatar">${esc(s.name[0]||'?')}</div>
+      <div style="flex:1">
+        <div class="s-name">${esc(s.name)}</div>
+        <div class="s-matric">${esc(s.matric)}</div>
+      </div>
+      <div class="s-ml">
+        <span class="badge bo">${esc(s.prog||'—')}</span>
+        <span class="badge bc">L${esc(s.level||'?')}</span>
+      </div>
+    </div>`).join('')}
+  </div>`;
+}
+
+// ═══════════════════════════════════════════════════════
+// LEADER — TAKE ATTENDANCE
+// ═══════════════════════════════════════════════════════
+let attWeekSel='';
+function vTakeAttendance(){
+  const g=APP.user.group;
+  const students=getGroupStudents(g);
+  const weeks=getWeeks();
+  const att=getAttendance();
+  const sel=attWeekSel||weeks[weeks.length-1]||'';
+  return ph('📋 Take Attendance','Mark weekly attendance for Group '+g)+`
+  <div class="card">
+    <div class="card-title">Select Week</div>
+    <div class="week-grid">
+      ${weeks.map(w=>`<div class="wpill ${w===sel?'on':''}" onclick="setAttWeek('${esc(w)}')">${esc(w)}</div>`).join('')}
+    </div>
+    ${weeks.length===0?`<div class="al aw">No attendance weeks set yet. Ask admin to add weeks in Settings.</div>`:''}
+  </div>
+  ${sel&&students.length>0?`
+  <div class="card">
+    <div class="card-title">Marking: ${esc(sel)}</div>
+    <div class="btn-row" style="margin-bottom:.7rem">
+      <button class="btn sm btn-g" onclick="markAllPresent()">✓ Mark All Present</button>
+      <button class="btn sm btn-d" onclick="markAllAbsent()">✗ Mark All Absent</button>
+    </div>
+    ${students.map(s=>{
+      const saved=att.find(x=>x.matric===s.matric&&x.week===sel&&x.group==g);
+      const status=pendingAtt[s.matric]!==undefined?pendingAtt[s.matric]:(saved?.status||'absent');
+      return `<div class="student-row">
+        <div class="s-avatar">${esc(s.name[0]||'?')}</div>
+        <div style="flex:1">
+          <div class="s-name">${esc(s.name)}</div>
+          <div class="s-matric">${esc(s.matric)} · ${esc(s.prog||'')} L${esc(s.level||'')}</div>
+        </div>
+        <div style="display:flex;gap:.4rem">
+          <button class="btn sm ${status==='present'?'btn-g':'btn-o'}" onclick="markAtt('${esc(s.matric)}','present')">✓</button>
+          <button class="btn sm ${status==='absent'?'btn-d':'btn-o'}" onclick="markAtt('${esc(s.matric)}','absent')">✗</button>
+        </div>
+      </div>`;
+    }).join('')}
+    <div class="btn-row" style="margin-top:1rem">
+      <button class="btn btn-p" onclick="saveAttendance()">💾 Save Attendance for ${esc(sel)}</button>
+    </div>
+  </div>`:''}
+  ${sel&&students.length===0?`<div class="card"><div class="al aw">No students in Group ${g} yet.</div></div>`:''}`;
+}
+
+let pendingAtt={};
+function setAttWeek(w){attWeekSel=w;pendingAtt={};render();}
+function markAtt(matric,status){pendingAtt[matric]=status;render();}
+function markAllPresent(){getGroupStudents(APP.user.group).forEach(s=>pendingAtt[s.matric]='present');render();}
+function markAllAbsent(){getGroupStudents(APP.user.group).forEach(s=>pendingAtt[s.matric]='absent');render();}
+function saveAttendance(){
+  if(!attWeekSel){toast('Select a week first','error');return;}
+  const g=APP.user.group;
+  const all=getAttendance();
+  getGroupStudents(g).forEach(s=>{
+    const status=pendingAtt[s.matric]||'absent';
+    const idx=all.findIndex(a=>a.matric===s.matric&&a.week===attWeekSel&&a.group==g);
+    const rec={matric:s.matric,name:s.name,prog:s.prog||'',dept:s.dept||'',level:s.level||'',group:g,week:attWeekSel,status,markedAt:new Date().toISOString(),markedBy:APP.user.matric};
+    if(idx>=0)all[idx]=rec;else all.push(rec);
+  });
+  S.set('attendance',all);pendingAtt={};
+  toast('Attendance saved ✅','success');render();
+}
+
+// ═══════════════════════════════════════════════════════
+// LEADER — SUBMIT RECIPE
+// ═══════════════════════════════════════════════════════
+let recPractSel='';
+function vSubmitRecipe(){
+  const g=APP.user.group;
+  const practicals=getPracticals();
+  const recipes=getRecipes().filter(r=>r.group==g);
+  const sel=recPractSel||(practicals[0]?.id||'');
+  const existing=recipes.find(r=>r.practicalId===sel);
+  return ph('🍳 Submit Recipe','Upload your group\'s recipe — Group '+g)+`
+  <div class="card">
+    <div class="card-title">Select Practical</div>
+    <div class="week-grid">
+      ${practicals.map(p=>{
+        const r=recipes.find(x=>x.practicalId===p.id);
+        const graded=r&&typeof r.score==='number';
+        return `<div class="wpill ${p.id===sel?'on':''} ${graded?'graded':r?'submitted':''}" onclick="setRecPract('${esc(p.id)}')">${esc(p.label)}${r?`<br><small>${graded?'✅ '+r.percent+'%':'⏳'}</small>`:''}</div>`;
+      }).join('')}
+    </div>
+    ${practicals.length===0?`<div class="al aw">No practicals set yet. Ask admin to add in Settings.</div>`:''}
+  </div>
+  ${sel?`
+  <div class="card">
+    <div class="card-title">${existing?'Update':'Submit'} — ${esc(practicals.find(p=>p.id===sel)?.label||sel)}</div>
+    ${existing&&typeof existing.score==='number'?`<div class="al as" style="margin-bottom:.9rem">Graded: <b>${existing.score}/${existing.maxScore||100} (${existing.percent}%)</b>${existing.feedback?' · '+existing.feedback:''}</div>`:''}
+    ${existing&&typeof existing.score!=='number'?`<div class="al ai" style="margin-bottom:.9rem">Submitted — awaiting grading.</div>`:''}
+    <div class="field"><label>Recipe Title</label><input id="rf-title" value="${existing?esc(existing.title||''):''}" placeholder="e.g. Pineapple Fruit Juice with Ginger"></div>
+    <div class="field"><label>Ingredients (one per line)</label><textarea id="rf-ing" style="min-height:120px" placeholder="e.g.&#10;2 ripe pineapples&#10;1 inch ginger root">${existing?esc(existing.ingredients||''):''}</textarea></div>
+    <div class="field"><label>Method / Procedure</label><textarea id="rf-method" style="min-height:150px" placeholder="Step-by-step...">${existing?esc(existing.method||''):''}</textarea></div>
+    <div class="fr">
+      <div class="field"><label>Yield / Quantity</label><input id="rf-yield" value="${existing?esc(existing.yield_||''):''}" placeholder="e.g. 4 servings"></div>
+      <div class="field"><label>Total Time</label><input id="rf-time" value="${existing?esc(existing.time_||''):''}" placeholder="e.g. 30 minutes"></div>
+    </div>
+    <div class="field"><label>Group Members Present</label><textarea id="rf-members" style="min-height:70px" placeholder="Names of all group members who participated...">${existing?esc(existing.members||''):''}</textarea></div>
+    <div class="field"><label>Photo of Finished Product (optional, &lt;1.5 MB)</label><input type="file" id="rf-photo" accept="image/*"></div>
+    ${existing?.photo?`<img src="${existing.photo}" class="photo-preview">`:''}
+    <div class="btn-row">
+      <button class="btn btn-p" onclick="submitRecipe('${esc(sel)}','${existing?.id||''}')">
+        ${existing?'🔄 Update Recipe':'✅ Submit Recipe'}
+      </button>
+    </div>
+  </div>`:''}`;
+}
+
+function setRecPract(id){recPractSel=id;render();}
+async function submitRecipe(practId,existingId){
+  const g=APP.user.group;
+  const title=document.getElementById('rf-title')?.value.trim()||'';
+  const ingredients=document.getElementById('rf-ing')?.value.trim()||'';
+  const method=document.getElementById('rf-method')?.value.trim()||'';
+  const yield_=document.getElementById('rf-yield')?.value.trim()||'';
+  const time_=document.getElementById('rf-time')?.value.trim()||'';
+  const members=document.getElementById('rf-members')?.value.trim()||'';
+  if(!title||!ingredients||!method){toast('Title, ingredients and method are required','error');return;}
+  let photo='';
+  const pf=document.getElementById('rf-photo');
+  if(pf&&pf.files&&pf.files[0]){
+    try{photo=await new Promise((res,rej)=>{const fr=new FileReader();fr.onload=()=>res(fr.result);fr.onerror=rej;fr.readAsDataURL(pf.files[0]);});}catch(e){}
+  }
+  const practicals=getPracticals();
+  const practical=practicals.find(p=>p.id===practId)?.label||practId;
+  const all=getRecipes();
+  const idx=existingId?all.findIndex(r=>r.id===existingId):-1;
+  const auto=Math.min(100,(title?15:0)+(ingredients.split('\n').filter(l=>l.trim()).length>=3?25:10)+(method.length>=120?30:method.length>=60?20:10)+(yield_?5:0)+(time_?5:0)+(members?10:0)+(photo?15:0));
+  const baseRec={id:existingId||'rec_'+Date.now(),group:g,practicalId:practId,practical,title,ingredients,method,yield_,time_,members,photo:photo||(idx>=0?all[idx].photo:''),autoScore:auto,maxScore:100,submittedAt:idx>=0?all[idx].submittedAt:new Date().toISOString(),updatedAt:new Date().toISOString(),leaderMatric:APP.user.matric,leaderName:APP.user.name};
+  if(idx>=0){const prev=all[idx];all[idx]={...baseRec,score:prev.score,percent:prev.percent,feedback:prev.feedback,gradedBy:prev.gradedBy,gradedAt:prev.gradedAt};}
+  else all.push(baseRec);
+  S.set('recipes',all);
+  toast(existingId?'Recipe updated ✅':'Recipe submitted ✅','success');render();
+}
+
+// ═══════════════════════════════════════════════════════
+// ADMIN — OVERVIEW
+// ═══════════════════════════════════════════════════════
+function vaOverview(){
+  const students=getStudents();
+  const recipes=getRecipes();
+  const att=getAttendance();
+  const cbtResults=getCBTResults();
+  const graded=recipes.filter(r=>typeof r.score==='number');
+  const nce=students.filter(s=>s.prog==='NCE').length;
+  const deg=students.filter(s=>s.prog==='Degree').length;
+  return ph('🏠 Overview','VOS Practical LMS — Admin Dashboard')+`
+  <div class="metrics">
+    <div class="metric"><div class="mv">${students.length}</div><div class="ml">Total Students</div></div>
+    <div class="metric"><div class="mv">${recipes.length}</div><div class="ml">Recipes Submitted</div></div>
+    <div class="metric"><div class="mv">${graded.length}</div><div class="ml">Recipes Graded</div></div>
+    <div class="metric"><div class="mv">${cbtResults.length}</div><div class="ml">CBT Attempts</div></div>
+  </div>
+  <div class="fr" style="margin-bottom:1rem">
+    <div class="card" style="margin-bottom:0">
+      <div class="card-title">Programme Split</div>
+      <div style="display:flex;gap:1rem;align-items:center">
+        <div><div class="mv" style="font-size:1.4rem">${nce}</div><div class="ml">NCE</div></div>
+        <div style="flex:1;background:var(--panel);height:10px;border-radius:5px;overflow:hidden">
+          <div style="width:${students.length?Math.round(nce/students.length*100):0}%;height:100%;background:var(--blue)"></div>
+        </div>
+        <div><div class="mv" style="font-size:1.4rem">${deg}</div><div class="ml">Degree</div></div>
+      </div>
+    </div>
+    <div class="card" style="margin-bottom:0">
+      <div class="card-title">Level Breakdown</div>
+      ${VOS_LEVELS.map(l=>{const c=students.filter(s=>s.level===l).length;return `<div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.35rem"><span class="mono" style="min-width:35px">L${l}</span><div style="flex:1;background:var(--panel);height:8px;border-radius:4px;overflow:hidden"><div style="width:${students.length?Math.round(c/students.length*100):0}%;height:100%;background:var(--cyan)"></div></div><span style="font-size:.78rem;color:var(--dim);min-width:24px;text-align:right">${c}</span></div>`;}).join('')}
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Group Summary</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Group</th><th>Students</th><th>NCE/Deg</th><th>Recipes</th><th>Graded</th><th>Avg%</th><th>PIN</th></tr></thead>
+      <tbody>
+        ${GROUPS.map(g=>{
+          const gs=students.filter(s=>s.group==g);
+          const gr=recipes.filter(r=>r.group==g);
+          const gg=gr.filter(r=>typeof r.score==='number');
+          const avg=gg.length?Math.round(gg.reduce((s,r)=>s+(r.percent||0),0)/gg.length):0;
+          const pins=S.get('group_pins',{});
+          const gn=gs.filter(s=>s.prog==='NCE').length;const gd=gs.filter(s=>s.prog==='Degree').length;
+          return `<tr>
+            <td><b>G${g}</b></td><td>${gs.length}</td>
+            <td style="font-size:.76rem">${gn?`<span class="badge bc">${gn} NCE</span> `:''}${gd?`<span class="badge bo">${gd} Deg</span>`:''}</td>
+            <td>${gr.length}</td><td>${gg.length}</td>
+            <td>${gg.length?avg+'%':'—'}</td>
+            <td>${pins[g]?`<span class="badge bg">✓</span>`:`<span class="badge br">Not set</span>`}</td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table></div>
+  </div>`;
+}
+
+// ═══════════════════════════════════════════════════════
+// ADMIN — GROUPS
+// ═══════════════════════════════════════════════════════
+let adminGroupSel=1;
+function vaGroups(){
+  const g=adminGroupSel;
+  const students=getGroupStudents(g);
+  const pins=S.get('group_pins',{});
+  return ph('👥 Groups','Manage group leaders, PINs and members')+`
+  <div class="card">
+    <div class="card-title">Select Group</div>
+    <div class="group-grid">${GROUPS.map(n=>`<div class="gpill ${n===g?'on':''}" onclick="setAdminGroup(${n})">G${n}</div>`).join('')}</div>
+  </div>
+  <div class="card">
+    <div class="card-title">Group ${g} — Leader PIN</div>
+    <div class="fr">
+      <div class="field"><label>Set / Change PIN</label><input id="pin-input" type="password" maxlength="10" placeholder="e.g. 1234" value="${pins[g]||''}"></div>
+    </div>
+    <button class="btn btn-p sm" onclick="saveGroupPin(${g})">💾 Save PIN</button>
+  </div>
+  <div class="card">
+    <div class="card-title">Group ${g} Members (${students.length})</div>
+    ${students.length===0?`<div class="empty" style="padding:1rem"><p>No students in Group ${g} yet.</p></div>`:
+    students.map(s=>`<div class="student-row">
+      <div class="s-avatar">${esc(s.name[0]||'?')}</div>
+      <div style="flex:1">
+        <div class="s-name">${esc(s.name)}</div>
+        <div class="s-matric">${esc(s.matric)} · ${esc(s.dept||'')} L${esc(s.level||'')}</div>
+      </div>
+      <div class="s-ml">
+        <span class="badge bo">${esc(s.prog||'?')}</span>
+        <button class="btn btn-d sm" onclick="removeStudent('${esc(s.matric)}')">🗑</button>
+      </div>
+    </div>`).join('')}
+    <div class="btn-row" style="margin-top:.8rem">
+      <button class="btn btn-g sm" onclick="exportGroupStudents(${g})">📥 Export Group ${g}</button>
+    </div>
+  </div>`;
+}
+
+function setAdminGroup(n){adminGroupSel=n;render();}
+function saveGroupPin(g){
+  const v=document.getElementById('pin-input')?.value.trim();
+  if(!v){toast('Enter a PIN','error');return;}
+  const pins=S.get('group_pins',{});pins[g]=v;S.set('group_pins',pins);
+  toast('PIN saved for Group '+g,'success');
+}
+function removeStudent(matric){
+  if(!confirm('Remove this student?'))return;
+  S.set('students',getStudents().filter(s=>s.matric!==matric));
+  toast('Student removed','info');render();
+}
+function exportGroupStudents(g){
+  const rows=getGroupStudents(g).map(s=>({Group:'Group '+g,Name:s.name,Matric:s.matric,Programme:s.prog||'',Department:s.dept||'',Level:s.level||'',Registered:s.registeredAt?new Date(s.registeredAt).toLocaleString('en-NG'):''}));
+  xlsxExport(rows,'Group_'+g+'_Students');
+}
+
+// ═══════════════════════════════════════════════════════
+// ADMIN — ALL STUDENTS
+// ═══════════════════════════════════════════════════════
+let stuFilter={prog:'',dept:'',level:'',group:''};
+function vaStudents(){
+  let students=getStudents();
+  if(stuFilter.prog) students=students.filter(s=>s.prog===stuFilter.prog);
+  if(stuFilter.dept) students=students.filter(s=>s.dept===stuFilter.dept);
+  if(stuFilter.level) students=students.filter(s=>s.level===stuFilter.level);
+  if(stuFilter.group) students=students.filter(s=>s.group==stuFilter.group);
+  students=students.sort((a,b)=>a.group-b.group||a.name.localeCompare(b.name));
+  return ph('🧑 All Students','Every registered student')+`
+  <div class="card">
+    <div class="card-title">Filter</div>
+    <div class="fr3">
+      <div class="field"><label>Programme</label>
+        <select onchange="stuFilter.prog=this.value;render()">
+          <option value="">All</option><option ${stuFilter.prog==='NCE'?'selected':''}>NCE</option><option ${stuFilter.prog==='Degree'?'selected':''}>Degree</option>
+        </select>
+      </div>
+      <div class="field"><label>Department</label>
+        <select onchange="stuFilter.dept=this.value;render()">
+          <option value="">All Departments</option>
+          ${VOS_DEPTS.map(d=>`<option ${stuFilter.dept===d?'selected':''}>${esc(d)}</option>`).join('')}
+        </select>
+      </div>
+      <div class="field"><label>Level</label>
+        <select onchange="stuFilter.level=this.value;render()">
+          <option value="">All Levels</option>
+          ${VOS_LEVELS.map(l=>`<option ${stuFilter.level===l?'selected':''}>${l}</option>`).join('')}
+        </select>
+      </div>
+    </div>
+    <div class="fr">
+      <div class="field"><label>Group</label>
+        <select onchange="stuFilter.group=this.value;render()">
+          <option value="">All Groups</option>
+          ${GROUPS.map(g=>`<option value="${g}" ${stuFilter.group==g?'selected':''}>Group ${g}</option>`).join('')}
+        </select>
+      </div>
+      <div class="field" style="display:flex;align-items:flex-end">
+        <button class="btn btn-o sm" onclick="stuFilter={prog:'',dept:'',level:'',group:''};render()">✕ Clear Filters</button>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;margin-bottom:.8rem">
+      <div class="card-title" style="margin-bottom:0">Results: ${students.length} student${students.length!==1?'s':''}</div>
+      <button class="btn btn-g sm" onclick="exportAllStudents()">📥 Export All Students</button>
+    </div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>G</th><th>Name</th><th>Matric</th><th>Prog</th><th>Department</th><th>Lvl</th><th></th></tr></thead>
+      <tbody>
+        ${students.length===0?`<tr><td colspan="7" style="text-align:center;color:var(--dim);padding:2rem">No students match this filter</td></tr>`:
+        students.map(s=>`<tr>
+          <td><span class="badge bc">G${s.group}</span></td>
+          <td>${esc(s.name)}</td>
+          <td class="mono">${esc(s.matric)}</td>
+          <td><span class="badge bo">${esc(s.prog||'—')}</span></td>
+          <td style="font-size:.8rem">${esc(s.dept||'—')}</td>
+          <td>${esc(s.level||'—')}</td>
+          <td><button class="btn btn-d sm" onclick="removeStudent('${esc(s.matric)}')">🗑</button></td>
+        </tr>`).join('')}
+      </tbody>
+    </table></div>
+  </div>`;
+}
+
+function exportAllStudents(){
+  const rows=getStudents().sort((a,b)=>a.group-b.group).map(s=>({Group:'Group '+s.group,Name:s.name,Matric:s.matric,Programme:s.prog||'',Department:s.dept||'',Level:s.level||'',Registered:s.registeredAt?new Date(s.registeredAt).toLocaleString('en-NG'):''}));
+  xlsxExport(rows,'All_Students_VOS');
+}
+
+// ═══════════════════════════════════════════════════════
+// ADMIN — ATTENDANCE
+// ═══════════════════════════════════════════════════════
+let attAdminGroup=0,attAdminWeek='all';
+function vaAttendance(){
+  const weeks=getWeeks();
+  const att=getAttendance();
+  const filtered=att.filter(a=>(attAdminGroup?a.group==attAdminGroup:true)&&(attAdminWeek!=='all'?a.week===attAdminWeek:true));
+  const present=filtered.filter(a=>a.status==='present').length;
+  return ph('📋 Attendance','View and export attendance')+`
+  <div class="card">
+    <div class="card-title">Filter</div>
+    <div class="fr">
+      <div class="field"><label>Group</label>
+        <select onchange="attAdminGroup=parseInt(this.value)||0;render()">
+          <option value="0">All Groups</option>
+          ${GROUPS.map(g=>`<option value="${g}" ${attAdminGroup==g?'selected':''}>Group ${g}</option>`).join('')}
+        </select>
+      </div>
+      <div class="field"><label>Week</label>
+        <select onchange="attAdminWeek=this.value;render()">
+          <option value="all">All Weeks</option>
+          ${weeks.map(w=>`<option value="${esc(w)}" ${attAdminWeek===w?'selected':''}>${esc(w)}</option>`).join('')}
+        </select>
+      </div>
+    </div>
+    <button class="btn btn-g sm" onclick="exportAttendance()">📥 Export Attendance</button>
+  </div>
+  <div class="metrics">
+    <div class="metric"><div class="mv">${filtered.length}</div><div class="ml">Total Records</div></div>
+    <div class="metric"><div class="mv">${present}</div><div class="ml">Present</div></div>
+    <div class="metric"><div class="mv">${filtered.length-present}</div><div class="ml">Absent</div></div>
+    <div class="metric"><div class="mv">${filtered.length?Math.round(present/filtered.length*100)+'%':'—'}</div><div class="ml">Rate</div></div>
+  </div>
+  <div class="card">
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>G</th><th>Name</th><th>Matric</th><th>Prog</th><th>Dept</th><th>Lvl</th><th>Week</th><th>Status</th><th>Date</th></tr></thead>
+      <tbody>
+        ${filtered.length===0?`<tr><td colspan="9" style="text-align:center;color:var(--dim);padding:2rem">No records</td></tr>`:
+        filtered.sort((a,b)=>a.group-b.group).map(a=>`<tr>
+          <td><span class="badge bc">G${a.group}</span></td>
+          <td>${esc(a.name)}</td>
+          <td class="mono">${esc(a.matric)}</td>
+          <td><span class="badge bo" style="font-size:.68rem">${esc(a.prog||'—')}</span></td>
+          <td style="font-size:.76rem">${esc(a.dept||'—')}</td>
+          <td>${esc(a.level||'—')}</td>
+          <td>${esc(a.week)}</td>
+          <td><span class="badge ${a.status==='present'?'bg':'br'}">${a.status==='present'?'Present':'Absent'}</span></td>
+          <td style="font-size:.76rem;color:var(--dim)">${a.markedAt?new Date(a.markedAt).toLocaleDateString('en-NG'):'—'}</td>
+        </tr>`).join('')}
+      </tbody>
+    </table></div>
+  </div>`;
+}
+
+function exportAttendance(){
+  const rows=getAttendance().sort((a,b)=>a.group-b.group).map(a=>({Group:'Group '+a.group,Name:a.name,Matric:a.matric,Programme:a.prog||'',Department:a.dept||'',Level:a.level||'',Week:a.week,Status:a.status,MarkedAt:a.markedAt?new Date(a.markedAt).toLocaleString('en-NG'):'',MarkedBy:a.markedBy||''}));
+  xlsxExport(rows,'VOS_Attendance');
+}
+
+// ═══════════════════════════════════════════════════════
+// ADMIN — RECIPES
+// ═══════════════════════════════════════════════════════
+let recAdminGroup=0,recAdminPract='all';
+function vaRecipes(){
+  const practicals=getPracticals();
+  const filtered=getRecipes().filter(r=>(recAdminGroup?r.group==recAdminGroup:true)&&(recAdminPract!=='all'?r.practicalId===recAdminPract:true));
+  const graded=filtered.filter(r=>typeof r.score==='number');
+  const avg=graded.length?Math.round(graded.reduce((s,r)=>s+(r.percent||0),0)/graded.length):0;
+  return ph('🍳 Recipes','Grade group recipe submissions')+`
+  <div class="card">
+    <div class="card-title">Filter</div>
+    <div class="fr">
+      <div class="field"><label>Group</label>
+        <select onchange="recAdminGroup=parseInt(this.value)||0;render()">
+          <option value="0">All Groups</option>
+          ${GROUPS.map(g=>`<option value="${g}" ${recAdminGroup==g?'selected':''}>Group ${g}</option>`).join('')}
+        </select>
+      </div>
+      <div class="field"><label>Practical</label>
+        <select onchange="recAdminPract=this.value;render()">
+          <option value="all">All Practicals</option>
+          ${practicals.map(p=>`<option value="${esc(p.id)}" ${recAdminPract===p.id?'selected':''}>${esc(p.label)}</option>`).join('')}
+        </select>
+      </div>
+    </div>
+    <button class="btn btn-g sm" onclick="exportRecipes()">📥 Export Recipe Results</button>
+  </div>
+  <div class="metrics">
+    <div class="metric"><div class="mv">${filtered.length}</div><div class="ml">Submissions</div></div>
+    <div class="metric"><div class="mv">${graded.length}</div><div class="ml">Graded</div></div>
+    <div class="metric"><div class="mv">${filtered.length-graded.length}</div><div class="ml">Pending</div></div>
+    <div class="metric"><div class="mv">${graded.length?avg+'%':'—'}</div><div class="ml">Class Avg</div></div>
+  </div>
+  <div class="section-scroll">
+    ${filtered.length===0?`<div class="card"><div class="empty" style="padding:1.5rem"><div class="ei">🍴</div><p>No recipes for this filter.</p></div></div>`:
+    filtered.sort((a,b)=>a.group-b.group).map(r=>`
+    <div class="recipe-card">
+      <div class="rc-header">
+        <div>
+          <div class="rc-title">🍴 ${esc(r.title)} — Group ${r.group}</div>
+          <div class="rc-sub">${esc(r.practical)} · By ${esc(r.leaderName||'Leader')} · ${new Date(r.submittedAt).toLocaleDateString('en-NG')}</div>
+          ${r.members?`<div class="rc-sub">Members: ${esc(r.members)}</div>`:''}
+        </div>
+        <span class="badge ${typeof r.score==='number'?(r.percent>=70?'bg':r.percent>=50?'ba':'br'):'bv'}">${typeof r.score==='number'?`${r.score}/${r.maxScore||100} (${r.percent}%)`:'Pending'}</span>
+      </div>
+      <div class="recipe-section"><div class="label">Ingredients</div><div class="val">${esc(r.ingredients)}</div></div>
+      <div class="recipe-section"><div class="label">Method</div><div class="val">${esc(r.method)}</div></div>
+      ${r.yield_||r.time_?`<div class="fr" style="margin-top:.7rem">${r.yield_?`<div><div class="label">Yield</div><div style="font-size:.83rem">${esc(r.yield_)}</div></div>`:''} ${r.time_?`<div><div class="label">Time</div><div style="font-size:.83rem">${esc(r.time_)}</div></div>`:''}</div>`:''}
+      ${r.photo?`<div class="recipe-section"><img src="${r.photo}" class="photo-preview"></div>`:''}
+      <div class="fr" style="margin-top:.9rem">
+        <div class="field"><label>Score (/ ${r.maxScore||100})</label><input type="number" id="rscore-${r.id}" value="${typeof r.score==='number'?r.score:''}" min="0" max="${r.maxScore||100}"></div>
+        <div class="field"><label>Feedback</label><textarea id="rfb-${r.id}" style="min-height:80px">${esc(r.feedback||'')}</textarea></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-p sm" onclick="gradeRecipe('${r.id}')">💾 Save Grade</button>
+        <button class="btn btn-d sm" onclick="deleteRecipe('${r.id}')">🗑 Delete</button>
+        ${typeof r.autoScore==='number'?`<span class="badge bc">Auto: ${r.autoScore}/100</span>`:''}
+      </div>
+    </div>`).join('')}
+  </div>`;
+}
+
+function gradeRecipe(id){
+  const all=getRecipes();const idx=all.findIndex(r=>r.id===id);
+  if(idx===-1){toast('Not found','error');return;}
+  const sc=parseFloat(document.getElementById('rscore-'+id)?.value);
+  if(isNaN(sc)){toast('Enter a numeric score','error');return;}
+  const fb=document.getElementById('rfb-'+id)?.value.trim()||'';
+  const max=all[idx].maxScore||100;const score=Math.max(0,Math.min(max,sc));
+  all[idx]={...all[idx],score,percent:Math.round(score/max*100),feedback:fb,gradedBy:APP.user.name,gradedAt:new Date().toISOString()};
+  S.set('recipes',all);toast('Grade saved ✅','success');render();
+}
+function deleteRecipe(id){
+  if(!confirm('Delete this recipe?'))return;
+  S.set('recipes',getRecipes().filter(r=>r.id!==id));toast('Deleted','info');render();
+}
+function exportRecipes(){
+  const rows=getRecipes().map(r=>({Group:'Group '+r.group,Practical:r.practical,Title:r.title,LeaderName:r.leaderName||'',LeaderMatric:r.leaderMatric||'',Members:r.members||'',Yield:r.yield_||'',TotalTime:r.time_||'',AutoScore:r.autoScore??'',Score:typeof r.score==='number'?r.score:'',MaxScore:r.maxScore||100,Percent:typeof r.percent==='number'?r.percent+'%':'',Feedback:r.feedback||'',GradedBy:r.gradedBy||'',GradedAt:r.gradedAt?new Date(r.gradedAt).toLocaleString('en-NG'):'',Submitted:new Date(r.submittedAt).toLocaleString('en-NG')}));
+  xlsxExport(rows,'VOS_Recipe_Results');
+}
+
+// ═══════════════════════════════════════════════════════
+// ADMIN — CBT
+// ═══════════════════════════════════════════════════════
+let cbtAdminView='list',cbtEditId='',cbtResultFilter={testId:'',prog:'',dept:'',group:''};
+
+function vaCBT(){
+  if(cbtAdminView==='edit') return vaCBTEditor();
+  if(cbtAdminView==='results') return vaCBTResults();
+  return vaCBTList();
+}
+
+function vaCBTList(){
+  const tests=getCBTTests();
+  return ph('📝 CBT Mid-Tests','Create and manage computer-based tests')+`
+  <div class="btn-row" style="margin-bottom:1rem">
+    <button class="btn btn-p" onclick="cbtNewTest()">＋ Create New Test</button>
+    <button class="btn btn-v" onclick="cbtAdminView='results';render()">📊 View All Results</button>
+  </div>
+  ${tests.length===0?`<div class="card"><div class="empty" style="padding:2rem"><div class="ei">📝</div><p>No tests created yet. Click "Create New Test" to start.</p></div></div>`:
+  tests.map(t=>{
+    const results=getCBTResults().filter(r=>r.testId===t.id);
+    const avg=results.length?Math.round(results.reduce((s,r)=>s+(r.percent||0),0)/results.length):0;
+    return `<div class="card" style="border-left:3px solid var(--violet)">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:.7rem">
+        <div>
+          <div style="font-weight:600;font-size:.95rem">${esc(t.title)}</div>
+          <div style="font-size:.76rem;color:var(--dim);margin-top:.2rem">${t.questions.length} questions · ${t.duration} min · ${t.allowRetake?'Retake allowed':'One attempt'}</div>
+          <div style="font-size:.76rem;color:var(--dim)">${results.length} attempt${results.length!==1?'s':''} · Avg: ${results.length?avg+'%':'—'}</div>
+        </div>
+        <div style="display:flex;gap:.4rem;flex-wrap:wrap">
+          <span class="badge ${t.active?'bg':'br'}">${t.active?'Active':'Inactive'}</span>
+          <button class="btn btn-o sm" onclick="toggleCBTActive('${t.id}')">${t.active?'Deactivate':'Activate'}</button>
+          <button class="btn btn-v sm" onclick="cbtAdminView='edit';cbtEditId='${t.id}';render()">✏️ Edit</button>
+          <button class="btn btn-g sm" onclick="cbtAdminView='results';cbtResultFilter.testId='${t.id}';render()">📊 Results</button>
+          <button class="btn btn-d sm" onclick="deleteCBTTest('${t.id}')">🗑</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('')}`;
+}
+
+function vaCBTEditor(){
+  const tests=getCBTTests();
+  const test=cbtEditId?tests.find(t=>t.id===cbtEditId):null;
+  const qs=test?test.questions:[];
+  return ph(test?'✏️ Edit Test: '+test.title:'➕ New CBT Test','Build questions with 4 options and a correct answer')+`
+  <div class="btn-row" style="margin-bottom:1rem">
+    <button class="btn btn-o" onclick="cbtAdminView='list';cbtEditId='';render()">← Back to Tests</button>
+    <button class="btn btn-p" onclick="saveCBTTest()">💾 Save Test</button>
+    <button class="btn btn-v" onclick="showCBTImport()">📂 Bulk Import Questions</button>
+    <button class="btn btn-o sm" onclick="downloadCBTTemplate()">⬇️ Download Template</button>
+  </div>
+  <div class="card">
+    <div class="card-title">Test Settings</div>
+    <div class="fr">
+      <div class="field"><label>Test Title</label><input id="cbt-title" value="${test?esc(test.title||''):''}" placeholder="e.g. VOS 102 Mid-Semester Test"></div>
+      <div class="field"><label>Duration (minutes)</label><input id="cbt-duration" type="number" value="${test?test.duration:30}" min="5" max="180"></div>
+    </div>
+    <div class="fr">
+      <div class="field"><label>Active (visible to students)</label>
+        <select id="cbt-active">
+          <option value="1" ${test?.active?'selected':''}>Yes — Students can take this test</option>
+          <option value="0" ${test&&!test.active?'selected':''}>No — Hidden from students</option>
+        </select>
+      </div>
+      <div class="field"><label>Allow Retake</label>
+        <select id="cbt-retake">
+          <option value="0" ${test&&!test.allowRetake?'selected':''}>No — One attempt only</option>
+          <option value="1" ${test?.allowRetake?'selected':''}>Yes — Students can retake</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div id="cbt-questions-container">
+    ${qs.map((q,i)=>cbtQuestionEditor(q,i)).join('')}
+  </div>
+  <div class="btn-row">
+    <button class="btn btn-p" onclick="addCBTQuestion()">＋ Add Question</button>
+    <button class="btn btn-p" onclick="saveCBTTest()">💾 Save Test (${qs.length} question${qs.length!==1?'s':''})</button>
+  </div>`;
+}
+
+function cbtQuestionEditor(q,i){
+  return `<div class="q-editor" id="qe-${i}">
+    <div class="q-editor-head">
+      <span class="q-editor-num">Question ${i+1}</span>
+      <button class="btn btn-d sm" onclick="removeCBTQuestion(${i})">✕ Remove</button>
+    </div>
+    <div class="field"><label>Question Text</label><textarea id="qtext-${i}" style="min-height:70px" placeholder="Type the question here...">${esc(q?.text||'')}</textarea></div>
+    <div class="fr">
+      <div class="field"><label>Option A</label><input id="qopt-${i}-0" value="${esc(q?.options?.[0]||'')}" placeholder="Option A"></div>
+      <div class="field"><label>Option B</label><input id="qopt-${i}-1" value="${esc(q?.options?.[1]||'')}" placeholder="Option B"></div>
+    </div>
+    <div class="fr">
+      <div class="field"><label>Option C</label><input id="qopt-${i}-2" value="${esc(q?.options?.[2]||'')}" placeholder="Option C"></div>
+      <div class="field"><label>Option D</label><input id="qopt-${i}-3" value="${esc(q?.options?.[3]||'')}" placeholder="Option D"></div>
+    </div>
+    <div class="field"><label>Correct Answer</label>
+      <select id="qans-${i}">
+        <option value="" ${q?.answer===undefined?'selected':''}>— Select correct answer —</option>
+        <option value="0" ${q?.answer===0?'selected':''}>A</option>
+        <option value="1" ${q?.answer===1?'selected':''}>B</option>
+        <option value="2" ${q?.answer===2?'selected':''}>C</option>
+        <option value="3" ${q?.answer===3?'selected':''}>D</option>
+      </select>
+    </div>
+  </div>`;
+}
+
+let _pendingQs=[];
+function addCBTQuestion(){
+  // collect current state first
+  const saved=collectCBTQuestions();
+  saved.push({text:'',options:['','','',''],answer:undefined});
+  const tests=getCBTTests();
+  if(cbtEditId){
+    const idx=tests.findIndex(t=>t.id===cbtEditId);
+    if(idx>=0){tests[idx].questions=saved;S.set('cbt_tests',tests);}
+  }
+  render();
+}
+function removeCBTQuestion(i){
+  if(!confirm('Remove question '+(i+1)+'?'))return;
+  const saved=collectCBTQuestions();
+  saved.splice(i,1);
+  const tests=getCBTTests();
+  if(cbtEditId){
+    const idx=tests.findIndex(t=>t.id===cbtEditId);
+    if(idx>=0){tests[idx].questions=saved;S.set('cbt_tests',tests);}
+  } else {
+    // temp storage for new test
+    _pendingQs=saved;
+  }
+  render();
+}
+function collectCBTQuestions(){
+  const qs=[];let i=0;
+  while(document.getElementById('qtext-'+i)){
+    qs.push({
+      text:document.getElementById('qtext-'+i)?.value.trim()||'',
+      options:[0,1,2,3].map(j=>document.getElementById('qopt-'+i+'-'+j)?.value.trim()||''),
+      answer:document.getElementById('qans-'+i)?.value!==''?parseInt(document.getElementById('qans-'+i).value):undefined
+    });
+    i++;
+  }
+  return qs;
+}
+function saveCBTTest(){
+  const title=document.getElementById('cbt-title')?.value.trim();
+  const duration=parseInt(document.getElementById('cbt-duration')?.value)||30;
+  const active=document.getElementById('cbt-active')?.value==='1';
+  const allowRetake=document.getElementById('cbt-retake')?.value==='1';
+  if(!title){toast('Enter a test title','error');return;}
+  const questions=collectCBTQuestions().filter(q=>q.text);
+  if(!questions.length){toast('Add at least one question','error');return;}
+  const bad=questions.find(q=>q.options.some(o=>!o)||q.answer===undefined);
+  if(bad){toast('Fill all options and select the correct answer for each question','error');return;}
+  const tests=getCBTTests();
+  if(cbtEditId){
+    const idx=tests.findIndex(t=>t.id===cbtEditId);
+    if(idx>=0){tests[idx]={...tests[idx],title,duration,active,allowRetake,questions,updatedAt:new Date().toISOString()};}
+  } else {
+    tests.push({id:'cbt_'+Date.now(),title,duration,active,allowRetake,questions,createdAt:new Date().toISOString()});
+  }
+  S.set('cbt_tests',tests);
+  toast('Test saved ✅','success');
+  cbtAdminView='list';cbtEditId='';render();
+}
+function cbtNewTest(){
+  cbtEditId='';
+  const tests=getCBTTests();
+  const newTest={id:'cbt_'+Date.now(),title:'',duration:30,active:false,allowRetake:false,questions:[{text:'',options:['','','',''],answer:undefined}],createdAt:new Date().toISOString()};
+  tests.push(newTest);
+  S.set('cbt_tests',tests);
+  cbtEditId=newTest.id;
+  cbtAdminView='edit';render();
+}
+function toggleCBTActive(id){
+  const tests=getCBTTests();const idx=tests.findIndex(t=>t.id===id);
+  if(idx>=0){tests[idx].active=!tests[idx].active;S.set('cbt_tests',tests);}
+  render();
+}
+function deleteCBTTest(id){
+  if(!confirm('Delete this test and all its results?'))return;
+  S.set('cbt_tests',getCBTTests().filter(t=>t.id!==id));
+  S.set('cbt_results',getCBTResults().filter(r=>r.testId!==id));
+  toast('Test deleted','info');render();
+}
+
+function vaCBTResults(){
+  const tests=getCBTTests();
+  let results=getCBTResults();
+  if(cbtResultFilter.testId) results=results.filter(r=>r.testId===cbtResultFilter.testId);
+  if(cbtResultFilter.prog) results=results.filter(r=>r.prog===cbtResultFilter.prog);
+  if(cbtResultFilter.dept) results=results.filter(r=>r.dept===cbtResultFilter.dept);
+  if(cbtResultFilter.group) results=results.filter(r=>r.group==cbtResultFilter.group);
+  const avg=results.length?Math.round(results.reduce((s,r)=>s+(r.percent||0),0)/results.length):0;
+  return ph('📊 CBT Results','All student test results')+`
+  <div class="btn-row" style="margin-bottom:1rem">
+    <button class="btn btn-o" onclick="cbtAdminView='list';cbtResultFilter={testId:'',prog:'',dept:'',group:''};render()">← Back to Tests</button>
+    <button class="btn btn-g sm" onclick="exportCBTResults()">📥 Export Results</button>
+  </div>
+  <div class="card">
+    <div class="card-title">Filter</div>
+    <div class="fr">
+      <div class="field"><label>Test</label>
+        <select onchange="cbtResultFilter.testId=this.value;render()">
+          <option value="">All Tests</option>
+          ${tests.map(t=>`<option value="${t.id}" ${cbtResultFilter.testId===t.id?'selected':''}>${esc(t.title)}</option>`).join('')}
+        </select>
+      </div>
+      <div class="field"><label>Programme</label>
+        <select onchange="cbtResultFilter.prog=this.value;render()">
+          <option value="">All</option><option ${cbtResultFilter.prog==='NCE'?'selected':''}>NCE</option><option ${cbtResultFilter.prog==='Degree'?'selected':''}>Degree</option>
+        </select>
+      </div>
+    </div>
+    <div class="fr">
+      <div class="field"><label>Department</label>
+        <select onchange="cbtResultFilter.dept=this.value;render()">
+          <option value="">All Departments</option>
+          ${VOS_DEPTS.map(d=>`<option ${cbtResultFilter.dept===d?'selected':''}>${esc(d)}</option>`).join('')}
+        </select>
+      </div>
+      <div class="field"><label>Group</label>
+        <select onchange="cbtResultFilter.group=this.value;render()">
+          <option value="">All Groups</option>
+          ${GROUPS.map(g=>`<option value="${g}" ${cbtResultFilter.group==g?'selected':''}>Group ${g}</option>`).join('')}
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="metrics">
+    <div class="metric"><div class="mv">${results.length}</div><div class="ml">Attempts</div></div>
+    <div class="metric"><div class="mv">${results.filter(r=>r.percent>=50).length}</div><div class="ml">Passed (≥50%)</div></div>
+    <div class="metric"><div class="mv">${results.filter(r=>r.percent<50).length}</div><div class="ml">Failed</div></div>
+    <div class="metric"><div class="mv" style="color:${avg>=50?'var(--green)':'var(--red)'}">${results.length?avg+'%':'—'}</div><div class="ml">Class Avg</div></div>
+  </div>
+  <div class="card">
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Name</th><th>Matric</th><th>Prog</th><th>Dept</th><th>Lvl</th><th>G</th><th>Test</th><th>Score</th><th>%</th><th>Time</th><th>Date</th></tr></thead>
+      <tbody>
+        ${results.length===0?`<tr><td colspan="11" style="text-align:center;color:var(--dim);padding:2rem">No results</td></tr>`:
+        results.sort((a,b)=>new Date(b.submittedAt)-new Date(a.submittedAt)).map(r=>{
+          const t=tests.find(x=>x.id===r.testId);
+          const mins=Math.floor(r.timeTaken/60);const secs=r.timeTaken%60;
+          return `<tr>
+            <td>${esc(r.name)}</td>
+            <td class="mono">${esc(r.matric)}</td>
+            <td><span class="badge bo" style="font-size:.68rem">${esc(r.prog||'—')}</span></td>
+            <td style="font-size:.76rem">${esc(r.dept||'—')}</td>
+            <td>${esc(r.level||'—')}</td>
+            <td><span class="badge bc">G${r.group}</span></td>
+            <td style="font-size:.78rem">${esc(t?.title||r.testId)}</td>
+            <td class="mono">${r.score}/${r.total}</td>
+            <td><span class="badge ${r.percent>=70?'bg':r.percent>=50?'ba':'br'}">${r.percent}%</span></td>
+            <td style="font-size:.76rem;color:var(--dim)">${mins}m${String(secs).padStart(2,'0')}s</td>
+            <td style="font-size:.76rem;color:var(--dim)">${new Date(r.submittedAt).toLocaleDateString('en-NG')}</td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table></div>
+  </div>`;
+}
+
+function exportCBTResults(){
+  const tests=getCBTTests();
+  const rows=getCBTResults().map(r=>{
+    const t=tests.find(x=>x.id===r.testId);
+    return {Name:r.name,Matric:r.matric,Programme:r.prog||'',Department:r.dept||'',Level:r.level||'',Group:'Group '+r.group,Test:t?.title||r.testId,Score:r.score,Total:r.total,Percent:r.percent+'%',TimeTakenSecs:r.timeTaken,TimedOut:r.timedOut?'Yes':'No',SubmittedAt:new Date(r.submittedAt).toLocaleString('en-NG')};
+  });
+  xlsxExport(rows,'VOS_CBT_Results');
+}
+
+// ═══════════════════════════════════════════════════════
+// ADMIN — SETTINGS
+// ═══════════════════════════════════════════════════════
+function vaSettings(){
+  const weeks=getWeeks();const practicals=getPracticals();
+  return ph('⚙️ Settings','Manage attendance weeks and practical sessions')+`
+  <div class="card">
+    <div class="card-title">Attendance Weeks</div>
+    <div class="week-grid">
+      ${weeks.map(w=>`<div class="wpill on">${esc(w)} <span onclick="removeWeek('${esc(w)}')" style="cursor:pointer;margin-left:.3rem;opacity:.7">✕</span></div>`).join('')}
+    </div>
+    <div class="fr">
+      <div class="field"><label>Add Week Label</label><input id="new-week" placeholder="e.g. Week 1 or 20 Jan"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-p sm" onclick="addWeek()">＋ Add Week</button>
+      <button class="btn btn-o sm" onclick="bulkAddWeeks()">⚡ Add Weeks 1–15 at once</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Practical Sessions</div>
+    <div class="week-grid">
+      ${practicals.map(p=>`<div class="wpill on">${esc(p.label)} <span onclick="removePractical('${esc(p.id)}')" style="cursor:pointer;margin-left:.3rem;opacity:.7">✕</span></div>`).join('')}
+    </div>
+    <div class="fr">
+      <div class="field"><label>Practical Label</label><input id="new-pract" placeholder="e.g. Practical 1 — Fruit Juice"></div>
+    </div>
+    <button class="btn btn-p sm" onclick="addPractical()">＋ Add Practical</button>
+  </div>
+  <div class="card">
+    <div class="card-title" style="color:var(--red)">Danger Zone</div>
+    <button class="btn btn-d sm" onclick="clearAll()">🗑 Clear ALL data</button>
+  </div>`;
+}
+
+function addWeek(){const v=document.getElementById('new-week')?.value.trim();if(!v){toast('Enter a week label','error');return;}const weeks=getWeeks();if(weeks.includes(v)){toast('Already exists','error');return;}weeks.push(v);S.set('att_weeks',weeks);toast('Week added','success');render();}
+function removeWeek(w){S.set('att_weeks',getWeeks().filter(x=>x!==w));render();}
+function bulkAddWeeks(){const weeks=getWeeks();let added=0;for(let i=1;i<=15;i++){const l='Week '+i;if(!weeks.includes(l)){weeks.push(l);added++;}}S.set('att_weeks',weeks);toast('Added '+added+' weeks','success');render();}
+function addPractical(){const v=document.getElementById('new-pract')?.value.trim();if(!v){toast('Enter a practical label','error');return;}const all=getPracticals();all.push({id:'prac_'+Date.now(),label:v});S.set('practicals',all);toast('Practical added','success');render();}
+function removePractical(id){S.set('practicals',getPracticals().filter(p=>p.id!==id));render();}
+function clearAll(){if(!confirm('Delete ALL data? This cannot be undone.'))return;['students','recipes','attendance','att_weeks','practicals','group_pins','cbt_tests','cbt_results'].forEach(k=>localStorage.removeItem(k));toast('All data cleared','info');render();}
+
+// ═══════════════════════════════════════════════════════
+// EXCEL EXPORT
+// ═══════════════════════════════════════════════════════
+function xlsxExport(rows,filename){
+  if(!rows.length){toast('Nothing to export','error');return;}
+  try{
+    const ws=XLSX.utils.json_to_sheet(rows);
+    const wb=XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb,ws,'Data');
+    XLSX.writeFile(wb,filename+'.xlsx');
+    toast('Exported ✅','success');
+  }catch(e){toast('Export failed: '+e.message,'error');}
+}
+</script>
+
+<!-- ═══════════════════════════════════════════════════════
+     CBT QUIZ BUILDER MODAL
+     ═══════════════════════════════════════════════════════ -->
+<div id="cbt-import-modal" class="hidden" style="position:fixed;inset:0;background:rgba(0,50,0,.45);z-index:2000;align-items:flex-start;justify-content:center;padding:1.2rem;overflow-y:auto;">
+  <div style="background:#fff;border-radius:16px;width:100%;max-width:680px;margin:auto;box-shadow:0 12px 48px rgba(0,80,0,.22);overflow:hidden;">
+
+    <!-- Modal header -->
+    <div style="background:linear-gradient(135deg,#16a34a,#15803d);padding:1.2rem 1.5rem;display:flex;align-items:center;justify-content:space-between;">
+      <div>
+        <div style="font-size:1.05rem;font-weight:700;color:#fff">📋 Quiz Builder</div>
+        <div style="font-size:.78rem;color:#bbf7d0;margin-top:.15rem">Add questions manually or paste text in bulk</div>
+      </div>
+      <button onclick="hideCBTImport()" style="background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);color:#fff;border-radius:8px;padding:.35rem .8rem;cursor:pointer;font-size:.83rem;">✕ Close</button>
+    </div>
+
+    <!-- Tabs -->
+    <div style="display:flex;border-bottom:2px solid #e9faf1;background:#f8fffe;">
+      <button id="qb-tab-paste" onclick="qbTab('paste')" style="flex:1;padding:.7rem;font-size:.85rem;font-weight:600;border:none;background:transparent;color:#16a34a;border-bottom:2.5px solid #16a34a;cursor:pointer;">📄 Paste Questions</button>
+      <button id="qb-tab-manual" onclick="qbTab('manual')" style="flex:1;padding:.7rem;font-size:.85rem;font-weight:600;border:none;background:transparent;color:var(--dim);border-bottom:2.5px solid transparent;cursor:pointer;">✏️ Add Manually</button>
+    </div>
+
+    <div style="padding:1.4rem 1.5rem;">
+
+      <!-- ── PASTE TAB ── -->
+      <div id="qb-pane-paste">
+        <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:.85rem 1rem;margin-bottom:.9rem;font-size:.8rem;line-height:1.65;color:#14532d;">
+          <b>📌 Required format — one block per question, separated by a blank line:</b><br>
+          <code style="background:#dcfce7;padding:.15rem .4rem;border-radius:4px;display:inline-block;margin-top:.4rem;font-size:.77rem;white-space:pre-wrap;">QUESTION: What is the capital of Nigeria?
+A) Lagos
+B) Abuja
+C) Kano
+D) Ibadan
+ANSWER: B</code>
+        </div>
+        <div class="field">
+          <label style="color:#16a34a;font-weight:600">Paste question text here</label>
+          <textarea id="qm-bulk" rows="9" placeholder="QUESTION: ...&#10;A) ...&#10;B) ...&#10;C) ...&#10;D) ...&#10;ANSWER: A&#10;&#10;QUESTION: next question..." style="font-family:monospace;font-size:.8rem;background:#f8fffe;border:1px solid #86efac;border-radius:8px;resize:vertical;"></textarea>
+        </div>
+        <div style="display:flex;gap:.6rem;flex-wrap:wrap;">
+          <button class="btn btn-p" onclick="vBulkImportQ()" style="background:#16a34a;">⚡ Parse &amp; Preview Questions</button>
+          <button class="btn btn-o sm" onclick="document.getElementById('qm-bulk').value=''">✕ Clear</button>
+        </div>
+      </div>
+
+      <!-- ── MANUAL TAB ── -->
+      <div id="qb-pane-manual" class="hidden">
+        <p style="font-size:.82rem;color:var(--dim);margin-bottom:.8rem">Build questions one at a time. Select the radio button next to the correct option.</p>
+        <button class="btn btn-p" onclick="vAddQ()" style="background:#16a34a;margin-bottom:.9rem;">＋ Add Question</button>
+      </div>
+
+      <!-- ── Shared preview list ── -->
+      <div id="qm-questions" style="margin-top:.8rem;max-height:320px;overflow-y:auto;"></div>
+
+      <!-- ── Apply bar (shown when vQuizDraft has entries) ── -->
+      <div id="qb-apply-bar" class="hidden" style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);display:flex;gap:.7rem;align-items:center;flex-wrap:wrap;">
+        <button class="btn btn-g" onclick="applyVQuizDraft()" style="background:#16a34a;color:#fff;flex:1;">
+          ✅ Add <span id="qb-count">0</span> Question(s) to Test
+        </button>
+        <button class="btn btn-o sm" onclick="vClearDraft()">🗑 Clear All</button>
+      </div>
+
+    </div><!-- /padding -->
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// QUIZ BUILDER — vAddQ, vBulkImportQ, vRenderQuestions
+// ═══════════════════════════════════════════════════════════
+// vQuizDraft: in-progress question list for the build session.
+// Format: { q: string, opts:{A,B,C,D}, answer:'A'|'B'|'C'|'D' }
+// LMS format: { text, options:[a,b,c,d], answer: 0|1|2|3 }
+let vQuizDraft = [];
+
+// ── alias so vRenderQuestions can call esc() ──
+function vpEsc(s){ return esc(s); }
+
+function vRenderQuestions(){
+  const container = document.getElementById('qm-questions');
+  if (!container) return;
+  if (!vQuizDraft.length){
+    container.innerHTML = '';
+    document.getElementById('qb-apply-bar')?.classList.add('hidden');
+    return;
+  }
+  document.getElementById('qb-count').textContent = vQuizDraft.length;
+  document.getElementById('qb-apply-bar')?.classList.remove('hidden');
+  container.innerHTML = vQuizDraft.map((q, idx) => `
+    <div style="border:1px solid var(--border);border-left:3px solid #16a34a;border-radius:11px;padding:.9rem 1rem;margin-bottom:.7rem;background:#f8fffe;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:.6rem;margin-bottom:.55rem">
+        <span style="font-size:.72rem;color:#16a34a;font-weight:700;background:#dcfce7;padding:.15rem .5rem;border-radius:20px;">Q${idx + 1}</span>
+        <button class="btn btn-d sm" onclick="vRemoveQ(${idx})">✕ Remove</button>
+      </div>
+      <div class="field" style="margin-bottom:.6rem">
+        <label>Question</label>
+        <textarea rows="2" style="min-height:52px;background:#fff;" onchange="vQuizDraft[${idx}].q=this.value">${vpEsc(q.q)}</textarea>
+      </div>
+      ${['A','B','C','D'].map(opt => `
+        <div style="display:flex;align-items:center;gap:.55rem;margin-bottom:.35rem;">
+          <input type="radio" name="vans_${idx}" value="${opt}" ${q.answer===opt?'checked':''} onchange="vQuizDraft[${idx}].answer=this.value" style="width:auto;flex-shrink:0;accent-color:#16a34a;">
+          <input placeholder="Option ${opt}" value="${vpEsc(q.opts[opt]||'')}" onchange="vQuizDraft[${idx}].opts['${opt}']=this.value" style="flex:1;background:#fff;">
+        </div>`).join('')}
+      <div style="font-size:.7rem;color:var(--dim);margin-top:.35rem;">🔘 Select the radio button beside the correct answer.</div>
+    </div>`).join('');
+}
+
+function vAddQ(){
+  if(typeof vQuizDraft==='undefined') window.vQuizDraft=[];
+  vQuizDraft.push({q:'',opts:{A:'',B:'',C:'',D:''},answer:'A'});
+  vRenderQuestions();
+  const container=document.getElementById('qm-questions');
+  if(container) container.lastElementChild?.scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+function vRemoveQ(idx){
+  vQuizDraft.splice(idx,1);
+  vRenderQuestions();
+}
+
+function vClearDraft(){
+  vQuizDraft=[];
+  vRenderQuestions();
+  document.getElementById('qm-bulk')&&(document.getElementById('qm-bulk').value='');
+}
+
+function vBulkImportQ(){
+  const raw=(document.getElementById('qm-bulk')?.value||'').trim();
+  if(!raw){toast('Paste question text first','error');return;}
+
+  const blocks=raw.split(/\n{2,}/).map(b=>b.trim()).filter(Boolean);
+  let imported=0;
+  const errors=[];
+
+  blocks.forEach((block,bi)=>{
+    const lines=block.split('\n').map(l=>l.trim()).filter(Boolean);
+    let qText='',opts={A:'',B:'',C:'',D:''},answer='';
+
+    lines.forEach(line=>{
+      if(/^QUESTION\s*:/i.test(line))      qText=line.replace(/^QUESTION\s*:/i,'').trim();
+      else if(/^A[.)]\s*/i.test(line))     opts.A=line.replace(/^A[.)]\s*/i,'').trim();
+      else if(/^B[.)]\s*/i.test(line))     opts.B=line.replace(/^B[.)]\s*/i,'').trim();
+      else if(/^C[.)]\s*/i.test(line))     opts.C=line.replace(/^C[.)]\s*/i,'').trim();
+      else if(/^D[.)]\s*/i.test(line))     opts.D=line.replace(/^D[.)]\s*/i,'').trim();
+      else if(/^ANSWER\s*:/i.test(line))   answer=line.replace(/^ANSWER\s*:/i,'').trim().toUpperCase().charAt(0);
+    });
+
+    if(!qText){errors.push(`Block ${bi+1}: missing QUESTION line`);return;}
+    if(!answer||!['A','B','C','D'].includes(answer)){errors.push(`Block ${bi+1}: invalid ANSWER (got "${answer}")`);return;}
+
+    vQuizDraft.push({q:qText,opts,answer});
+    imported++;
+  });
+
+  vRenderQuestions();
+
+  if(errors.length){
+    toast(`${imported} imported, ${errors.length} skipped ⚠️`,'info');
+    console.warn('[vBulkImportQ] Skipped:',errors);
+  } else {
+    toast(`${imported} question${imported!==1?'s':''} parsed ✅`,'success');
+  }
+  if(imported) document.getElementById('qm-bulk').value='';
+}
+
+// Convert vQuizDraft letter-format → LMS index-format and append to active test
+function applyVQuizDraft(){
+  if(!vQuizDraft.length){toast('No questions to add','error');return;}
+  const ansMap={A:0,B:1,C:2,D:3};
+  const converted=vQuizDraft.map(q=>({
+    text:q.q,
+    options:[q.opts.A,q.opts.B,q.opts.C,q.opts.D],
+    answer:ansMap[q.answer]??0
+  }));
+  const bad=converted.find(q=>!q.text||q.options.some(o=>!o));
+  if(bad){toast('Fill in all question text and options before adding','error');return;}
+  const tests=getCBTTests();
+  if(!cbtEditId){toast('No active test — save a test first','error');return;}
+  const idx=tests.findIndex(t=>t.id===cbtEditId);
+  if(idx<0){toast('Test not found','error');return;}
+  // collect any already-rendered questions in the editor so we don't lose them
+  const current=collectCBTQuestions();
+  tests[idx].questions=[...current,...converted];
+  S.set('cbt_tests',tests);
+  toast(`Added ${converted.length} question${converted.length!==1?'s':''} ✅`,'success');
+  hideCBTImport();
+  render();
+}
+
+// ── Modal open/close ──
+function showCBTImport(){
+  // snapshot the editor first
+  const saved=collectCBTQuestions();
+  const tests=getCBTTests();
+  if(cbtEditId){const idx=tests.findIndex(t=>t.id===cbtEditId);if(idx>=0){tests[idx].questions=saved;S.set('cbt_tests',tests);}}
+  vQuizDraft=[];
+  vRenderQuestions();
+  const m=document.getElementById('cbt-import-modal');
+  m.classList.remove('hidden');
+  m.style.display='flex';
+  qbTab('paste');
+}
+function hideCBTImport(){
+  const m=document.getElementById('cbt-import-modal');
+  m.classList.add('hidden');
+  m.style.display='';
+  vQuizDraft=[];
+}
+
+// ── Tab switcher ──
+function qbTab(name){
+  ['paste','manual'].forEach(t=>{
+    document.getElementById('qb-pane-'+t).classList.toggle('hidden',t!==name);
+    const btn=document.getElementById('qb-tab-'+t);
+    if(t===name){btn.style.color='#16a34a';btn.style.borderBottomColor='#16a34a';}
+    else{btn.style.color='var(--dim)';btn.style.borderBottomColor='transparent';}
+  });
+}
+
+// ── kept for backward compat (unused but harmless) ──
+function downloadCBTTemplate(){
+  const ws=XLSX.utils.aoa_to_sheet([
+    ['Question','OptionA','OptionB','OptionC','OptionD','Answer'],
+    ['What is the capital of Nigeria?','Lagos','Abuja','Kano','Ibadan','B'],
+    ['Which nutrient provides the most energy per gram?','Carbohydrate','Protein','Fat','Vitamins','C'],
+    ['Water boils at what temperature (°C) at sea level?','90','95','100','105','C'],
+  ]);
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'CBT Questions');
+  XLSX.writeFile(wb,'CBT_Questions_Template.xlsx');
+  toast('Template downloaded ✅','success');
+}
+</script>
+</body>
+</html>
