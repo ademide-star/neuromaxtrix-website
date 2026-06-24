@@ -257,7 +257,7 @@
       <div class="field"><label>Admin Password</label><input id="al-pw" type="password" placeholder="Password"></div>
       <button class="btn btn-p" style="width:100%;justify-content:center" onclick="loginAdmin()">Admin Login</button>
       <div class="divider">default</div>
-      <div class="mono" style="text-align:center;color:var(--dim);font-size:.78rem">Password: <strong style="color:var(--amber)">grace</strong></div>
+      <div class="mono" style="text-align:center;color:var(--dim);font-size:.78rem">Password: <strong style="color:var(--amber)">admin2024</strong></div>
     </div>
   </div>
 </div>
@@ -278,15 +278,110 @@
 </div>
 <div id="toast"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 // ═══════════════════════════════════════════════════════
-// DATA & CONSTANTS
+// SUPABASE CLIENT
 // ═══════════════════════════════════════════════════════
-const S={
-  get(k,def=null){try{const v=localStorage.getItem(k);return v==null?def:JSON.parse(v);}catch{return def;}},
-  set(k,v){localStorage.setItem(k,JSON.stringify(v));},
-  arr(k){return S.get(k,[])||[];}
+const SUPA_URL = 'https://ipstxfvtasgbnqtybmyn.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlwc3R4ZnZ0YXNnYm5xdHlibXluIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyNjIwODMsImV4cCI6MjA5NzgzODA4M30.UBw7F3y2mYdOEkrHlcpOH1DuZh373ipuv9EpIeGGcl4'; // ← paste your anon/public key here
+const supa = supabase.createClient(SUPA_URL, SUPA_KEY);
+
+// ── In-memory cache so synchronous render() still works ──
+const CACHE = {
+  students: [], attendance: [], cbt_tests: [], cbt_results: [],
+  recipes: [], practicals: [], att_weeks: [], group_pins: {}
 };
+
+// ── DB helper: fetch all rows from a table into cache ──
+async function dbLoad(table) {
+  const { data, error } = await supa.from(table).select('*');
+  if (error) { console.error('dbLoad', table, error); return; }
+  if (table === 'group_pins') {
+    CACHE.group_pins = {};
+    (data || []).forEach(r => { CACHE.group_pins[r.group_num] = r.pin; });
+  } else if (table === 'att_weeks') {
+    CACHE.att_weeks = (data || []).map(r => r.label);
+  } else {
+    CACHE[table] = data || [];
+  }
+}
+
+async function dbLoadAll() {
+  await Promise.all(['students','attendance','cbt_tests','cbt_results',
+                     'recipes','practicals','att_weeks','group_pins'].map(dbLoad));
+}
+
+// ── Generic upsert (uses id as conflict key except where noted) ──
+async function dbUpsert(table, row) {
+  const { error } = await supa.from(table).upsert(row);
+  if (error) { toast('Save error: ' + error.message, 'error'); console.error(table, error); }
+}
+
+async function dbDelete(table, match) {
+  const q = supa.from(table).delete();
+  Object.entries(match).forEach(([k,v]) => q.eq(k, v)); // Note: chain below
+  const { error } = await supa.from(table).delete().match(match);
+  if (error) { toast('Delete error: ' + error.message, 'error'); }
+}
+
+// ── Compatibility shim — S.get / S.set now hit cache + Supabase ──
+// Most callers use S.set(key, array) then call render().
+// We make S.set async-aware: it updates cache immediately (so render() is instant)
+// and fires the Supabase write in the background.
+const S = {
+  get(k, def = null) {
+    if (k === 'group_pins') return { ...CACHE.group_pins };
+    if (k === 'att_weeks')  return [...CACHE.att_weeks];
+    return Array.isArray(CACHE[k]) ? [...CACHE[k]] : def;
+  },
+  arr(k) { return S.get(k, []) || []; },
+
+  // ── set: update cache now, persist async ──
+  set(k, v) {
+    if (k === 'group_pins') {
+      CACHE.group_pins = typeof v === 'object' ? { ...v } : {};
+      // Sync each pin entry
+      Object.entries(CACHE.group_pins).forEach(([g, pin]) => {
+        supa.from('group_pins').upsert({ group_num: parseInt(g), pin: String(pin) })
+            .then(({ error }) => error && console.error('group_pins upsert', error));
+      });
+      return;
+    }
+    if (k === 'att_weeks') {
+      CACHE.att_weeks = Array.isArray(v) ? [...v] : [];
+      // Delete all, re-insert  (small table, simple approach)
+      supa.from('att_weeks').delete().neq('label','__never__')
+          .then(() => {
+            if (CACHE.att_weeks.length) {
+              supa.from('att_weeks')
+                  .upsert(CACHE.att_weeks.map(label => ({ label })))
+                  .then(({ error }) => error && console.error('att_weeks upsert', error));
+            }
+          });
+      return;
+    }
+    CACHE[k] = Array.isArray(v) ? [...v] : [];
+    _syncTable(k, CACHE[k]);
+  }
+};
+
+// ── Full-table sync: compare new array to old, upsert changed, delete removed ──
+async function _syncTable(table, rows) {
+  if (!rows.length) {
+    await supa.from(table).delete().neq('id', '__never__');
+    return;
+  }
+  const { error } = await supa.from(table).upsert(rows);
+  if (error) console.error('_syncTable', table, error);
+}
+
+// ─────────────────────────────────────────────
+// Override individual write functions to use
+// targeted upsert instead of full-table rewrites
+// where performance matters (attendance, recipes)
+// ─────────────────────────────────────────────
+
 const ADMIN_PW='ademideola2026';
 const GROUPS=Array.from({length:20},(_,i)=>i+1);
 const VOS_DEPTS=["Agricultural Science","Biology","Business Education","Chemistry","Computer Science","Creative Art","Early Childhood Education","Economics","English","Entrepreneurship","Fine & Applied Arts","Guidance and Counselling","Health Education","Human Kinetics","Library and Information","Mathematics","Physics","Political Science","Primary Education","Social Studies"];
@@ -317,7 +412,7 @@ function loginTabSwitch(t){
   document.querySelectorAll('.login-tab').forEach((el,i)=>el.classList.toggle('on',['student','leader','admin'][i]===t));
 }
 
-function loginStudent(){
+async function loginStudent(){
   const name=document.getElementById('sl-name').value.trim();
   const matric=document.getElementById('sl-matric').value.trim().toUpperCase();
   const prog=document.getElementById('sl-prog').value;
@@ -325,31 +420,35 @@ function loginStudent(){
   const level=document.getElementById('sl-level').value;
   const group=parseInt(document.getElementById('sl-group').value);
   if(!name||!matric||!dept||!level||!group){toast('Fill all fields','error');return;}
-  const students=S.arr('students');
-  const idx=students.findIndex(s=>s.matric===matric);
-  const rec={matric,name,prog,dept,level,group,registeredAt:new Date().toISOString()};
-  if(idx>=0) students[idx]={...students[idx],...rec};
-  else students.push(rec);
-  S.set('students',students);
+  toast('Signing in…','info');
+  const rec={matric,name,prog,dept,level:String(level),group,registeredAt:new Date().toISOString()};
+  const {error}=await supa.from('students').upsert(rec,{onConflict:'matric'});
+  if(error){toast('Registration error: '+error.message,'error');return;}
+  await dbLoadAll();
   APP.user={role:'student',name,matric,prog,dept,level,group};
   launchApp();
 }
 
-function loginLeader(){
+async function loginLeader(){
   const group=parseInt(document.getElementById('ll-group').value);
   const name=document.getElementById('ll-name').value.trim();
   const matric=document.getElementById('ll-matric').value.trim().toUpperCase();
   const pin=document.getElementById('ll-pin').value.trim();
   if(!group||!name||!matric||!pin){toast('Fill all fields','error');return;}
-  const pins=S.get('group_pins',{});
-  if(!pins[group]){toast('No PIN set for Group '+group,'error');return;}
-  if(pin!==String(pins[group])){toast('Incorrect PIN','error');return;}
+  toast('Verifying PIN…','info');
+  // Fetch pin directly from DB (don\'t rely on stale cache for auth)
+  const {data,error}=await supa.from('group_pins').select('pin').eq('group_num',group).single();
+  if(error||!data){toast('No PIN set for Group '+group,'error');return;}
+  if(pin!==String(data.pin)){toast('Incorrect PIN','error');return;}
+  await dbLoadAll();
   APP.user={role:'leader',name,matric,group};
   launchApp();
 }
 
-function loginAdmin(){
+async function loginAdmin(){
   if(document.getElementById('al-pw').value!==ADMIN_PW){toast('Wrong password','error');return;}
+  toast('Loading data…','info');
+  await dbLoadAll();
   APP.user={role:'admin',name:'Administrator',group:null};
   launchApp();
 }
@@ -607,7 +706,7 @@ function cbtTestView(){
   </div>`;
 }
 
-function submitCBT(timeout=false){
+async function submitCBT(timeout=false){
   clearInterval(CBT.timerInterval);
   const test=getCBTTests().find(t=>t.id===CBT.testId);
   let correct=0;
@@ -623,9 +722,9 @@ function submitCBT(timeout=false){
     timeTaken:Math.round((Date.now()-CBT.startTime)/1000),
     submittedAt:new Date().toISOString(),timedOut:timeout
   };
-  const all=getCBTResults();
-  all.push(result);
-  S.set('cbt_results',all);
+  const {error:re}=await supa.from('cbt_results').insert(result);
+  if(re) console.error('cbt_results insert',re);
+  await dbLoad('cbt_results');
   CBT.active=false;CBT.lastResult=result;CBT.lastTest=test;
   activeTab='my-cbt';render();
   toast(timeout?'Time up! Test submitted.':'Test submitted ✅','success');
@@ -712,17 +811,19 @@ function setAttWeek(w){attWeekSel=w;pendingAtt={};render();}
 function markAtt(matric,status){pendingAtt[matric]=status;render();}
 function markAllPresent(){getGroupStudents(APP.user.group).forEach(s=>pendingAtt[s.matric]='present');render();}
 function markAllAbsent(){getGroupStudents(APP.user.group).forEach(s=>pendingAtt[s.matric]='absent');render();}
-function saveAttendance(){
+async function saveAttendance(){
   if(!attWeekSel){toast('Select a week first','error');return;}
   const g=APP.user.group;
-  const all=getAttendance();
-  getGroupStudents(g).forEach(s=>{
-    const status=pendingAtt[s.matric]||'absent';
-    const idx=all.findIndex(a=>a.matric===s.matric&&a.week===attWeekSel&&a.group==g);
-    const rec={matric:s.matric,name:s.name,prog:s.prog||'',dept:s.dept||'',level:s.level||'',group:g,week:attWeekSel,status,markedAt:new Date().toISOString(),markedBy:APP.user.matric};
-    if(idx>=0)all[idx]=rec;else all.push(rec);
-  });
-  S.set('attendance',all);pendingAtt={};
+  const rows=getGroupStudents(g).map(s=>({
+    id:(s.matric+'|'+attWeekSel+'|'+g).replace(/[^a-zA-Z0-9|_-]/g,'_'),
+    matric:s.matric,name:s.name,prog:s.prog||'',dept:s.dept||'',level:s.level||'',
+    group:g,week:attWeekSel,status:pendingAtt[s.matric]||'absent',
+    markedAt:new Date().toISOString(),markedBy:APP.user.matric
+  }));
+  const {error}=await supa.from('attendance').upsert(rows,{onConflict:'id'});
+  if(error){toast('Error saving: '+error.message,'error');return;}
+  await dbLoad('attendance');
+  pendingAtt={};
   toast('Attendance saved ✅','success');render();
 }
 
@@ -794,7 +895,10 @@ async function submitRecipe(practId,existingId){
   const baseRec={id:existingId||'rec_'+Date.now(),group:g,practicalId:practId,practical,title,ingredients,method,yield_,time_,members,photo:photo||(idx>=0?all[idx].photo:''),autoScore:auto,maxScore:100,submittedAt:idx>=0?all[idx].submittedAt:new Date().toISOString(),updatedAt:new Date().toISOString(),leaderMatric:APP.user.matric,leaderName:APP.user.name};
   if(idx>=0){const prev=all[idx];all[idx]={...baseRec,score:prev.score,percent:prev.percent,feedback:prev.feedback,gradedBy:prev.gradedBy,gradedAt:prev.gradedAt};}
   else all.push(baseRec);
-  S.set('recipes',all);
+  // Targeted upsert so we don't rewrite every recipe
+  const {error}=await supa.from('recipes').upsert(idx>=0?all[idx]:baseRec);
+  if(error){toast('Save error: '+error.message,'error');return;}
+  await dbLoad('recipes');
   toast(existingId?'Recipe updated ✅':'Recipe submitted ✅','success');render();
 }
 
@@ -898,15 +1002,19 @@ function vaGroups(){
 }
 
 function setAdminGroup(n){adminGroupSel=n;render();}
-function saveGroupPin(g){
+async function saveGroupPin(g){
   const v=document.getElementById('pin-input')?.value.trim();
   if(!v){toast('Enter a PIN','error');return;}
-  const pins=S.get('group_pins',{});pins[g]=v;S.set('group_pins',pins);
-  toast('PIN saved for Group '+g,'success');
+  const {error}=await supa.from('group_pins').upsert({group_num:g,pin:v},{onConflict:'group_num'});
+  if(error){toast('Save error: '+error.message,'error');return;}
+  await dbLoad('group_pins');
+  toast('PIN saved for Group '+g,'success');render();
 }
-function removeStudent(matric){
+async function removeStudent(matric){
   if(!confirm('Remove this student?'))return;
-  S.set('students',getStudents().filter(s=>s.matric!==matric));
+  const {error}=await supa.from('students').delete().eq('matric',matric);
+  if(error){toast('Delete error: '+error.message,'error');return;}
+  await dbLoad('students');
   toast('Student removed','info');render();
 }
 function exportGroupStudents(g){
@@ -1110,19 +1218,24 @@ function vaRecipes(){
   </div>`;
 }
 
-function gradeRecipe(id){
+async function gradeRecipe(id){
   const all=getRecipes();const idx=all.findIndex(r=>r.id===id);
   if(idx===-1){toast('Not found','error');return;}
   const sc=parseFloat(document.getElementById('rscore-'+id)?.value);
   if(isNaN(sc)){toast('Enter a numeric score','error');return;}
   const fb=document.getElementById('rfb-'+id)?.value.trim()||'';
   const max=all[idx].maxScore||100;const score=Math.max(0,Math.min(max,sc));
-  all[idx]={...all[idx],score,percent:Math.round(score/max*100),feedback:fb,gradedBy:APP.user.name,gradedAt:new Date().toISOString()};
-  S.set('recipes',all);toast('Grade saved ✅','success');render();
+  const updated={...all[idx],score,percent:Math.round(score/max*100),feedback:fb,gradedBy:APP.user.name,gradedAt:new Date().toISOString()};
+  const {error}=await supa.from('recipes').upsert(updated);
+  if(error){toast('Save error: '+error.message,'error');return;}
+  await dbLoad('recipes');
+  toast('Grade saved ✅','success');render();
 }
-function deleteRecipe(id){
+async function deleteRecipe(id){
   if(!confirm('Delete this recipe?'))return;
-  S.set('recipes',getRecipes().filter(r=>r.id!==id));toast('Deleted','info');render();
+  const {error}=await supa.from('recipes').delete().eq('id',id);
+  if(error){toast('Delete error: '+error.message,'error');return;}
+  await dbLoad('recipes');toast('Deleted','info');render();
 }
 function exportRecipes(){
   const rows=getRecipes().map(r=>({Group:'Group '+r.group,Practical:r.practical,Title:r.title,LeaderName:r.leaderName||'',LeaderMatric:r.leaderMatric||'',Members:r.members||'',Yield:r.yield_||'',TotalTime:r.time_||'',AutoScore:r.autoScore??'',Score:typeof r.score==='number'?r.score:'',MaxScore:r.maxScore||100,Percent:typeof r.percent==='number'?r.percent+'%':'',Feedback:r.feedback||'',GradedBy:r.gradedBy||'',GradedAt:r.gradedAt?new Date(r.gradedAt).toLocaleString('en-NG'):'',Submitted:new Date(r.submittedAt).toLocaleString('en-NG')}));
@@ -1246,7 +1359,12 @@ function addCBTQuestion(){
   const tests=getCBTTests();
   if(cbtEditId){
     const idx=tests.findIndex(t=>t.id===cbtEditId);
-    if(idx>=0){tests[idx].questions=saved;S.set('cbt_tests',tests);}
+    if(idx>=0){
+      tests[idx].questions=saved;
+      CACHE.cbt_tests=tests;
+      supa.from('cbt_tests').update({questions:saved}).eq('id',cbtEditId)
+          .then(({error})=>error&&console.error('cbt_tests q update',error));
+    }
   }
   render();
 }
@@ -1257,9 +1375,13 @@ function removeCBTQuestion(i){
   const tests=getCBTTests();
   if(cbtEditId){
     const idx=tests.findIndex(t=>t.id===cbtEditId);
-    if(idx>=0){tests[idx].questions=saved;S.set('cbt_tests',tests);}
+    if(idx>=0){
+      tests[idx].questions=saved;
+      CACHE.cbt_tests=tests;
+      supa.from('cbt_tests').update({questions:saved}).eq('id',cbtEditId)
+          .then(({error})=>error&&console.error('cbt_tests rm q',error));
+    }
   } else {
-    // temp storage for new test
     _pendingQs=saved;
   }
   render();
@@ -1276,7 +1398,7 @@ function collectCBTQuestions(){
   }
   return qs;
 }
-function saveCBTTest(){
+async function saveCBTTest(){
   const title=document.getElementById('cbt-title')?.value.trim();
   const duration=parseInt(document.getElementById('cbt-duration')?.value)||30;
   const active=document.getElementById('cbt-active')?.value==='1';
@@ -1293,28 +1415,37 @@ function saveCBTTest(){
   } else {
     tests.push({id:'cbt_'+Date.now(),title,duration,active,allowRetake,questions,createdAt:new Date().toISOString()});
   }
-  S.set('cbt_tests',tests);
+  const changed=cbtEditId?tests.find(t=>t.id===cbtEditId):tests[tests.length-1];
+  const {error}=await supa.from('cbt_tests').upsert(changed);
+  if(error){toast('Save error: '+error.message,'error');return;}
+  await dbLoad('cbt_tests');
   toast('Test saved ✅','success');
   cbtAdminView='list';cbtEditId='';render();
 }
-function cbtNewTest(){
+async function cbtNewTest(){
   cbtEditId='';
   const tests=getCBTTests();
   const newTest={id:'cbt_'+Date.now(),title:'',duration:30,active:false,allowRetake:false,questions:[{text:'',options:['','','',''],answer:undefined}],createdAt:new Date().toISOString()};
-  tests.push(newTest);
-  S.set('cbt_tests',tests);
+  CACHE.cbt_tests.push(newTest);
+  const {error}=await supa.from('cbt_tests').insert(newTest);
+  if(error) console.error('cbt_tests insert',error);
   cbtEditId=newTest.id;
   cbtAdminView='edit';render();
 }
-function toggleCBTActive(id){
+async function toggleCBTActive(id){
   const tests=getCBTTests();const idx=tests.findIndex(t=>t.id===id);
-  if(idx>=0){tests[idx].active=!tests[idx].active;S.set('cbt_tests',tests);}
+  if(idx>=0){
+    tests[idx].active=!tests[idx].active;
+    CACHE.cbt_tests=tests;
+    await supa.from('cbt_tests').update({active:tests[idx].active}).eq('id',id);
+  }
   render();
 }
-function deleteCBTTest(id){
+async function deleteCBTTest(id){
   if(!confirm('Delete this test and all its results?'))return;
-  S.set('cbt_tests',getCBTTests().filter(t=>t.id!==id));
-  S.set('cbt_results',getCBTResults().filter(r=>r.testId!==id));
+  await supa.from('cbt_results').delete().eq('testId',id);
+  await supa.from('cbt_tests').delete().eq('id',id);
+  await Promise.all([dbLoad('cbt_tests'),dbLoad('cbt_results')]);
   toast('Test deleted','info');render();
 }
 
@@ -1438,12 +1569,12 @@ function vaSettings(){
   </div>`;
 }
 
-function addWeek(){const v=document.getElementById('new-week')?.value.trim();if(!v){toast('Enter a week label','error');return;}const weeks=getWeeks();if(weeks.includes(v)){toast('Already exists','error');return;}weeks.push(v);S.set('att_weeks',weeks);toast('Week added','success');render();}
-function removeWeek(w){S.set('att_weeks',getWeeks().filter(x=>x!==w));render();}
-function bulkAddWeeks(){const weeks=getWeeks();let added=0;for(let i=1;i<=15;i++){const l='Week '+i;if(!weeks.includes(l)){weeks.push(l);added++;}}S.set('att_weeks',weeks);toast('Added '+added+' weeks','success');render();}
-function addPractical(){const v=document.getElementById('new-pract')?.value.trim();if(!v){toast('Enter a practical label','error');return;}const all=getPracticals();all.push({id:'prac_'+Date.now(),label:v});S.set('practicals',all);toast('Practical added','success');render();}
-function removePractical(id){S.set('practicals',getPracticals().filter(p=>p.id!==id));render();}
-function clearAll(){if(!confirm('Delete ALL data? This cannot be undone.'))return;['students','recipes','attendance','att_weeks','practicals','group_pins','cbt_tests','cbt_results'].forEach(k=>localStorage.removeItem(k));toast('All data cleared','info');render();}
+async function addWeek(){const v=document.getElementById('new-week')?.value.trim();if(!v){toast('Enter a week label','error');return;}const weeks=getWeeks();if(weeks.includes(v)){toast('Already exists','error');return;}weeks.push(v);S.set('att_weeks',weeks);await supa.from('att_weeks').upsert({label:v}).then(({error})=>error&&console.error(error));await dbLoad('att_weeks');toast('Week added','success');render();}
+async function removeWeek(w){await supa.from('att_weeks').delete().eq('label',w);await dbLoad('att_weeks');render();}
+async function bulkAddWeeks(){const weeks=getWeeks();const toAdd=[];for(let i=1;i<=15;i++){const l='Week '+i;if(!weeks.includes(l)){toAdd.push({label:l});}}if(toAdd.length)await supa.from('att_weeks').upsert(toAdd);await dbLoad('att_weeks');toast('Added '+toAdd.length+' weeks','success');render();}
+async function addPractical(){const v=document.getElementById('new-pract')?.value.trim();if(!v){toast('Enter a practical label','error');return;}const rec={id:'prac_'+Date.now(),label:v};const {error}=await supa.from('practicals').insert(rec);if(error){toast('Error: '+error.message,'error');return;}await dbLoad('practicals');toast('Practical added','success');render();}
+async function removePractical(id){await supa.from('practicals').delete().eq('id',id);await dbLoad('practicals');render();}
+async function clearAll(){if(!confirm('Delete ALL data? This cannot be undone.'))return;const tables=['students','recipes','attendance','att_weeks','practicals','group_pins','cbt_tests','cbt_results'];await Promise.all(tables.map(t=>supa.from(t).delete().neq('id','__never__').then()));await dbLoadAll();toast('All data cleared','info');render();}
 
 // ═══════════════════════════════════════════════════════
 // EXCEL EXPORT
@@ -1625,7 +1756,7 @@ function vBulkImportQ(){
 }
 
 // Convert vQuizDraft letter-format → LMS index-format and append to active test
-function applyVQuizDraft(){
+async function applyVQuizDraft(){
   if(!vQuizDraft.length){toast('No questions to add','error');return;}
   const ansMap={A:0,B:1,C:2,D:3};
   const converted=vQuizDraft.map(q=>({
@@ -1642,7 +1773,10 @@ function applyVQuizDraft(){
   // collect any already-rendered questions in the editor so we don't lose them
   const current=collectCBTQuestions();
   tests[idx].questions=[...current,...converted];
-  S.set('cbt_tests',tests);
+  CACHE.cbt_tests=tests;
+  const {error:ae}=await supa.from('cbt_tests').update({questions:tests[idx].questions}).eq('id',cbtEditId);
+  if(ae) console.error('applyVQuizDraft',ae);
+  await dbLoad('cbt_tests');
   toast(`Added ${converted.length} question${converted.length!==1?'s':''} ✅`,'success');
   hideCBTImport();
   render();
@@ -1692,5 +1826,40 @@ function downloadCBTTemplate(){
   toast('Template downloaded ✅','success');
 }
 </script>
+
+
+<div id="db-loading" style="position:fixed;inset:0;background:rgba(240,253,244,.97);z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;">
+  <div style="font-size:2.5rem">🍽️</div>
+  <div style="font-size:1.1rem;font-weight:700;color:#16a34a">VOS Practical Portal</div>
+  <div style="font-size:.85rem;color:#4d7c5f" id="db-loading-msg">Connecting to database…</div>
+  <div style="width:200px;height:4px;background:#dcfce7;border-radius:2px;overflow:hidden">
+    <div id="db-loading-bar" style="width:0%;height:100%;background:#16a34a;transition:width .4s;border-radius:2px"></div>
+  </div>
+</div>
+
+<script>
+(async function initDB(){
+  const bar=document.getElementById('db-loading-bar');
+  const msg=document.getElementById('db-loading-msg');
+  const overlay=document.getElementById('db-loading');
+  try{
+    msg.textContent='Loading students & groups…';bar.style.width='20%';
+    await dbLoad('students');await dbLoad('group_pins');
+    bar.style.width='40%';msg.textContent='Loading attendance…';
+    await dbLoad('attendance');await dbLoad('att_weeks');
+    bar.style.width='65%';msg.textContent='Loading recipes & practicals…';
+    await dbLoad('recipes');await dbLoad('practicals');
+    bar.style.width='85%';msg.textContent='Loading CBT tests…';
+    await dbLoad('cbt_tests');await dbLoad('cbt_results');
+    bar.style.width='100%';
+    setTimeout(()=>overlay.remove(),300);
+  }catch(e){
+    msg.textContent='Connection error. Check your SUPA_KEY.';
+    bar.style.background='#dc2626';
+    console.error('initDB error',e);
+  }
+})();
+</script>
+
 </body>
 </html>
