@@ -584,7 +584,7 @@
             // ============================================================
             const SUPABASE_URL = 'https://ipstxfvtasgbnqtybmyn.supabase.co';
             const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlwc3R4ZnZ0YXNnYm5xdHlibXluIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyNjIwODMsImV4cCI6MjA5NzgzODA4M30.UBw7F3y2mYdOEkrHlcpOH1DuZh373ipuv9EpIeGGcl4';
-
+            
             // ============================================================
             // 2. INIT SUPABASE
             // ============================================================
@@ -763,7 +763,7 @@
                     const { data, error } = await supabase
                         .from('students')
                         .select('*')
-                        .order('created_at', { ascending: false });
+                        .order('registeredAt', { ascending: false });
 
                     if (error) {
                         console.error('Fetch error:', error);
