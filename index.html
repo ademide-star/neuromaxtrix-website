@@ -3,1581 +3,187 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NeuroMatrix Biosystems — Precision Neuroscience Tools</title>
-  <meta name="description" content="NeuroMatrix Biosystems develops AI-powered neuroscience research tools for African and global research communities." />
+  <title>NeuroMatrix BioSystems — Precision Neuroscience Tools</title>
+  <meta name="description" content="NeuroMatrix BioSystems develops AI-powered neuroscience, bioinformatics, and digital health tools for African and global research communities." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <style>
-    /* ── RESET & VARIABLES ─────────────────────────────────────────────── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --gold:     #c9a84c;
-      --gold-dim: #c9a84c22;
-      --gold-mid: #c9a84c66;
-      --bg:       #070b16;
-      --surface:  #0a0e1a;
-      --panel:    #0d1428;
-      --border:   #1e2a4a;
-      --text:     #e2e8f0;
-      --muted:    #4a5568;
-      --dim:      #2d3748;
-      --green:    #00f5c4;
-      --red:      #ff6b6b;
-      --blue:     #63b3ed;
-    }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'IBM Plex Mono', monospace;
-      overflow-x: hidden;
-      line-height: 1.6;
-    }
-
-    ::selection { background: var(--gold-mid); color: var(--bg); }
-
-    ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-track { background: var(--bg); }
-    ::-webkit-scrollbar-thumb { background: var(--gold-mid); border-radius: 2px; }
-
-    /* ── GRAIN OVERLAY ─────────────────────────────────────────────────── */
-    body::before {
-      content: '';
-      position: fixed; inset: 0; z-index: 0; pointer-events: none;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-      opacity: 0.4;
-    }
-
-    /* ── NAV ───────────────────────────────────────────────────────────── */
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 48px; height: 64px;
-      background: linear-gradient(180deg, #070b16ee 0%, transparent 100%);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .nav-brand {
-      display: flex; align-items: center; gap: 12px;
-      text-decoration: none;
-    }
-
-    .nav-logo {
-      width: 36px; height: 36px; border-radius: 8px;
-      background: linear-gradient(135deg, var(--gold-dim), transparent);
-      border: 1px solid var(--gold-mid);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 18px;
-    }
-
-    .nav-wordmark {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 13px; font-weight: 600; letter-spacing: 0.15em;
-      color: var(--gold);
-    }
-
-    .nav-wordmark span { color: var(--text); }
-
-    .nav-links {
-      display: flex; align-items: center; gap: 32px;
-      list-style: none;
-    }
-
-    .nav-links a {
-      font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
-      color: var(--muted); text-decoration: none; transition: color 0.2s;
-    }
-
-    .nav-links a:hover { color: var(--gold); }
-
-    .nav-cta {
-      background: var(--gold-dim); border: 1px solid var(--gold-mid);
-      color: var(--gold) !important; padding: 7px 18px; border-radius: 6px;
-      font-size: 10px !important; letter-spacing: 0.1em !important;
-      transition: all 0.2s !important;
-    }
-
-    .nav-cta:hover { background: var(--gold) !important; color: var(--bg) !important; }
-
-    /* ── HERO ──────────────────────────────────────────────────────────── */
-    .hero {
-      min-height: 100vh;
-      display: flex; align-items: center; justify-content: center;
-      padding: 120px 48px 80px;
-      position: relative; overflow: hidden;
-    }
-
-    .hero-bg {
-      position: absolute; inset: 0; z-index: 0;
-      background:
-        radial-gradient(ellipse 80% 60% at 50% 0%, #c9a84c0a 0%, transparent 70%),
-        radial-gradient(ellipse 40% 40% at 20% 80%, #6c63ff08 0%, transparent 60%),
-        radial-gradient(ellipse 30% 30% at 80% 60%, #00f5c408 0%, transparent 60%);
-    }
-
-    /* Animated grid */
-    .hero-grid {
-      position: absolute; inset: 0; z-index: 0;
-      background-image:
-        linear-gradient(var(--border) 1px, transparent 1px),
-        linear-gradient(90deg, var(--border) 1px, transparent 1px);
-      background-size: 60px 60px;
-      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 0%, transparent 100%);
-      opacity: 0.3;
-    }
-
-    .hero-content {
-      position: relative; z-index: 1;
-      text-align: center; max-width: 860px;
-    }
-
-    .hero-eyebrow {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: var(--gold-dim); border: 1px solid var(--gold-mid);
-      color: var(--gold); font-size: 9px; letter-spacing: 0.2em;
-      text-transform: uppercase; padding: 6px 16px; border-radius: 20px;
-      margin-bottom: 32px;
-      animation: fadeUp 0.8s ease both;
-    }
-
-    .hero-eyebrow::before {
-      content: '';
-      width: 6px; height: 6px; border-radius: 50%;
-      background: var(--green);
-      box-shadow: 0 0 8px var(--green);
-      animation: pulse 2s infinite;
-    }
-
-    .hero-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(52px, 8vw, 96px);
-      font-weight: 300; line-height: 1.0; letter-spacing: -0.02em;
-      color: var(--text); margin-bottom: 24px;
-      animation: fadeUp 0.8s 0.1s ease both;
-    }
-
-    .hero-title em {
-      font-style: italic; color: var(--gold);
-      background: linear-gradient(135deg, var(--gold), #e8c96a);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    }
-
-    .hero-sub {
-      font-size: 13px; color: var(--muted); line-height: 1.8;
-      max-width: 560px; margin: 0 auto 48px;
-      animation: fadeUp 0.8s 0.2s ease both;
-    }
-
-    .hero-actions {
-      display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
-      animation: fadeUp 0.8s 0.3s ease both;
-    }
-
-    .btn-primary {
-      background: var(--gold); color: var(--bg);
-      padding: 12px 28px; border-radius: 8px; border: none;
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 11px; font-weight: 600; letter-spacing: 0.1em;
-      cursor: pointer; text-decoration: none; transition: all 0.2s;
-      display: inline-flex; align-items: center; gap: 8px;
-    }
-
-    .btn-primary:hover {
-      background: #e8c96a; transform: translateY(-2px);
-      box-shadow: 0 8px 24px #c9a84c44;
-    }
-
-    .btn-outline {
-      background: transparent; color: var(--text);
-      padding: 12px 28px; border-radius: 8px;
-      border: 1px solid var(--border);
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 11px; font-weight: 600; letter-spacing: 0.1em;
-      cursor: pointer; text-decoration: none; transition: all 0.2s;
-      display: inline-flex; align-items: center; gap: 8px;
-    }
-
-    .btn-outline:hover { border-color: var(--gold-mid); color: var(--gold); transform: translateY(-2px); }
-
-    /* Hero stats */
-    .hero-stats {
-      display: flex; gap: 48px; justify-content: center;
-      margin-top: 64px; padding-top: 48px;
-      border-top: 1px solid var(--border);
-      animation: fadeUp 0.8s 0.4s ease both;
-    }
-
-    .hero-stat-value {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 42px; font-weight: 600; color: var(--gold);
-      line-height: 1;
-    }
-
-    .hero-stat-label {
-      font-size: 9px; color: var(--muted);
-      letter-spacing: 0.15em; text-transform: uppercase;
-      margin-top: 4px;
-    }
-
-    /* ── SECTION BASE ──────────────────────────────────────────────────── */
-    section {
-      padding: 100px 48px;
-      position: relative; z-index: 1;
-    }
-
-    .section-eyebrow {
-      font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
-      color: var(--gold); margin-bottom: 12px;
-      display: flex; align-items: center; gap: 12px;
-    }
-
-    .section-eyebrow::after {
-      content: ''; flex: 0 0 40px; height: 1px;
-      background: var(--gold-mid);
-    }
-
-    .section-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(36px, 5vw, 56px);
-      font-weight: 300; line-height: 1.1;
-      color: var(--text); margin-bottom: 16px;
-    }
-
-    .section-title em { font-style: italic; color: var(--gold); }
-
-    .section-sub {
-      font-size: 12px; color: var(--muted);
-      max-width: 500px; line-height: 1.8;
-    }
-
-    /* ── APPS SECTION ──────────────────────────────────────────────────── */
-    #apps { background: var(--surface); }
-
-    .apps-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 24px; margin-top: 56px;
-    }
-
-    .app-card {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 16px; padding: 32px;
-      position: relative; overflow: hidden;
-      transition: all 0.3s; cursor: pointer;
-      text-decoration: none; color: inherit;
-      display: block;
-    }
-
-    .app-card::before {
-      content: ''; position: absolute;
-      top: 0; left: 0; right: 0; height: 2px;
-      background: linear-gradient(90deg, transparent, var(--card-color, var(--gold)), transparent);
-      opacity: 0; transition: opacity 0.3s;
-    }
-
-    .app-card:hover { transform: translateY(-4px); border-color: var(--card-color, var(--gold)); }
-    .app-card:hover::before { opacity: 1; }
-
-    .app-card-icon {
-      width: 52px; height: 52px; border-radius: 12px;
-      background: var(--gold-dim); border: 1px solid var(--gold-mid);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 24px; margin-bottom: 20px;
-    }
-
-    .app-card-tag {
-      display: inline-block; font-size: 8px; letter-spacing: 0.15em;
-      text-transform: uppercase; padding: 3px 10px; border-radius: 4px;
-      margin-bottom: 16px;
-    }
-
-    .app-card-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 26px; font-weight: 600; color: var(--text);
-      margin-bottom: 10px; line-height: 1.2;
-    }
-
-    .app-card-desc {
-      font-size: 11px; color: var(--muted); line-height: 1.8;
-      margin-bottom: 24px;
-    }
-
-    .app-card-features {
-      list-style: none; margin-bottom: 28px;
-    }
-
-    .app-card-features li {
-      font-size: 10px; color: var(--muted);
-      padding: 5px 0; border-bottom: 1px solid var(--dim);
-      display: flex; align-items: center; gap: 8px;
-    }
-
-    .app-card-features li::before {
-      content: '→'; color: var(--card-color, var(--gold));
-      font-size: 10px; flex-shrink: 0;
-    }
-
-    .app-card-link {
-      display: inline-flex; align-items: center; gap: 8px;
-      font-size: 10px; font-weight: 600; letter-spacing: 0.1em;
-      color: var(--card-color, var(--gold));
-      transition: gap 0.2s;
-    }
-
-    .app-card:hover .app-card-link { gap: 12px; }
-
-    .app-card-status {
-      position: absolute; top: 20px; right: 20px;
-      font-size: 8px; letter-spacing: 0.1em; text-transform: uppercase;
-      padding: 3px 10px; border-radius: 20px;
-    }
-
-    /* ── PUBLICATIONS ───────────────────────────────────────────────────── */
-    #publications { background: var(--bg); }
-
-    .pub-list { margin-top: 48px; }
-
-    .pub-item {
-      display: grid; grid-template-columns: 80px 1fr auto;
-      gap: 24px; align-items: start;
-      padding: 28px 0; border-bottom: 1px solid var(--border);
-      transition: all 0.2s;
-    }
-
-    .pub-item:hover { padding-left: 8px; }
-
-    .pub-year {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 32px; font-weight: 300; color: var(--gold);
-      line-height: 1;
-    }
-
-    .pub-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 20px; font-weight: 600; color: var(--text);
-      margin-bottom: 6px; line-height: 1.3;
-    }
-
-    .pub-authors { font-size: 10px; color: var(--muted); margin-bottom: 6px; }
-
-    .pub-journal {
-      font-size: 10px; color: var(--gold);
-      font-style: italic;
-    }
-
-    .pub-badge {
-      font-size: 8px; letter-spacing: 0.1em; text-transform: uppercase;
-      padding: 4px 10px; border-radius: 4px; white-space: nowrap;
-      align-self: start;
-    }
-
-    /* ── CONTACT ───────────────────────────────────────────────────────── */
-    #contact { background: var(--surface); }
-
-    .contact-grid {
-      display: grid; grid-template-columns: 1fr 1fr;
-      gap: 64px; margin-top: 56px; align-items: start;
-    }
-
-    .contact-info-item {
-      display: flex; gap: 16px; align-items: flex-start;
-      padding: 20px 0; border-bottom: 1px solid var(--border);
-    }
-
-    .contact-info-icon {
-      width: 36px; height: 36px; border-radius: 8px;
-      background: var(--gold-dim); border: 1px solid var(--gold-mid);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 14px; flex-shrink: 0;
-    }
-
-    .contact-info-label {
-      font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase;
-      color: var(--muted); margin-bottom: 4px;
-    }
-
-    .contact-info-value {
-      font-size: 12px; color: var(--text);
-    }
-
-    .contact-form { display: flex; flex-direction: column; gap: 16px; }
-
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-
-    .form-group { display: flex; flex-direction: column; gap: 6px; }
-
-    .form-label {
-      font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase;
-      color: var(--muted);
-    }
-
-    .form-input, .form-textarea, .form-select {
-      background: var(--panel); border: 1px solid var(--border);
-      border-radius: 8px; padding: 12px 16px;
-      color: var(--text); font-family: 'IBM Plex Mono', monospace;
-      font-size: 12px; outline: none; transition: border-color 0.2s;
-      width: 100%;
-    }
-
-    .form-input:focus, .form-textarea:focus, .form-select:focus {
-      border-color: var(--gold-mid);
-    }
-
-    .form-textarea { resize: vertical; min-height: 120px; }
-
-    .form-select option { background: var(--panel); }
-
-    /* ── NEWSLETTER ────────────────────────────────────────────────────── */
-    #newsletter {
-      background: var(--bg);
-      border-top: 1px solid var(--border);
-    }
-
-    .newsletter-inner {
-      max-width: 640px; margin: 0 auto; text-align: center;
-    }
-
-    .newsletter-form {
-      display: flex; gap: 12px; margin-top: 32px;
-    }
-
-    .newsletter-input {
-      flex: 1; background: var(--panel); border: 1px solid var(--border);
-      border-radius: 8px; padding: 12px 20px;
-      color: var(--text); font-family: 'IBM Plex Mono', monospace;
-      font-size: 12px; outline: none; transition: border-color 0.2s;
-    }
-
-    .newsletter-input:focus { border-color: var(--gold-mid); }
-
-    .newsletter-input::placeholder { color: var(--muted); }
-
-    /* ── FOOTER ────────────────────────────────────────────────────────── */
-    footer {
-      background: var(--surface);
-      border-top: 1px solid var(--border);
-      padding: 48px;
-      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
-      gap: 48px;
-    }
-
-    .footer-brand-name {
-      font-size: 13px; font-weight: 600; letter-spacing: 0.15em;
-      color: var(--gold); margin-bottom: 8px;
-    }
-
-    .footer-brand-sub {
-      font-size: 8px; letter-spacing: 0.3em; text-transform: uppercase;
-      color: var(--muted); margin-bottom: 16px;
-    }
-
-    .footer-brand-desc {
-      font-size: 10px; color: var(--dim); line-height: 1.8;
-      max-width: 240px;
-    }
-
-    .footer-col-title {
-      font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
-      color: var(--gold); margin-bottom: 16px;
-    }
-
-    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-
-    .footer-links a {
-      font-size: 10px; color: var(--muted); text-decoration: none;
-      transition: color 0.2s;
-    }
-
-    .footer-links a:hover { color: var(--gold); }
-
-    .footer-bottom {
-      background: var(--bg);
-      border-top: 1px solid var(--border);
-      padding: 20px 48px;
-      display: flex; justify-content: space-between; align-items: center;
-    }
-
-    .footer-bottom-text {
-      font-size: 9px; color: var(--dim); letter-spacing: 0.05em;
-    }
-
-    /* ── ANIMATIONS ────────────────────────────────────────────────────── */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(24px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50%       { opacity: 0.4; }
-    }
-
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50%       { transform: translateY(-8px); }
-    }
-
-    .reveal {
-      opacity: 0; transform: translateY(32px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
-    }
-
-    .reveal.visible { opacity: 1; transform: translateY(0); }
-
-    /* ── DIVIDER ───────────────────────────────────────────────────────── */
-    .gold-divider {
-      display: flex; align-items: center; gap: 12px;
-      margin: 48px 0;
-    }
-
-    .gold-divider::before, .gold-divider::after {
-      content: ''; flex: 1; height: 1px;
-      background: linear-gradient(90deg, transparent, var(--gold-mid));
-    }
-
-    .gold-divider::after {
-      background: linear-gradient(90deg, var(--gold-mid), transparent);
-    }
-
-    .gold-divider span {
-      font-size: 8px; color: var(--gold); letter-spacing: 4px;
-    }
-
-    /* ── SUCCESS MESSAGE ───────────────────────────────────────────────── */
-    .success-msg {
-      display: none; background: #00f5c411; border: 1px solid #00f5c444;
-      border-radius: 8px; padding: 12px 20px;
-      font-size: 11px; color: var(--green); text-align: center;
-    }
-
-    /* ── RESPONSIVE ────────────────────────────────────────────────────── */
-    @media (max-width: 768px) {
-      nav { padding: 0 20px; }
-      .nav-links { display: none; }
-      section { padding: 60px 20px; }
-      .hero { padding: 100px 20px 60px; }
-      .contact-grid { grid-template-columns: 1fr; }
-      .form-row { grid-template-columns: 1fr; }
-      footer { grid-template-columns: 1fr 1fr; padding: 32px 20px; }
-      .newsletter-form { flex-direction: column; }
-      .hero-stats { gap: 24px; flex-wrap: wrap; }
-      .masonry-grid { columns: 2; }
-      .faq-grid { grid-template-columns: 1fr; }
-    }
-
-    @media (max-width: 480px) {
-      .masonry-grid { columns: 1; }
-    }
-
-    /* ── GALLERY ───────────────────────────────────────────────────────── */
-    #gallery { background: var(--surface); }
-
-    .masonry-grid {
-      columns: 3; column-gap: 16px; margin-top: 48px;
-    }
-
-    .masonry-item {
-      break-inside: avoid; margin-bottom: 16px;
-      position: relative; border-radius: 10px; overflow: hidden;
-      cursor: pointer; border: 1px solid var(--border);
-      transition: all 0.3s; background: var(--panel);
-    }
-
-    .masonry-item:hover { transform: translateY(-4px); border-color: var(--gold-mid); }
-
-    .masonry-img {
-      width: 100%; display: block; transition: transform 0.4s ease;
-      background: var(--panel); min-height: 160px;
-      display: flex; align-items: center; justify-content: center;
-    }
-
-    .masonry-item:hover .masonry-img { transform: scale(1.04); }
-
-    .masonry-placeholder {
-      width: 100%; display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      padding: 32px 20px; gap: 10px; min-height: 160px;
-      background: var(--panel);
-    }
-
-    .masonry-placeholder-icon { font-size: 32px; opacity: 0.5; }
-
-    .masonry-caption {
-      padding: 12px 14px; border-top: 1px solid var(--border);
-    }
-
-    .masonry-tag {
-      display: inline-block; font-size: 8px; letter-spacing: 0.1em;
-      text-transform: uppercase; padding: 2px 8px; border-radius: 4px;
-      margin-bottom: 6px;
-    }
-
-    .masonry-caption-title {
-      font-size: 11px; font-weight: 600; color: var(--text); margin-bottom: 3px;
-    }
-
-    .masonry-caption-sub { font-size: 9px; color: var(--muted); }
-
-    .gallery-upload-note {
-      margin-top: 32px; padding: 16px 24px;
-      background: var(--panel); border: 1px dashed var(--gold-mid);
-      border-radius: 10px; text-align: center;
-      font-size: 10px; color: var(--muted); line-height: 1.8;
-    }
-
-    /* Lightbox */
-    .lightbox {
-      display: none; position: fixed; inset: 0; z-index: 300;
-      background: rgba(0,0,0,0.92); backdrop-filter: blur(8px);
-      align-items: center; justify-content: center; flex-direction: column;
-      gap: 16px;
-    }
-
-    .lightbox.open { display: flex; }
-
-    .lightbox-img {
-      max-width: 88vw; max-height: 78vh;
-      border-radius: 10px; border: 1px solid var(--border);
-      object-fit: contain;
-    }
-
-    .lightbox-close {
-      position: absolute; top: 20px; right: 24px;
-      background: var(--panel); border: 1px solid var(--border);
-      color: var(--text); font-size: 18px; cursor: pointer;
-      border-radius: 8px; padding: 6px 12px; z-index: 301;
-    }
-
-    .lightbox-caption {
-      text-align: center; font-size: 11px; color: var(--muted); max-width: 500px;
-    }
-
-    /* ── FAQ ────────────────────────────────────────────────────────────── */
-    #faq { background: var(--bg); }
-
-    .faq-grid {
-      display: grid; grid-template-columns: 1fr 1fr;
-      gap: 0 56px; margin-top: 48px;
-    }
-
-    .faq-item {
-      border-bottom: 1px solid var(--border);
-      padding: 20px 0; cursor: pointer; transition: padding 0.2s;
-    }
-
-    .faq-item:hover { padding-left: 6px; }
-
-    .faq-q {
-      display: flex; justify-content: space-between; align-items: flex-start;
-      gap: 12px; font-size: 12px; color: var(--text); font-weight: 600;
-      line-height: 1.5;
-    }
-
-    .faq-arrow { transition: transform 0.2s; flex-shrink: 0; color: var(--gold); }
-    .faq-item.open .faq-arrow { transform: rotate(180deg); }
-
-    .faq-a {
-      font-size: 11px; color: var(--muted); line-height: 1.8;
-      margin-top: 0; max-height: 0; overflow: hidden;
-      transition: max-height 0.35s ease, margin-top 0.2s ease;
-      padding-right: 24px;
-    }
-
-    .faq-item.open .faq-a {
-      display: block;
-      max-height: 300px;
-      margin-top: 12px;
-    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--gold:#c9a84c;--gold-bright:#f0cf72;--gold-dim:#c9a84c22;--gold-mid:#c9a84c66;--bg:#070b16;--surface:#0a0e1a;--panel:#0d1428;--border:#1e2a4a;--text:#e2e8f0;--text-strong:#f8fafc;--muted:#94a3b8;--link:#f0cf72;--link-hover:#fff1b3;--green:#00f5c4}
+    html{scroll-behavior:smooth} body{background:var(--bg);color:var(--text);font-family:'IBM Plex Mono',monospace;overflow-x:hidden;line-height:1.6} a{color:var(--link);text-decoration-thickness:1.5px;text-underline-offset:3px;transition:.2s} a:hover{color:var(--link-hover)}
+    body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");opacity:.4}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 48px;height:68px;background:linear-gradient(180deg,#070b16f2 0%,#070b16d8 65%,transparent 100%);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+    .nav-brand{display:flex;align-items:center;gap:12px;text-decoration:none}.nav-wordmark{font-size:13px;font-weight:600;letter-spacing:.15em;color:var(--gold-bright)}.nav-wordmark span{color:var(--text-strong)}
+    .nav-links{display:flex;align-items:center;gap:24px;list-style:none}.nav-links a{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:#d5deea;text-decoration:none;padding-bottom:5px;border-bottom:1px solid transparent;opacity:.96}.nav-links a:hover,.nav-links a.active{color:var(--gold-bright);border-bottom-color:var(--gold-mid);opacity:1}.nav-cta{background:var(--gold-dim);border:1px solid var(--gold-mid);color:var(--gold-bright)!important;padding:8px 18px;border-radius:6px;font-size:10px!important}.nav-cta:hover{background:var(--gold);color:var(--bg)!important;border-bottom-color:transparent!important}
+    .hero{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:120px 48px 80px;position:relative;overflow:hidden}.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,#c9a84c0a 0%,transparent 70%),radial-gradient(ellipse 40% 40% at 20% 80%,#6c63ff08 0%,transparent 60%),radial-gradient(ellipse 30% 30% at 80% 60%,#00f5c408 0%,transparent 60%)}.hero-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 0%,transparent 100%);opacity:.3}.hero-content{position:relative;z-index:1;text-align:center;max-width:940px}.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:var(--gold-dim);border:1px solid var(--gold-mid);color:var(--gold-bright);font-size:9px;letter-spacing:.2em;text-transform:uppercase;padding:6px 16px;border-radius:20px;margin-bottom:32px}.hero-eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green)}.hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(52px,8vw,96px);font-weight:300;line-height:1;letter-spacing:-.02em;color:var(--text);margin-bottom:24px}.hero-title em{font-style:italic;background:linear-gradient(135deg,var(--gold),#e8c96a);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.hero-sub{font-size:13px;color:#c3cfdf;line-height:1.9;max-width:690px;margin:0 auto 48px}.hero-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}.btn-primary,.btn-outline{padding:12px 28px;border-radius:8px;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.1em;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:.2s}.btn-primary{background:var(--gold);color:var(--bg);border:none}.btn-primary:hover{background:#e8c96a;color:var(--bg);transform:translateY(-2px);box-shadow:0 8px 24px #c9a84c44}.btn-outline{color:var(--text-strong);border:1px solid var(--gold-mid)}.btn-outline:hover{border-color:var(--gold-bright);color:var(--gold-bright);transform:translateY(-2px);background:rgba(201,168,76,.06)}
+    .hero-stats{display:flex;gap:48px;justify-content:center;margin-top:64px;padding-top:48px;border-top:1px solid var(--border);flex-wrap:wrap}.hero-stat-value{font-family:'Cormorant Garamond',serif;font-size:42px;font-weight:600;color:var(--gold-bright);line-height:1}.hero-stat-label{font-size:9px;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;margin-top:4px}
+    section{padding:100px 48px;position:relative;z-index:1}.section-eyebrow{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-bright);margin-bottom:12px;display:flex;align-items:center;gap:12px}.section-eyebrow::after{content:'';flex:0 0 40px;height:1px;background:var(--gold-mid)}.section-title{font-family:'Cormorant Garamond',serif;font-size:clamp(36px,5vw,56px);font-weight:300;line-height:1.1;color:var(--text);margin-bottom:16px}.section-title em{font-style:italic;color:var(--gold)}.section-sub{font-size:12px;color:#b7c3d4;max-width:760px;line-height:1.9}.gold-divider{display:flex;align-items:center;gap:12px;margin:48px 0}.gold-divider::before,.gold-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--gold-mid))}.gold-divider::after{background:linear-gradient(90deg,var(--gold-mid),transparent)}.gold-divider span{font-size:8px;color:var(--gold-bright);letter-spacing:4px}
+    #about{background:linear-gradient(180deg,var(--bg) 0%,#09101f 100%)}.about-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:28px;margin-top:56px}.about-main,.about-side{display:flex;flex-direction:column;gap:24px}.about-panel,.profile-card{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:28px;box-shadow:0 10px 30px rgba(0,0,0,.15)}.about-panel h3,.profile-card h3{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;color:var(--gold-bright);margin-bottom:14px}.about-panel p,.profile-list li{font-size:11px;color:#d2dceb;line-height:1.95}.about-motto{font-size:18px!important;color:var(--text-strong)!important;font-style:italic;line-height:1.6}.about-approach{display:grid;gap:14px}.approach-step{display:grid;grid-template-columns:52px 1fr;gap:14px;align-items:start;padding:14px 0;border-bottom:1px solid var(--border)}.approach-step:last-child{border-bottom:none}.approach-step span{width:42px;height:42px;border-radius:10px;background:var(--gold-dim);border:1px solid var(--gold-mid);color:var(--gold-bright);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700}.approach-step strong{display:block;color:var(--text-strong);font-size:12px;margin-bottom:4px}.profile-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}.tag-grid{display:flex;flex-wrap:wrap;gap:10px}.tag-grid span{font-size:10px;color:var(--text-strong);background:#101a31;border:1px solid var(--border);border-radius:999px;padding:8px 12px}.profile-list{list-style:none;display:flex;flex-direction:column;gap:12px}.profile-list li{position:relative;padding-left:18px}.profile-list li::before{content:'•';position:absolute;left:0;top:0;color:var(--gold-bright)}
+    #apps,#gallery,#contact,footer{background:var(--surface)}.apps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;margin-top:56px}.app-card{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:32px;position:relative;overflow:hidden;transition:.3s;cursor:pointer;text-decoration:none;color:inherit;display:block}.app-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--card-color,var(--gold)),transparent);opacity:0;transition:.3s}.app-card:hover{transform:translateY(-4px);border-color:var(--card-color,var(--gold));box-shadow:0 14px 36px rgba(0,0,0,.24)}.app-card:hover::before{opacity:1}.app-card-icon{width:52px;height:52px;border-radius:12px;background:var(--gold-dim);border:1px solid var(--gold-mid);display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:20px}.app-card-tag{display:inline-block;font-size:8px;letter-spacing:.15em;text-transform:uppercase;padding:4px 10px;border-radius:4px;margin-bottom:16px}.app-card-title{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;color:var(--text-strong);margin-bottom:10px;line-height:1.2}.app-card-desc{font-size:11px;color:#c4cfdd;line-height:1.9;margin-bottom:24px}.app-card-features{list-style:none;margin-bottom:28px}.app-card-features li{font-size:10px;color:#c0cadd;padding:6px 0;border-bottom:1px solid #1b2744;display:flex;align-items:center;gap:8px}.app-card-features li::before{content:'→';color:var(--card-color,var(--gold));font-size:10px}.app-card-link{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--card-color,var(--gold-bright));text-decoration:underline;text-underline-offset:4px}.app-card:hover .app-card-link{gap:12px}.app-card-status{position:absolute;top:20px;right:20px;font-size:8px;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border-radius:20px}
+    #publications,#faq,#newsletter,.footer-bottom{background:var(--bg)}.pub-list{margin-top:48px}.pub-item{display:grid;grid-template-columns:80px 1fr auto;gap:24px;align-items:start;padding:28px 0;border-bottom:1px solid var(--border);transition:.2s}.pub-item:hover{padding-left:8px}.pub-year{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;color:var(--gold-bright);line-height:1}.pub-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--text-strong);margin-bottom:6px;line-height:1.3}.pub-authors{font-size:10px;color:#c2cfdd;margin-bottom:6px}.pub-journal{font-size:10px;color:var(--gold-bright);font-style:italic;line-height:1.7}.pub-badge{font-size:8px;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border-radius:4px;white-space:nowrap;align-self:start}
+    .masonry-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin-top:48px}.masonry-item{position:relative;border-radius:14px;overflow:hidden;cursor:pointer;border:1px solid var(--border);transition:.3s;background:var(--panel)}.masonry-item:hover{transform:translateY(-4px);border-color:var(--gold-mid);box-shadow:0 12px 28px rgba(0,0,0,.22)}.masonry-img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;transition:transform .4s ease;background:var(--panel)}.masonry-item:hover .masonry-img{transform:scale(1.04)}.masonry-caption{padding:14px 14px 16px;border-top:1px solid var(--border);background:linear-gradient(180deg,rgba(13,20,40,.85),rgba(13,20,40,1))}.masonry-tag{display:inline-block;font-size:8px;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:4px;margin-bottom:6px}.masonry-caption-title{font-size:11px;font-weight:700;color:var(--text-strong);margin-bottom:3px}.masonry-caption-sub{font-size:9px;color:var(--muted)}.gallery-upload-note{margin-top:32px;padding:16px 24px;background:var(--panel);border:1px dashed var(--gold-mid);border-radius:10px;text-align:center;font-size:10px;color:var(--muted);line-height:1.8}
+    .lightbox{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.92);backdrop-filter:blur(8px);align-items:center;justify-content:center;flex-direction:column;gap:16px;padding:20px}.lightbox.open{display:flex}.lightbox-img{max-width:88vw;max-height:78vh;border-radius:10px;border:1px solid var(--border);object-fit:contain}.lightbox-close{position:absolute;top:20px;right:24px;background:var(--panel);border:1px solid var(--border);color:var(--text);font-size:14px;cursor:pointer;border-radius:8px;padding:8px 12px}.lightbox-caption{text-align:center;font-size:11px;color:#dbe4f1;max-width:560px}
+    .faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 56px;margin-top:48px}.faq-item{border-bottom:1px solid var(--border);padding:20px 0;cursor:pointer;transition:.2s}.faq-item:hover{padding-left:6px}.faq-q{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;font-size:12px;color:var(--text-strong);font-weight:600;line-height:1.6}.faq-arrow{transition:.2s;color:var(--gold-bright)}.faq-item.open .faq-arrow{transform:rotate(180deg)}.faq-a{font-size:11px;color:#c9d3e2;line-height:1.9;margin-top:0;max-height:0;overflow:hidden;transition:max-height .35s ease,margin-top .2s ease;padding-right:24px}.faq-item.open .faq-a{max-height:320px;margin-top:12px}
+    .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;margin-top:56px;align-items:start}.contact-info-item{display:flex;gap:16px;align-items:flex-start;padding:20px 0;border-bottom:1px solid var(--border)}.contact-info-icon{width:36px;height:36px;border-radius:8px;background:var(--gold-dim);border:1px solid var(--gold-mid);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}.contact-info-label{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}.contact-info-value{font-size:12px;color:var(--text-strong);line-height:1.8}.contact-form{display:flex;flex-direction:column;gap:16px}.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}.form-group{display:flex;flex-direction:column;gap:6px}.form-label{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted)}.form-input,.form-textarea,.form-select,.newsletter-input{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:12px 16px;color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:12px;outline:none;width:100%}.form-textarea{resize:vertical;min-height:120px}.newsletter-inner{max-width:680px;margin:0 auto;text-align:center}.newsletter-form{display:flex;gap:12px;margin-top:32px}.success-msg{display:none;background:#00f5c411;border:1px solid #00f5c444;border-radius:8px;padding:12px 20px;font-size:11px;color:var(--green);text-align:center}
+    footer{border-top:1px solid var(--border);padding:48px;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px}.footer-brand-name{font-size:13px;font-weight:700;letter-spacing:.15em;color:var(--gold-bright);margin-bottom:8px}.footer-brand-sub{font-size:8px;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);margin-bottom:16px}.footer-brand-desc{font-size:10px;color:#c2cddd;line-height:1.9;max-width:280px}.footer-col-title{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-bright);margin-bottom:16px}.footer-links{list-style:none;display:flex;flex-direction:column;gap:10px}.footer-links a{font-size:11px;color:#d9e3ef;text-decoration:underline;text-underline-offset:3px}.footer-links a:hover{color:var(--gold-bright);padding-left:4px}.footer-bottom{border-top:1px solid var(--border);padding:20px 48px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.footer-bottom-text{font-size:9px;color:var(--muted);letter-spacing:.05em}
+    .reveal{opacity:0;transform:translateY(32px);transition:opacity .7s ease,transform .7s ease}.reveal.visible{opacity:1;transform:translateY(0)}
+    @media (max-width:980px){.about-grid,.profile-grid,.contact-grid,.faq-grid{grid-template-columns:1fr}footer{grid-template-columns:1fr 1fr}}
+    @media (max-width:768px){nav{padding:0 20px}.nav-links{display:none}section{padding:60px 20px}.hero{padding:100px 20px 60px}.form-row{grid-template-columns:1fr}.newsletter-form{flex-direction:column}footer{grid-template-columns:1fr;padding:32px 20px}.footer-bottom{padding:20px}.pub-item{grid-template-columns:1fr;gap:12px}}
   </style>
 </head>
 <body>
-
-  <!-- ── NAV ── -->
   <nav>
     <a href="#" class="nav-brand">
-      <img src="/logo.png" alt="NeuroMatrix Biosystems"
-       style="height:36px;width:36px;object-fit:contain;border-radius:8px;"
-       onerror="this.style.display='none';this.nextSibling.style.display='flex';" />
-      <div style="display:none;width:36px;height:36px;border-radius:8px;
-       background:linear-gradient(135deg,#c9a84c44,#c9a84c22);
-       border:1px solid #c9a84c44;align-items:center;
-       justify-content:center;font-size:18px;">🧠</div>
-      <div class="nav-wordmark">NEURO<span>MATRIX</span> <span style="opacity:0.4;font-weight:300">Biosystems</span></div>
+      <img src="/logo.png" alt="NeuroMatrix BioSystems" style="height:36px;width:36px;object-fit:contain;border-radius:8px;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+      <div style="display:none;width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,#c9a84c44,#c9a84c22);border:1px solid #c9a84c44;align-items:center;justify-content:center;font-size:18px;">🧠</div>
+      <div class="nav-wordmark">NEURO<span>MATRIX</span> <span style="opacity:.55;font-weight:300">BioSystems</span></div>
     </a>
     <ul class="nav-links">
-      <li><a href="#apps">Products</a></li>
-      <li><a href="#publications">Research</a></li>
-      <li><a href="/anhrl.html">ANHRL Lab</a></li>
-      <li><a href="#gallery">Gallery</a></li>
-      <li><a href="#faq">FAQ</a></li>
-      <li><a href="#contact">Contact</a></li>
-      <li><a href="#newsletter" class="nav-cta">Stay Updated</a></li>
+      <li><a href="#about">About</a></li><li><a href="#apps">Products</a></li><li><a href="#publications">Research</a></li><li><a href="/anhrl.html">ANHRL Lab</a></li><li><a href="#gallery">Gallery</a></li><li><a href="#faq">FAQ</a></li><li><a href="#contact">Contact</a></li><li><a href="#newsletter" class="nav-cta">Stay Updated</a></li>
     </ul>
   </nav>
 
-  <!-- ── HERO ── -->
   <section class="hero">
-    <div class="hero-bg"></div>
-    <div class="hero-grid"></div>
+    <div class="hero-bg"></div><div class="hero-grid"></div>
     <div class="hero-content">
       <div class="hero-eyebrow">A Research Unit — GRASP / NIH / DSI Collaborative Program</div>
-      <h1 class="hero-title">
-        Precision Tools for<br /><em>Neuroscience Research</em>
-      </h1>
-      <p class="hero-sub">
-        AI-powered platforms built for African and global research communities —
-        from behavioral analysis to clinical neurohealth prediction.
-      </p>
-      <div class="hero-actions">
-        <a href="#apps" class="btn-primary">🧪 Explore Our Tools</a>
-        <a href="#publications" class="btn-outline">📄 View Research</a>
-      </div>
-      <div class="hero-stats">
-        <div>
-          <div class="hero-stat-value">3</div>
-          <div class="hero-stat-label">Research Platforms</div>
-        </div>
-        <div>
-          <div class="hero-stat-value">86%</div>
-          <div class="hero-stat-label">Model Accuracy</div>
-        </div>
-        <div>
-          <div class="hero-stat-value">2</div>
-          <div class="hero-stat-label">Universities</div>
-        </div>
-        <div>
-          <div class="hero-stat-value">NIH</div>
-          <div class="hero-stat-label">Funded Research</div>
-        </div>
-      </div>
+      <h1 class="hero-title">Precision Tools for<br /><em>Neuroscience Research</em></h1>
+      <p class="hero-sub">NeuroMatrix BioSystems develops AI-powered research platforms, translational bioinformatics tools, scientific visualization systems, and digital health solutions for African and global research communities.</p>
+      <div class="hero-actions"><a href="#apps" class="btn-primary">🧪 Explore Our Tools</a><a href="#about" class="btn-outline">📘 About NeuroMatrix</a></div>
+      <div class="hero-stats"><div><div class="hero-stat-value">5</div><div class="hero-stat-label">Digital Platforms</div></div><div><div class="hero-stat-value">86%</div><div class="hero-stat-label">Clinical Model Accuracy</div></div><div><div class="hero-stat-value">2</div><div class="hero-stat-label">Academic Affiliations</div></div><div><div class="hero-stat-value">NIH</div><div class="hero-stat-label">Funded Research</div></div></div>
     </div>
   </section>
 
-  <!-- ── APPS ── -->
-  <section id="apps">
-    <div class="section-eyebrow">Our Platforms</div>
-    <h2 class="section-title">Research <em>Tools</em></h2>
-    <p class="section-sub">Three integrated platforms covering behavioral neuroscience, clinical AI, and research education.</p>
+  <section id="about">
+    <div class="section-eyebrow">Profile</div>
+    <h2 class="section-title">About <em>NeuroMatrix BioSystems</em></h2>
+    <p class="section-sub">Transforming biology through intelligence, innovation, and impact through interdisciplinary research, computational science, biomedical innovation, and educational technology.</p>
+    <div class="about-grid reveal">
+      <div class="about-main">
+        <div class="about-panel">
+          <h3>Who We Are</h3>
+          <p><strong>NeuroMatrix BioSystems</strong> is an interdisciplinary research and innovation platform dedicated to advancing biomedical science through the integration of neuroscience, translational bioinformatics, computational modeling, artificial intelligence, and scientific visualization.</p>
+          <p>We bridge the gap between <strong>wet laboratory research and dry laboratory analytics</strong>, transforming biological discoveries into predictive models, digital tools, educational technologies, and evidence-based healthcare solutions.</p>
+          <p>Our work spans neurological disorders, cardiovascular diseases, precision medicine, computational biology, and AI-driven decision support, with a strong commitment to improving health outcomes in Africa and beyond.</p>
+          <p>NeuroMatrix BioSystems serves as the parent organization for specialized research units, including the <strong>African NeuroHealth Research Lab (ANHRL)</strong>, fostering multidisciplinary collaboration among researchers, clinicians, educators, data scientists, and innovators.</p>
+        </div>
+        <div class="about-panel">
+          <h3>Our Approach</h3>
+          <div class="about-approach">
+            <div class="approach-step"><span>01</span><div><strong>Discover</strong><p>Generating biological knowledge through experimental and translational research.</p></div></div>
+            <div class="approach-step"><span>02</span><div><strong>Decode</strong><p>Analyzing complex biological data using bioinformatics, machine learning, and computational modeling.</p></div></div>
+            <div class="approach-step"><span>03</span><div><strong>Design</strong><p>Creating innovative digital tools, scientific graphics, dashboards, and educational technologies that transform complex information into practical solutions.</p></div></div>
+            <div class="approach-step"><span>04</span><div><strong>Deliver</strong><p>Translating discoveries into healthcare innovations, educational resources, public health interventions, and policy-relevant evidence.</p></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="about-side">
+        <div class="about-panel"><h3>Vision</h3><p>To become a globally recognized center of excellence where biology, computation, and innovation converge to transform healthcare, scientific discovery, and education.</p></div>
+        <div class="about-panel"><h3>Mission</h3><p>To develop innovative research, computational tools, educational technologies, and translational solutions that accelerate scientific discovery and improve human health through interdisciplinary collaboration.</p></div>
+        <div class="about-panel"><h3>Aim</h3><p>To bridge experimental biology with computational intelligence by integrating laboratory science, bioinformatics, artificial intelligence, and scientific visualization into practical solutions for research, education, and healthcare.</p></div>
+        <div class="about-panel"><h3>Motto</h3><p class="about-motto">Innovating Science. Transforming Health. Inspiring Discovery.</p></div>
+      </div>
+    </div>
+    <div class="gold-divider"><span>RESEARCH PROFILE</span></div>
+    <div class="profile-grid reveal">
+      <div class="profile-card"><h3>Core Research Areas</h3><div class="tag-grid"><span>Translational Neuroscience</span><span>Computational Neuroscience</span><span>Translational Bioinformatics</span><span>Systems Biology</span><span>Artificial Intelligence in Healthcare</span><span>Stroke and Dementia Research</span><span>Neurodegenerative Diseases</span><span>Cardiovascular Disorders</span><span>Scientific Visualization</span><span>Predictive Modeling</span><span>Learning Technologies</span><span>Precision Medicine</span></div></div>
+      <div class="profile-card"><h3>Goals</h3><ul class="profile-list"><li>Advance research in neuroscience, stroke, dementia, cardiovascular diseases, and precision medicine.</li><li>Develop AI-powered computational models for disease prediction and decision support.</li><li>Promote translational bioinformatics and systems biology.</li><li>Create scientific graphics, dashboards, and data visualization tools for research and education.</li><li>Build innovative digital learning platforms and educational technologies.</li><li>Train the next generation of scientists through mentorship, capacity building, and collaborative research.</li><li>Foster partnerships with universities, healthcare institutions, industries, and international organizations.</li><li>Generate research that addresses Africa's unique health challenges while contributing to global scientific knowledge.</li></ul></div>
+      <div class="profile-card"><h3>Core Values</h3><ul class="profile-list"><li><strong>Innovation</strong> — We embrace creativity and emerging technologies to solve complex scientific problems.</li><li><strong>Scientific Excellence</strong> — We pursue rigorous, ethical, and impactful research.</li><li><strong>Collaboration</strong> — We believe multidisciplinary partnerships drive meaningful discoveries.</li><li><strong>Integrity</strong> — We uphold honesty, transparency, and responsible research practices.</li><li><strong>Education</strong> — We empower students, researchers, and professionals through knowledge sharing and mentorship.</li><li><strong>Impact</strong> — We measure success by the positive difference our work makes in society.</li></ul></div>
+    </div>
+  </section>
 
+  <section id="apps"><div class="section-eyebrow">Our Platforms</div><h2 class="section-title">Research <em>Tools</em></h2><p class="section-sub">Integrated platforms covering behavioral neuroscience, clinical AI, research education, and digital student systems.</p>
     <div class="apps-grid">
-
-      <!-- NeuroTrack Pro -->
-      <a href="https://neurotrack-one.vercel.app/" target="_blank" class="app-card" style="--card-color: #c9a84c;">
-        <div class="app-card-status" style="background:#c9a84c22;color:#c9a84c;border:1px solid #c9a84c44;">● Live</div>
-        <div class="app-card-icon">
-          <img src="/logo.png" alt="NeuroTrack Pro"
-               style="width:36px;height:36px;object-fit:contain;border-radius:6px;"
-               onerror="this.outerHTML='🏊'" />
-        </div>
-        <div class="app-card-tag" style="background:#c9a84c22;color:#c9a84c;border:1px solid #c9a84c44;">Behavioral Analysis</div>
-        <div class="app-card-title">NeuroTrack Pro</div>
-        <p class="app-card-desc">AI-powered Morris Water Maze, Y-Maze and Open Field Test analysis platform with real-time trajectory tracking and heatmap generation.</p>
-        <ul class="app-card-features">
-          <li>Video upload + auto rat tracking</li>
-          <li>Escape latency & path length metrics</li>
-          <li>Probe trial quadrant analysis</li>
-          <li>Y-Maze spontaneous alternation</li>
-          <li>OFT anxiety index + velocity</li>
-          <li>Desktop .exe + web version</li>
-        </ul>
-        <div class="app-card-link">Launch App →</div>
-      </a>
- 
-
-      <!-- African NeuroHealth -->
-      <a href="https://african-neurohealth-dashboard.vercel.app//" class="app-card" style="--card-color: #00f5c4;">
-        <div class="app-card-status" style="background:#00f5c422;color:#00f5c4;border:1px solid #00f5c444;">● Live</div>
-        <div class="app-card-icon">
-          <img src="/NEWLOGOANHRL.png" alt="African NeuroHealth AI"
-               style="width:36px;height:36px;object-fit:contain;border-radius:6px;"
-               onerror="this.outerHTML='🌍'" />
-        </div>
-        <div class="app-card-tag" style="background:#00f5c422;color:#00f5c4;border:1px solid #00f5c444;">Clinical AI</div>
-        <div class="app-card-title">African NeuroHealth AI</div>
-        <p class="app-card-desc">Culturally-attuned stroke and dementia risk prediction platform incorporating lifestyle, environmental and psychosocial factors relevant to African populations.</p>
-        <ul class="app-card-features">
-          <li>Stroke risk prediction (86.7% accuracy)</li>
-          <li>Dementia risk assessment (93.3% accuracy)</li>
-          <li>Memory game cognitive training</li>
-          <li>Nutrition & stress assessment</li>
-          <li>English / French language support</li>
-          <li>PDF downloadable reports</li>
-        </ul>
-        <div class="app-card-link">Launch App →</div>
-      </a>
-
-      <!-- LMS -->
-      <a href="https://multi-lecture-dashboard.vercel.app/" class="app-card" style="--card-color: #6c63ff;">
-        <div class="app-card-status" style="background:#6c63ff22;color:#6c63ff;border:1px solid #6c63ff44;">◎ Live</div>
-          <div class="app-card-icon">
-          <img src="/neuromatrix_lms_logo.png" alt="NeuroMatrix LMS"
-               style="width:36px;height:36px;object-fit:contain;border-radius:6px;"
-               onerror="this.outerHTML='🎓'" />
-        </div>
-        <div class="app-card-tag" style="background:#6c63ff22;color:#6c63ff;border:1px solid #6c63ff44;">Education</div>
-        <div class="app-card-title">NeuroMatrix LMS</div>
-        <p class="app-card-desc">Advanced learning management system for neuroscience research training — designed for African universities and research institutions.</p>
-        <ul class="app-card-features">
-          <li>Neuroscience course modules</li>
-          <li>Interactive research methodology</li>
-          <li>Student progress tracking</li>
-          <li>Research tool tutorials</li>
-          <li>Certificate programs</li>
-          <li>Multi-institution support</li>
-        </ul>
-        <div class="app-card-link">Live →</div>
-      </a>
-
-      <!-- Interactive Courses -->
-      <a href="/NeuroMatrix_Interactive_Courses_Dashboard.html" class="app-card" style="--card-color: #6c63ff;">
-        <div class="app-card-status" style="background:#6c63ff22;color:#6c63ff;border:1px solid #6c63ff44;">● Live</div>
-        <div class="app-card-icon">
-          <img src="/neuromatrix_lms_logo.png" alt="NeuroMatrix Dashboard"
-               style="width:36px;height:36px;object-fit:contain;border-radius:6px;"
-               onerror="this.outerHTML='🎓'" />
-        </div>
-        <div class="app-card-tag" style="background:#6c63ff22;color:#6c63ff;border:1px solid #6c63ff44;">Education</div>
-        <div class="app-card-title">NeuroMatrix Dashboard</div>
-        <p class="app-card-desc">Advanced learning management system for neuroscience research training — designed for African universities and research institutions.</p>
-        <ul class="app-card-features">
-          <li>Interactive Learning Modules</li>
-          <li>Student Learning Analytics</li>
-          <li>Flashcards for Memory Retention</li>
-          <li>Weekly/Quiz/Diagram counts</li>
-          <li>Interactive Quizzes and Notes</li>
-        </ul>
-        <div class="app-card-link">Live →</div>
-      </a>
+      <a href="https://neurotrack-one.vercel.app/" target="_blank" rel="noopener" class="app-card" style="--card-color:#c9a84c;"><div class="app-card-status" style="background:#c9a84c22;color:#f0cf72;border:1px solid #c9a84c44;">● Live</div><div class="app-card-icon"><img src="/logo.png" alt="NeuroTrack Pro" style="width:36px;height:36px;object-fit:contain;border-radius:6px;" onerror="this.outerHTML='🏊'" /></div><div class="app-card-tag" style="background:#c9a84c22;color:#f0cf72;border:1px solid #c9a84c44;">Behavioral Analysis</div><div class="app-card-title">NeuroTrack Pro</div><p class="app-card-desc">AI-powered Morris Water Maze, Y-Maze, and Open Field Test analysis platform with real-time trajectory tracking and heatmap generation.</p><ul class="app-card-features"><li>Video upload + automatic rat tracking</li><li>Escape latency &amp; path length metrics</li><li>Probe trial quadrant analysis</li><li>Y-Maze spontaneous alternation</li><li>Open field anxiety index + velocity</li><li>Desktop .exe + web version</li></ul><div class="app-card-link">Launch App →</div></a>
+      <a href="https://african-neurohealth-dashboard.vercel.app/" target="_blank" rel="noopener" class="app-card" style="--card-color:#00f5c4;"><div class="app-card-status" style="background:#00f5c422;color:#00f5c4;border:1px solid #00f5c444;">● Live</div><div class="app-card-icon"><img src="/NEWLOGOANHRL.png" alt="African NeuroHealth AI" style="width:36px;height:36px;object-fit:contain;border-radius:6px;" onerror="this.outerHTML='🌍'" /></div><div class="app-card-tag" style="background:#00f5c422;color:#00f5c4;border:1px solid #00f5c444;">Clinical AI</div><div class="app-card-title">African NeuroHealth AI</div><p class="app-card-desc">Culturally attuned stroke and dementia risk prediction platform incorporating lifestyle, environmental, and psychosocial factors relevant to African populations.</p><ul class="app-card-features"><li>Stroke risk prediction (86.7% accuracy)</li><li>Dementia risk assessment (93.3% accuracy)</li><li>Memory game cognitive training</li><li>Nutrition &amp; stress assessment</li><li>English / French support</li><li>PDF downloadable reports</li></ul><div class="app-card-link">Launch App →</div></a>
+      <a href="https://multi-lecture-dashboard.vercel.app/" target="_blank" rel="noopener" class="app-card" style="--card-color:#6c63ff;"><div class="app-card-status" style="background:#6c63ff22;color:#8b7cf6;border:1px solid #6c63ff44;">● Live</div><div class="app-card-icon"><img src="/neuromatrix_lms_logo.png" alt="NeuroMatrix LMS" style="width:36px;height:36px;object-fit:contain;border-radius:6px;" onerror="this.outerHTML='🎓'" /></div><div class="app-card-tag" style="background:#6c63ff22;color:#8b7cf6;border:1px solid #6c63ff44;">Education</div><div class="app-card-title">NeuroMatrix LMS</div><p class="app-card-desc">Advanced learning management system for neuroscience research training designed for African universities and research institutions.</p><ul class="app-card-features"><li>Neuroscience course modules</li><li>Interactive research methodology</li><li>Student progress tracking</li><li>Research tool tutorials</li><li>Certificate programs</li><li>Multi-institution support</li></ul><div class="app-card-link">Launch App →</div></a>
+      <a href="/NeuroMatrix_Interactive_Courses_Dashboard.html" class="app-card" style="--card-color:#6c63ff;"><div class="app-card-status" style="background:#6c63ff22;color:#8b7cf6;border:1px solid #6c63ff44;">● Live</div><div class="app-card-icon"><img src="/neuromatrix_lms_logo.png" alt="NeuroMatrix Dashboard" style="width:36px;height:36px;object-fit:contain;border-radius:6px;" onerror="this.outerHTML='🎓'" /></div><div class="app-card-tag" style="background:#6c63ff22;color:#8b7cf6;border:1px solid #6c63ff44;">Education</div><div class="app-card-title">NeuroMatrix Dashboard</div><p class="app-card-desc">Interactive learning dashboard for neuroscience training with notes, quizzes, memory tools, analytics, and student learning support.</p><ul class="app-card-features"><li>Interactive learning modules</li><li>Student learning analytics</li><li>Flashcards for memory retention</li><li>Weekly / quiz / diagram counts</li><li>Interactive quizzes and notes</li></ul><div class="app-card-link">Open Dashboard →</div></a>
+      <a href="/vos.html" target="_blank" rel="noopener" class="app-card" style="--card-color:#2a7de1;"><div class="app-card-status" style="background:#2a7de122;color:#63b3ed;border:1px solid #2a7de144;">● Live</div><div class="app-card-icon"><img src="/vos-lms-icon.png" alt="Vocational Studies LMS" style="width:36px;height:36px;object-fit:contain;border-radius:6px;" onerror="this.outerHTML='🎓'" /></div><div class="app-card-tag" style="background:#2a7de122;color:#63b3ed;border:1px solid #2a7de144;">Student Management</div><div class="app-card-title">Vocational Studies LMS</div><p class="app-card-desc">Self-service student registration system with Supabase backend. Students submit their details while admins manage, export, and search records.</p><ul class="app-card-features"><li>Public registration form</li><li>Admin dashboard with search &amp; delete</li><li>CSV export for all records</li><li>Supabase real-time database</li><li>Secure admin login</li><li>Mobile-friendly responsive design</li></ul><div class="app-card-link">Launch App →</div></a>
     </div>
   </section>
-
-  <!-- Vocational Studies LMS · Student Portal -->
-<a href="/vos.html" target="_blank" class="app-card" style="--card-color: #2a7de1;">
-  <div class="app-card-status" style="background:#2a7de122;color:#2a7de1;border:1px solid #2a7de144;">● Live</div>
-  <div class="app-card-icon">
-    <img src="/vos-lms-icon.png" alt="VOS LMS"
-         style="width:36px;height:36px;object-fit:contain;border-radius:6px;"
-         onerror="this.outerHTML='🎓'" />
-  </div>
-  <div class="app-card-tag" style="background:#2a7de122;color:#2a7de1;border:1px solid #2a7de144;">Student Management</div>
-  <div class="app-card-title">Vocational Studies LMS</div>
-  <p class="app-card-desc">
-    Self‑service student registration system with Supabase backend. Students submit their details, and admins can view, delete, and export all records to CSV.
-  </p>
-  <ul class="app-card-features">
-    <li>Public registration form (name, matric, dept.)</li>
-    <li>Admin dashboard with search & delete</li>
-    <li>Export all records to CSV</li>
-    <li>Supabase database (real‑time)</li>
-    <li>Secure admin login (username/password)</li>
-    <li>Mobile‑friendly responsive design</li>
-  </ul>
-  <div class="app-card-link">Launch App →</div>
-</a>
-  <!-- ── PUBLICATIONS ── -->
   <section id="publications">
-    <div class="section-eyebrow">Research Output</div>
-    <h2 class="section-title">Publications & <em>Research</em></h2>
-    <p class="section-sub">Peer-reviewed work from the GRASP/NIH/DSI Collaborative Program at the University of Ilorin.</p>
-
+    <div class="section-eyebrow">Research Output</div><h2 class="section-title">Publications &amp; <em>Research</em></h2><p class="section-sub">Peer-reviewed work and technical outputs from the GRASP / NIH / DSI collaborative ecosystem and associated NeuroMatrix research initiatives.</p>
     <div class="pub-list reveal">
-
-      <div class="pub-item">
-        <div class="pub-year">2026</div>
-        <div>
-          <div class="pub-title">Comprehensive metabolomic and phytochemical profiling of saigon
-cinnamon reveals promise as a functional food and nutraceutical</div>
-          <div class="pub-authors">Adebimpe John Omolola E., Osiboye O.O., Owoyele B.V.</div>
-          <div class="pub-journal">Journal of Food Measurement and Characterization
-https://doi.org/10.1007/s11694-026-04084-5</div>
-        </div>
-        <div class="pub-badge" style="background:#c9a84c22;color:#c9a84c;border:1px solid #c9a84c44;">Published</div>
-      </div>
-
-      <div class="pub-item">
-        <div class="pub-year">2026</div>
-        <div>
-          <div class="pub-title">Neurovascular Toxicity of Diclofenac-Caffeine-Sodium Triad in Hypertensive Rat Model</div>
-          <div class="pub-authors">Adebimpe John Omolola E. et al.</div>
-          <div class="pub-journal">Collaborative Preclinical Neuroscience Study — University of Ilorin</div>
-        </div>
-        <div class="pub-badge" style="background:#6c63ff22;color:#6c63ff;border:1px solid #6c63ff44;">Ongoing</div>
-      </div>
-
-      <div class="pub-item">
-        <div class="pub-year">2025</div>
-        <div>
-          <div class="pub-title">African NeuroHealth AI: Stroke & Dementia Risk Prediction for African Populations</div>
-          <div class="pub-authors">Adebimpe John Omolola E.</div>
-          <div class="pub-journal">GRASP / NIH / DSI Collaborative Program — Technical Report</div>
-        </div>
-        <div class="pub-badge" style="background:#00f5c422;color:#00f5c4;border:1px solid #00f5c444;">Submitted</div>
-      </div>
-
-      <div class="pub-item">
-        <div class="pub-year">2025</div>
-        <div>
-          <div class="pub-title">NeuroTrack Pro: Open-Source Behavioral Analysis Platform for Preclinical Neuroscience</div>
-          <div class="pub-authors">Adebimpe John Omolola E., NeuroMatrix Biosystems</div>
-          <div class="pub-journal">Software — Available at neuromatrixbiosystems.com</div>
-        </div>
-        <div class="pub-badge" style="background:#00f5c422;color:#00f5c4;border:1px solid #00f5c444;">Released</div>
-      </div>
-
+      <div class="pub-item"><div class="pub-year">2026</div><div><div class="pub-title">Comprehensive metabolomic and phytochemical profiling of saigon cinnamon reveals promise as a functional food and nutraceutical</div><div class="pub-authors">Adebimpe John Omolola E., Osiboye O.O., Owoyele B.V.</div><div class="pub-journal">Journal of Food Measurement and Characterization<br /><a href="https://doi.org/10.1007/s11694-026-04084-5" target="_blank" rel="noopener">https://doi.org/10.1007/s11694-026-04084-5</a></div></div><div class="pub-badge" style="background:#c9a84c22;color:#f0cf72;border:1px solid #c9a84c44;">Published</div></div>
+      <div class="pub-item"><div class="pub-year">2026</div><div><div class="pub-title">Neurovascular Toxicity of Diclofenac-Caffeine-Sodium Triad in Hypertensive Rat Model</div><div class="pub-authors">Adebimpe John Omolola E. et al.</div><div class="pub-journal">Collaborative Preclinical Neuroscience Study — University of Ilorin</div></div><div class="pub-badge" style="background:#6c63ff22;color:#8b7cf6;border:1px solid #6c63ff44;">Ongoing</div></div>
+      <div class="pub-item"><div class="pub-year">2025</div><div><div class="pub-title">African NeuroHealth AI: Stroke &amp; Dementia Risk Prediction for African Populations</div><div class="pub-authors">Adebimpe John Omolola E.</div><div class="pub-journal">GRASP / NIH / DSI Collaborative Program — Technical Report</div></div><div class="pub-badge" style="background:#00f5c422;color:#00f5c4;border:1px solid #00f5c444;">Submitted</div></div>
+      <div class="pub-item"><div class="pub-year">2025</div><div><div class="pub-title">NeuroTrack Pro: Open-Source Behavioral Analysis Platform for Preclinical Neuroscience</div><div class="pub-authors">Adebimpe John Omolola E., NeuroMatrix BioSystems</div><div class="pub-journal">Software — Available at neuromatrixbiosystems.com</div></div><div class="pub-badge" style="background:#00f5c422;color:#00f5c4;border:1px solid #00f5c444;">Released</div></div>
     </div>
   </section>
 
-  <!-- ── CONTACT ── -->
-  <section id="contact">
-    <div class="section-eyebrow">Get In Touch</div>
-    <h2 class="section-title">Contact <em>Us</em></h2>
-    <p class="section-sub">Reach out for collaborations, research inquiries, or early access to our platforms.</p>
-
-    <div class="contact-grid reveal">
-
-      <!-- Info -->
-      <div>
-        <div class="contact-info-item">
-          <div class="contact-info-icon">🏛️</div>
-          <div>
-            <div class="contact-info-label">Institution</div>
-            <div class="contact-info-value">Department of Bilogical Science<br />Sikiru Adetona College of Education Science and Technology Omu-Ijebu, Nigeria</div>
-          </div>
-            <div class="contact-info-value">Department of Physiology<br />University of Ilorin, Nigeria</div>
-          </div>
-        </div>
-        <div class="contact-info-item">
-          <div class="contact-info-icon">🔬</div>
-          <div>
-            <div class="contact-info-label">Research Unit</div>
-            <div class="contact-info-value">African Neurohealth Lab / Neuroscience & Inflammation Unit<br />GRASP / NIH / DSI Program</div>
-          </div>
-        </div>
-        <div class="contact-info-item">
-          <div class="contact-info-icon">👤</div>
-          <div>
-            <div class="contact-info-label">Principal Researcher</div>
-            <div class="contact-info-value">Adebimpe John Omolola E.<br />PhD Candidate</div>
-          </div>
-        </div>
-        <div class="contact-info-item">
-          <div class="contact-info-icon">🌐</div>
-          <div>
-            <div class="contact-info-label">Supervisors</div>
-            <div class="contact-info-value">Prof. Bamidele Owoyele<br />Prof. Owolabi Mayowa</div>
-          </div>
-        </div>
-        <div class="contact-info-item">
-          <div class="contact-info-icon">💻</div>
-          <div>
-            <div class="contact-info-label">GitHub</div>
-            <div class="contact-info-value">github.com/ademide-star</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Form -->
-      <form class="contact-form" action="https://formspree.io/f/xlgpyzzq" method="POST">
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">First Name</label>
-            <input class="form-input" type="text" name="first_name" placeholder="John" required />
-          </div>
-          <div class="form-group">
-            <label class="form-label">Last Name</label>
-            <input class="form-input" type="text" name="last_name" placeholder="Doe" required />
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Email</label>
-          <input class="form-input" type="email" name="email" placeholder="researcher@university.edu" required />
-        </div>
-        <div class="form-group">
-          <label class="form-label">Institution</label>
-          <input class="form-input" type="text" name="institution" placeholder="University / Research Lab" />
-        </div>
-        <div class="form-group">
-          <label class="form-label">Inquiry Type</label>
-          <select class="form-select" name="inquiry_type">
-            <option>Research Collaboration</option>
-            <option>NeuroTrack Pro Support</option>
-            <option>African NeuroHealth AI</option>
-            <option>LMS Early Access</option>
-            <option>General Inquiry</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Message</label>
-          <textarea class="form-textarea" name="message" placeholder="Tell us about your research or inquiry..." required></textarea>
-        </div>
-        <!-- Formspree honeypot spam filter -->
-        <input type="text" name="_gotcha" style="display:none" />
-        <!-- Redirect back after submit -->
-        <input type="hidden" name="_next" value="https://neuromatrixbiosystems.com/?submitted=true" />
-        <input type="hidden" name="_subject" value="New NeuroMatrix Contact Form Submission" />
-        <button type="submit" class="btn-primary" style="width:100%;justify-content:center;">
-          Send Message →
-        </button>
-        <div class="success-msg" id="contact-success">
-          ✅ Message sent! We'll respond within 48 hours.
-        </div>
-      </form>
-
-    </div>
-  </section>
-
-  <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gallery - NeuroTrack Pro</title>
-  <style>
-    :root {
-      --gold: #f5b042;
-      --gold-dim: rgba(245, 176, 66, 0.1);
-      --dark: #1e2a3e;
-      --light: #f8fafc;
-    }
-
-    /* Gallery Section Styles */
-    #gallery {
-      padding: 4rem 2rem;
-      background: var(--light);
-    }
-
-    .section-eyebrow {
-      text-align: center;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      font-size: 0.85rem;
-      color: var(--gold);
-      font-weight: 600;
-      margin-bottom: 1rem;
-    }
-
-    .section-title {
-      text-align: center;
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
-      color: var(--dark);
-    }
-
-    .section-title em {
-      color: var(--gold);
-      font-style: italic;
-    }
-
-    .section-sub {
-      text-align: center;
-      max-width: 700px;
-      margin: 0 auto 3rem;
-      color: #64748b;
-      line-height: 1.6;
-    }
-
-    /* Masonry Grid Layout */
-    .masonry-grid {
-      max-width: 1400px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 1.5rem;
-      grid-auto-rows: auto;
-    }
-
-    .masonry-item {
-      position: relative;
-      border-radius: 16px;
-      overflow: hidden;
-      cursor: pointer;
-      background: #fff;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .masonry-item:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
-    }
-
-    .masonry-img {
-      width: 100%;
-      height: auto;
-      display: block;
-      transition: transform 0.3s ease;
-    }
-
-    .masonry-item:hover .masonry-img {
-      transform: scale(1.05);
-    }
-
-    .masonry-caption {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
-      padding: 1.5rem 1rem 1rem;
-      color: white;
-      transform: translateY(100%);
-      transition: transform 0.3s ease;
-    }
-
-    .masonry-item:hover .masonry-caption {
-      transform: translateY(0);
-    }
-
-    .masonry-tag {
-      display: inline-block;
-      padding: 0.25rem 0.75rem;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-      background: rgba(245, 176, 66, 0.2);
-      color: var(--gold);
-    }
-
-    .masonry-caption-title {
-      font-weight: 700;
-      font-size: 1rem;
-      margin-bottom: 0.25rem;
-    }
-
-    .masonry-caption-sub {
-      font-size: 0.85rem;
-      opacity: 0.9;
-    }
-
-    /* Lightbox Styles */
-    .lightbox {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.95);
-      z-index: 9999;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      cursor: pointer;
-    }
-
-    .lightbox.active {
-      display: flex;
-    }
-
-    .lightbox-img {
-      max-width: 90%;
-      max-height: 80vh;
-      object-fit: contain;
-      border-radius: 8px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-    }
-
-    .lightbox-caption {
-      margin-top: 1rem;
-      color: white;
-      text-align: center;
-      max-width: 80%;
-      font-size: 1rem;
-      line-height: 1.5;
-      background: rgba(0, 0, 0, 0.6);
-      padding: 0.75rem 1.5rem;
-      border-radius: 30px;
-    }
-
-    .lightbox-close {
-      position: absolute;
-      top: 20px;
-      right: 30px;
-      background: rgba(255, 255, 255, 0.2);
-      border: none;
-      color: white;
-      font-size: 1rem;
-      padding: 0.75rem 1.5rem;
-      border-radius: 30px;
-      cursor: pointer;
-      transition: background 0.3s ease;
-      font-weight: 600;
-    }
-
-    .lightbox-close:hover {
-      background: rgba(255, 255, 255, 0.3);
-    }
-
-    /* Reveal Animation */
-    .reveal {
-      opacity: 0;
-      transform: translateY(30px);
-      animation: reveal 0.6s ease forwards;
-    }
-
-    @keyframes reveal {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-      .masonry-grid {
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 1rem;
-      }
-      
-      .section-title {
-        font-size: 1.8rem;
-      }
-      
-      .lightbox-img {
-        max-width: 95%;
-        max-height: 70vh;
-      }
-    }
-  </style>
-</head>
-<body>
-  <!-- GALLERY SECTION -->
   <section id="gallery">
-    <div class="section-eyebrow">Behind the Research</div>
-    <h2 class="section-title">Lab, Field & <em>Conference</em></h2>
-    <p class="section-sub">Snapshots from the Neuroscience & Inflammation Unit — conferences attended, lab work and research in action.</p>
-
+    <div class="section-eyebrow">Behind the Research</div><h2 class="section-title">Lab, Field &amp; <em>Conference</em></h2><p class="section-sub">Snapshots from the Neuroscience &amp; Inflammation Unit — conferences attended, lab work, team development, and research in action.</p>
     <div class="masonry-grid reveal">
+      <div class="masonry-item" onclick="openLightbox('conf-dsi-team.jpg','5th DS-I Africa Consortium Meeting, Accra, Ghana — August 2025')"><img class="masonry-img" src="conf-dsi-team.jpg" alt="DS-I Africa Consortium Meeting 2025 — Accra, Ghana" onerror="this.src='https://via.placeholder.com/800x600?text=Image+Not+Found'" /><div class="masonry-caption"><div class="masonry-tag" style="background:#c9a84c22;color:#f0cf72;">Conference</div><div class="masonry-caption-title">5th DS-I Africa Consortium Meeting</div><div class="masonry-caption-sub">Accra, Ghana — August 2025</div></div></div>
+      <div class="masonry-item" onclick="openLightbox('lab-team-formal.jpg','Neuroscience & Inflammation Unit research team with supervisor — University of Ilorin')"><img class="masonry-img" src="lab-team-formal.jpg" alt="Research team with supervisor — University of Ilorin" onerror="this.src='https://via.placeholder.com/800x600?text=Image+Not+Found'" /><div class="masonry-caption"><div class="masonry-tag" style="background:#6c63ff22;color:#8b7cf6;">Team</div><div class="masonry-caption-title">Research Team with Supervisor</div><div class="masonry-caption-sub">Neuroscience &amp; Inflammation Unit, UNILORIN</div></div></div>
+      <div class="masonry-item" onclick="openLightbox('conf-dsi-solo.jpg','Principal researcher at the 5th DS-I Africa Consortium Meeting, Accra, Ghana')"><img class="masonry-img" src="conf-dsi-solo.jpg" alt="DS-I Africa Consortium Meeting — principal researcher" onerror="this.src='https://via.placeholder.com/800x600?text=Image+Not+Found'" /><div class="masonry-caption"><div class="masonry-tag" style="background:#c9a84c22;color:#f0cf72;">Conference</div><div class="masonry-caption-title">DS-I Africa — Accra, Ghana 2025</div><div class="masonry-caption-sub">Data Science for Health in Africa</div></div></div>
+      <div class="masonry-item" onclick="openLightbox('conf-dsi-group.jpg','DS-I Africa Consortium full delegate group photo — Accra, Ghana 2025')"><img class="masonry-img" src="conf-dsi-group.jpg" alt="DS-I Africa full group photo" onerror="this.src='https://via.placeholder.com/800x600?text=Image+Not+Found'" /><div class="masonry-caption"><div class="masonry-tag" style="background:#c9a84c22;color:#f0cf72;">Conference</div><div class="masonry-caption-title">DS-I Africa Delegate Group</div><div class="masonry-caption-sub">Full consortium — Accra, Ghana 2025</div></div></div>
+      <div class="masonry-item" onclick="openLightbox('lab-team-casual.jpg','Student research team in lab coats — University of Ilorin')"><img class="masonry-img" src="lab-team-casual.jpg" alt="Student research team — University of Ilorin" onerror="this.src='https://via.placeholder.com/800x600?text=Image+Not+Found'" /><div class="masonry-caption"><div class="masonry-tag" style="background:#00f5c422;color:#00f5c4;">Lab Team</div><div class="masonry-caption-title">Student Research Team</div><div class="masonry-caption-sub">University of Ilorin — 2026</div></div></div>
+      <div class="masonry-item" onclick="openLightbox('conf-inform-group.jpg','INFORM Africa conference group photo — DS-I Africa Consortium Meeting 2025')"><img class="masonry-img" src="conf-inform-group.jpg" alt="INFORM Africa group at DS-I Africa meeting" onerror="this.src='https://via.placeholder.com/800x600?text=Image+Not+Found'" /><div class="masonry-caption"><div class="masonry-tag" style="background:#6c63ff22;color:#8b7cf6;">Conference</div><div class="masonry-caption-title">INFORM Africa Working Group</div><div class="masonry-caption-sub">DS-I Africa Consortium — 2025</div></div></div>
+      <div class="masonry-item" onclick="openLightbox('conf-dsi-selfie.jpg','Networking with fellow researchers at DS-I Africa Consortium Meeting, Accra 2025')"><img class="masonry-img" src="conf-dsi-selfie.jpg" alt="Networking at DS-I Africa — Accra 2025" onerror="this.src='https://via.placeholder.com/800x600?text=Image+Not+Found'" /><div class="masonry-caption"><div class="masonry-tag" style="background:#c9a84c22;color:#f0cf72;">Conference</div><div class="masonry-caption-title">Networking at DS-I Africa</div><div class="masonry-caption-sub">With fellow researchers — Accra 2025</div></div></div>
+    </div>
+    <div class="gallery-upload-note">Add new conference, laboratory, workshop, field, or dashboard screenshots here to keep the NeuroMatrix story visual and alive.</div>
+  </section>
 
-      <!-- Image 1 — DS-I Africa team -->
-      <div class="masonry-item" onclick="openLightbox(this.querySelector('img').src, '5th DS-I Africa Consortium Meeting, Accra, Ghana — August 2025')">
-        <img class="masonry-img" src="conf-dsi-team.jpg" alt="DS-I Africa Consortium Meeting 2025 — Accra, Ghana" onerror="this.src='https://via.placeholder.com/400x300?text=Image+Not+Found'"/>
-        <div class="masonry-caption">
-          <div class="masonry-tag" style="background:var(--gold-dim);color:var(--gold);">Conference</div>
-          <div class="masonry-caption-title">5th DS-I Africa Consortium Meeting</div>
-          <div class="masonry-caption-sub">Accra, Ghana — August 2025</div>
-        </div>
-      </div>
-
-      <!-- Image 7 — Lab team formal -->
-      <div class="masonry-item" onclick="openLightbox(this.querySelector('img').src, 'Neuroscience & Inflammation Unit research team with supervisor — University of Ilorin')">
-        <img class="masonry-img" src="lab-team-formal.jpg" alt="Research team with supervisor — University of Ilorin" onerror="this.src='https://via.placeholder.com/400x300?text=Image+Not+Found'"/>
-        <div class="masonry-caption">
-          <div class="masonry-tag" style="background:#6c63ff22;color:#6c63ff;">Team</div>
-          <div class="masonry-caption-title">Research Team with Supervisor</div>
-          <div class="masonry-caption-sub">Neuroscience & Inflammation Unit, UNILORIN</div>
-        </div>
-      </div>
-
-      <!-- Image 2 — DS-I Africa solo -->
-      <div class="masonry-item" onclick="openLightbox(this.querySelector('img').src, 'Principal researcher at the 5th DS-I Africa Consortium Meeting, Accra, Ghana')">
-        <img class="masonry-img" src="conf-dsi-solo.jpg" alt="DS-I Africa Consortium Meeting — principal researcher" onerror="this.src='https://via.placeholder.com/400x300?text=Image+Not+Found'"/>
-        <div class="masonry-caption">
-          <div class="masonry-tag" style="background:var(--gold-dim);color:var(--gold);">Conference</div>
-          <div class="masonry-caption-title">DS-I Africa — Accra, Ghana 2025</div>
-          <div class="masonry-caption-sub">Data Science for Health in Africa</div>
-        </div>
-      </div>
-
-      <!-- Image 4 — Large DS-I group -->
-      <div class="masonry-item" onclick="openLightbox(this.querySelector('img').src, 'DS-I Africa Consortium full delegate group photo — Accra, Ghana 2025')">
-        <img class="masonry-img" src="conf-dsi-group.jpg" alt="DS-I Africa full group photo" onerror="this.src='https://via.placeholder.com/400x300?text=Image+Not+Found'"/>
-        <div class="masonry-caption">
-          <div class="masonry-tag" style="background:var(--gold-dim);color:var(--gold);">Conference</div>
-          <div class="masonry-caption-title">DS-I Africa Delegate Group</div>
-          <div class="masonry-caption-sub">Full consortium — Accra, Ghana 2025</div>
-        </div>
-      </div>
-
-      <!-- Image 6 — Lab team casual -->
-      <div class="masonry-item" onclick="openLightbox(this.querySelector('img').src, 'Student research team in lab coats — University of Ilorin')">
-        <img class="masonry-img" src="lab-team-casual.jpg" alt="Student research team — University of Ilorin" onerror="this.src='https://via.placeholder.com/400x300?text=Image+Not+Found'"/>
-        <div class="masonry-caption">
-          <div class="masonry-tag" style="background:#00f5c422;color:#00f5c4;">Lab Team</div>
-          <div class="masonry-caption-title">Student Research Team</div>
-          <div class="masonry-caption-sub">University of Ilorin — 2026</div>
-        </div>
-      </div>
-
-      <!-- Image 5 — Inform Africa group -->
-      <div class="masonry-item" onclick="openLightbox(this.querySelector('img').src, 'INFORM Africa conference group photo — DS-I Africa Consortium Meeting 2025')">
-        <img class="masonry-img" src="conf-inform-group.jpg" alt="INFORM Africa group at DS-I Africa meeting" onerror="this.src='https://via.placeholder.com/400x300?text=Image+Not+Found'"/>
-        <div class="masonry-caption">
-          <div class="masonry-tag" style="background:#6c63ff22;color:#6c63ff;">Conference</div>
-          <div class="masonry-caption-title">INFORM Africa Working Group</div>
-          <div class="masonry-caption-sub">DS-I Africa Consortium — 2025</div>
-        </div>
-      </div>
-
-      <!-- Image 3 — Conference selfie -->
-      <div class="masonry-item" onclick="openLightbox(this.querySelector('img').src, 'Networking with fellow researchers at DS-I Africa Consortium Meeting, Accra 2025')">
-        <img class="masonry-img" src="conf-dsi-selfie.jpg" alt="Networking at DS-I Africa — Accra 2025" onerror="this.src='https://via.placeholder.com/400x300?text=Image+Not+Found'"/>
-        <div class="masonry-caption">
-          <div class="masonry-tag" style="background:var(--gold-dim);color:var(--gold);">Conference</div>
-          <div class="masonry-caption-title">Networking at DS-I Africa</div>
-          <div class="masonry-caption-sub">With fellow researchers — Accra 2025</div>
-        </div>
-      </div>
-
+  <section id="faq">
+    <div class="section-eyebrow">Common Questions</div><h2 class="section-title">Frequently Asked <em>Questions</em></h2><p class="section-sub">Answers about NeuroTrack Pro licensing, academic usage, pricing, delivery, and support.</p>
+    <div class="faq-grid reveal">
+      <div class="faq-item"><div class="faq-q">What is included in the license? <span class="faq-arrow">▼</span></div><div class="faq-a">Your license unlocks full access to the NeuroTrack Pro web app and desktop Windows .exe installer. It covers Morris Water Maze, Y-Maze, and Open Field Test analysis including video upload, auto-tracking, trajectory, heatmap, metrics, PNG export, and CSV export.</div></div>
+      <div class="faq-item"><div class="faq-q">How do I receive my license key? <span class="faq-arrow">▼</span></div><div class="faq-a">After payment via Paystack or bank transfer, your unique license key is emailed to you within 24 hours. For Paystack payments, delivery can be automated within minutes.</div></div>
+      <div class="faq-item"><div class="faq-q">Is this a one-time payment or subscription? <span class="faq-arrow">▼</span></div><div class="faq-a">It is a one-time payment with perpetual access. Researcher and Institution plans can include upgrade support depending on the license level.</div></div>
+      <div class="faq-item"><div class="faq-q">Can I use this for my PhD thesis? <span class="faq-arrow">▼</span></div><div class="faq-a">Yes. NeuroTrack Pro is designed for academic research and can be cited in your methods section where appropriate.</div></div>
+      <div class="faq-item"><div class="faq-q">How does NeuroTrack Pro compare to ANY-maze? <span class="faq-arrow">▼</span></div><div class="faq-a">NeuroTrack Pro is designed as a lower-cost, accessible alternative for institutions that need flexible behavioral analysis without high hardware costs, making it especially suitable for research environments with tighter budgets.</div></div>
+      <div class="faq-item"><div class="faq-q">What if I need a refund? <span class="faq-arrow">▼</span></div><div class="faq-a">We offer a 7-day refund policy if the software does not work as described. Contact <a href="mailto:neuromatrixbiosystems@gmail.com">neuromatrixbiosystems@gmail.com</a> with your license key and a short explanation.</div></div>
     </div>
   </section>
 
-  <!-- Lightbox -->
-  <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
-    <button class="lightbox-close" onclick="closeLightbox()">✕ Close</button>
-    <img class="lightbox-img" id="lightbox-img" src="" alt="" />
-    <div class="lightbox-caption" id="lightbox-caption"></div>
-  </div>
-
-  <script>
-    // Lightbox Functions
-    function openLightbox(imgSrc, caption) {
-      const lightbox = document.getElementById('lightbox');
-      const lightboxImg = document.getElementById('lightbox-img');
-      const lightboxCaption = document.getElementById('lightbox-caption');
-      
-      lightboxImg.src = imgSrc;
-      lightboxCaption.textContent = caption;
-      lightbox.classList.add('active');
-      
-      // Prevent body scrolling when lightbox is open
-      document.body.style.overflow = 'hidden';
-    }
-    
-    function closeLightbox(event) {
-      // Close if clicking on the overlay background
-      if (event && event.target !== event.currentTarget) {
-        return;
-      }
-      
-      const lightbox = document.getElementById('lightbox');
-      lightbox.classList.remove('active');
-      
-      // Re-enable body scrolling
-      document.body.style.overflow = '';
-    }
-    
-    // Close lightbox with Escape key
-    document.addEventListener('keydown', function(event) {
-      if (event.key === 'Escape') {
-        const lightbox = document.getElementById('lightbox');
-        if (lightbox.classList.contains('active')) {
-          closeLightbox();
-        }
-      }
-    });
-    
-    // Optional: Add loading animation for images
-    document.querySelectorAll('.masonry-img').forEach(img => {
-      img.addEventListener('load', function() {
-        this.style.opacity = '1';
-      });
-      if (img.complete) {
-        img.style.opacity = '1';
-      } else {
-        img.style.opacity = '0';
-        img.style.transition = 'opacity 0.3s ease';
-      }
-    });
-  </script>
-</body>
-</html>
-
-  <!-- ── FAQ ── -->
-  <div class="faq-section">
-    <div class="faq-title">Frequently Asked <em style="font-style:italic;color:var(--gold);">Questions</em></div>
-
-    <div class="faq-item" onclick="toggleFaq(this)">
-      <div class="faq-q">What is included in the license? <span class="faq-arrow">▼</span></div>
-      <div class="faq-a">Your license unlocks full access to NeuroTrack Pro web app AND the desktop Windows .exe installer. It covers Morris Water Maze, Y-Maze, and Open Field Test analysis including video upload, auto-tracking, trajectory, heatmap, all metrics, PNG and CSV export.</div>
-    </div>
-
-    <div class="faq-item" onclick="toggleFaq(this)">
-      <div class="faq-q">How do I receive my license key? <span class="faq-arrow">▼</span></div>
-      <div class="faq-a">After payment via Paystack or bank transfer, your unique license key is emailed to you within 24 hours. For Paystack payments it is usually automated within minutes.</div>
-    </div>
-
-    <div class="faq-item" onclick="toggleFaq(this)">
-      <div class="faq-q">Is this a one-time payment or subscription? <span class="faq-arrow">▼</span></div>
-      <div class="faq-a">100% one-time payment — perpetual license with no recurring fees. Researcher and Institution plans include free upgrades for 1 year and lifetime respectively.</div>
-    </div>
-
-    <div class="faq-item" onclick="toggleFaq(this)">
-      <div class="faq-q">Can I use this for my PhD thesis? <span class="faq-arrow">▼</span></div>
-      <div class="faq-a">Yes! NeuroTrack Pro is designed specifically for academic research. The Researcher plan includes a software citation you can include in your methods section.</div>
-    </div>
-
-    <div class="faq-item" onclick="toggleFaq(this)">
-      <div class="faq-q">How does NeuroTrack Pro compare to ANY-maze? <span class="faq-arrow">▼</span></div>
-      <div class="faq-a">ANY-maze costs $1,000–$5,000+ and requires hardware bundles. NeuroTrack Pro starts at $29, works with any existing camera, runs on any Windows PC, and includes a web version — making it ideal for African research institutions with limited budgets.</div>
-    </div>
-
-    <div class="faq-item" onclick="toggleFaq(this)">
-      <div class="faq-q">What if I need a refund? <span class="faq-arrow">▼</span></div>
-      <div class="faq-a">We offer a 7-day refund policy if the software does not work as described. Contact <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="93fdf6e6e1fcfef2e7e1faebf1fafce0eae0e7f6fed3f4fef2faffbdf0fcfe">[email&#160;protected]</a> with your license key and reason.</div>
-    </div>
-
-  </div>
-
-</div>
-  
-  <!-- ── NEWSLETTER ── -->
-  <section id="newsletter">
-    <div class="newsletter-inner reveal">
-      <div class="section-eyebrow" style="justify-content:center;">Stay Updated</div>
-      <h2 class="section-title" style="text-align:center;">Research <em>Newsletter</em></h2>
-      <p class="section-sub" style="margin:0 auto;text-align:center;">
-        Get updates on new platform releases, research publications and neuroscience tools from NeuroMatrix Biosystems.
-      </p>
-      <form class="newsletter-form" onsubmit="handleNewsletter(event)">
-        <input class="newsletter-input" type="email" placeholder="your@email.com" required />
-        <button type="submit" class="btn-primary">Subscribe →</button>
+  <section id="contact">
+    <div class="section-eyebrow">Get In Touch</div><h2 class="section-title">Contact <em>Us</em></h2><p class="section-sub">Reach out for collaborations, research inquiries, training partnerships, software licensing, or early access to our platforms.</p>
+    <div class="contact-grid reveal">
+      <div>
+        <div class="contact-info-item"><div class="contact-info-icon">🏛️</div><div><div class="contact-info-label">Institution</div><div class="contact-info-value">Department of Biological Science<br />Sikiru Adetona College of Education Science and Technology, Omu-Ijebu, Nigeria<br /><br />Department of Physiology<br />University of Ilorin, Nigeria</div></div></div>
+        <div class="contact-info-item"><div class="contact-info-icon">🔬</div><div><div class="contact-info-label">Research Unit</div><div class="contact-info-value">African NeuroHealth Lab / Neuroscience &amp; Inflammation Unit<br />GRASP / NIH / DSI Program</div></div></div>
+        <div class="contact-info-item"><div class="contact-info-icon">👤</div><div><div class="contact-info-label">Principal Researcher</div><div class="contact-info-value">Adebimpe John Omolola E.<br />PhD Candidate</div></div></div>
+        <div class="contact-info-item"><div class="contact-info-icon">🌐</div><div><div class="contact-info-label">Supervisors</div><div class="contact-info-value">Prof. Bamidele Owoyele<br />Prof. Owolabi Mayowa</div></div></div>
+        <div class="contact-info-item"><div class="contact-info-icon">💻</div><div><div class="contact-info-label">GitHub</div><div class="contact-info-value"><a href="https://github.com/ademide-star" target="_blank" rel="noopener">github.com/ademide-star</a></div></div></div>
+      </div>
+      <form class="contact-form" action="https://formspree.io/f/xlgpyzzq" method="POST">
+        <div class="form-row"><div class="form-group"><label class="form-label">First Name</label><input class="form-input" type="text" name="first_name" placeholder="John" required /></div><div class="form-group"><label class="form-label">Last Name</label><input class="form-input" type="text" name="last_name" placeholder="Doe" required /></div></div>
+        <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" name="email" placeholder="researcher@university.edu" required /></div>
+        <div class="form-group"><label class="form-label">Institution</label><input class="form-input" type="text" name="institution" placeholder="University / Research Lab" /></div>
+        <div class="form-group"><label class="form-label">Inquiry Type</label><select class="form-select" name="inquiry_type"><option>Research Collaboration</option><option>NeuroTrack Pro Support</option><option>African NeuroHealth AI</option><option>LMS Early Access</option><option>General Inquiry</option></select></div>
+        <div class="form-group"><label class="form-label">Message</label><textarea class="form-textarea" name="message" placeholder="Tell us about your research or inquiry..." required></textarea></div>
+        <input type="text" name="_gotcha" style="display:none" /><input type="hidden" name="_next" value="https://neuromatrixbiosystems.com/?submitted=true" /><input type="hidden" name="_subject" value="New NeuroMatrix Contact Form Submission" />
+        <button type="submit" class="btn-primary" style="width:100%;">Send Message →</button>
+        <div class="success-msg" id="contact-success">✅ Message sent! We'll respond within 48 hours.</div>
       </form>
-      <div class="success-msg" id="newsletter-success" style="margin-top:16px;">
-        ✅ Subscribed! Welcome to the NeuroMatrix community.
-      </div>
-      <p style="font-size:9px;color:var(--dim);margin-top:16px;text-align:center;">
-        No spam. Research updates only. Unsubscribe anytime.
-      </p>
     </div>
   </section>
 
-  <!-- ── FOOTER ── -->
+  <section id="newsletter">
+    <div class="newsletter-inner reveal"><div class="section-eyebrow" style="justify-content:center;">Stay Updated</div><h2 class="section-title" style="text-align:center;">Research <em>Newsletter</em></h2><p class="section-sub" style="margin:0 auto;text-align:center;">Get updates on new platform releases, research publications, and neuroscience tools from NeuroMatrix BioSystems.</p><form class="newsletter-form"><input class="newsletter-input" type="email" placeholder="your@email.com" required /><button type="submit" class="btn-primary">Subscribe →</button></form><div class="success-msg" id="newsletter-success" style="margin-top:16px;">✅ Subscribed! Welcome to the NeuroMatrix community.</div><p style="font-size:9px;color:#64748b;margin-top:16px;text-align:center;">No spam. Research updates only. Unsubscribe anytime.</p></div>
+  </section>
+
   <footer>
-    <div>
-      <div class="footer-brand-name">NEUROMATRIX Biosystems</div>
-      <div class="footer-brand-sub">Precision Neuroscience Tools</div>
-      <p class="footer-brand-desc">
-        AI-powered research platforms developed at the University of Ilorin, Nigeria —
-        supported by the GRASP/NIH/DSI Collaborative Program.
-      </p>
-    </div>
-    <div>
-      <div class="footer-col-title">Platforms</div>
-      <ul class="footer-links">
-        <li><a href="https://neurotrack-ten.vercel.app" target="_blank">NeuroTrack Pro</a></li>
-        <li><a href="https://huggingface.co/spaces/ademideola/african-neurohealth" target="_blank">African NeuroHealth AI</a></li>
-        <li><a href="#contact">NeuroMatrix LMS</a></li>
-      </ul>
-    </div>
-    <div>
-      <div class="footer-col-title">Research</div>
-      <ul class="footer-links">
-        <li><a href="#publications">Publications</a></li>
-        <li><a href="https://github.com/ademide-star" target="_blank">GitHub</a></li>
-        <li><a href="https://huggingface.co/ademideola" target="_blank">Hugging Face</a></li>
-      </ul>
-    </div>
-    <div>
-      <div class="footer-col-title">Connect</div>
-      <ul class="footer-links">
-        <li><a href="#contact">Contact</a></li>
-        <li><a href="#newsletter">Newsletter</a></li>
-        <li><a href="https://github.com/ademide-star/neurotrack" target="_blank">Open Source</a></li>
-      </ul>
-    </div>
+    <div><div class="footer-brand-name">NEUROMATRIX BioSystems</div><div class="footer-brand-sub">Precision Neuroscience Tools</div><p class="footer-brand-desc">AI-powered research platforms developed in Nigeria for neuroscience, digital health, bioinformatics, and education — supported by the GRASP / NIH / DSI collaborative ecosystem.</p></div>
+    <div><div class="footer-col-title">Platforms</div><ul class="footer-links"><li><a href="https://neurotrack-one.vercel.app/" target="_blank" rel="noopener">NeuroTrack Pro</a></li><li><a href="https://african-neurohealth-dashboard.vercel.app/" target="_blank" rel="noopener">African NeuroHealth AI</a></li><li><a href="https://multi-lecture-dashboard.vercel.app/" target="_blank" rel="noopener">NeuroMatrix LMS</a></li></ul></div>
+    <div><div class="footer-col-title">Research</div><ul class="footer-links"><li><a href="#publications">Publications</a></li><li><a href="https://github.com/ademide-star" target="_blank" rel="noopener">GitHub</a></li><li><a href="https://huggingface.co/ademideola" target="_blank" rel="noopener">Hugging Face</a></li></ul></div>
+    <div><div class="footer-col-title">Connect</div><ul class="footer-links"><li><a href="#about">About</a></li><li><a href="#contact">Contact</a></li><li><a href="#newsletter">Newsletter</a></li><li><a href="https://github.com/ademide-star/neurotrack" target="_blank" rel="noopener">Open Source</a></li></ul></div>
   </footer>
+  <div class="footer-bottom"><span class="footer-bottom-text">© 2026 NeuroMatrix BioSystems — Adebimpe John Omolola E.</span><span class="footer-bottom-text">neuromatrixbiosystems.com</span><span class="footer-bottom-text">University of Ilorin · GRASP / NIH / DSI</span></div>
 
-  <div class="footer-bottom">
-    <span class="footer-bottom-text">© 2026 NeuroMatrix Biosystems — Adebimpe John Omolola E.</span>
-    <span class="footer-bottom-text">neuromatrixbiosystems.com</span>
-    <span class="footer-bottom-text">University of Ilorin · GRASP/NIH/DSI</span>
-  </div>
+  <div class="lightbox" id="lightbox" onclick="closeLightbox(event)"><button class="lightbox-close" onclick="closeLightbox(event)">✕ Close</button><img class="lightbox-img" id="lightbox-img" src="" alt="" /><div class="lightbox-caption" id="lightbox-caption"></div></div>
 
-  <script>
-    // ── Gallery lightbox ──
-    const galleryData = {};
-
-    function openLightbox(src, caption) {
-      // Accepts either a URL string or an element ID
-      const imgSrc = (typeof src === 'string' && src.startsWith('http') || src.includes('.jpg') || src.includes('.png') || src.includes('.jpeg'))
-        ? src
-        : (document.getElementById(src) ? document.getElementById(src).src : src);
-      document.getElementById('lightbox-img').src = imgSrc;
-      document.getElementById('lightbox-caption').textContent = caption;
-      document.getElementById('lightbox').classList.add('open');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeLightbox(e) {
-      if (e && e.target !== document.getElementById('lightbox') && !e.target.classList.contains('lightbox-close')) return;
-      document.getElementById('lightbox').classList.remove('open');
-      document.body.style.overflow = '';
-    }
-
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Escape') {
-        document.getElementById('lightbox').classList.remove('open');
-        document.body.style.overflow = '';
-      }
-    });
-
-    // ── FAQ toggle ──
-    function toggleFaq(el) {
-      // Close all others first
-      document.querySelectorAll('.faq-item.open').forEach(item => {
-        if (item !== el) item.classList.remove('open');
-      });
-      el.classList.toggle('open');
-    }
-
-    // Also add event delegation as backup
-    document.addEventListener('DOMContentLoaded', function() {
-      document.querySelectorAll('.faq-item').forEach(function(item) {
-        item.addEventListener('click', function() {
-          document.querySelectorAll('.faq-item.open').forEach(function(open) {
-            if (open !== item) open.classList.remove('open');
-          });
-          item.classList.toggle('open');
-        });
-      });
-    });
-
-    // ── Scroll reveal ──
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-    }, { threshold: 0.1 });
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-    // ── Contact form ──
-    function handleContact(e) {
-      e.preventDefault();
-      const btn = e.target.querySelector('button[type="submit"]');
-      btn.textContent = 'Sending...'; btn.disabled = true;
-      setTimeout(() => {
-        document.getElementById('contact-success').style.display = 'block';
-        btn.textContent = 'Send Message →'; btn.disabled = false;
-        e.target.reset();
-      }, 1200);
-    }
-
-    // ── Newsletter ──
-    function handleNewsletter(e) {
-      e.preventDefault();
-      const btn = e.target.querySelector('button[type="submit"]');
-      btn.textContent = '...'; btn.disabled = true;
-      setTimeout(() => {
-        document.getElementById('newsletter-success').style.display = 'block';
-        btn.textContent = 'Subscribe →'; btn.disabled = false;
-        e.target.reset();
-      }, 1000);
-    }
-
-    // ── Smooth nav highlight ──
-    const sections = document.querySelectorAll('section[id]');
-    window.addEventListener('scroll', () => {
-      let current = '';
-      sections.forEach(s => { if (window.scrollY >= s.offsetTop - 100) current = s.id; });
-      document.querySelectorAll('.nav-links a').forEach(a => {
-        a.style.color = a.getAttribute('href') === '#' + current ? 'var(--gold)' : '';
-      });
-    });
-  </script>
+<script>
+const observer=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')})},{threshold:.1});document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+function openLightbox(src,caption){document.getElementById('lightbox-img').src=src;document.getElementById('lightbox-caption').textContent=caption;document.getElementById('lightbox').classList.add('open');document.body.style.overflow='hidden'}
+function closeLightbox(e){if(e&&e.target!==document.getElementById('lightbox')&&!e.target.classList.contains('lightbox-close'))return;document.getElementById('lightbox').classList.remove('open');document.body.style.overflow=''}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLightbox()});
+document.querySelectorAll('.faq-item').forEach(item=>item.addEventListener('click',()=>{document.querySelectorAll('.faq-item.open').forEach(open=>{if(open!==item)open.classList.remove('open')});item.classList.toggle('open')}));
+document.querySelector('.newsletter-form')?.addEventListener('submit',e=>{e.preventDefault();document.getElementById('newsletter-success').style.display='block';e.target.reset()});
+const params=new URLSearchParams(window.location.search);if(params.get('submitted')==='true'){const el=document.getElementById('contact-success');if(el)el.style.display='block'}
+const sections=document.querySelectorAll('section[id]');window.addEventListener('scroll',()=>{let current='';sections.forEach(s=>{if(window.scrollY>=s.offsetTop-120)current=s.id});document.querySelectorAll('.nav-links a').forEach(a=>{a.classList.toggle('active',a.getAttribute('href')==='#'+current)})});
+</script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body>
 </html>
