@@ -1,0 +1,2029 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="theme-color" content="#0D6E6E"/>
+<title>MindSpring – Brain Health App</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  :root{
+    --teal:#0D6E6E;--teal-lt:#1A9B9B;--teal-bg:#E8F5F5;
+    --amber:#F5A623;--amber-lt:#FDF3DC;
+    --red:#E05252;--green:#3DAA6E;
+    --ink:#1A2533;--slate:#5C6A7A;--mist:#EEF3F7;--white:#fff;
+  }
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+    background:#C8DADA; min-height:100vh;
+    display:flex; justify-content:center; align-items:flex-start;
+  }
+  #app{
+    width:100%; max-width:430px; min-height:100vh;
+    background:var(--mist); display:flex; flex-direction:column;
+    position:relative; overflow:hidden;
+  }
+
+  /* ── Status Bar ── */
+  #statusbar{
+    background:var(--teal); color:#fff;
+    padding:10px 20px 6px;
+    display:flex; justify-content:space-between;
+    font-size:11px; font-weight:700; flex-shrink:0;
+  }
+
+  /* ── Scrollable Body ── */
+  #content{flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; scroll-behavior:smooth;}
+  #content::-webkit-scrollbar{display:none;}
+
+  /* ── Bottom Nav ── */
+  #bottomnav{
+    background:var(--white); border-top:1px solid var(--mist);
+    display:flex; padding:8px 0 env(safe-area-inset-bottom,14px); flex-shrink:0;
+  }
+  .nav-btn{
+    flex:1; background:none; border:none; cursor:pointer;
+    display:flex; flex-direction:column; align-items:center; gap:2px;
+    padding:4px 0; color:var(--slate);
+  }
+  .nav-btn.active{color:var(--teal);}
+  .nav-btn .nav-icon{font-size:20px;}
+  .nav-btn .nav-label{font-size:10px; font-weight:400;}
+  .nav-btn.active .nav-label{font-weight:700;}
+  .nav-dot{width:4px;height:4px;border-radius:2px;background:var(--teal);margin:0 auto;}
+
+  /* ── Shared Components ── */
+  .card{
+    background:var(--white); border-radius:16px;
+    box-shadow:0 2px 12px rgba(0,0,0,.08); padding:18px;
+  }
+  .btn{
+    display:inline-block; border:2px solid var(--teal);
+    background:var(--teal); color:#fff; border-radius:30px;
+    padding:11px 22px; font-weight:700; font-size:14px;
+    cursor:pointer; text-align:center; transition:opacity .15s;
+    font-family:inherit;
+  }
+  .btn:active{opacity:.8;}
+  .btn.outline{background:transparent;color:var(--teal);}
+  .btn.full{display:block; width:100%;}
+  .btn.amber{background:var(--amber);border-color:var(--amber);}
+  .pill{
+    display:inline-block; border-radius:20px;
+    padding:2px 10px; font-weight:700; font-size:11px; letter-spacing:.5px;
+    background:rgba(13,110,110,.12); color:var(--teal);
+  }
+  .progress-bar{background:var(--mist);border-radius:8px;height:8px;overflow:hidden;margin-top:8px;}
+  .progress-fill{height:100%;border-radius:8px;transition:width .4s;background:var(--teal);}
+  .section-title{font-size:22px;font-weight:800;color:var(--ink);margin-bottom:4px;}
+  .section-sub{font-size:13px;color:var(--slate);margin-bottom:18px;}
+  .back-bar{
+    background:var(--white); padding:10px 16px;
+    border-bottom:1px solid var(--mist);
+  }
+  .back-btn{
+    background:none; border:none; color:var(--teal);
+    font-weight:700; font-size:14px; cursor:pointer; padding:0; font-family:inherit;
+  }
+
+  /* ─── HOME ─── */
+  .home-hero{
+    background:linear-gradient(135deg, var(--teal), var(--teal-lt));
+    border-radius:0 0 28px 28px; padding:28px 20px 36px;
+    color:#fff; margin-bottom:-16px;
+  }
+  .home-eyebrow{font-size:10px;font-weight:700;letter-spacing:2px;opacity:.8;margin-bottom:4px;}
+  .home-title{font-size:28px;font-weight:800;line-height:1.2;}
+  .home-tagline{font-size:13px;opacity:.85;margin-top:4px;}
+  .home-stats{display:flex;gap:12px;margin-top:16px;}
+  .home-stat{
+    background:rgba(255,255,255,.2); border-radius:12px;
+    padding:10px 16px; flex:1; text-align:center;
+  }
+  .home-stat-val{font-size:22px;font-weight:800;}
+  .home-stat-lbl{font-size:11px;opacity:.8;}
+  .home-body{padding:28px 16px 0;}
+  .tip-card{background:var(--amber-lt);border:1px solid rgba(245,166,35,.3);margin-bottom:14px;}
+  .tip-label{font-size:11px;font-weight:700;color:var(--amber);letter-spacing:1px;margin-bottom:6px;}
+  .fact-card{background:var(--teal-bg);border:1px solid rgba(13,110,110,.2);margin-bottom:20px;}
+  .fact-label{font-size:11px;font-weight:700;color:var(--teal);letter-spacing:1px;margin-bottom:6px;}
+  .quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .quick-card{text-align:center;padding:18px 12px;cursor:pointer;}
+  .quick-icon{font-size:28px;}
+  .quick-name{font-size:13px;font-weight:700;color:var(--ink);margin-top:6px;}
+
+  /* ─── GAMES ─── */
+  .games-body{padding:16px;}
+  .game-list{display:flex;flex-direction:column;gap:12px;}
+  .game-card{display:flex;align-items:center;gap:14px;cursor:pointer;}
+  .game-icon{font-size:36px;flex-shrink:0;}
+  .game-info{flex:1;}
+  .game-name{font-weight:700;color:var(--ink);margin-bottom:2px;}
+  .game-desc{font-size:12px;color:var(--slate);margin-bottom:6px;}
+  .game-arrow{font-size:18px;color:var(--teal);}
+  .badges-card{background:var(--amber-lt);margin-bottom:16px;}
+
+  /* ─── GAMES SHARED ─── */
+  .game-screen{padding:16px;}
+  .game-title{font-size:20px;font-weight:800;color:var(--ink);margin-bottom:4px;}
+  .game-sub{font-size:13px;color:var(--slate);margin-bottom:16px;}
+  .emoji-grid{display:grid;gap:10px;}
+  .emoji-cell{
+    background:var(--mist); border-radius:12px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:28px; cursor:pointer; transition:all .15s; border:2px solid transparent;
+    user-select:none;
+  }
+  .emoji-cell.selected{background:var(--teal);border-color:var(--teal);}
+  .emoji-cell.matched{background:var(--green);}
+  .emoji-cell.wrong{background:var(--red);}
+  .emoji-cell.hidden{font-size:20px;color:var(--slate);background:var(--mist);}
+  .result-center{text-align:center;padding-top:20px;}
+  .result-emoji{font-size:56px;}
+  .result-title{font-size:24px;font-weight:800;color:var(--ink);margin:12px 0 4px;}
+  .result-sub{font-size:13px;color:var(--slate);margin-bottom:4px;}
+  .result-msg{font-size:13px;font-weight:700;margin-bottom:20px;}
+  .result-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+  .number-display{
+    font-size:44px;font-weight:800;color:var(--teal);
+    letter-spacing:16px;text-align:center;padding:30px 0;
+  }
+  .number-input{
+    width:100%;font-size:24px;font-weight:700;text-align:center;
+    border:2px solid var(--teal);border-radius:12px;padding:12px;
+    font-family:inherit; outline:none;
+  }
+
+  /* ─── EDUCATION ─── */
+  .edu-body{padding:16px;}
+  .edu-card{cursor:pointer;margin-bottom:10px;}
+  .edu-header{display:flex;align-items:center;gap:12px;}
+  .edu-icon{font-size:28px;}
+  .edu-name{flex:1;font-weight:700;color:var(--ink);}
+  .edu-arrow{color:var(--teal);font-size:18px;}
+  .edu-content{
+    font-size:13px;color:var(--slate);margin-top:12px;line-height:1.7;
+    border-top:1px solid var(--mist);padding-top:12px; display:none;
+  }
+  .edu-card.open .edu-content{display:block;}
+  .edu-card.open .edu-arrow::after{content:"▲";}
+  .edu-card:not(.open) .edu-arrow::after{content:"▼";}
+
+  /* ─── ASSESSMENT ─── */
+  .assess-body{padding:16px;}
+  .q-card{margin-bottom:12px;}
+  .q-text{font-weight:700;color:var(--ink);margin-bottom:10px;font-size:14px;}
+  .q-options{display:flex;flex-direction:column;gap:6px;}
+  .q-opt{
+    padding:9px 14px;border-radius:10px;cursor:pointer;font-size:13px;
+    background:var(--mist);color:var(--ink);border:none;text-align:left;
+    font-family:inherit;transition:all .15s;
+  }
+  .q-opt.selected{background:var(--teal);color:#fff;font-weight:700;}
+  .score-circle{
+    font-size:64px;font-weight:800;text-align:center;
+    padding:20px 0 4px;
+  }
+  .score-cat{font-size:18px;font-weight:700;text-align:center;margin-bottom:8px;}
+  .score-tip{font-size:13px;color:var(--slate);text-align:center;margin-bottom:16px;}
+  .rec-card{display:flex;gap:10px;align-items:flex-start;margin-bottom:8px;}
+
+  /* ─── CAREGIVER ─── */
+  .care-body{padding:16px;}
+  .care-tip{display:flex;gap:12px;align-items:flex-start;margin-bottom:12px;}
+  .care-tip-icon{font-size:24px;}
+  .care-tip-title{font-weight:700;color:var(--ink);margin-bottom:4px;}
+  .care-tip-text{font-size:13px;color:var(--slate);line-height:1.6;}
+  .stress-item{display:flex;gap:12px;align-items:center;margin-bottom:10px;cursor:pointer;}
+  .checkbox{
+    width:20px;height:20px;border-radius:6px;border:2px solid var(--slate);
+    flex-shrink:0;display:flex;align-items:center;justify-content:center;
+    font-size:12px;color:#fff;transition:all .15s;
+  }
+  .checkbox.checked{background:var(--red);border-color:var(--red);}
+  .stress-feedback{
+    margin-top:12px;padding:10px 14px;border-radius:10px;
+    font-size:13px;font-weight:600;display:none;
+  }
+
+  /* ─── ACCESSIBILITY MODES ─── */
+  #app.large-text{font-size:1.18em;}
+  #app.large-text .home-title{font-size:31px;}
+  #app.large-text .nav-label{font-size:11.5px;}
+  #app.high-contrast{--teal:#004747;--teal-lt:#006666;--teal-bg:#DFF0F0;
+    --amber:#B36A00;--amber-lt:#FCE9C7;--red:#B00000;--green:#0E6B36;
+    --ink:#000;--slate:#2A2A2A;--mist:#FFFFFF;}
+  #app.high-contrast .card{border:1.5px solid #000;box-shadow:none;}
+  #app.high-contrast body,#app.high-contrast{background:#fff;}
+
+  /* ─── RED FLAG BANNER ─── */
+  .redflag-card{background:#FDEAEA;border:1.5px solid var(--red);margin-bottom:16px;}
+  .redflag-title{font-size:14px;font-weight:800;color:var(--red);margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+  .redflag-list{font-size:13px;color:var(--ink);line-height:1.8;padding-left:18px;margin:0;}
+
+  /* ─── MORE MENU ─── */
+  .more-body{padding:16px;}
+  .more-item{display:flex;align-items:center;gap:14px;cursor:pointer;margin-bottom:10px;}
+  .more-icon{font-size:26px;flex-shrink:0;width:34px;text-align:center;}
+  .more-info{flex:1;}
+  .more-name{font-weight:700;color:var(--ink);}
+  .more-desc{font-size:12px;color:var(--slate);margin-top:1px;}
+  .more-arrow{color:var(--teal);font-size:18px;}
+
+  /* ─── FAMILY MODE PILL ─── */
+  .family-pill{
+    display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.22);
+    border-radius:20px;padding:5px 12px;font-size:11.5px;font-weight:700;
+    color:#fff;margin-top:12px;cursor:pointer;
+  }
+
+  /* ─── SETTINGS ─── */
+  .settings-body{padding:16px;}
+  .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--mist);}
+  .toggle-row:last-child{border-bottom:none;}
+  .toggle-label{font-weight:700;color:var(--ink);font-size:14px;}
+  .toggle-desc{font-size:12px;color:var(--slate);margin-top:2px;}
+  .switch{width:46px;height:26px;border-radius:14px;background:var(--mist);position:relative;cursor:pointer;flex-shrink:0;border:2px solid var(--slate);transition:all .15s;}
+  .switch.on{background:var(--teal);border-color:var(--teal);}
+  .switch::after{content:"";position:absolute;width:18px;height:18px;border-radius:50%;background:#fff;top:2px;left:2px;transition:all .15s;}
+  .switch.on::after{left:22px;}
+  .family-opt{padding:12px 14px;border-radius:10px;background:var(--mist);margin-bottom:8px;cursor:pointer;font-size:14px;font-weight:600;color:var(--ink);}
+  .family-opt.selected{background:var(--teal);color:#fff;}
+
+  /* ─── COMMUNITY CHALLENGES ─── */
+  .community-body{padding:16px;}
+  .challenge-card{margin-bottom:14px;}
+  .challenge-title{font-weight:700;color:var(--ink);font-size:14px;margin-bottom:2px;}
+  .challenge-desc{font-size:12px;color:var(--slate);margin-bottom:8px;}
+  .challenge-meta{display:flex;justify-content:space-between;font-size:11px;color:var(--slate);margin-top:6px;}
+  .challenge-done{color:var(--green);font-weight:700;font-size:12px;margin-top:8px;}
+
+  /* ─── JOURNEY ─── */
+  .journey-body{padding:16px;}
+  .journey-chart{display:flex;align-items:flex-end;gap:8px;height:120px;margin:14px 0 6px;}
+  .journey-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;}
+  .journey-bar{width:100%;max-width:26px;border-radius:6px 6px 0 0;background:var(--teal);transition:height .3s;}
+  .journey-bar-lbl{font-size:9px;color:var(--slate);margin-top:4px;}
+  .journey-stat-row{display:flex;gap:10px;margin-bottom:14px;}
+  .journey-stat{flex:1;text-align:center;}
+  .journey-stat-val{font-size:20px;font-weight:800;color:var(--teal);}
+  .journey-stat-lbl{font-size:10px;color:var(--slate);}
+
+  /* ─── COMPANION (AI CHAT) ─── */
+  .companion-wrap{display:flex;flex-direction:column;height:100%;}
+  .companion-msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;}
+  .msg{max-width:82%;padding:10px 14px;border-radius:16px;font-size:13.5px;line-height:1.5;}
+  .msg.bot{background:var(--white);color:var(--ink);align-self:flex-start;box-shadow:0 2px 8px rgba(0,0,0,.06);border-bottom-left-radius:4px;}
+  .msg.user{background:var(--teal);color:#fff;align-self:flex-end;border-bottom-right-radius:4px;}
+  .msg.typing{color:var(--slate);font-style:italic;}
+  .companion-input-bar{display:flex;gap:8px;padding:10px 14px;background:var(--white);border-top:1px solid var(--mist);flex-shrink:0;}
+  .companion-input{flex:1;border:1.5px solid var(--mist);border-radius:22px;padding:10px 16px;font-size:14px;font-family:inherit;outline:none;}
+  .companion-input:focus{border-color:var(--teal);}
+  .companion-send{width:42px;height:42px;border-radius:50%;background:var(--teal);color:#fff;border:none;font-size:16px;flex-shrink:0;cursor:pointer;}
+  .companion-disclaimer{font-size:10.5px;color:var(--slate);text-align:center;padding:6px 16px 2px;background:var(--white);}
+  .companion-suggest{display:flex;flex-wrap:wrap;gap:6px;padding:0 16px 12px;}
+  .companion-chip{background:var(--teal-bg);color:var(--teal);border:none;border-radius:14px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;}
+
+  /* ─── QUIZ ─── */
+  .quiz-body{padding:16px;}
+  .quiz-q-card{margin-bottom:14px;}
+  .quiz-q-text{font-weight:700;color:var(--ink);font-size:14px;margin-bottom:10px;}
+  .quiz-opt{padding:11px 14px;border-radius:10px;background:var(--mist);margin-bottom:8px;font-size:13.5px;font-weight:600;color:var(--ink);cursor:pointer;border:1.5px solid transparent;}
+  .quiz-opt.selected{border-color:var(--teal);background:var(--teal-bg);}
+  .quiz-opt.correct{border-color:var(--green);background:#E4F5EA;}
+  .quiz-opt.incorrect{border-color:var(--red);background:#FDEAEA;}
+  .quiz-result-score{font-size:40px;font-weight:800;color:var(--teal);text-align:center;margin:10px 0 4px;}
+
+  /* ─── SATISFACTION STARS ─── */
+  .sat-row{margin-bottom:16px;}
+  .sat-label{font-size:13.5px;font-weight:700;color:var(--ink);margin-bottom:6px;}
+  .sat-stars{display:flex;gap:6px;}
+  .sat-star{font-size:26px;cursor:pointer;color:#D8DFDF;}
+  .sat-star.on{color:var(--amber);}
+
+  /* ─── RESEARCH DASHBOARD ─── */
+  .research-body{padding:16px;}
+  .research-id{font-family:monospace;font-size:11px;background:var(--mist);color:var(--slate);padding:4px 10px;border-radius:6px;display:inline-block;margin-bottom:14px;}
+  .research-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+  .research-stat{text-align:center;}
+  .research-stat-val{font-size:22px;font-weight:800;color:var(--teal);}
+  .research-stat-lbl{font-size:10.5px;color:var(--slate);margin-top:2px;}
+  .research-topic-row{display:flex;justify-content:space-between;font-size:12.5px;color:var(--ink);padding:7px 0;border-bottom:1px solid var(--mist);}
+  .research-topic-row:last-child{border-bottom:none;}
+
+  /* ─── ONBOARDING DISCLAIMER MODAL ─── */
+  .disclaimer-modal{
+    position:absolute; inset:0; z-index:500; display:flex; align-items:center; justify-content:center;
+    background:rgba(10,30,30,.55); padding:24px;
+  }
+  .disclaimer-card{
+    background:#fff; border-radius:18px; padding:26px 22px; max-width:340px; width:100%;
+    box-shadow:0 20px 50px rgba(0,0,0,.25);
+  }
+
+  /* ─── BRAIN HEALTH PASSPORT ─── */
+  .passport-body{padding:16px;}
+  .passport-card{margin-bottom:14px;}
+  .passport-head{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+  .passport-icon{font-size:24px;width:32px;text-align:center;}
+  .passport-title{flex:1;font-weight:700;color:var(--ink);font-size:14px;}
+  .passport-latest{font-size:15px;font-weight:800;color:var(--teal);}
+  .passport-unit{font-size:10.5px;color:var(--slate);}
+  .passport-chart{display:flex;align-items:flex-end;gap:5px;height:54px;margin:10px 0 4px;}
+  .passport-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;}
+  .passport-bar{width:100%;max-width:18px;border-radius:4px 4px 0 0;background:var(--teal-lt,var(--teal));}
+  .passport-empty{font-size:12px;color:var(--slate);padding:10px 0;text-align:center;}
+  .passport-log-row{display:flex;gap:8px;margin-top:10px;}
+  .passport-log-input{flex:1;border:1.5px solid var(--mist);border-radius:8px;padding:8px 10px;font-size:13px;font-family:inherit;box-sizing:border-box;width:0;}
+  .passport-log-btn{background:var(--teal);color:#fff;border:none;border-radius:8px;padding:8px 14px;font-size:12.5px;font-weight:700;cursor:pointer;flex-shrink:0;}
+  .passport-toggle{font-size:11.5px;color:var(--teal);font-weight:700;cursor:pointer;text-align:right;}
+
+  /* ─── ADMIN PORTAL ─── */
+  .admin-body{padding:16px;}
+  .admin-pin-input{
+    width:100%; border:1.5px solid var(--mist); border-radius:10px; padding:12px 14px;
+    font-size:20px; letter-spacing:6px; text-align:center; font-family:inherit; box-sizing:border-box;
+  }
+  .admin-toggle-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;}
+  .phase-pill{
+    display:inline-flex; border-radius:20px; background:var(--mist); padding:3px; gap:2px;
+  }
+  .phase-btn{
+    border:none; background:transparent; padding:8px 18px; border-radius:18px; font-size:12.5px;
+    font-weight:700; color:var(--slate); cursor:pointer; font-family:inherit;
+  }
+  .phase-btn.active{background:var(--teal); color:#fff;}
+  .log-table{width:100%; border-collapse:collapse; font-size:11.5px;}
+  .log-table th{background:var(--teal-dark, var(--teal)); color:#fff; padding:7px 6px; text-align:left; font-size:10.5px;}
+  .log-table td{padding:6px; border-bottom:1px solid var(--mist); color:var(--ink);}
+  .log-table tr:nth-child(even) td{background:#F4F8F7;}
+  .admin-stat-row{display:flex;gap:10px;margin-bottom:14px;}
+  .admin-stat{flex:1;text-align:center;background:var(--mist);border-radius:10px;padding:10px 4px;}
+  .admin-stat-val{font-size:17px;font-weight:800;color:var(--teal);}
+  .admin-stat-lbl{font-size:9px;color:var(--slate);}
+  .capture-prompt{
+    margin-top:14px; padding:14px; border-radius:12px; background:var(--teal-bg);
+    border:1.5px solid var(--teal);
+  }
+  .capture-input{
+    width:100%; border:1.5px solid var(--mist); border-radius:8px; padding:10px 12px;
+    font-size:14px; font-family:inherit; box-sizing:border-box; margin:8px 0;
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <!-- Status Bar -->
+  <div id="statusbar">
+    <span id="clock">9:41</span>
+    <span>●●● 📶 🔋</span>
+  </div>
+
+  <!-- Back bar (hidden by default) -->
+  <div id="backbar" class="back-bar" style="display:none;">
+    <button class="back-btn" id="backbarBtn" onclick="goBack()">← Back to Games</button>
+  </div>
+
+  <!-- Content -->
+  <div id="content"></div>
+
+  <!-- Disclaimer modal (shown once per session) -->
+  <div id="disclaimerModal" class="disclaimer-modal">
+    <div class="disclaimer-card">
+      <div style="font-size:34px;text-align:center;margin-bottom:6px;">⚕️</div>
+      <div style="font-weight:800;font-size:16px;color:var(--ink);text-align:center;margin-bottom:10px;">Before you begin</div>
+      <div style="font-size:13.5px;color:var(--slate);line-height:1.7;text-align:center;margin-bottom:18px;">MindSpring is an educational and cognitive engagement tool. It does not diagnose dementia or replace professional medical assessment. Users with concerning symptoms are advised to seek evaluation from a qualified healthcare professional.</div>
+      <button class="btn full" onclick="ackDisclaimer()">I Understand</button>
+    </div>
+  </div>
+
+  <!-- Admin PIN modal -->
+  <div id="adminPinModal" class="disclaimer-modal" style="display:none;">
+    <div class="disclaimer-card">
+      <div style="font-size:34px;text-align:center;margin-bottom:6px;">🔐</div>
+      <div style="font-weight:800;font-size:16px;color:var(--ink);text-align:center;margin-bottom:14px;">Admin Access</div>
+      <input type="password" inputmode="numeric" id="adminPinInput" class="admin-pin-input" placeholder="••••" maxlength="8" />
+      <div id="adminPinError" style="color:var(--red);font-size:12px;text-align:center;margin-top:8px;display:none;">Incorrect PIN</div>
+      <div style="display:flex;gap:8px;margin-top:16px;">
+        <button class="btn outline" style="flex:1;" onclick="closeAdminPin()">Cancel</button>
+        <button class="btn" style="flex:1;" onclick="submitAdminPin()">Unlock</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Nav -->
+  <div id="bottomnav">
+    <button class="nav-btn active" id="nav-home" onclick="navigate('home')">
+      <span class="nav-icon">🏠</span>
+      <span class="nav-label">Home</span>
+      <div class="nav-dot"></div>
+    </button>
+    <button class="nav-btn" id="nav-games" onclick="navigate('games')">
+      <span class="nav-icon">🎮</span>
+      <span class="nav-label">Games</span>
+    </button>
+    <button class="nav-btn" id="nav-education" onclick="navigate('education')">
+      <span class="nav-icon">📚</span>
+      <span class="nav-label">Learn</span>
+    </button>
+    <button class="nav-btn" id="nav-assessment" onclick="navigate('assessment')">
+      <span class="nav-icon">🧪</span>
+      <span class="nav-label">Score</span>
+    </button>
+    <button class="nav-btn" id="nav-caregiver" onclick="navigate('caregiver')">
+      <span class="nav-icon">🤝</span>
+      <span class="nav-label">Care</span>
+    </button>
+    <button class="nav-btn" id="nav-more" onclick="navigate('more')">
+      <span class="nav-icon">☰</span>
+      <span class="nav-label">More</span>
+    </button>
+  </div>
+</div>
+
+<script>
+// ── State ─────────────────────────────────────────────────────────
+let state = {
+  screen: 'home',
+  prevScreen: 'home',
+  game: null,
+  brainScore: null,
+  badges: [],
+  familyMode: 'myself',        // myself | parent | spouse | patient
+  largeText: false,
+  highContrast: false,
+  voiceOn: false,
+  scoreHistory: [],            // {score, date}
+  gamesCompleted: 0,
+  challengeProgress: { walk:0, hydration:0, gamesweek:0 },
+  topicViews: {},              // {topicTitle: count}
+  quizHistory: [],             // {score, date} out of 5
+  satisfaction: null,          // {appearance, navigation, content, games, overall, comment}
+  sessionId: 'MS-' + Math.random().toString(36).slice(2,8).toUpperCase(),
+  sessionStart: Date.now(),
+  disclaimerAcked: false,
+  passport: { bp:[], glucose:[], sleep:[], activity:[], water:[], weight:[] },
+
+  // ── Admin / live-event data capture ──────────────────────────
+  sessionCaptureMode: false,
+  capturePhase: 'pre',           // 'pre' | 'post'
+  participantLog: [],            // {code, phase, score, maxScore, ts, deviceSessionId, synced}
+  adminPin: '1234',
+  supabaseUrl: 'https://xxyncvigdhegrqekyfee.supabase.co',
+  supabaseKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh4eW5jdmlnZGhlZ3JxZWt5ZmVlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYwMTU2OTIsImV4cCI6MjEwMTU5MTY5Mn0.x1BgyfSUa5ZsTnp0uZcXHKvnu51UJlep853xi4lo8Xg',
+  supabaseTable: 'mindspring_quiz_results',
+};
+
+// ── LOCAL PERSISTENCE (admin data only — survives page reloads) ──
+function loadAdminLocal(){
+  try{
+    const raw = localStorage.getItem('mindspring_admin_v1');
+    if(!raw) return;
+    const saved = JSON.parse(raw);
+    if(saved.participantLog) state.participantLog = saved.participantLog;
+    if(saved.adminPin) state.adminPin = saved.adminPin;
+    if(saved.supabaseUrl) state.supabaseUrl = saved.supabaseUrl;
+    if(saved.supabaseKey) state.supabaseKey = saved.supabaseKey;
+    if(saved.supabaseTable) state.supabaseTable = saved.supabaseTable;
+    if(typeof saved.sessionCaptureMode === 'boolean') state.sessionCaptureMode = saved.sessionCaptureMode;
+    if(saved.capturePhase) state.capturePhase = saved.capturePhase;
+  }catch(e){ /* localStorage unavailable — fail silently, stay in-memory only */ }
+}
+function saveAdminLocal(){
+  try{
+    localStorage.setItem('mindspring_admin_v1', JSON.stringify({
+      participantLog: state.participantLog,
+      adminPin: state.adminPin,
+      supabaseUrl: state.supabaseUrl,
+      supabaseKey: state.supabaseKey,
+      supabaseTable: state.supabaseTable,
+      sessionCaptureMode: state.sessionCaptureMode,
+      capturePhase: state.capturePhase,
+    }));
+  }catch(e){ /* storage full or blocked — data still works in-memory this session */ }
+}
+
+const FAMILY_LABELS = {
+  myself:'Myself', parent:'My Parent', spouse:'My Spouse', patient:'My Patient'
+};
+
+function applyAccessibility(){
+  const app = document.getElementById('app');
+  app.classList.toggle('large-text', state.largeText);
+  app.classList.toggle('high-contrast', state.highContrast);
+}
+
+function speak(text){
+  if(!state.voiceOn || !('speechSynthesis' in window)) return;
+  try{
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.rate = 0.95;
+    window.speechSynthesis.speak(u);
+  }catch(e){}
+}
+
+const TIPS = [
+  "Walk for 30 minutes today 🚶",
+  "Read a book for 15 minutes 📖",
+  "Learn one new word today 🔤",
+  "Call a friend or family member 📞",
+  "Eat fruits and vegetables 🥦",
+  "Drink 8 glasses of water 💧",
+  "Get 7–9 hours of sleep tonight 😴",
+];
+const FACTS = [
+  "Dementia is NOT a normal part of ageing.",
+  "Physical activity may reduce dementia risk by up to 30%.",
+  "Early diagnosis can significantly improve quality of life.",
+  "Social engagement is a powerful brain protector.",
+  "High blood pressure is a leading modifiable risk factor for dementia.",
+];
+
+// ── Clock ─────────────────────────────────────────────────────────
+function updateClock(){
+  const now = new Date();
+  document.getElementById('clock').textContent =
+    now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
+}
+updateClock(); setInterval(updateClock, 10000);
+
+// ── Navigation ────────────────────────────────────────────────────
+function navigate(screen){
+  state.screen = screen; state.game = null;
+  document.getElementById('backbar').style.display = 'none';
+  highlightNav(screen);
+  render();
+  document.getElementById('content').scrollTop = 0;
+}
+
+function highlightNav(screen){
+  document.querySelectorAll('.nav-btn').forEach(b => {
+    b.classList.remove('active');
+    const dot = b.querySelector('.nav-dot');
+    if(dot) dot.remove();
+  });
+  const active = document.getElementById('nav-' + screen);
+  if(active){
+    active.classList.add('active');
+    if(!active.querySelector('.nav-dot')){
+      const dot = document.createElement('div');
+      dot.className = 'nav-dot';
+      active.appendChild(dot);
+    }
+  }
+}
+
+function openSub(screen, label){
+  state.prevScreen = ['home','games','education','assessment','caregiver','more'].includes(state.screen) ? state.screen : (state.prevScreen || 'more');
+  state.screen = screen; state.game = null;
+  document.getElementById('backbarBtn').textContent = '← ' + (label || 'Back');
+  document.getElementById('backbar').style.display = 'block';
+  highlightNav('more');
+  render();
+  document.getElementById('content').scrollTop = 0;
+}
+
+function startGame(id){
+  state.game = id;
+  document.getElementById('backbarBtn').textContent = '← Back to Games';
+  document.getElementById('backbar').style.display = 'block';
+  render();
+  document.getElementById('content').scrollTop = 0;
+}
+
+function goBack(){
+  if(state.game){
+    state.game = null;
+    document.getElementById('backbar').style.display = 'none';
+    render();
+    return;
+  }
+  navigate(state.prevScreen || 'more');
+}
+
+function addBadge(b){
+  if(!state.badges.includes(b)){
+    state.badges.push(b);
+    state.gamesCompleted++;
+    state.challengeProgress.gamesweek = Math.min(5, state.challengeProgress.gamesweek + 1);
+  }
+}
+
+// ── Render ────────────────────────────────────────────────────────
+function render(){
+  const el = document.getElementById('content');
+  if(state.game) return renderGame(el);
+  switch(state.screen){
+    case 'home':       return renderHome(el);
+    case 'games':      return renderGames(el);
+    case 'education':  return renderEducation(el);
+    case 'assessment': return renderAssessment(el);
+    case 'caregiver':  return renderCaregiver(el);
+    case 'more':       return renderMore(el);
+    case 'companion':  return renderCompanion(el);
+    case 'settings':   return renderSettings(el);
+    case 'community':  return renderCommunity(el);
+    case 'journey':    return renderJourney(el);
+    case 'quiz':       return renderQuiz(el);
+    case 'satisfaction': return renderSatisfaction(el);
+    case 'research':   return renderResearch(el);
+    case 'passport':   return renderPassport(el);
+    case 'admin':      return renderAdmin(el);
+  }
+}
+
+// ── HOME ──────────────────────────────────────────────────────────
+function renderHome(el){
+  const tip  = TIPS[new Date().getDay() % TIPS.length];
+  const fact = FACTS[new Date().getDay() % FACTS.length];
+  const scoreLabel = state.brainScore !== null ? state.brainScore : '—';
+  el.innerHTML = `
+    <div class="home-hero">
+      <div class="home-eyebrow">BRAIN HEALTH ACADEMY AFRICA</div>
+      <div class="home-title">MindSpring 🧠</div>
+      <div class="home-tagline">Brain Health • Memory Training • Dementia Awareness</div>
+      <div class="family-pill" onclick="openSub('settings','More')">👤 Using for: ${FAMILY_LABELS[state.familyMode]} ✎</div>
+      <div class="home-stats">
+        <div class="home-stat">
+          <div class="home-stat-val">${scoreLabel}</div>
+          <div class="home-stat-lbl">Brain Health Score</div>
+        </div>
+        <div class="home-stat">
+          <div class="home-stat-val">${state.badges.length}</div>
+          <div class="home-stat-lbl">Badges Earned</div>
+        </div>
+      </div>
+    </div>
+    <div class="home-body">
+      <div class="card tip-card">
+        <div class="tip-label">DAILY TIP</div>
+        <div style="font-size:15px;color:var(--ink);font-weight:600;">${tip}</div>
+      </div>
+      <div class="card fact-card">
+        <div class="fact-label">FACT OF THE DAY</div>
+        <div style="font-size:14px;color:var(--ink);">💡 ${fact}</div>
+      </div>
+      <div class="card" style="background:var(--ink);color:#fff;margin-bottom:20px;display:flex;align-items:center;gap:14px;cursor:pointer;" onclick="openSub('companion','More')">
+        <div style="font-size:32px;">🤖</div>
+        <div style="flex:1;">
+          <div style="font-weight:800;font-size:15px;">Ask the Brain Companion</div>
+          <div style="font-size:12px;opacity:.8;">Get answers about memory & brain health</div>
+        </div>
+        <div style="font-size:18px;">▶</div>
+      </div>
+      <div style="font-size:13px;font-weight:700;color:var(--slate);margin-bottom:10px;">QUICK ACCESS</div>
+      <div class="quick-grid">
+        ${[['🎮','Play Games','games'],['📚','Learn','education'],
+           ['🧪','Health Score','assessment'],['🤝','Caregiver','caregiver']]
+          .map(([icon,label,screen]) => `
+            <div class="card quick-card" onclick="navigate('${screen}')">
+              <div class="quick-icon">${icon}</div>
+              <div class="quick-name">${label}</div>
+            </div>`).join('')}
+      </div>
+      <div style="height:24px;"></div>
+    </div>`;
+}
+
+// ── GAMES HUB ─────────────────────────────────────────────────────
+function renderGames(el){
+  const games = [
+    {id:'recall',  icon:'🖼️', name:'Picture Recall',     desc:'Remember images shown briefly',   tag:'Memory'},
+    {id:'pairs',   icon:'🃏', name:'Match the Pairs',    desc:'Find matching hidden cards',       tag:'Concentration'},
+    {id:'numbers', icon:'🔢', name:'Number Memory',      desc:'Repeat a number sequence',         tag:'Working Memory'},
+    {id:'spotdiff',icon:'🔍', name:'Spot the Difference',desc:'Find what changed between scenes', tag:'Visual Attention'},
+  ];
+  const badgesHtml = state.badges.length
+    ? `<div class="card badges-card" style="margin-bottom:16px;">
+        <div style="font-size:12px;font-weight:700;color:var(--amber);">YOUR BADGES 🏆</div>
+        <div style="font-size:14px;margin-top:4px;">${state.badges.join('  ')}</div>
+       </div>` : '';
+  el.innerHTML = `
+    <div class="games-body">
+      <div class="section-title">Brain Games</div>
+      <div class="section-sub">Play daily to keep your mind sharp</div>
+      ${badgesHtml}
+      <div class="game-list">
+        ${games.map(g => `
+          <div class="card game-card" onclick="startGame('${g.id}')">
+            <div class="game-icon">${g.icon}</div>
+            <div class="game-info">
+              <div class="game-name">${g.name}</div>
+              <div class="game-desc">${g.desc}</div>
+              <span class="pill">${g.tag}</span>
+            </div>
+            <div class="game-arrow">▶</div>
+          </div>`).join('')}
+      </div>
+    </div>`;
+}
+
+// ── GAME ROUTER ───────────────────────────────────────────────────
+function renderGame(el){
+  switch(state.game){
+    case 'recall':   return gameRecall(el);
+    case 'pairs':    return gamePairs(el);
+    case 'numbers':  return gameNumbers(el);
+    case 'spotdiff': return gameSpotDiff(el);
+  }
+}
+
+// ── GAME: PICTURE RECALL ──────────────────────────────────────────
+function gameRecall(el){
+  const ALL = ['🍎','🍌','🐘','🐕','🚗','🌺','🎸','🏡','📚','🦋','🍕','⚽','🌍','🎯','🎵'];
+  const shown = ALL.sort(()=>Math.random()-.5).slice(0,6);
+  let timeLeft = 5, phase = 'study', selected = [], timerRef;
+
+  function draw(){
+    if(phase === 'study'){
+      el.innerHTML = `
+        <div class="game-screen">
+          <div class="game-title">🖼️ Picture Recall</div>
+          <div class="game-sub">Memorise these images — <strong>${timeLeft}s</strong> remaining</div>
+          <div class="progress-bar"><div class="progress-fill" style="width:${((5-timeLeft)/5)*100}%;background:var(--amber);"></div></div>
+          <div class="emoji-grid" style="grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px;">
+            ${shown.map(i=>`<div class="card" style="text-align:center;font-size:40px;padding:16px;">${i}</div>`).join('')}
+          </div>
+        </div>`;
+    } else if(phase === 'recall'){
+      const options = [...shown, ...ALL.filter(i=>!shown.includes(i)).slice(0,6)].sort(()=>Math.random()-.5);
+      el.innerHTML = `
+        <div class="game-screen">
+          <div class="game-title">🖼️ Picture Recall</div>
+          <div class="game-sub">Tap the images you saw (${selected.length} selected)</div>
+          <div class="emoji-grid" style="grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px;">
+            ${options.map((img,i)=>`
+              <div class="emoji-cell${selected.includes(img)?' selected':''}"
+                   style="height:60px;" onclick="recallToggle(${i})" data-img="${img}">${img}</div>`).join('')}
+          </div>
+          <button class="btn full" onclick="recallSubmit()">Submit Answers</button>
+        </div>`;
+    } else {
+      const correct = selected.filter(i=>shown.includes(i)).length;
+      const wrong   = selected.filter(i=>!shown.includes(i)).length;
+      if(correct>=5) addBadge('🖼️ Picture Pro');
+      el.innerHTML = `
+        <div class="game-screen result-center">
+          <div class="result-emoji">${correct>=5?'🏆':'🧠'}</div>
+          <div class="result-title">${correct}/${shown.length} Correct</div>
+          <div class="result-sub">${wrong} incorrect selection${wrong!==1?'s':''}</div>
+          <div class="result-msg" style="color:${correct>=5?'var(--green)':correct>=3?'var(--amber)':'var(--red)'}">
+            ${correct>=5?'Excellent! 🌟 Badge earned!':correct>=3?'Good effort! Keep practising.':'Keep playing to build your recall.'}
+          </div>
+          <div class="result-btns">
+            <button class="btn outline" onclick="startGame('recall')">Play Again</button>
+            <button class="btn" onclick="goBack()">Back to Games</button>
+          </div>
+        </div>`;
+    }
+  }
+
+  window.recallToggle = (i) => {
+    const cells = document.querySelectorAll('[data-img]');
+    const img = cells[i].dataset.img;
+    if(selected.includes(img)) selected = selected.filter(x=>x!==img);
+    else selected.push(img);
+    cells[i].classList.toggle('selected', selected.includes(img));
+    document.querySelector('.game-sub').textContent = `Tap the images you saw (${selected.length} selected)`;
+  };
+  window.recallSubmit = () => { phase = 'result'; draw(); };
+
+  draw();
+  timerRef = setInterval(()=>{
+    timeLeft--;
+    if(timeLeft <= 0){ clearInterval(timerRef); phase = 'recall'; draw(); return; }
+    if(phase === 'study') draw();
+  }, 1000);
+}
+
+// ── GAME: MATCH PAIRS ─────────────────────────────────────────────
+function gamePairs(el){
+  const icons = ['🧠','🌺','🎸','🚀','🦋','🐘'];
+  let cards = [...icons,...icons].map((icon,id)=>({id,icon,flipped:false,matched:false}))
+    .sort(()=>Math.random()-.5);
+  let open = [], moves = 0, locked = false;
+
+  function draw(){
+    const allMatched = cards.every(c=>c.matched);
+    if(allMatched) addBadge('🃏 Memory Matcher');
+    el.innerHTML = `
+      <div class="game-screen">
+        <div class="game-title">🃏 Match the Pairs</div>
+        <div class="game-sub">Moves: ${moves}</div>
+        ${allMatched ? `
+          <div class="result-center">
+            <div class="result-emoji">🏆</div>
+            <div class="result-title">All Matched!</div>
+            <div class="result-sub">Completed in ${moves} moves</div>
+            <div class="result-btns" style="margin-top:16px;">
+              <button class="btn outline" onclick="startGame('pairs')">Play Again</button>
+              <button class="btn" onclick="goBack()">Back to Games</button>
+            </div>
+          </div>` : `
+          <div class="emoji-grid" style="grid-template-columns:repeat(4,1fr);gap:10px;">
+            ${cards.map(c=>`
+              <div class="emoji-cell${c.matched?' matched':c.flipped?' selected':' hidden'}"
+                   style="height:65px;" onclick="flipCard(${c.id})">
+                ${c.flipped||c.matched ? c.icon : '?'}
+              </div>`).join('')}
+          </div>`}
+      </div>`;
+  }
+
+  window.flipCard = (id) => {
+    if(locked) return;
+    const card = cards.find(c=>c.id===id);
+    if(!card || card.flipped || card.matched) return;
+    card.flipped = true;
+    open.push(id);
+    if(open.length === 2){
+      moves++;
+      locked = true;
+      const [a,b] = open.map(id=>cards.find(c=>c.id===id));
+      if(a.icon === b.icon){
+        a.matched = b.matched = true;
+        open = []; locked = false;
+      } else {
+        setTimeout(()=>{ a.flipped = b.flipped = false; open = []; locked = false; draw(); }, 800);
+      }
+    }
+    draw();
+  };
+  draw();
+}
+
+// ── GAME: NUMBER MEMORY ───────────────────────────────────────────
+function gameNumbers(el){
+  let level = 3, best = 3, phase = 'show', seq = [], timeLeft = 3, timerRef;
+
+  function newSeq(){
+    seq = Array.from({length:level}, ()=>Math.floor(Math.random()*9)+1);
+    timeLeft = level; phase = 'show';
+  }
+
+  function draw(){
+    if(phase === 'show'){
+      el.innerHTML = `
+        <div class="game-screen">
+          <div class="game-title">🔢 Number Memory</div>
+          <div class="game-sub">Level ${level} — memorise in ${timeLeft}s…</div>
+          <div class="number-display">${seq.join(' ')}</div>
+          <div class="progress-bar"><div class="progress-fill" style="width:${((level-timeLeft)/level)*100}%;background:var(--amber);"></div></div>
+        </div>`;
+    } else if(phase === 'input'){
+      el.innerHTML = `
+        <div class="game-screen">
+          <div class="game-title">🔢 Number Memory</div>
+          <div class="game-sub">Type the numbers you saw (no spaces needed):</div>
+          <input class="number-input" id="numInput" type="number" placeholder="e.g. 382" inputmode="numeric"/>
+          <button class="btn full" style="margin-top:14px;" onclick="numSubmit()">Submit</button>
+        </div>`;
+      setTimeout(()=>document.getElementById('numInput')?.focus(), 100);
+    } else {
+      el.innerHTML = `
+        <div class="game-screen result-center">
+          <div class="result-emoji">🧠</div>
+          <div class="result-title">Best: ${best} digits</div>
+          <div class="result-sub">Sequence was: <strong>${seq.join(' – ')}</strong></div>
+          <div class="result-btns" style="margin-top:16px;">
+            <button class="btn outline" onclick="startGame('numbers')">Try Again</button>
+            <button class="btn" onclick="goBack()">Back to Games</button>
+          </div>
+        </div>`;
+    }
+  }
+
+  window.numSubmit = () => {
+    const val = document.getElementById('numInput')?.value?.replace(/\s/g,'');
+    if(val === seq.join('')){
+      level++; best = Math.max(best, level);
+      if(level > 7) addBadge('🔢 Number Master');
+      newSeq();
+    } else {
+      phase = 'result';
+    }
+    draw();
+    if(phase === 'show'){
+      timerRef = setInterval(()=>{
+        timeLeft--;
+        if(timeLeft<=0){ clearInterval(timerRef); phase='input'; draw(); return; }
+        draw();
+      }, 1000);
+    }
+  };
+
+  newSeq(); draw();
+  timerRef = setInterval(()=>{
+    timeLeft--;
+    if(timeLeft<=0){ clearInterval(timerRef); phase='input'; draw(); return; }
+    if(phase==='show') draw();
+  }, 1000);
+}
+
+// ── GAME: SPOT THE DIFFERENCE ─────────────────────────────────────
+function gameSpotDiff(el){
+  const scenes = [
+    {a:['🌳','☀️','🏡','🐕','🌺','🚗'], b:['🌳','🌙','🏡','🐕','🌺','🚗'], diff:1},
+    {a:['🍎','🍌','🍊','🍇','🍓','🫐'], b:['🍎','🍌','🍊','🍇','🍓','🥝'], diff:5},
+    {a:['🎸','🎹','🥁','🎺','🎻','🪕'], b:['🎸','🎹','🥁','🎵','🎻','🪕'], diff:3},
+  ];
+  const scene = scenes[Math.floor(Math.random()*scenes.length)];
+  let selected = null, done = false;
+
+  window.pickDiff = (i) => {
+    if(done) return;
+    selected = i;
+    if(i === scene.diff){ done = true; addBadge('🔍 Sharp Eyes'); }
+    draw();
+  };
+
+  function draw(){
+    el.innerHTML = `
+      <div class="game-screen">
+        <div class="game-title">🔍 Spot the Difference</div>
+        <div class="game-sub">Tap the item that changed in Scene B</div>
+        ${['Scene A','Scene B'].map((label,si)=>`
+          <div style="margin-bottom:12px;">
+            <div style="font-size:12px;font-weight:700;color:var(--slate);margin-bottom:6px;">${label}</div>
+            <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;">
+              ${(si===0?scene.a:scene.b).map((item,i)=>`
+                <div onclick="${si===1?`pickDiff(${i})`:''}"
+                  style="background:${si===1&&selected===i?(done?'var(--green)':'var(--red)'):'var(--mist)'};
+                  border-radius:10px;height:50px;display:flex;align-items:center;justify-content:center;
+                  font-size:22px;cursor:${si===1?'pointer':'default'};transition:all .2s;">
+                  ${item}
+                </div>`).join('')}
+            </div>
+          </div>`).join('')}
+        ${done ? `
+          <div style="text-align:center;margin-top:12px;">
+            <div style="font-size:18px;font-weight:800;color:var(--green);">🎉 Correct! Badge earned!</div>
+            <div class="result-btns" style="margin-top:12px;">
+              <button class="btn outline" onclick="startGame('spotdiff')">Play Again</button>
+              <button class="btn" onclick="goBack()">Back to Games</button>
+            </div>
+          </div>` :
+          selected !== null ? `<div style="text-align:center;color:var(--red);font-weight:700;margin-top:8px;">Not quite — look again!</div>` : ''}
+      </div>`;
+  }
+  draw();
+}
+
+// ── EDUCATION ─────────────────────────────────────────────────────
+function renderEducation(el){
+  const topics = [
+    {icon:'🧠',title:'What is Dementia?',
+     text:'Dementia is a syndrome — not a single disease — characterised by deterioration in memory, thinking, behaviour, and ability to perform everyday activities. It primarily affects older people but is NOT a normal part of ageing.'},
+    {icon:'⚠️',title:'Early Warning Signs',
+     text:'Watch for: persistent memory loss, confusion about time or place, difficulty with familiar tasks, problems with language, poor judgment, withdrawal from social activities, and changes in mood or personality.'},
+    {icon:'🔴',title:'Risk Factors',
+     text:'Modifiable risk factors include hypertension, diabetes, obesity, physical inactivity, smoking, excessive alcohol, depression, social isolation, and low educational attainment. Managing these can significantly reduce your risk.'},
+    {icon:'🟢',title:'Protective Factors',
+     text:'Regular physical activity, a healthy diet (especially Mediterranean-style), lifelong learning, social engagement, good sleep hygiene, and managing cardiovascular health all help protect the brain.'},
+    {icon:'🌍',title:'Dementia in Africa',
+     text:'Dementia prevalence in Africa is rising due to ageing populations and increasing risk factors. Awareness remains low, leading to stigma, delayed diagnosis, and inadequate caregiver support. Education is critical.'},
+    {icon:'🌍',title:'African Brain Health Focus',
+     text:'Key regional priorities: manage hypertension and diabetes (major stroke & dementia risk factors), get hearing loss checked and treated early, stay physically active, and stay socially connected. Favour traditional, minimally processed African diets rich in vegetables, legumes, fish, and whole grains — and limit excess salt, sugar, and processed foods. Small, consistent changes to these factors can meaningfully lower long-term risk.'},
+    {icon:'✅',title:'Myths vs Facts',
+     text:'MYTH: Dementia is a normal part of ageing. FACT: It is not. MYTH: Nothing can be done. FACT: Lifestyle changes and early support make a real difference. MYTH: Only old people get it. FACT: Young-onset dementia exists.'},
+  ];
+  el.innerHTML = `
+    <div class="edu-body">
+      <div class="section-title">Dementia Education</div>
+      <div class="section-sub">Tap any topic to expand</div>
+      <div class="card redflag-card">
+        <div class="redflag-title">🚨 When should I see a doctor?</div>
+        <ul class="redflag-list">
+          <li>Sudden confusion</li>
+          <li>Personality changes</li>
+          <li>Getting lost in familiar places</li>
+          <li>Difficulty speaking</li>
+          <li>Repeated forgetting that affects daily life</li>
+        </ul>
+        <div style="font-size:11.5px;color:var(--slate);margin-top:8px;">If you notice these signs in yourself or someone you care for, please speak with a healthcare professional soon.</div>
+      </div>
+      ${topics.map((t,i)=>`
+        <div class="card edu-card" id="edu-${i}" onclick="toggleEdu(${i})">
+          <div class="edu-header">
+            <div class="edu-icon">${t.icon}</div>
+            <div class="edu-name">${t.title}</div>
+            <div class="edu-arrow"></div>
+          </div>
+          <div class="edu-content">${t.text}</div>
+        </div>`).join('')}
+      <div class="card" style="background:var(--amber-lt);cursor:pointer;display:flex;align-items:center;gap:12px;" onclick="openSub('quiz','Learn')">
+        <div style="font-size:26px;">❓</div>
+        <div style="flex:1;">
+          <div style="font-weight:800;color:var(--ink);font-size:14px;">Dementia Knowledge Quiz</div>
+          <div style="font-size:12px;color:var(--slate);">5 quick questions — test what you've learned</div>
+        </div>
+        <div style="color:var(--amber);font-size:16px;">▶</div>
+      </div>
+      <div style="height:16px;"></div>
+    </div>`;
+
+  window.toggleEdu = (i) => {
+    const card = document.getElementById('edu-'+i);
+    const opening = !card.classList.contains('open');
+    card.classList.toggle('open');
+    if(opening){
+      const title = topics[i].title;
+      state.topicViews[title] = (state.topicViews[title]||0) + 1;
+    }
+  };
+}
+
+// ── ASSESSMENT ────────────────────────────────────────────────────
+const QUESTIONS = [
+  {key:'activity',q:'Do you get 150+ minutes of physical activity weekly?',opts:['Yes, always','Sometimes','Rarely','No']},
+  {key:'sleep',   q:'Do you regularly get 7–9 hours of sleep?',           opts:['Yes','Most nights','Rarely','No']},
+  {key:'nutrition',q:'How often do you eat fruits and vegetables?',        opts:['Daily','Most days','Occasionally','Rarely']},
+  {key:'hydration',q:'Do you drink adequate water (6–8 glasses) daily?',  opts:['Yes','Most days','Sometimes','Rarely']},
+  {key:'social',  q:'How often do you interact socially with others?',     opts:['Daily','Several times a week','Weekly','Rarely']},
+  {key:'mental',  q:'Do you regularly read, solve puzzles, or learn new skills?', opts:['Daily','Often','Sometimes','Rarely']},
+  {key:'bp',      q:'Do you know your blood pressure status?',             opts:['Yes, it\'s normal','Yes, being managed','Checked but unsure','Never checked']},
+  {key:'smoke',   q:'Do you smoke or use tobacco products?',               opts:['Never','Quit previously','Occasionally','Yes, regularly']},
+];
+const SCORE_MAP = [100, 70, 40, 10];
+const RECS = {
+  activity:['Try a 30-minute walk at least 5 times per week 🚶','Consider joining a community exercise group'],
+  sleep:   ['Maintain a consistent sleep schedule 😴','Reduce screen time 1 hour before bed'],
+  nutrition:['Add one extra fruit or vegetable daily 🥦','Try the Mediterranean-style diet'],
+  hydration:['Carry a water bottle 💧','Set hourly hydration reminders on your phone'],
+  social:  ['Call a friend or family member daily 📞','Join a community or faith group'],
+  mental:  ['Read for 15 minutes daily 📖','Try crosswords or memory puzzles'],
+  bp:      ['Schedule a blood pressure check at your clinic','Monitor your salt intake'],
+  smoke:   ['Seek smoking cessation support 🚭','Speak to a healthcare worker about quitting'],
+};
+
+let assessAnswers = {};
+
+function renderAssessment(el){
+  el.innerHTML = `
+    <div class="assess-body">
+      <div class="section-title">🧪 Brain Health Score</div>
+      <div class="section-sub">Answer 8 questions to get your personalised score</div>
+      ${QUESTIONS.map((q,qi)=>`
+        <div class="card q-card">
+          <div class="q-text">${qi+1}. ${q.q}</div>
+          <div class="q-options">
+            ${q.opts.map((opt,oi)=>`
+              <button class="q-opt${assessAnswers[q.key]===oi?' selected':''}"
+                onclick="pickAnswer('${q.key}',${oi})">${opt}</button>`).join('')}
+          </div>
+        </div>`).join('')}
+      <button class="btn full" id="calcBtn"
+        style="opacity:${Object.keys(assessAnswers).length<QUESTIONS.length?.5:1};"
+        onclick="calcScore()">
+        Calculate My Score (${Object.keys(assessAnswers).length}/${QUESTIONS.length})
+      </button>
+      <div style="height:16px;"></div>
+    </div>`;
+}
+
+window.pickAnswer = (key, oi) => {
+  assessAnswers[key] = oi;
+  renderAssessment(document.getElementById('content'));
+};
+
+window.calcScore = () => {
+  if(Object.keys(assessAnswers).length < QUESTIONS.length) return;
+  const total = Object.values(assessAnswers).reduce((s,v)=>s+(SCORE_MAP[v]??0),0);
+  const score = Math.round(total / QUESTIONS.length);
+  state.brainScore = score;
+  state.scoreHistory.push({score, date:new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short'})});
+  if(state.scoreHistory.length > 8) state.scoreHistory.shift();
+
+  const cat = score>=80 ? {label:'Excellent 🌟',color:'var(--green)',tip:'Keep up your great brain-health habits!'}
+    : score>=60 ? {label:'Good 👍',color:'var(--teal-lt)',tip:'A few improvements could make a real difference.'}
+    : score>=40 ? {label:'Fair ⚠️',color:'var(--amber)',tip:'Several risk factors need attention — start small.'}
+    : {label:'Needs Improvement 🔴',color:'var(--red)',tip:'Significant lifestyle changes are recommended. Speak to a healthcare worker.'};
+
+  const recs = Object.entries(assessAnswers)
+    .filter(([,v])=>v>1)
+    .flatMap(([k])=>RECS[k]||[]);
+
+  document.getElementById('content').innerHTML = `
+    <div class="assess-body">
+      <div class="section-title">Your Results</div>
+      <div class="card" style="text-align:center;margin-bottom:16px;">
+        <div class="score-circle" style="color:${cat.color};">${score}</div>
+        <div class="score-cat" style="color:${cat.color};">${cat.label}</div>
+        <div class="score-tip">${cat.tip}</div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${score}%;background:${cat.color};"></div></div>
+      </div>
+      ${recs.length ? `
+        <div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:10px;">Personalised Recommendations</div>
+        ${recs.map(r=>`
+          <div class="card rec-card" style="margin-bottom:8px;">
+            <div style="color:var(--amber);font-size:18px;">💡</div>
+            <div style="font-size:13px;color:var(--ink);">${r}</div>
+          </div>`).join('')}` : ''}
+      <button class="btn outline full" style="margin-top:12px;"
+        onclick="assessAnswers={};navigate('assessment')">Retake Assessment</button>
+      <div style="height:16px;"></div>
+    </div>`;
+};
+
+// ── CAREGIVER ─────────────────────────────────────────────────────
+const CARE_TIPS = [
+  {icon:'💬',title:'Communication',tip:'Speak slowly and clearly. Use simple sentences. Maintain eye contact and a calm, reassuring tone.'},
+  {icon:'🏠',title:'Safety at Home',tip:'Remove trip hazards, lock away medications and sharp objects. Label rooms and drawers to aid orientation.'},
+  {icon:'😤',title:'Managing Behaviour',tip:'Respond to the emotion behind behaviour, not just the action. Avoid arguing or repeatedly correcting the person.'},
+  {icon:'❤️',title:'Caregiver Wellbeing',tip:'You cannot pour from an empty cup. Accept help when offered, take regular breaks, and seek peer support.'},
+  {icon:'😰',title:'Preventing Burnout',tip:'Watch for signs: exhaustion, resentment, neglecting your own health. Reach out to a healthcare professional early.'},
+];
+const STRESS_Q = [
+  'I feel overwhelmed by caregiving responsibilities',
+  'I have little time for myself',
+  'I feel isolated or alone',
+  'I feel emotionally drained',
+];
+let stressChecked = {};
+
+function renderCaregiver(el){
+  el.innerHTML = `
+    <div class="care-body">
+      <div class="section-title">🤝 Caregiver Corner</div>
+      <div class="section-sub">Support for those who care for others</div>
+      ${CARE_TIPS.map(t=>`
+        <div class="card" style="margin-bottom:12px;">
+          <div class="care-tip">
+            <div class="care-tip-icon">${t.icon}</div>
+            <div>
+              <div class="care-tip-title">${t.title}</div>
+              <div class="care-tip-text">${t.tip}</div>
+            </div>
+          </div>
+        </div>`).join('')}
+      <div style="font-size:15px;font-weight:700;color:var(--ink);margin-bottom:12px;">Weekly Stress Check-in</div>
+      <div class="card" style="margin-bottom:16px;">
+        ${STRESS_Q.map((q,i)=>`
+          <div class="stress-item" onclick="toggleStress(${i})">
+            <div class="checkbox${stressChecked[i]?' checked':''}" id="cb-${i}">
+              ${stressChecked[i]?'✓':''}
+            </div>
+            <div style="font-size:13px;color:var(--ink);">${q}</div>
+          </div>`).join('')}
+        <button class="btn full" style="margin-top:8px;" onclick="checkStress()">Check My Stress Level</button>
+        <div class="stress-feedback" id="stressFeedback"></div>
+      </div>
+      <div style="height:8px;"></div>
+    </div>`;
+}
+
+window.toggleStress = (i) => {
+  stressChecked[i] = !stressChecked[i];
+  const cb = document.getElementById('cb-'+i);
+  cb.classList.toggle('checked', stressChecked[i]);
+  cb.textContent = stressChecked[i] ? '✓' : '';
+};
+
+window.checkStress = () => {
+  const score = Object.values(stressChecked).filter(Boolean).length;
+  const fb = document.getElementById('stressFeedback');
+  fb.style.display = 'block';
+  if(score >= 3){
+    fb.style.background='#FDE8E8'; fb.style.color='var(--red)';
+    fb.textContent = '⚠️ High stress detected. Please speak with a healthcare professional or a trusted person soon.';
+  } else if(score >= 1){
+    fb.style.background='var(--amber-lt)'; fb.style.color='#A07000';
+    fb.textContent = 'You\'re showing some signs of caregiver stress. Prioritise self-care this week.';
+  } else {
+    fb.style.background='var(--teal-bg)'; fb.style.color='var(--teal)';
+    fb.textContent = '✅ You\'re managing well! Keep checking in weekly.';
+  }
+};
+
+// ── MORE MENU ─────────────────────────────────────────────────────
+function renderMore(el){
+  el.innerHTML = `
+    <div class="more-body">
+      <div class="section-title">More</div>
+      <div class="section-sub">Companion, settings, challenges & your progress</div>
+      <div class="card" style="margin-bottom:16px;">
+        <div class="more-item" onclick="openSub('companion','More')">
+          <div class="more-icon">🤖</div>
+          <div class="more-info"><div class="more-name">Brain Companion</div><div class="more-desc">Ask questions, get educational answers</div></div>
+          <div class="more-arrow">▶</div>
+        </div>
+        <div class="more-item" onclick="openSub('journey','More')">
+          <div class="more-icon">📈</div>
+          <div class="more-info"><div class="more-name">My Brain Health Journey</div><div class="more-desc">Track your score & activity over time</div></div>
+          <div class="more-arrow">▶</div>
+        </div>
+        <div class="more-item" onclick="openSub('passport','More')">
+          <div class="more-icon">🩺</div>
+          <div class="more-info"><div class="more-name">Brain Health Passport</div><div class="more-desc">Log BP, glucose, sleep, activity, water & weight</div></div>
+          <div class="more-arrow">▶</div>
+        </div>
+        <div class="more-item" onclick="openSub('community','More')">
+          <div class="more-icon">🏆</div>
+          <div class="more-info"><div class="more-name">Community Challenges</div><div class="more-desc">Monthly goals & certificates</div></div>
+          <div class="more-arrow">▶</div>
+        </div>
+        <div class="more-item" onclick="navigate('education')">
+          <div class="more-icon">🌍</div>
+          <div class="more-info"><div class="more-name">African Brain Health</div><div class="more-desc">Regional risk factors & healthy habits</div></div>
+          <div class="more-arrow">▶</div>
+        </div>
+        <div class="more-item" onclick="openSub('settings','More')">
+          <div class="more-icon">⚙️</div>
+          <div class="more-info"><div class="more-name">Family Mode & Accessibility</div><div class="more-desc">Large text, contrast, voice, who you're caring for</div></div>
+          <div class="more-arrow">▶</div>
+        </div>
+        <div class="more-item" onclick="openSub('research','More')" style="margin-bottom:0;">
+          <div class="more-icon">🔬</div>
+          <div class="more-info"><div class="more-name">Research Dashboard</div><div class="more-desc">For the project lead — session data for evaluation</div></div>
+          <div class="more-arrow">▶</div>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:16px;cursor:pointer;display:flex;align-items:center;gap:12px;" onclick="openAdminPin()">
+        <div style="font-size:22px;">🔐</div>
+        <div style="flex:1;">
+          <div style="font-weight:700;color:var(--ink);font-size:13.5px;">Admin Portal</div>
+          <div style="font-size:11.5px;color:var(--slate);">PIN-protected — live event data capture & export</div>
+        </div>
+        <div style="color:var(--slate);font-size:16px;">▶</div>
+      </div>
+      <div class="card" style="background:#FDEAEA;border:1.5px solid var(--red);margin-bottom:16px;">
+        <div style="font-size:12px;font-weight:700;color:var(--red);margin-bottom:6px;">⚕️ IMPORTANT: NOT A DIAGNOSTIC TOOL</div>
+        <div style="font-size:12.5px;color:var(--ink);line-height:1.7;">MindSpring is an educational and cognitive engagement tool. It does not diagnose dementia or replace professional medical assessment. Users with concerning symptoms are advised to seek evaluation from a qualified healthcare professional.</div>
+      </div>
+      <div class="card" style="margin-bottom:16px;">
+        <div style="font-size:12px;font-weight:700;color:var(--teal);margin-bottom:6px;">🔒 DATA & PRIVACY</div>
+        <div style="font-size:12.5px;color:var(--slate);line-height:1.7;">User data are stored securely and anonymised for research purposes where applicable.</div>
+      </div>
+      <div style="height:8px;"></div>
+    </div>`;
+}
+
+// ── SETTINGS: FAMILY MODE & ACCESSIBILITY ────────────────────────
+function renderSettings(el){
+  el.innerHTML = `
+    <div class="settings-body">
+      <div class="section-title">Settings</div>
+      <div class="section-sub">Personalise MindSpring for how you use it</div>
+
+      <div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:8px;">I'm using this app for</div>
+      <div class="card" style="margin-bottom:20px;">
+        ${Object.entries(FAMILY_LABELS).map(([key,label])=>`
+          <div class="family-opt${state.familyMode===key?' selected':''}" onclick="setFamilyMode('${key}')">${label}</div>`).join('')}
+      </div>
+
+      <div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:8px;">Accessibility</div>
+      <div class="card" style="margin-bottom:20px;">
+        <div class="toggle-row">
+          <div><div class="toggle-label">Large Text</div><div class="toggle-desc">Increase text size app-wide</div></div>
+          <div class="switch${state.largeText?' on':''}" onclick="toggleA11y('largeText')"></div>
+        </div>
+        <div class="toggle-row">
+          <div><div class="toggle-label">High Contrast</div><div class="toggle-desc">Stronger colours for readability</div></div>
+          <div class="switch${state.highContrast?' on':''}" onclick="toggleA11y('highContrast')"></div>
+        </div>
+        <div class="toggle-row">
+          <div><div class="toggle-label">Voice Narration</div><div class="toggle-desc">Read daily tips aloud</div></div>
+          <div class="switch${state.voiceOn?' on':''}" onclick="toggleA11y('voiceOn')"></div>
+        </div>
+      </div>
+
+      <div style="font-size:14px;font-weight:700;color:var(--red);margin-bottom:8px;">⚕️ Important</div>
+      <div class="card" style="background:#FDEAEA;border:1.5px solid var(--red);margin-bottom:20px;">
+        <div style="font-size:12.5px;color:var(--ink);line-height:1.7;">MindSpring is an educational and cognitive engagement tool. It does not diagnose dementia or replace professional medical assessment. Users with concerning symptoms are advised to seek evaluation from a qualified healthcare professional.</div>
+      </div>
+
+      <div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:8px;">🔒 Data & Privacy</div>
+      <div class="card" style="margin-bottom:16px;">
+        <div style="font-size:12.5px;color:var(--slate);line-height:1.7;">User data are stored securely and anonymised for research purposes where applicable.</div>
+      </div>
+    </div>`;
+}
+
+window.setFamilyMode = (key) => {
+  state.familyMode = key;
+  renderSettings(document.getElementById('content'));
+};
+
+window.toggleA11y = (key) => {
+  state[key] = !state[key];
+  applyAccessibility();
+  renderSettings(document.getElementById('content'));
+  if(key==='voiceOn' && state.voiceOn) speak("Voice narration turned on.");
+};
+
+// ── COMMUNITY CHALLENGES ─────────────────────────────────────────
+const CHALLENGES = [
+  {key:'walk', icon:'🚶', title:'Walk 100km this month', desc:'Log your walking distance', unit:'km', target:100, step:5},
+  {key:'hydration', icon:'💧', title:'Hydrate for 30 days', desc:'Drink enough water daily and log it', unit:'days', target:30, step:1},
+  {key:'gamesweek', icon:'🎮', title:'Complete all games this week', desc:'Play each brain game to earn a badge', unit:'games', target:4, step:1},
+];
+
+function renderCommunity(el){
+  el.innerHTML = `
+    <div class="community-body">
+      <div class="section-title">🏆 Community Challenges</div>
+      <div class="section-sub">Stay motivated with monthly goals</div>
+      ${CHALLENGES.map(c=>{
+        const val = state.challengeProgress[c.key] || 0;
+        const pct = Math.min(100, Math.round((val/c.target)*100));
+        const done = val >= c.target;
+        return `
+        <div class="card challenge-card">
+          <div style="display:flex;gap:10px;align-items:flex-start;">
+            <div style="font-size:26px;">${c.icon}</div>
+            <div style="flex:1;">
+              <div class="challenge-title">${c.title}</div>
+              <div class="challenge-desc">${c.desc}</div>
+              <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${done?'var(--green)':'var(--teal)'};"></div></div>
+              <div class="challenge-meta"><span>${val}/${c.target} ${c.unit}</span><span>${pct}%</span></div>
+              ${done ? `<div class="challenge-done">🎉 Completed — certificate earned!</div>` :
+                `<button class="btn outline" style="margin-top:10px;padding:7px 16px;font-size:12px;" onclick="logChallenge('${c.key}',${c.step})">+${c.step} ${c.unit}</button>`}
+            </div>
+          </div>
+        </div>`;
+      }).join('')}
+      <div style="height:8px;"></div>
+    </div>`;
+}
+
+window.logChallenge = (key, step) => {
+  const c = CHALLENGES.find(c=>c.key===key);
+  const wasDone = (state.challengeProgress[key]||0) >= c.target;
+  state.challengeProgress[key] = Math.min(c.target, (state.challengeProgress[key]||0) + step);
+  if(!wasDone && state.challengeProgress[key] >= c.target){
+    const b = '🏅 ' + c.title;
+    if(!state.badges.includes(b)) state.badges.push(b);
+  }
+  renderCommunity(document.getElementById('content'));
+};
+
+// ── MY BRAIN HEALTH JOURNEY ──────────────────────────────────────
+function renderJourney(el){
+  const hist = state.scoreHistory;
+  const challengesDone = CHALLENGES.filter(c=>(state.challengeProgress[c.key]||0) >= c.target).length;
+  el.innerHTML = `
+    <div class="journey-body">
+      <div class="section-title">📈 My Brain Health Journey</div>
+      <div class="section-sub">See how your habits and scores change over time</div>
+      <div class="journey-stat-row">
+        <div class="card journey-stat"><div class="journey-stat-val">${state.gamesCompleted}</div><div class="journey-stat-lbl">Games Completed</div></div>
+        <div class="card journey-stat"><div class="journey-stat-val">${state.badges.length}</div><div class="journey-stat-lbl">Badges</div></div>
+        <div class="card journey-stat"><div class="journey-stat-val">${challengesDone}</div><div class="journey-stat-lbl">Challenges Done</div></div>
+      </div>
+      <div class="card">
+        <div style="font-size:13px;font-weight:700;color:var(--ink);">Brain Health Score Trend</div>
+        ${hist.length ? `
+          <div class="journey-chart">
+            ${hist.map(h=>`
+              <div class="journey-bar-wrap">
+                <div class="journey-bar" style="height:${Math.max(6,h.score)}%;"></div>
+                <div class="journey-bar-lbl">${h.date}</div>
+              </div>`).join('')}
+          </div>` :
+          `<div style="font-size:13px;color:var(--slate);padding:20px 0;text-align:center;">Take the Brain Health Score assessment to start your trend.</div>`}
+      </div>
+      <div style="height:16px;"></div>
+    </div>`;
+}
+
+// ── AI BRAIN COMPANION ───────────────────────────────────────────
+let companionMsgs = [];
+
+function companionGreeting(){
+  const who = state.familyMode;
+  const suffix = who==='parent' ? " as it relates to your parent" :
+                 who==='spouse' ? " as it relates to your spouse" :
+                 who==='patient' ? " as it relates to your patient" : "";
+  return `Hi! I'm your Brain Companion 🧠. Ask me anything about memory, dementia, or brain health${suffix}. I share educational information only — I don't diagnose dementia or replace a professional medical assessment. If something feels concerning, please see a qualified healthcare professional.`;
+}
+
+function renderCompanion(el){
+  if(companionMsgs.length===0) companionMsgs.push({role:'bot', text: companionGreeting()});
+  el.innerHTML = `
+    <div class="companion-wrap" style="height:68vh;">
+      <div class="companion-msgs" id="companionMsgs">
+        ${companionMsgs.map(m=>`<div class="msg ${m.role}">${m.text}</div>`).join('')}
+      </div>
+      <div class="companion-suggest">
+        ${['Is forgetting names normal?','How can I improve my memory?','When should I see a doctor?']
+          .map(q=>`<button class="companion-chip" onclick="companionAsk(${JSON.stringify(q)})">${q}</button>`).join('')}
+      </div>
+      <div class="companion-input-bar">
+        <input class="companion-input" id="companionInput" placeholder="Ask a question…" onkeydown="if(event.key==='Enter')companionSend();"/>
+        <button class="companion-send" onclick="companionSend()">➤</button>
+      </div>
+      <div class="companion-disclaimer">MindSpring is an educational and cognitive engagement tool. It does not diagnose dementia or replace professional medical assessment. If you notice concerning symptoms, please seek evaluation from a qualified healthcare professional.</div>
+    </div>`;
+  const box = document.getElementById('companionMsgs');
+  if(box) box.scrollTop = box.scrollHeight;
+}
+
+window.companionSend = () => {
+  const input = document.getElementById('companionInput');
+  const text = input.value.trim();
+  if(!text) return;
+  input.value = '';
+  companionAsk(text);
+};
+
+window.companionAsk = async (text) => {
+  companionMsgs.push({role:'user', text});
+  companionMsgs.push({role:'bot typing', text:'Thinking…'});
+  renderCompanion(document.getElementById('content'));
+
+  let reply;
+  try {
+    reply = await fetchCompanionAI(text);
+  } catch(e){
+    reply = scriptedCompanionReply(text);
+  }
+  companionMsgs.pop();
+  companionMsgs.push({role:'bot', text: reply});
+  renderCompanion(document.getElementById('content'));
+};
+
+async function fetchCompanionAI(text){
+  const who = FAMILY_LABELS[state.familyMode];
+  const sys = `You are the "Brain Companion" inside MindSpring, a brain-health education app from Brain Health Academy Africa. The person using the app is asking on behalf of: ${who}. Give a brief (under 120 words), warm, educational answer about memory, brain health, or dementia. NEVER diagnose dementia or any condition, and never state or imply that a person does or does not have dementia. MindSpring is an educational and cognitive engagement tool — it does not replace professional medical assessment. When relevant, remind the user to seek evaluation from a qualified healthcare professional if symptoms are concerning. Keep it simple and practical, considering an African context where relevant.`;
+  const response = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      model: "claude-sonnet-4-6",
+      max_tokens: 1000,
+      system: sys,
+      messages: [{ role: "user", content: text }]
+    })
+  });
+  if(!response.ok) throw new Error('API error');
+  const data = await response.json();
+  const block = (data.content || []).find(b=>b.type==='text');
+  if(!block || !block.text) throw new Error('No text');
+  return block.text.trim();
+}
+
+function scriptedCompanionReply(text){
+  const t = text.toLowerCase();
+  if(t.includes('normal') && (t.includes('forget')||t.includes('name')))
+    return "Occasional forgetfulness (like misplacing names sometimes) is common with ageing. It becomes a concern when it's frequent, worsening, or affects daily life — that's worth discussing with a healthcare professional. I can't diagnose, but I can share general information. 💡";
+  if(t.includes('improve') && t.includes('memory'))
+    return "A few evidence-based ways to support memory: stay physically active, get 7–9 hours of sleep, eat a diet rich in vegetables and healthy fats, stay socially connected, manage blood pressure, and challenge your brain with puzzles or new skills. Try our Brain Games for daily practice! 🧠";
+  if(t.includes('doctor') || t.includes('warning') || t.includes('red flag'))
+    return "See a doctor if you notice: sudden confusion, personality changes, getting lost in familiar places, difficulty speaking, or forgetting that disrupts daily life. Early evaluation makes a real difference. 🚨";
+  if(t.includes('stress'))
+    return "Chronic stress can affect memory and brain health over time. Try short daily relaxation practices, regular movement, social support, and adequate sleep. If stress feels overwhelming, please reach out to a healthcare professional. 💙";
+  if(t.includes('diet')||t.includes('food')||t.includes('eat'))
+    return "Brain-healthy eating in an African context: favour vegetables, legumes, fish, whole grains, and traditional minimally-processed foods, while limiting excess salt, sugar, and fried foods. This also supports healthy blood pressure — a key protective factor. 🥦";
+  return "Thanks for your question! In general, staying physically active, socially connected, mentally engaged, and managing conditions like blood pressure and diabetes are the best-known ways to support brain health. For anything specific to a person's symptoms, please consult a healthcare professional — I'm here for education, not diagnosis. 🧠";
+}
+
+// ── DEMENTIA KNOWLEDGE QUIZ ──────────────────────────────────────
+const QUIZ_QUESTIONS = [
+  {q:'Dementia is best described as:',
+   options:['A normal part of ageing','A disease affecting memory and thinking','A mental illness only','I don\'t know'], correct:1},
+  {q:'Which of these is an early symptom of dementia?',
+   options:['Memory loss affecting daily life','Occasional forgetting of names','A mild fever','Joint pain'], correct:0},
+  {q:'Which of these increases dementia risk?',
+   options:['Hypertension','Reading daily','Regular exercise','Good sleep'], correct:0},
+  {q:'Can healthy lifestyle choices reduce dementia risk?',
+   options:['Yes','No','Not sure'], correct:0},
+  {q:'Which of these is a warning sign that needs medical evaluation?',
+   options:['Sudden confusion','Occasionally misplacing keys','Feeling tired after a long day','Forgetting a phone number once'], correct:0},
+];
+
+let quizState = { i:0, selected:null, score:0, done:false };
+
+function renderQuiz(el){
+  if(quizState.done){
+    const firstScore = state.quizHistory.length ? state.quizHistory[0].score : quizState.score;
+    const improvement = quizState.score - firstScore;
+    el.innerHTML = `
+      <div class="quiz-body" style="text-align:center;">
+        <div class="section-title">Quiz Complete!</div>
+        <div class="quiz-result-score">${quizState.score}/5</div>
+        <div style="font-size:13px;color:var(--slate);margin-bottom:20px;">
+          ${quizState.score>=4?'Excellent knowledge! 🎉':quizState.score>=3?'Good job — review a few topics to sharpen up.':'Keep learning — revisit the Dementia Education topics.'}
+          ${state.quizHistory.length ? `<br>Change since first attempt: ${improvement>=0?'+':''}${improvement}` : ''}
+        </div>
+        ${state.sessionCaptureMode ? `
+          <div class="capture-prompt" style="text-align:left;">
+            <div style="font-weight:800;color:var(--teal);font-size:13px;margin-bottom:2px;">📋 Event mode is on</div>
+            <div style="font-size:11.5px;color:var(--slate);margin-bottom:8px;">Saving as: <b>${state.capturePhase.toUpperCase()}</b>-session score. Enter your participant code to log this result for the facilitator.</div>
+            <input type="text" id="captureCode" class="capture-input" placeholder="Participant code (e.g. A01)" />
+            <button class="btn full" onclick="saveQuizToLog()">Save to Event Log</button>
+            <div id="captureSaved" style="display:none;color:var(--green);font-size:12px;font-weight:700;text-align:center;margin-top:8px;">✅ Saved!</div>
+          </div>
+        ` : ''}
+        <button class="btn full" style="margin-top:14px;" onclick="startQuizAgain()">Retake Quiz</button>
+        <button class="btn outline full" style="margin-top:10px;" onclick="navigate('education')">Back to Learn</button>
+      </div>`;
+    return;
+  }
+  const q = QUIZ_QUESTIONS[quizState.i];
+  el.innerHTML = `
+    <div class="quiz-body">
+      <div class="section-sub">Question ${quizState.i+1} of ${QUIZ_QUESTIONS.length}</div>
+      <div class="progress-bar" style="margin-bottom:16px;"><div class="progress-fill" style="width:${(quizState.i/QUIZ_QUESTIONS.length)*100}%;"></div></div>
+      <div class="card quiz-q-card">
+        <div class="quiz-q-text">${q.q}</div>
+        ${q.options.map((opt,idx)=>{
+          let cls='quiz-opt';
+          if(quizState.selected!==null){
+            if(idx===q.correct) cls+=' correct';
+            else if(idx===quizState.selected) cls+=' incorrect';
+          }
+          return `<div class="${cls}" onclick="answerQuiz(${idx})">${opt}</div>`;
+        }).join('')}
+      </div>
+      ${quizState.selected!==null ? `<button class="btn full" onclick="nextQuiz()">${quizState.i===QUIZ_QUESTIONS.length-1?'See Results':'Next'}</button>` : ''}
+    </div>`;
+}
+
+window.answerQuiz = (idx) => {
+  if(quizState.selected!==null) return;
+  quizState.selected = idx;
+  if(idx === QUIZ_QUESTIONS[quizState.i].correct) quizState.score++;
+  renderQuiz(document.getElementById('content'));
+};
+
+window.nextQuiz = () => {
+  if(quizState.i < QUIZ_QUESTIONS.length - 1){
+    quizState.i++; quizState.selected = null;
+    renderQuiz(document.getElementById('content'));
+  } else {
+    quizState.done = true;
+    state.quizHistory.push({score:quizState.score, date:new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short'})});
+    if(state.quizHistory.length>10) state.quizHistory.shift();
+    renderQuiz(document.getElementById('content'));
+  }
+};
+
+window.startQuizAgain = () => {
+  quizState = { i:0, selected:null, score:quizState.score, done:false };
+  quizState.score = 0;
+  renderQuiz(document.getElementById('content'));
+};
+
+// ── SATISFACTION SURVEY ──────────────────────────────────────────
+const SAT_CATEGORIES = [
+  {key:'appearance', label:'Appearance of the app'},
+  {key:'navigation', label:'Ease of navigation'},
+  {key:'content',    label:'Educational content'},
+  {key:'games',       label:'Memory games'},
+  {key:'overall',    label:'Overall experience'},
+];
+
+let satDraft = {};
+
+function renderSatisfaction(el){
+  if(state.satisfaction) satDraft = {...state.satisfaction};
+  el.innerHTML = `
+    <div class="settings-body">
+      <div class="section-title">Rate MindSpring</div>
+      <div class="section-sub">Your feedback helps improve the app for the pilot study</div>
+      <div class="card">
+        ${SAT_CATEGORIES.map(c=>`
+          <div class="sat-row">
+            <div class="sat-label">${c.label}</div>
+            <div class="sat-stars" id="satstars-${c.key}">
+              ${[1,2,3,4,5].map(n=>`<span class="sat-star${(satDraft[c.key]||0)>=n?' on':''}" onclick="setSatStar('${c.key}',${n})">★</span>`).join('')}
+            </div>
+          </div>`).join('')}
+        <textarea id="satComment" placeholder="Any additional comments? (optional)" style="width:100%;border:1.5px solid var(--mist);border-radius:10px;padding:10px;font-family:inherit;font-size:13px;min-height:70px;box-sizing:border-box;" >${satDraft.comment||''}</textarea>
+      </div>
+      <button class="btn full" style="margin-top:14px;" onclick="submitSatisfaction()">Submit Rating</button>
+    </div>`;
+}
+
+window.setSatStar = (key, n) => {
+  satDraft[key] = n;
+  document.querySelectorAll(`#satstars-${key} .sat-star`).forEach((s,idx)=>{
+    s.classList.toggle('on', idx < n);
+  });
+};
+
+window.submitSatisfaction = () => {
+  satDraft.comment = document.getElementById('satComment').value;
+  state.satisfaction = {...satDraft};
+  openSub('research','More');
+};
+
+// ── RESEARCH DASHBOARD ───────────────────────────────────────────
+function renderResearch(el){
+  const avgScore = state.scoreHistory.length ? Math.round(state.scoreHistory.reduce((a,h)=>a+h.score,0)/state.scoreHistory.length) : null;
+  const quizImprovement = state.quizHistory.length>1 ? (state.quizHistory[state.quizHistory.length-1].score - state.quizHistory[0].score) : null;
+  const topTopics = Object.entries(state.topicViews).sort((a,b)=>b[1]-a[1]);
+  const satAvg = state.satisfaction ? (SAT_CATEGORIES.reduce((sum,c)=>sum+(state.satisfaction[c.key]||0),0)/SAT_CATEGORIES.length).toFixed(1) : null;
+  const minsActive = Math.max(1, Math.round((Date.now()-state.sessionStart)/60000));
+
+  el.innerHTML = `
+    <div class="research-body">
+      <div class="section-title">🔬 Research Dashboard</div>
+      <div class="section-sub">Anonymised session data for pilot evaluation</div>
+      <div class="research-id">Session ID: ${state.sessionId}</div>
+
+      <div class="card">
+        <div class="research-grid">
+          <div class="research-stat"><div class="research-stat-val">${state.gamesCompleted}</div><div class="research-stat-lbl">Games Completed</div></div>
+          <div class="research-stat"><div class="research-stat-val">${avgScore!==null?avgScore:'—'}</div><div class="research-stat-lbl">Avg Brain Health Score</div></div>
+          <div class="research-stat"><div class="research-stat-val">${quizImprovement!==null?(quizImprovement>=0?'+':'')+quizImprovement:'—'}</div><div class="research-stat-lbl">Quiz Improvement</div></div>
+          <div class="research-stat"><div class="research-stat-val">${satAvg!==null?satAvg+'★':'—'}</div><div class="research-stat-lbl">Satisfaction</div></div>
+          <div class="research-stat"><div class="research-stat-val">${state.badges.length}</div><div class="research-stat-lbl">Badges Earned</div></div>
+          <div class="research-stat"><div class="research-stat-val">${minsActive}m</div><div class="research-stat-lbl">Time Active</div></div>
+        </div>
+      </div>
+
+      <div style="font-size:13px;font-weight:700;color:var(--ink);margin:16px 0 8px;">Most Viewed Topics</div>
+      <div class="card">
+        ${topTopics.length ? topTopics.map(([t,c])=>`<div class="research-topic-row"><span>${t}</span><span>${c} view${c>1?'s':''}</span></div>`).join('')
+          : `<div style="font-size:12.5px;color:var(--slate);">No topics viewed yet this session.</div>`}
+      </div>
+
+      <div style="font-size:13px;font-weight:700;color:var(--ink);margin:16px 0 8px;">User Satisfaction</div>
+      <div class="card">
+        ${state.satisfaction ? `
+          ${SAT_CATEGORIES.map(c=>`<div class="research-topic-row"><span>${c.label}</span><span>${'★'.repeat(state.satisfaction[c.key]||0)}${'☆'.repeat(5-(state.satisfaction[c.key]||0))}</span></div>`).join('')}
+          ${state.satisfaction.comment ? `<div style="font-size:12px;color:var(--slate);margin-top:8px;font-style:italic;">"${state.satisfaction.comment}"</div>` : ''}
+          <button class="btn outline full" style="margin-top:10px;" onclick="openSub('satisfaction','More')">Update Rating</button>
+        ` : `
+          <div style="font-size:12.5px;color:var(--slate);margin-bottom:10px;">Not rated yet on this device.</div>
+          <button class="btn full" onclick="openSub('satisfaction','More')">Rate the App</button>
+        `}
+      </div>
+
+      <div class="card" style="background:var(--teal-bg);margin-top:16px;">
+        <div style="font-size:12px;font-weight:700;color:var(--teal);margin-bottom:4px;">📋 FOR THE PROJECT LEAD</div>
+        <div style="font-size:12px;color:var(--ink);line-height:1.7;">These numbers reflect this device only. For the full pilot (40–60 participants), export each participant's session summary and compile the files into one spreadsheet for aggregate averages and pre/post comparisons.</div>
+      </div>
+
+      <button class="btn full" style="margin-top:14px;" onclick="exportResearchData()">⬇ Export Session Data (JSON)</button>
+      <div style="height:16px;"></div>
+    </div>`;
+}
+
+window.exportResearchData = () => {
+  const avgScore = state.scoreHistory.length ? Math.round(state.scoreHistory.reduce((a,h)=>a+h.score,0)/state.scoreHistory.length) : null;
+  const payload = {
+    sessionId: state.sessionId,
+    exportedAt: new Date().toISOString(),
+    familyMode: state.familyMode,
+    gamesCompleted: state.gamesCompleted,
+    badges: state.badges,
+    brainHealthScoreHistory: state.scoreHistory,
+    avgBrainHealthScore: avgScore,
+    quizHistory: state.quizHistory,
+    topicViews: state.topicViews,
+    challengeProgress: state.challengeProgress,
+    satisfaction: state.satisfaction,
+    brainHealthPassport: state.passport,
+    minutesActive: Math.max(1, Math.round((Date.now()-state.sessionStart)/60000)),
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `mindspring-session-${state.sessionId}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+};
+
+// ── BRAIN HEALTH PASSPORT ────────────────────────────────────────
+const PASSPORT_METRICS = [
+  {key:'bp', icon:'❤️', label:'Blood Pressure', unit:'mmHg', min:80, max:180, type:'bp'},
+  {key:'glucose', icon:'🩸', label:'Blood Glucose', unit:'mg/dL', min:60, max:200, type:'number'},
+  {key:'sleep', icon:'😴', label:'Sleep', unit:'hrs', min:0, max:12, type:'number', step:'0.5'},
+  {key:'activity', icon:'🏃', label:'Physical Activity', unit:'min', min:0, max:120, type:'number'},
+  {key:'water', icon:'💧', label:'Water Intake', unit:'glasses', min:0, max:12, type:'number'},
+  {key:'weight', icon:'⚖️', label:'Weight', unit:'kg', auto:true, type:'number', step:'0.1'},
+];
+
+function passportBarPct(key, entry){
+  const cfg = PASSPORT_METRICS.find(m=>m.key===key);
+  const parse = (e) => key==='bp' ? (parseInt((e.value||'0').split('/')[0])||0) : (parseFloat(e.value)||0);
+  let min = cfg.min, max = cfg.max;
+  if(cfg.auto){
+    const vals = state.passport[key].map(parse);
+    min = Math.min(...vals) - 1; max = Math.max(...vals) + 1;
+    if(min===max){ min -= 1; max += 1; }
+  }
+  const val = parse(entry);
+  const pct = Math.max(6, Math.min(100, Math.round(((val-min)/(max-min))*100)));
+  return pct;
+}
+
+function renderPassport(el){
+  const latestScore = state.scoreHistory.length ? state.scoreHistory[state.scoreHistory.length-1].score : null;
+  el.innerHTML = `
+    <div class="passport-body">
+      <div class="section-title">🩺 Brain Health Passport</div>
+      <div class="section-sub">Track the modifiable factors linked to brain health</div>
+
+      <div class="card passport-card" style="display:flex;gap:14px;align-items:center;">
+        <div style="flex:1;text-align:center;">
+          <div class="passport-latest">${latestScore!==null?latestScore:'—'}</div>
+          <div class="passport-unit">Brain Health Score</div>
+        </div>
+        <div style="width:1px;align-self:stretch;background:var(--mist);"></div>
+        <div style="flex:1;text-align:center;">
+          <div class="passport-latest">${state.gamesCompleted}</div>
+          <div class="passport-unit">Games Completed</div>
+        </div>
+      </div>
+
+      ${PASSPORT_METRICS.map(m=>{
+        const arr = state.passport[m.key];
+        const latest = arr.length ? arr[arr.length-1] : null;
+        const recent = arr.slice(-8);
+        return `
+        <div class="card passport-card">
+          <div class="passport-head">
+            <div class="passport-icon">${m.icon}</div>
+            <div class="passport-title">${m.label}</div>
+            <div style="text-align:right;">
+              <div class="passport-latest">${latest ? latest.value : '—'}</div>
+              <div class="passport-unit">${m.unit}</div>
+            </div>
+          </div>
+          ${recent.length ? `
+            <div class="passport-chart">
+              ${recent.map(e=>`<div class="passport-bar-wrap"><div class="passport-bar" style="height:${passportBarPct(m.key,e)}%;"></div></div>`).join('')}
+            </div>` : `<div class="passport-empty">No entries yet — log your first reading below.</div>`}
+          ${m.type==='bp' ? `
+            <div class="passport-log-row">
+              <input class="passport-log-input" id="pp-${m.key}-sys" type="number" placeholder="Systolic" />
+              <input class="passport-log-input" id="pp-${m.key}-dia" type="number" placeholder="Diastolic" />
+              <button class="passport-log-btn" onclick="logPassportBP()">Log</button>
+            </div>` : `
+            <div class="passport-log-row">
+              <input class="passport-log-input" id="pp-${m.key}" type="number" step="${m.step||'1'}" placeholder="Enter ${m.label.toLowerCase()}" />
+              <button class="passport-log-btn" onclick="logPassport('${m.key}')">Log</button>
+            </div>`}
+        </div>`;
+      }).join('')}
+      <div style="height:8px;"></div>
+    </div>`;
+}
+
+window.logPassport = (key) => {
+  const input = document.getElementById('pp-'+key);
+  const val = input.value.trim();
+  if(!val) return;
+  state.passport[key].push({value: val, date: new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short'})});
+  if(state.passport[key].length > 10) state.passport[key].shift();
+  renderPassport(document.getElementById('content'));
+};
+
+window.logPassportBP = () => {
+  const sys = document.getElementById('pp-bp-sys').value.trim();
+  const dia = document.getElementById('pp-bp-dia').value.trim();
+  if(!sys || !dia) return;
+  state.passport.bp.push({value: `${sys}/${dia}`, date: new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short'})});
+  if(state.passport.bp.length > 10) state.passport.bp.shift();
+  renderPassport(document.getElementById('content'));
+};
+
+window.ackDisclaimer = () => {
+  state.disclaimerAcked = true;
+  const modal = document.getElementById('disclaimerModal');
+  if(modal) modal.style.display = 'none';
+};
+
+window.saveQuizToLog = () => {
+  const codeInput = document.getElementById('captureCode');
+  const code = (codeInput.value || '').trim();
+  if(!code){ codeInput.focus(); return; }
+  state.participantLog.push({
+    code, phase: state.capturePhase, score: quizState.score, maxScore: 5,
+    ts: new Date().toISOString(), deviceSessionId: state.sessionId, synced: false,
+  });
+  saveAdminLocal();
+  const saved = document.getElementById('captureSaved');
+  if(saved) saved.style.display = 'block';
+  codeInput.value = '';
+  codeInput.disabled = true;
+};
+
+// ── ADMIN PORTAL ──────────────────────────────────────────────────
+window.openAdminPin = () => {
+  const modal = document.getElementById('adminPinModal');
+  modal.style.display = 'flex';
+  document.getElementById('adminPinInput').value = '';
+  document.getElementById('adminPinError').style.display = 'none';
+  setTimeout(()=>{ const i=document.getElementById('adminPinInput'); if(i) i.focus(); }, 50);
+};
+window.closeAdminPin = () => {
+  document.getElementById('adminPinModal').style.display = 'none';
+};
+window.submitAdminPin = () => {
+  const val = document.getElementById('adminPinInput').value;
+  if(val === state.adminPin){
+    closeAdminPin();
+    openSub('admin', 'More');
+  } else {
+    document.getElementById('adminPinError').style.display = 'block';
+  }
+};
+
+function escapeHtml(str){
+  return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function renderAdmin(el){
+  const log = state.participantLog;
+  const preScores = log.filter(r=>r.phase==='pre').map(r=>r.score);
+  const postScores = log.filter(r=>r.phase==='post').map(r=>r.score);
+  const avg = arr => arr.length ? (arr.reduce((a,b)=>a+b,0)/arr.length).toFixed(1) : '—';
+  const codes = new Set(log.map(r=>r.code));
+
+  el.innerHTML = `
+    <div class="admin-body">
+      <div class="section-title">🔐 Admin Portal</div>
+      <div class="section-sub">Live-event data capture, export & sync</div>
+
+      <div class="card">
+        <div class="admin-toggle-row">
+          <div>
+            <div style="font-weight:700;color:var(--ink);font-size:13.5px;">Event Capture Mode</div>
+            <div style="font-size:11px;color:var(--slate);">Show the save-to-log prompt after each quiz</div>
+          </div>
+          <div class="switch${state.sessionCaptureMode?' on':''}" onclick="toggleCaptureMode()"></div>
+        </div>
+        ${state.sessionCaptureMode ? `
+          <div style="margin-top:10px;">
+            <div style="font-size:11.5px;color:var(--slate);margin-bottom:6px;">Currently collecting:</div>
+            <div class="phase-pill">
+              <button class="phase-btn${state.capturePhase==='pre'?' active':''}" onclick="setCapturePhase('pre')">PRE</button>
+              <button class="phase-btn${state.capturePhase==='post'?' active':''}" onclick="setCapturePhase('post')">POST</button>
+            </div>
+          </div>
+        ` : ''}
+      </div>
+
+      <div class="admin-stat-row">
+        <div class="admin-stat"><div class="admin-stat-val">${codes.size}</div><div class="admin-stat-lbl">Participants</div></div>
+        <div class="admin-stat"><div class="admin-stat-val">${avg(preScores)}</div><div class="admin-stat-lbl">Avg Pre (/5)</div></div>
+        <div class="admin-stat"><div class="admin-stat-val">${avg(postScores)}</div><div class="admin-stat-lbl">Avg Post (/5)</div></div>
+      </div>
+
+      <div class="card" style="padding:0;overflow-x:auto;">
+        ${log.length ? `
+          <table class="log-table">
+            <thead><tr><th>Code</th><th>Phase</th><th>Score</th><th>Time</th></tr></thead>
+            <tbody>
+              ${log.slice().reverse().map(r=>`
+                <tr>
+                  <td>${escapeHtml(r.code)}</td>
+                  <td>${r.phase.toUpperCase()}</td>
+                  <td>${r.score}/${r.maxScore}</td>
+                  <td>${new Date(r.ts).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})}</td>
+                </tr>`).join('')}
+            </tbody>
+          </table>
+        ` : `<div style="padding:20px;text-align:center;font-size:12.5px;color:var(--slate);">No records yet. Turn on Event Capture Mode above, then have participants take the quiz.</div>`}
+      </div>
+
+      <button class="btn full" style="margin-top:14px;" onclick="exportLogCsv()">⬇ Download CSV (${log.length} rows)</button>
+
+      <div style="font-size:13px;font-weight:700;color:var(--ink);margin:20px 0 8px;">☁️ Supabase Sync (optional)</div>
+      <div class="card">
+        <div style="font-size:11.5px;color:var(--slate);margin-bottom:10px;">Paste your Supabase project URL and anon public API key once — this device remembers them. Requires a table with an insert-allowed policy for the anon role (see chat for the schema).</div>
+        <input type="text" id="sbUrl" class="capture-input" placeholder="https://xxxx.supabase.co" value="${escapeHtml(state.supabaseUrl)}" />
+        <input type="text" id="sbKey" class="capture-input" placeholder="anon public API key" value="${escapeHtml(state.supabaseKey)}" />
+        <input type="text" id="sbTable" class="capture-input" placeholder="Table name" value="${escapeHtml(state.supabaseTable)}" />
+        <button class="btn outline full" onclick="saveSupabaseConfig()">Save Settings</button>
+        <button class="btn full" style="margin-top:8px;" onclick="syncToSupabase()">Sync Unsynced Rows to Supabase</button>
+        <div id="sbStatus" style="font-size:12px;margin-top:8px;text-align:center;"></div>
+      </div>
+
+      <div style="font-size:13px;font-weight:700;color:var(--ink);margin:20px 0 8px;">⚙️ Settings</div>
+      <div class="card">
+        <div style="font-size:11.5px;color:var(--slate);margin-bottom:8px;">Change admin PIN</div>
+        <input type="text" id="newPin" class="capture-input" placeholder="New PIN" />
+        <button class="btn outline full" onclick="changeAdminPin()">Update PIN</button>
+        <button class="btn full" style="margin-top:14px;background:var(--red);" onclick="clearAdminLog()">🗑 Clear All Log Data</button>
+      </div>
+
+      <div class="card" style="background:#FDEAEA;border:1.5px solid var(--red);margin-top:16px;">
+        <div style="font-size:11px;color:var(--ink);line-height:1.7;">⚠️ This PIN is a light deterrent for a community screening tool, not strong security — it's checked in the browser, not on a server. Don't use it to protect anything more sensitive than anonymised participant codes and quiz scores.</div>
+      </div>
+      <div style="height:16px;"></div>
+    </div>`;
+}
+
+window.toggleCaptureMode = () => {
+  state.sessionCaptureMode = !state.sessionCaptureMode;
+  saveAdminLocal();
+  renderAdmin(document.getElementById('content'));
+};
+window.setCapturePhase = (phase) => {
+  state.capturePhase = phase;
+  saveAdminLocal();
+  renderAdmin(document.getElementById('content'));
+};
+
+window.exportLogCsv = () => {
+  const rows = [['code','phase','score','max_score','timestamp','device_session_id']];
+  state.participantLog.forEach(r => rows.push([r.code, r.phase, r.score, r.maxScore, r.ts, r.deviceSessionId]));
+  const csv = rows.map(row => row.map(cell => {
+    const s = String(cell === undefined || cell === null ? '' : cell);
+    return /[",\n]/.test(s) ? '"' + s.replace(/"/g,'""') + '"' : s;
+  }).join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `mindspring-event-log-${new Date().toISOString().slice(0,10)}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+};
+
+window.saveSupabaseConfig = () => {
+  state.supabaseUrl = document.getElementById('sbUrl').value.trim().replace(/\/$/,'');
+  state.supabaseKey = document.getElementById('sbKey').value.trim();
+  state.supabaseTable = document.getElementById('sbTable').value.trim() || 'mindspring_quiz_results';
+  saveAdminLocal();
+  const status = document.getElementById('sbStatus');
+  status.style.color = 'var(--green)';
+  status.textContent = 'Settings saved on this device.';
+};
+
+window.syncToSupabase = async () => {
+  const status = document.getElementById('sbStatus');
+  if(!state.supabaseUrl || !state.supabaseKey){
+    status.style.color = 'var(--red)';
+    status.textContent = 'Add your Supabase URL and key first, then Save Settings.';
+    return;
+  }
+  const unsynced = state.participantLog.filter(r => !r.synced);
+  if(!unsynced.length){
+    status.style.color = 'var(--slate)';
+    status.textContent = 'Nothing to sync — all rows already synced.';
+    return;
+  }
+  status.style.color = 'var(--slate)';
+  status.textContent = `Syncing ${unsynced.length} row(s)…`;
+  try{
+    const payload = unsynced.map(r => ({
+      participant_code: r.code, phase: r.phase, score: r.score, max_score: r.maxScore,
+      recorded_at: r.ts, device_session_id: r.deviceSessionId,
+    }));
+    const res = await fetch(`${state.supabaseUrl}/rest/v1/${state.supabaseTable}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': state.supabaseKey,
+        'Authorization': `Bearer ${state.supabaseKey}`,
+        'Prefer': 'return=minimal',
+      },
+      body: JSON.stringify(payload),
+    });
+    if(!res.ok){
+      const text = await res.text();
+      throw new Error(`${res.status}: ${text.slice(0,200)}`);
+    }
+    unsynced.forEach(r => r.synced = true);
+    saveAdminLocal();
+    status.style.color = 'var(--green)';
+    status.textContent = `✅ Synced ${unsynced.length} row(s) to Supabase.`;
+    renderAdmin(document.getElementById('content'));
+  }catch(e){
+    status.style.color = 'var(--red)';
+    status.textContent = `Sync failed: ${e.message}`;
+  }
+};
+
+window.changeAdminPin = () => {
+  const val = document.getElementById('newPin').value.trim();
+  if(!val || val.length < 4){ alert('PIN must be at least 4 characters.'); return; }
+  state.adminPin = val;
+  saveAdminLocal();
+  alert('PIN updated.');
+  renderAdmin(document.getElementById('content'));
+};
+
+window.clearAdminLog = () => {
+  if(!confirm('This permanently deletes all captured participant records on this device. Continue?')) return;
+  state.participantLog = [];
+  saveAdminLocal();
+  renderAdmin(document.getElementById('content'));
+};
+
+// ── Init ──────────────────────────────────────────────────────────
+loadAdminLocal();
+applyAccessibility();
+navigate('home');
+if(state.disclaimerAcked){
+  const modal = document.getElementById('disclaimerModal');
+  if(modal) modal.style.display = 'none';
+}
+</script>
+</body>
+</html>
