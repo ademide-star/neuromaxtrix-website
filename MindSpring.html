@@ -472,9 +472,6 @@ let state = {
   capturePhase: 'pre',           // 'pre' | 'post'
   participantLog: [],            // {code, phase, score, maxScore, ts, deviceSessionId, synced}
   adminPin: '1234',
-  supabaseUrl: 'https://xxyncvigdhegrqekyfee.supabase.co',
-  supabaseKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh4eW5jdmlnZGhlZ3JxZWt5ZmVlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYwMTU2OTIsImV4cCI6MjEwMTU5MTY5Mn0.x1BgyfSUa5ZsTnp0uZcXHKvnu51UJlep853xi4lo8Xg',
-  supabaseTable: 'mindspring_quiz_results',
 };
 
 // ── LOCAL PERSISTENCE (admin data only — survives page reloads) ──
@@ -485,9 +482,6 @@ function loadAdminLocal(){
     const saved = JSON.parse(raw);
     if(saved.participantLog) state.participantLog = saved.participantLog;
     if(saved.adminPin) state.adminPin = saved.adminPin;
-    if(saved.supabaseUrl) state.supabaseUrl = saved.supabaseUrl;
-    if(saved.supabaseKey) state.supabaseKey = saved.supabaseKey;
-    if(saved.supabaseTable) state.supabaseTable = saved.supabaseTable;
     if(typeof saved.sessionCaptureMode === 'boolean') state.sessionCaptureMode = saved.sessionCaptureMode;
     if(saved.capturePhase) state.capturePhase = saved.capturePhase;
   }catch(e){ /* localStorage unavailable — fail silently, stay in-memory only */ }
@@ -497,9 +491,6 @@ function saveAdminLocal(){
     localStorage.setItem('mindspring_admin_v1', JSON.stringify({
       participantLog: state.participantLog,
       adminPin: state.adminPin,
-      supabaseUrl: state.supabaseUrl,
-      supabaseKey: state.supabaseKey,
-      supabaseTable: state.supabaseTable,
       sessionCaptureMode: state.sessionCaptureMode,
       capturePhase: state.capturePhase,
     }));
@@ -1890,17 +1881,6 @@ function renderAdmin(el){
 
       <button class="btn full" style="margin-top:14px;" onclick="exportLogCsv()">⬇ Download CSV (${log.length} rows)</button>
 
-      <div style="font-size:13px;font-weight:700;color:var(--ink);margin:20px 0 8px;">☁️ Supabase Sync (optional)</div>
-      <div class="card">
-        <div style="font-size:11.5px;color:var(--slate);margin-bottom:10px;">Paste your Supabase project URL and anon public API key once — this device remembers them. Requires a table with an insert-allowed policy for the anon role (see chat for the schema).</div>
-        <input type="text" id="sbUrl" class="capture-input" placeholder="https://xxxx.supabase.co" value="${escapeHtml(state.supabaseUrl)}" />
-        <input type="text" id="sbKey" class="capture-input" placeholder="anon public API key" value="${escapeHtml(state.supabaseKey)}" />
-        <input type="text" id="sbTable" class="capture-input" placeholder="Table name" value="${escapeHtml(state.supabaseTable)}" />
-        <button class="btn outline full" onclick="saveSupabaseConfig()">Save Settings</button>
-        <button class="btn full" style="margin-top:8px;" onclick="syncToSupabase()">Sync Unsynced Rows to Supabase</button>
-        <div id="sbStatus" style="font-size:12px;margin-top:8px;text-align:center;"></div>
-      </div>
-
       <div style="font-size:13px;font-weight:700;color:var(--ink);margin:20px 0 8px;">⚙️ Settings</div>
       <div class="card">
         <div style="font-size:11.5px;color:var(--slate);margin-bottom:8px;">Change admin PIN</div>
@@ -1943,61 +1923,6 @@ window.exportLogCsv = () => {
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
-};
-
-window.saveSupabaseConfig = () => {
-  state.supabaseUrl = document.getElementById('sbUrl').value.trim().replace(/\/$/,'');
-  state.supabaseKey = document.getElementById('sbKey').value.trim();
-  state.supabaseTable = document.getElementById('sbTable').value.trim() || 'mindspring_quiz_results';
-  saveAdminLocal();
-  const status = document.getElementById('sbStatus');
-  status.style.color = 'var(--green)';
-  status.textContent = 'Settings saved on this device.';
-};
-
-window.syncToSupabase = async () => {
-  const status = document.getElementById('sbStatus');
-  if(!state.supabaseUrl || !state.supabaseKey){
-    status.style.color = 'var(--red)';
-    status.textContent = 'Add your Supabase URL and key first, then Save Settings.';
-    return;
-  }
-  const unsynced = state.participantLog.filter(r => !r.synced);
-  if(!unsynced.length){
-    status.style.color = 'var(--slate)';
-    status.textContent = 'Nothing to sync — all rows already synced.';
-    return;
-  }
-  status.style.color = 'var(--slate)';
-  status.textContent = `Syncing ${unsynced.length} row(s)…`;
-  try{
-    const payload = unsynced.map(r => ({
-      participant_code: r.code, phase: r.phase, score: r.score, max_score: r.maxScore,
-      recorded_at: r.ts, device_session_id: r.deviceSessionId,
-    }));
-    const res = await fetch(`${state.supabaseUrl}/rest/v1/${state.supabaseTable}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'apikey': state.supabaseKey,
-        'Authorization': `Bearer ${state.supabaseKey}`,
-        'Prefer': 'return=minimal',
-      },
-      body: JSON.stringify(payload),
-    });
-    if(!res.ok){
-      const text = await res.text();
-      throw new Error(`${res.status}: ${text.slice(0,200)}`);
-    }
-    unsynced.forEach(r => r.synced = true);
-    saveAdminLocal();
-    status.style.color = 'var(--green)';
-    status.textContent = `✅ Synced ${unsynced.length} row(s) to Supabase.`;
-    renderAdmin(document.getElementById('content'));
-  }catch(e){
-    status.style.color = 'var(--red)';
-    status.textContent = `Sync failed: ${e.message}`;
-  }
 };
 
 window.changeAdminPin = () => {
