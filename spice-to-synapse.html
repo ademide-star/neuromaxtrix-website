@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="From Spice to Synapse — NSN 2026 Workshop. Building a Neuroinformatics Pipeline for Evaluating African Medicinal Plants in Neurodegeneration. COEST · Olabisi Onabanjo University, Nigeria.">
+<meta property="og:title" content="From Spice to Synapse · NSN 2026 Workshop">
+<meta property="og:description" content="An AI-powered drug discovery pipeline turning African medicinal plants into stroke and dementia drug candidates. Live demo tools, real preclinical data, open collaboration.">
+<meta property="og:type" content="website">
+<title>From Spice to Synapse · NSN 2026 · Neuroinformatics Workshop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bark:#2C1400;--spice:#6B2D0A;--ochre:#C4570A;--gold:#E8991A;
+  --cream:#FDF8F2;--parchment:#F7EDD9;--fog:#EAD9C0;--ink:#1A0E05;
+  --muted:#7A5535;--light:#FFFFFF;
+  --neural:#0F3D5C;--synapse:#0A6B4A;--sky:#1A5FA8;
+  --serif:'Lora',Georgia,serif;--sans:'Inter',system-ui,sans-serif;--mono:'JetBrains Mono',monospace;
+  --max:1120px;--r:10px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;font-size:16px;}
+body{background:var(--cream);color:var(--ink);font-family:var(--sans);line-height:1.65;-webkit-font-smoothing:antialiased;}
+
+/* ── NAV ── */
+nav{position:sticky;top:0;z-index:200;background:rgba(253,248,242,0.94);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--fog);}
+.nav-inner{max-width:var(--max);margin:0 auto;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:58px;}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.nav-logo{width:32px;height:32px;border-radius:8px;background:var(--bark);display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--cream);}
+.nav-name{font-family:var(--serif);font-size:15px;font-weight:600;color:var(--bark);}
+.nav-links{display:flex;gap:0;align-items:center;}
+.nav-links a{font-size:13px;font-weight:500;color:var(--muted);text-decoration:none;padding:8px 14px;border-radius:6px;transition:color .15s,background .15s;}
+.nav-links a:hover{color:var(--bark);background:var(--parchment);}
+.nav-cta{background:var(--bark);color:var(--cream) !important;border-radius:6px;padding:7px 16px !important;font-size:13px;font-weight:600 !important;}
+.nav-cta:hover{background:var(--spice) !important;color:var(--cream) !important;}
+
+/* ── HERO ── */
+.hero{background:var(--bark);color:var(--cream);padding:0;overflow:hidden;position:relative;}
+.hero-grid{max-width:var(--max);margin:0 auto;padding:5rem 2rem 4.5rem;display:grid;grid-template-columns:1fr 420px;gap:4rem;align-items:center;}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:1.4rem;}
+.hero-eyebrow::before{content:'';display:block;width:24px;height:1.5px;background:var(--gold);}
+.hero h1{font-family:var(--serif);font-size:3.2rem;font-weight:700;line-height:1.12;letter-spacing:-0.5px;margin-bottom:1.2rem;}
+.hero h1 em{color:var(--gold);font-style:normal;}
+.hero-sub{font-size:1.05rem;color:#C8A87A;line-height:1.75;max-width:520px;margin-bottom:2.2rem;}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:var(--r);font-size:14px;font-weight:600;cursor:pointer;border:none;text-decoration:none;transition:opacity .15s,transform .12s;}
+.btn:hover{opacity:.9;transform:translateY(-1px);}
+.btn-gold{background:var(--gold);color:var(--bark);}
+.btn-outline{background:transparent;color:var(--cream);border:1.5px solid rgba(255,255,255,.3);}
+.btn-outline:hover{border-color:rgba(255,255,255,.6);}
+.btn-sm{padding:9px 18px;font-size:13px;}
+
+/* Hero card */
+.hero-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:1.8rem;}
+.hc-title{font-size:11px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:#C8A87A;margin-bottom:1rem;}
+.hc-stat{display:flex;justify-content:space-between;align-items:baseline;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.08);}
+.hc-stat:last-child{border-bottom:none;}
+.hc-val{font-family:var(--serif);font-size:1.6rem;font-weight:700;color:var(--gold);}
+.hc-lbl{font-size:12px;color:#A8856A;text-align:right;max-width:160px;line-height:1.4;}
+
+/* Scroll indicator */
+.scroll-hint{text-align:center;padding:1.2rem 0;border-top:1px solid rgba(255,255,255,.08);margin-top:3rem;}
+.scroll-hint span{font-size:11px;color:#7A5A3A;letter-spacing:1px;text-transform:uppercase;}
+
+/* ── SECTIONS ── */
+.section{padding:5rem 0;border-bottom:1px solid var(--fog);}
+.section:last-of-type{border-bottom:none;}
+.container{max-width:var(--max);margin:0 auto;padding:0 2rem;}
+.eyebrow{font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--ochre);margin-bottom:.6rem;}
+.section-title{font-family:var(--serif);font-size:2rem;font-weight:700;color:var(--bark);margin-bottom:.5rem;letter-spacing:-.3px;}
+.section-desc{font-size:.95rem;color:var(--muted);max-width:580px;line-height:1.7;margin-bottom:3rem;}
+
+/* ── PIPELINE ── */
+.pipeline{display:grid;grid-template-columns:repeat(5,1fr);gap:0;position:relative;margin-bottom:2rem;}
+.pipe-stage{padding:1.4rem 1rem 1.2rem;border:1px solid var(--fog);border-right:none;position:relative;background:var(--light);transition:border-color .15s,background .15s;}
+.pipe-stage:last-child{border-right:1px solid var(--fog);border-radius:0 var(--r) var(--r) 0;}
+.pipe-stage:first-child{border-radius:var(--r) 0 0 var(--r);}
+.pipe-stage.done{background:var(--parchment);border-color:var(--fog);}
+.pipe-stage.active{background:#FFF7E6;border-color:var(--gold);z-index:1;}
+.pipe-stage.next{background:#F0F6FF;}
+.pipe-num{font-family:var(--mono);font-size:10px;font-weight:500;color:var(--muted);margin-bottom:8px;}
+.pipe-stage.done .pipe-num{color:var(--synapse);}
+.pipe-stage.active .pipe-num{color:var(--ochre);}
+.pipe-name{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:4px;line-height:1.3;}
+.pipe-tool{font-size:10px;color:var(--muted);line-height:1.4;}
+.pipe-badge{display:inline-block;font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;margin-top:8px;}
+.pipe-badge.done{background:#D1FAE5;color:#065F46;}
+.pipe-badge.active{background:#FEF3C7;color:#92400E;}
+.pipe-badge.next{background:#DBEAFE;color:#1E40AF;}
+.pipe-arrow{position:absolute;right:-12px;top:50%;transform:translateY(-50%);width:0;height:0;border-top:9px solid transparent;border-bottom:9px solid transparent;border-left:12px solid var(--fog);z-index:2;}
+.pipe-stage.done .pipe-arrow{border-left-color:var(--fog);}
+.pipe-stage.active .pipe-arrow{border-left-color:var(--gold);}
+
+/* ── TOOL CARDS ── */
+.tools-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-bottom:2rem;}
+.tool-card{background:var(--light);border:1.5px solid var(--fog);border-radius:14px;overflow:hidden;transition:border-color .2s,box-shadow .2s,transform .15s;display:flex;flex-direction:column;}
+.tool-card:hover{border-color:var(--ochre);box-shadow:0 8px 32px rgba(59,28,10,.1);transform:translateY(-3px);}
+.tc-header{padding:1.5rem 1.5rem 0;}
+.tc-num{font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:10px;}
+.tc-icon{font-size:2rem;margin-bottom:.8rem;display:block;}
+.tc-title{font-family:var(--serif);font-size:1.15rem;font-weight:700;color:var(--bark);margin-bottom:.4rem;}
+.tc-sub{font-size:.82rem;color:var(--muted);line-height:1.6;margin-bottom:1rem;}
+.tc-body{padding:0 1.5rem 1.5rem;flex:1;display:flex;flex-direction:column;}
+.tc-features{list-style:none;margin-bottom:1.2rem;flex:1;}
+.tc-features li{font-size:.82rem;color:var(--ink);padding:7px 0;border-bottom:1px solid var(--fog);display:flex;gap:8px;align-items:flex-start;line-height:1.5;}
+.tc-features li:last-child{border-bottom:none;}
+.tc-features li::before{content:'→';color:var(--ochre);flex-shrink:0;margin-top:1px;}
+.tc-btn{display:block;text-align:center;background:var(--bark);color:var(--cream);padding:10px;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;transition:background .15s;}
+.tc-btn:hover{background:var(--spice);}
+
+/* ── CINNAMON DATA ── */
+.data-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-bottom:2rem;}
+.data-panel{background:var(--light);border:1.5px solid var(--fog);border-radius:14px;padding:1.5rem;}
+.dp-title{font-size:.78rem;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--ochre);margin-bottom:1rem;}
+.kpi-row{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:1rem;}
+.kpi{background:var(--parchment);border-radius:8px;padding:12px;text-align:center;}
+.kpi-val{font-family:var(--serif);font-size:1.6rem;font-weight:700;color:var(--spice);display:block;line-height:1.1;}
+.kpi-lbl{font-size:.68rem;color:var(--muted);line-height:1.3;margin-top:3px;}
+
+/* Compound pills */
+.compound-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--fog);}
+.compound-row:last-child{border-bottom:none;}
+.compound-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.compound-name{font-weight:600;font-size:.88rem;color:var(--ink);flex:1;}
+.compound-score{font-family:var(--mono);font-size:.82rem;color:var(--spice);font-weight:500;}
+.compound-tag{font-size:.68rem;padding:2px 7px;border-radius:20px;background:var(--parchment);color:var(--muted);}
+
+/* Heatmap preview */
+.hm-preview{display:grid;grid-template-columns:repeat(16,1fr);gap:1px;background:var(--fog);border:1px solid var(--fog);border-radius:6px;overflow:hidden;}
+.hm-cell{aspect-ratio:1;}
+
+/* ── DISEASE TARGETS ── */
+.disease-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:2rem;}
+.disease-card{background:var(--light);border:1.5px solid var(--fog);border-radius:14px;overflow:hidden;}
+.dc-header{padding:1.3rem 1.5rem;display:flex;gap:14px;align-items:center;}
+.dc-icon-wrap{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;}
+.dc-title{font-family:var(--serif);font-size:1.1rem;font-weight:700;color:var(--ink);}
+.dc-sub{font-size:.75rem;color:var(--muted);margin-top:2px;line-height:1.4;}
+.dc-body{padding:0 1.5rem 1.5rem;}
+.target-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--fog);}
+.target-item:last-child{border-bottom:none;}
+.target-badge{font-family:var(--mono);font-size:.7rem;font-weight:600;padding:3px 8px;border-radius:4px;white-space:nowrap;flex-shrink:0;margin-top:1px;}
+.target-text{font-size:.82rem;color:var(--muted);line-height:1.5;flex:1;}
+.target-score{font-family:var(--mono);font-size:.78rem;font-weight:600;color:var(--spice);flex-shrink:0;white-space:nowrap;}
+
+/* ── WORKSHOP DETAILS ── */
+.workshop-grid{display:grid;grid-template-columns:1fr 340px;gap:3rem;align-items:start;}
+.ws-info{background:var(--light);border:1.5px solid var(--fog);border-radius:14px;padding:1.8rem;}
+.ws-row{display:flex;gap:14px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--fog);}
+.ws-row:last-child{border-bottom:none;}
+.ws-icon{font-size:1.1rem;width:28px;text-align:center;flex-shrink:0;margin-top:2px;}
+.ws-label{font-size:.75rem;font-weight:600;color:var(--ochre);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px;}
+.ws-val{font-size:.9rem;color:var(--ink);line-height:1.5;}
+.ws-val small{display:block;font-size:.78rem;color:var(--muted);margin-top:2px;}
+.agenda-list{list-style:none;}
+.agenda-item{display:flex;gap:14px;padding:12px 0;border-bottom:1px solid var(--fog);}
+.agenda-item:last-child{border-bottom:none;}
+.agenda-time{font-family:var(--mono);font-size:.75rem;color:var(--muted);width:56px;flex-shrink:0;padding-top:2px;}
+.agenda-dot{width:8px;height:8px;border-radius:50%;background:var(--ochre);flex-shrink:0;margin-top:5px;}
+.agenda-content{flex:1;}
+.agenda-title{font-size:.88rem;font-weight:600;color:var(--ink);margin-bottom:2px;}
+.agenda-desc{font-size:.78rem;color:var(--muted);line-height:1.5;}
+
+/* ── PRESENTER ── */
+.presenter-card{background:var(--parchment);border:1.5px solid var(--fog);border-radius:14px;padding:1.8rem;}
+.pc-avatar{width:72px;height:72px;border-radius:50%;background:var(--bark);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:1.4rem;font-weight:700;color:var(--gold);margin-bottom:1rem;}
+.pc-name{font-family:var(--serif);font-size:1.2rem;font-weight:700;color:var(--bark);margin-bottom:2px;}
+.pc-role{font-size:.82rem;color:var(--muted);margin-bottom:1rem;line-height:1.5;}
+.pc-creds{list-style:none;}
+.pc-creds li{font-size:.82rem;color:var(--ink);padding:7px 0;border-bottom:1px solid var(--fog);display:flex;gap:8px;line-height:1.5;}
+.pc-creds li:last-child{border-bottom:none;}
+.pc-creds li::before{content:'▸';color:var(--ochre);flex-shrink:0;}
+
+/* ── COLLAB ── */
+.collab-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;margin-bottom:2rem;}
+.collab-card{background:var(--light);border:1.5px solid var(--fog);border-radius:12px;padding:1.3rem;transition:border-color .2s,box-shadow .2s;}
+.collab-card:hover{border-color:var(--ochre);box-shadow:0 4px 20px rgba(59,28,10,.08);}
+.cc-icon{font-size:1.5rem;margin-bottom:.7rem;display:block;}
+.cc-title{font-weight:600;font-size:.9rem;color:var(--ink);margin-bottom:.4rem;}
+.cc-desc{font-size:.78rem;color:var(--muted);line-height:1.6;margin-bottom:.8rem;}
+.cc-tags{display:flex;flex-wrap:wrap;gap:4px;}
+.cc-tag{font-size:.65rem;padding:2px 7px;border-radius:20px;font-weight:600;}
+.tag-seek{background:#EFF6FF;color:#1D4ED8;}
+.tag-offer{background:#F0FDF4;color:#166534;}
+
+/* ── CTA BANNER ── */
+.cta-banner{background:var(--bark);border-radius:16px;padding:3rem 3.5rem;display:grid;grid-template-columns:1fr auto;gap:3rem;align-items:center;margin:2rem 0;}
+.cta-title{font-family:var(--serif);font-size:1.7rem;font-weight:700;color:var(--light);margin-bottom:.6rem;}
+.cta-sub{font-size:.9rem;color:#C8A87A;line-height:1.7;max-width:500px;}
+.cta-buttons{display:flex;flex-direction:column;gap:10px;min-width:200px;}
+.cta-link{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:8px;padding:11px 16px;color:var(--light);text-decoration:none;font-size:.82rem;font-weight:600;display:flex;align-items:center;gap:10px;transition:background .15s;}
+.cta-link:hover{background:rgba(255,255,255,.16);}
+
+/* ── FOOTER ── */
+footer{background:var(--ink);color:#8A6A4A;padding:3rem 2rem;text-align:center;}
+footer strong{color:#C8A87A;}
+footer a{color:#8A6A4A;text-decoration:none;}
+footer a:hover{color:#C8A87A;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .hero-grid{grid-template-columns:1fr;gap:2.5rem;}
+  .hero-card{display:none;}
+  .hero h1{font-size:2.2rem;}
+  .pipeline{grid-template-columns:1fr 1fr;gap:8px;}
+  .pipe-arrow{display:none;}
+  .pipe-stage{border-right:1px solid var(--fog) !important;border-radius:var(--r) !important;}
+  .tools-grid,.disease-grid,.data-grid,.collab-grid{grid-template-columns:1fr;}
+  .workshop-grid{grid-template-columns:1fr;}
+  .cta-banner{grid-template-columns:1fr;padding:2rem;}
+  .nav-links{display:none;}
+}
+@media(max-width:600px){
+  .hero h1{font-size:1.8rem;}
+  .hero-grid{padding:3rem 1.5rem 2.5rem;}
+  .container{padding:0 1.5rem;}
+  .kpi-row{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a class="nav-brand" href="#">
+      <div class="nav-logo">🌿</div>
+      <span class="nav-name">Spice to Synapse</span>
+    </a>
+    <div class="nav-links">
+      <a href="#pipeline">Pipeline</a>
+      <a href="#tools">Tools</a>
+      <a href="#data">Data</a>
+      <a href="#workshop">Workshop</a>
+      <a href="#collaborate">Collaborate</a>
+      <a href="#tools" class="nav-cta">Try the platform →</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid">
+    <div>
+      <div class="hero-eyebrow">NSN 23rd Scientific Conference · Abuja 2026</div>
+      <h1>From <em>Spice</em><br>to <em>Synapse</em></h1>
+      <p class="hero-sub">Building a neuroinformatics pipeline that turns African medicinal plants into stroke and dementia drug candidates — validated on 84 real animals, powered by AI, open to any researcher on the continent.</p>
+      <div class="hero-actions">
+        <a class="btn btn-gold" href="#tools">Explore the live tools</a>
+        <a class="btn btn-outline" href="#workshop">Workshop details</a>
+        <a class="btn btn-outline" href="#collaborate">Collaborate with us</a>
+      </div>
+    </div>
+    <div class="hero-card">
+      <div class="hc-title">Platform at a glance</div>
+      <div class="hc-stat"><span class="hc-val">84</span><span class="hc-lbl">Real animals · 31 biomarkers</span></div>
+      <div class="hc-stat"><span class="hc-val">84.8%</span><span class="hc-lbl">LDA classification accuracy</span></div>
+      <div class="hc-stat"><span class="hc-val">100%</span><span class="hc-lbl">Neuroprotective response classification</span></div>
+      <div class="hc-stat"><span class="hc-val">5 → 15</span><span class="hc-lbl">Compounds → validated targets</span></div>
+      <div class="hc-stat"><span class="hc-val">22</span><span class="hc-lbl">Pathways mapped</span></div>
+      <div class="hc-stat"><span class="hc-val">0</span><span class="hc-lbl">Lines of code needed by participants</span></div>
+    </div>
+  </div>
+  <div class="scroll-hint container">
+    <span>↓ Scroll to explore</span>
+  </div>
+</section>
+
+<!-- PIPELINE -->
+<section class="section" id="pipeline">
+  <div class="container">
+    <div class="eyebrow">The 6-stage translational pipeline</div>
+    <h2 class="section-title">From Market Stall to NAFDAC Application</h2>
+    <p class="section-desc">A defined path from ethnobotanical knowledge to a clinically viable drug candidate — with stages 1–3 already complete using Saigon cinnamon as the reference compound.</p>
+    <div class="pipeline">
+      <div class="pipe-stage done">
+        <div class="pipe-num">STAGE 01</div>
+        <div class="pipe-name">Ethnobotany &amp; target ID</div>
+        <div class="pipe-tool">Saigon cinnamon · 5 compounds · 15 targets</div>
+        <div class="pipe-badge done">✓ Complete</div>
+        <div class="pipe-arrow"></div>
+      </div>
+      <div class="pipe-stage done">
+        <div class="pipe-num">STAGE 02</div>
+        <div class="pipe-name">Preclinical in vivo</div>
+        <div class="pipe-tool">84 animals · AD model · 31 biomarkers</div>
+        <div class="pipe-badge done">✓ Complete</div>
+        <div class="pipe-arrow"></div>
+      </div>
+      <div class="pipe-stage active">
+        <div class="pipe-num">STAGE 03</div>
+        <div class="pipe-name">Computational screening</div>
+        <div class="pipe-tool">Docking · ADMET · ML · Network pharmacology</div>
+        <div class="pipe-badge active">◉ This workshop</div>
+        <div class="pipe-arrow"></div>
+      </div>
+      <div class="pipe-stage next">
+        <div class="pipe-num">STAGE 04</div>
+        <div class="pipe-name">In vitro validation</div>
+        <div class="pipe-tool">AChE · BACE1 · BBB · IC₅₀</div>
+        <div class="pipe-badge next">→ Seeking partners</div>
+        <div class="pipe-arrow"></div>
+      </div>
+      <div class="pipe-stage next">
+        <div class="pipe-num">STAGE 05–06</div>
+        <div class="pipe-name">Lead optimisation &amp; IND</div>
+        <div class="pipe-tool">SAR · GLP tox · NAFDAC filing</div>
+        <div class="pipe-badge next">→ Future phases</div>
+      </div>
+    </div>
+    <div style="background:var(--parchment);border:1.5px solid var(--fog);border-radius:var(--r);padding:1rem 1.4rem;font-size:.85rem;color:var(--muted);line-height:1.7;">
+      <strong style="color:var(--bark);">Why this matters:</strong> Africa has 25% of the world's plant species and carries a growing burden of dementia and stroke — yet zero neuroprotective drugs have been developed on the continent. This pipeline changes that equation computationally first, before committing years of wet-lab resources to the wrong compound.
+    </div>
+  </div>
+</section>
+
+<!-- TOOLS -->
+<section class="section" id="tools" style="background:var(--parchment);">
+  <div class="container">
+    <div class="eyebrow">Three AI-powered tools</div>
+    <h2 class="section-title">The Platform — Open to Every Researcher</h2>
+    <p class="section-desc">Built on real preclinical data from 84 animals and validated against Saigon cinnamon. Input any African plant. No coding required. No account needed. Download once, run anywhere.</p>
+    <div class="tools-grid">
+      <div class="tool-card">
+        <div class="tc-header">
+          <div class="tc-num">MODULE 01</div>
+          <span class="tc-icon">🔬</span>
+          <div class="tc-title">Plant → Drug Screener</div>
+          <div class="tc-sub">Enter any plant or compound. Get binding affinities, ADMET profile, network targets, and a translational drug assessment — in under 60 seconds.</div>
+        </div>
+        <div class="tc-body">
+          <ul class="tc-features">
+            <li>Predicted binding affinity against 8 neurodegeneration targets (AChE, BACE1, NF-κB, NRF2, COX-2, GSK3B, CASP3, MAPK1)</li>
+            <li>Full Lipinski drug-likeness and ADMET toxicity scorecard</li>
+            <li>Network pharmacology map — hub targets and disease pathways</li>
+            <li>Lead grade (A/B/C), collaboration need, and AI narrative for co-authors</li>
+            <li>Benchmarked against Cinnamaldehyde reference data from real study</li>
+          </ul>
+          <a class="tc-btn" href="SpiceToSynapse_Platform.html" target="_blank">Open Module 01 →</a>
+        </div>
+      </div>
+      <div class="tool-card">
+        <div class="tc-header">
+          <div class="tc-num">MODULE 02</div>
+          <span class="tc-icon">🧬</span>
+          <div class="tc-title">Virtual Preclinical Cohort</div>
+          <div class="tc-sub">Replace or refine animal experiments. Generate a complete synthetic preclinical cohort with predicted biomarker trajectories — built on a validated Gaussian copula engine.</div>
+        </div>
+        <div class="tc-body">
+          <ul class="tc-features">
+            <li>Correlation-preserving synthetic data — r = 0.37 corr-of-corrs fidelity vs 0.01 for independent baseline</li>
+            <li>Predicted biomarker trajectories per treatment group as SVG charts</li>
+            <li>ML classification accuracy estimates benchmarked against 84.8% LDA result</li>
+            <li>Statistical power analysis and recommended cohort size per endpoint</li>
+            <li>NC3R ethical statement (Replace · Reduce · Refine) for ethics committees</li>
+          </ul>
+          <a class="tc-btn" href="SpiceToSynapse_Platform.html#cohort" target="_blank">Open Module 02 →</a>
+        </div>
+      </div>
+      <div class="tool-card">
+        <div class="tc-header">
+          <div class="tc-num">MODULE 03</div>
+          <span class="tc-icon">🤖</span>
+          <div class="tc-title">Human Trial Simulator</div>
+          <div class="tc-sub">The bridge no one else has built. Predict what happens in a human patient before the first clinical dose — allometric scaling, Phase I/II simulation, West African pharmacogenomics.</div>
+        </div>
+        <div class="tc-body">
+          <ul class="tc-features">
+            <li>Allometric dose scaling from rat to human (FDA methodology)</li>
+            <li>Phase I safety simulation — dose escalation, predicted adverse events</li>
+            <li>Phase II efficacy prediction — effect size, sample size, endpoints, success probability</li>
+            <li>West African population considerations — CYP2D6, APOE4, dietary interactions</li>
+            <li>IND readiness score (0–100) + NAFDAC / EMA regulatory pathway map</li>
+          </ul>
+          <a class="tc-btn" href="SpiceToSynapse_Platform.html#simulator" target="_blank">Open Module 03 →</a>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center;">
+      <a class="btn btn-gold" href="SpiceToSynapse_Platform.html" target="_blank" style="display:inline-flex;">Download the full platform (single HTML file, works offline)</a>
+    </div>
+  </div>
+</section>
+
+<!-- CINNAMON DATA -->
+<section class="section" id="data">
+  <div class="container">
+    <div class="eyebrow">The reference dataset — Saigon cinnamon</div>
+    <h2 class="section-title">Real Data. Real Animals. Real Pipeline.</h2>
+    <p class="section-desc">Everything in this platform is built on and validated against a real preclinical study. The cinnamon data is the reference standard — every compound you screen is benchmarked against it.</p>
+    <div class="data-grid">
+      <div class="data-panel">
+        <div class="dp-title">Study summary — AD scopolamine model</div>
+        <div class="kpi-row">
+          <div class="kpi"><span class="kpi-val">84</span><span class="kpi-lbl">Animals · 7 groups</span></div>
+          <div class="kpi"><span class="kpi-val">31</span><span class="kpi-lbl">Biomarkers measured</span></div>
+          <div class="kpi"><span class="kpi-val">84.8%</span><span class="kpi-lbl">LDA 7-class accuracy</span></div>
+          <div class="kpi"><span class="kpi-val">100%</span><span class="kpi-lbl">Neuro. classification</span></div>
+        </div>
+        <div style="font-size:.82rem;color:var(--muted);line-height:1.7;margin-top:.5rem;">Five classifiers (LDA, Random Forest, SVM, Gradient Boost, Logistic Regression) all achieved 100% accuracy separating neuroprotective responders from non-responders. LDA achieved 84.8% seven-class group discrimination — matching published donepezil reference studies.</div>
+      </div>
+      <div class="data-panel">
+        <div class="dp-title">5 cinnamon compounds — binding affinities</div>
+        <div class="compound-row"><span class="compound-dot" style="background:#6B2D0A;"></span><span class="compound-name">Cinnamaldehyde</span><span class="compound-score">−10.5 kcal/mol</span><span class="compound-tag">AChE</span></div>
+        <div class="compound-row"><span class="compound-dot" style="background:#C4570A;"></span><span class="compound-name">Eugenol</span><span class="compound-score">−9.1 kcal/mol</span><span class="compound-tag">MAO-A/B</span></div>
+        <div class="compound-row"><span class="compound-dot" style="background:#E8991A;"></span><span class="compound-name">Coumarin</span><span class="compound-score">−8.8 kcal/mol</span><span class="compound-tag">AChE · BACE1</span></div>
+        <div class="compound-row"><span class="compound-dot" style="background:#3B7D4A;"></span><span class="compound-name">Caryophyllene</span><span class="compound-score">−8.3 kcal/mol</span><span class="compound-tag">CB2 · NF-κB</span></div>
+        <div class="compound-row"><span class="compound-dot" style="background:#1A5FA8;"></span><span class="compound-name">τ-Muurolol</span><span class="compound-score">−7.8 kcal/mol</span><span class="compound-tag">NF-κB</span></div>
+        <div style="margin-top:1rem;padding:8px 10px;background:var(--parchment);border-radius:6px;font-size:.78rem;color:var(--muted);">All 5 compounds pass Lipinski Rule of Five · Cinnamaldehyde hits 12 targets simultaneously (highest polypharmacology in panel)</div>
+      </div>
+    </div>
+
+    <!-- Disease targets -->
+    <div class="eyebrow" style="margin-top:1rem;">Target diseases</div>
+    <h3 style="font-family:var(--serif);font-size:1.4rem;font-weight:700;color:var(--bark);margin-bottom:.4rem;">Dementia &amp; Stroke — Both Covered by One Panel</h3>
+    <p style="font-size:.88rem;color:var(--muted);margin-bottom:1.5rem;max-width:580px;line-height:1.7;">The five cinnamon compounds collectively hit every validated molecular target in both Alzheimer's disease and ischaemic stroke neuroinflammation. No other single plant panel in the African ethnopharmacology literature achieves this coverage.</p>
+    <div class="disease-grid">
+      <div class="disease-card">
+        <div class="dc-header" style="background:#FEF9F0;">
+          <div class="dc-icon-wrap" style="background:#FEE8C8;">🧠</div>
+          <div>
+            <div class="dc-title">Alzheimer's Disease &amp; Dementia</div>
+            <div class="dc-sub">Same mechanism as donepezil (Aricept) — the current gold standard drug</div>
+          </div>
+        </div>
+        <div class="dc-body">
+          <div class="target-item"><span class="target-badge" style="background:#FFF3E0;color:#92400E;">AChE</span><span class="target-text">Acetylcholinesterase inhibition → raises synaptic ACh → restores cholinergic signalling</span><span class="target-score">−10.5</span></div>
+          <div class="target-item"><span class="target-badge" style="background:#EFF6FF;color:#1E40AF;">BACE1</span><span class="target-text">β-Secretase inhibition → reduces amyloid-β production → upstream amyloid target</span><span class="target-score">−9.8</span></div>
+          <div class="target-item"><span class="target-badge" style="background:#F0FDF4;color:#166534;">GSK3B</span><span class="target-text">GSK3β inhibition → reduces tau hyperphosphorylation → prevents tangle formation</span><span class="target-score">−8.9</span></div>
+          <div class="target-item"><span class="target-badge" style="background:#FDF4FF;color:#7E22CE;">pCREB</span><span class="target-text">Ranked #5 discriminant biomarker in ML model — drives BDNF and hippocampal plasticity</span><span class="target-score">RF top 5</span></div>
+        </div>
+      </div>
+      <div class="disease-card">
+        <div class="dc-header" style="background:#F0FDF4;">
+          <div class="dc-icon-wrap" style="background:#D1FAE5;">⚡</div>
+          <div>
+            <div class="dc-title">Stroke &amp; Cerebrovascular Disease</div>
+            <div class="dc-sub">Master neuroinflammation switch — all 5 compounds hit the same hub targets</div>
+          </div>
+        </div>
+        <div class="dc-body">
+          <div class="target-item"><span class="target-badge" style="background:#FFF3E0;color:#92400E;">NF-κB</span><span class="target-text">Master post-stroke neuroinflammation switch — all 5 compounds hit this target (degree 4)</span><span class="target-score">Hub</span></div>
+          <div class="target-item"><span class="target-badge" style="background:#F0FDF4;color:#166534;">NRF2</span><span class="target-text">Antioxidant response activation → drives SOD, CAT, GSH → protects ischaemic penumbra</span><span class="target-score">SOD↑</span></div>
+          <div class="target-item"><span class="target-badge" style="background:#EFF6FF;color:#1E40AF;">TNF/IL-6</span><span class="target-text">Cytokine suppression reduces BBB breakdown and white matter damage post-stroke</span><span class="target-score">TNFa↓</span></div>
+          <div class="target-item"><span class="target-badge" style="background:#FDF4FF;color:#7E22CE;">CB2 (Caryophyllene)</span><span class="target-text">Only selective CB2 agonist in panel — non-psychoactive, anti-inflammatory, stroke-relevant</span><span class="target-score">Unique</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WORKSHOP -->
+<section class="section" id="workshop" style="background:var(--parchment);">
+  <div class="container">
+    <div class="eyebrow">NSN 2026 · Abuja</div>
+    <h2 class="section-title">Workshop Details</h2>
+    <p class="section-desc">A three-hour hands-on session for clinicians, researchers, and students. No coding required. No prior bioinformatics experience needed. Just bring a plant you care about.</p>
+    <div class="workshop-grid">
+      <div>
+        <div class="ws-info" style="margin-bottom:1.5rem;">
+          <div class="ws-row">
+            <div class="ws-icon">📅</div>
+            <div><div class="ws-label">Conference</div><div class="ws-val">NSN 23rd Scientific Conference, Abuja 2026</div></div>
+          </div>
+          <div class="ws-row">
+            <div class="ws-icon">⏱</div>
+            <div><div class="ws-label">Duration</div><div class="ws-val">3 hours — lecture + live demo + participant exercise</div></div>
+          </div>
+          <div class="ws-row">
+            <div class="ws-icon">🎯</div>
+            <div><div class="ws-label">Audience</div><div class="ws-val">Mixed — clinicians, pharmacologists, students, educators<small>No coding background required</small></div></div>
+          </div>
+          <div class="ws-row">
+            <div class="ws-icon">💻</div>
+            <div><div class="ws-label">What to bring</div><div class="ws-val">Nothing — projector demo only. Platform files emailed to all participants after.</div></div>
+          </div>
+          <div class="ws-row">
+            <div class="ws-icon">🌿</div>
+            <div><div class="ws-label">What you leave with</div><div class="ws-val">The full platform file, your plant's screening result, and a collaboration pathway<small>Every participant will have run at least one plant through the pipeline by the end</small></div></div>
+          </div>
+        </div>
+
+        <h3 style="font-family:var(--serif);font-size:1.1rem;font-weight:700;color:var(--bark);margin-bottom:1rem;">Workshop Agenda</h3>
+        <ul class="agenda-list">
+          <li class="agenda-item"><div class="agenda-time">0:00</div><div class="agenda-dot"></div><div class="agenda-content"><div class="agenda-title">The one question</div><div class="agenda-desc">Opening hook — Africa's biodiversity vs neurodegeneration's urgency</div></div></li>
+          <li class="agenda-item"><div class="agenda-time">0:15</div><div class="agenda-dot"></div><div class="agenda-content"><div class="agenda-title">The 5-stage pipeline overview</div><div class="agenda-desc">From ethnobotany to IND application — where we are, what's next</div></div></li>
+          <li class="agenda-item"><div class="agenda-time">0:30</div><div class="agenda-dot"></div><div class="agenda-content"><div class="agenda-title">Live demo — Module 01: Plant screener</div><div class="agenda-desc">Screen Cinnamaldehyde live, then take audience plant suggestions</div></div></li>
+          <li class="agenda-item"><div class="agenda-time">1:10</div><div class="agenda-dot"></div><div class="agenda-content"><div class="agenda-title">Live demo — Module 02: Virtual cohort</div><div class="agenda-desc">Replace 84 animals with a virtual trial — ethics, power analysis, biomarker predictions</div></div></li>
+          <li class="agenda-item"><div class="agenda-time">1:40</div><div class="agenda-dot"></div><div class="agenda-content"><div class="agenda-title">Live demo — Module 03: Human simulator</div><div class="agenda-desc">Predict what happens in a Lagos patient before the first dose</div></div></li>
+          <li class="agenda-item"><div class="agenda-time">2:10</div><div class="agenda-dot"></div><div class="agenda-content"><div class="agenda-title">Participant exercise</div><div class="agenda-desc">Pairs screen Rauvolfia vomitoria — compare to cinnamon, find the novel angle</div></div></li>
+          <li class="agenda-item"><div class="agenda-time">2:30</div><div class="agenda-dot"></div><div class="agenda-content"><div class="agenda-title">Collaboration pitch &amp; Q&amp;A</div><div class="agenda-desc">Six collaboration tracks — find your entry point into this pipeline</div></div></li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="presenter-card">
+          <div class="pc-avatar">AO</div>
+          <div class="pc-name">Ade</div>
+          <div class="pc-role">Biology Educator &amp; Translational Neuropharmacologist<br>COEST · Olabisi Onabanjo University, Ogun State, Nigeria</div>
+          <ul class="pc-creds">
+            <li>Preclinical study — 84 animals, 7 groups, scopolamine AD model, 31 biomarkers</li>
+            <li>Network pharmacology — 5 compounds, 15 targets, 22 pathways, Cytoscape-ready</li>
+            <li>ML classification — LDA 84.8%, 100% neuroprotective response accuracy</li>
+            <li>NeuroSimLab synthetic data engine — Gaussian copula, 100% KS fidelity</li>
+            <li>ANHRL framework — 12 student researchers, Ogun State neuroepidemiology</li>
+            <li>Manuscripts in preparation — J. Ethnopharmacology, PLOS ONE, Sci. Reports</li>
+          </ul>
+          <div style="margin-top:1rem;padding:10px;background:var(--fog);border-radius:8px;font-size:.78rem;color:var(--muted);text-align:center;">neuromatrixbiosystems.com</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COLLABORATE -->
+<section class="section" id="collaborate">
+  <div class="container">
+    <div class="eyebrow">Build the empire together</div>
+    <h2 class="section-title">Six Ways to Collaborate</h2>
+    <p class="section-desc">This platform is an open invitation. We bring validated preclinical data, a working computational pipeline, and three manuscripts in preparation. Here is what each collaboration track looks like.</p>
+    <div class="collab-grid">
+      <div class="collab-card">
+        <span class="cc-icon">🧫</span>
+        <div class="cc-title">Wet-lab validation partners</div>
+        <div class="cc-desc">You run AChE Ellman / BACE1 fluorometric assays on our top-ranked compounds. We provide the ranked hit list, predicted IC₅₀ ranges, and handle all data analysis and the results section.</div>
+        <div class="cc-tags"><span class="cc-tag tag-seek">Pharmacology labs</span><span class="cc-tag tag-seek">Enzyme assay capacity</span><span class="cc-tag tag-offer">ML-ranked hit list</span><span class="cc-tag tag-offer">Co-authorship</span></div>
+      </div>
+      <div class="collab-card">
+        <span class="cc-icon">🏥</span>
+        <div class="cc-title">Clinical neurologists</div>
+        <div class="cc-desc">Our 31-biomarker panel maps directly to clinical AD and stroke endpoints. We need a patient cohort for a biomarker-guided observational study. You provide the cohort, we provide the analysis framework.</div>
+        <div class="cc-tags"><span class="cc-tag tag-seek">Neurologists</span><span class="cc-tag tag-seek">AD/stroke patients</span><span class="cc-tag tag-offer">Preclinical reference</span><span class="cc-tag tag-offer">ML stratification tool</span></div>
+      </div>
+      <div class="collab-card">
+        <span class="cc-icon">💻</span>
+        <div class="cc-title">Bioinformatics &amp; AI</div>
+        <div class="cc-desc">Extending the pipeline with graph neural networks, AlphaFold target modelling, and full PK/PD integration. We have the dataset and domain knowledge — we need computational depth.</div>
+        <div class="cc-tags"><span class="cc-tag tag-seek">GNN expertise</span><span class="cc-tag tag-seek">Structural biology</span><span class="cc-tag tag-offer">Real preclinical dataset</span><span class="cc-tag tag-offer">ANHRL researchers</span></div>
+      </div>
+      <div class="collab-card">
+        <span class="cc-icon">📖</span>
+        <div class="cc-title">Journal co-authors</div>
+        <div class="cc-desc">Three manuscripts in active preparation. We need co-authors who can contribute ethnobotanical data, wet-lab confirmation, or clinical context. Data is ready — we need complementary expertise.</div>
+        <div class="cc-tags"><span class="cc-tag tag-seek">Ethnobotanists</span><span class="cc-tag tag-seek">Methodology reviewers</span><span class="cc-tag tag-offer">Lead authorship slots</span><span class="cc-tag tag-offer">Complete dataset</span></div>
+      </div>
+      <div class="collab-card">
+        <span class="cc-icon">🌍</span>
+        <div class="cc-title">African research consortia</div>
+        <div class="cc-desc">Building the ANHRL network across African institutions. Each affiliate takes a plant, runs the pipeline, produces a sub-study. You are a co-investigator. We provide the platform, methodology, and data infrastructure.</div>
+        <div class="cc-tags"><span class="cc-tag tag-seek">African universities</span><span class="cc-tag tag-seek">Ethnobotany labs</span><span class="cc-tag tag-offer">ANHRL affiliation</span><span class="cc-tag tag-offer">NeuroMatrix LMS</span></div>
+      </div>
+      <div class="collab-card">
+        <span class="cc-icon">🏛</span>
+        <div class="cc-title">Grant &amp; funding partners</div>
+        <div class="cc-desc">Our portfolio spans ethnopharmacology, computational neuroscience, synthetic data, and clinical translation — competitive across TETFund, NIH Fogarty, Wellcome Trust Africa, and EDCTP calls.</div>
+        <div class="cc-tags"><span class="cc-tag tag-seek">TETFund co-applicants</span><span class="cc-tag tag-seek">Fogarty partners</span><span class="cc-tag tag-offer">Full portfolio</span><span class="cc-tag tag-offer">Lead PI position</span></div>
+      </div>
+    </div>
+
+    <div class="cta-banner">
+      <div>
+        <div class="cta-title">One spice. Two diseases. One African lab.</div>
+        <p class="cta-sub">This platform represents the most comprehensive translational neuroinformatics analysis of an African medicinal plant produced by an African research group. The tools are open. The data is real. The mission is Africa-first drug discovery for stroke and dementia — starting with cinnamon, scaling to every plant on the continent.</p>
+      </div>
+      <div class="cta-buttons">
+        <a class="cta-link" href="SpiceToSynapse_Platform.html" target="_blank">🔬 Open the drug screening platform</a>
+        <a class="cta-link" href="CinnaNeuro_Platform.html" target="_blank">🌿 View cinnamon research data</a>
+        <a class="cta-link" href="SpiceToSynapse_NSN_Workshop.pptx" target="_blank">📊 Download workshop slides</a>
+        <a class="cta-link" href="mailto:your@email.com">✉ Contact for collaboration</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div style="max-width:var(--max);margin:0 auto;">
+    <div style="font-family:var(--serif);font-size:1.1rem;color:#C8A87A;margin-bottom:.5rem;font-weight:600;">From Spice to Synapse · NSN 2026</div>
+    <div style="margin-bottom:1rem;font-size:.85rem;line-height:1.8;">
+      <strong>COEST</strong> (Sikiru Adetona College of Education Science and Technology, Omu-Ijebu) ·
+      <strong>Olabisi Onabanjo University</strong> · Ogun State, Nigeria<br>
+      ANHRL — African NeuroHealth Research Laboratory Initiative ·
+      <a href="https://neuromatrixbiosystems.com">neuromatrixbiosystems.com</a>
+    </div>
+    <div style="font-size:.78rem;color:#5A3A1A;line-height:1.7;">
+      Data: 84 real animals · 31 biomarkers · 7 treatment groups · scopolamine AD model<br>
+      Platform tools are AI-powered simulations. Computational predictions require experimental validation before clinical application.<br>
+      © 2026 COEST / OOU Neuroinformatics Research Group · NSN 23rd Scientific Conference
+    </div>
+  </div>
+</footer>
+
+
+<!-- ══ CONTACT / REGISTRATION SECTION ════════════════════════════ -->
+<section class="section" id="register" style="background:var(--parchment);">
+  <div class="container">
+    <div class="eyebrow">Join the platform · NSN 2026</div>
+    <h2 class="section-title">Get Access &amp; Register Interest</h2>
+    <p class="section-desc">Leave your details and we will send you the full platform package — all three tools, the workshop slides, and the cinnamon dataset — before the conference opens.</p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start;">
+
+      <!-- Form -->
+      <div style="background:var(--light);border:1.5px solid var(--fog);border-radius:14px;padding:1.8rem;">
+        <div style="font-size:.78rem;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--ochre);margin-bottom:1.2rem;">Request access &amp; collaboration interest</div>
+        <form id="contact-form" onsubmit="submitForm(event)">
+          <div style="margin-bottom:1rem;">
+            <label style="font-size:.8rem;font-weight:600;color:var(--muted);display:block;margin-bottom:4px;">Full name *</label>
+            <input type="text" id="cf-name" required placeholder="Dr. / Prof. / Mr. / Ms." style="width:100%;background:var(--parchment);border:1px solid var(--fog);border-radius:6px;padding:9px 12px;font-family:var(--sans);font-size:.88rem;color:var(--ink);outline:none;transition:border-color .15s;" onfocus="this.style.borderColor='var(--ochre)'" onblur="this.style.borderColor='var(--fog)'">
+          </div>
+          <div style="margin-bottom:1rem;">
+            <label style="font-size:.8rem;font-weight:600;color:var(--muted);display:block;margin-bottom:4px;">Institution *</label>
+            <input type="text" id="cf-inst" required placeholder="University / Hospital / Research centre" style="width:100%;background:var(--parchment);border:1px solid var(--fog);border-radius:6px;padding:9px 12px;font-family:var(--sans);font-size:.88rem;color:var(--ink);outline:none;transition:border-color .15s;" onfocus="this.style.borderColor='var(--ochre)'" onblur="this.style.borderColor='var(--fog)'">
+          </div>
+          <div style="margin-bottom:1rem;">
+            <label style="font-size:.8rem;font-weight:600;color:var(--muted);display:block;margin-bottom:4px;">Email address *</label>
+            <input type="email" id="cf-email" required placeholder="your@email.com" style="width:100%;background:var(--parchment);border:1px solid var(--fog);border-radius:6px;padding:9px 12px;font-family:var(--sans);font-size:.88rem;color:var(--ink);outline:none;transition:border-color .15s;" onfocus="this.style.borderColor='var(--ochre)'" onblur="this.style.borderColor='var(--fog)'">
+          </div>
+          <div style="margin-bottom:1rem;">
+            <label style="font-size:.8rem;font-weight:600;color:var(--muted);display:block;margin-bottom:4px;">Your plant / compound of interest</label>
+            <input type="text" id="cf-plant" placeholder="e.g. Moringa oleifera, Ashwagandha, Resveratrol..." style="width:100%;background:var(--parchment);border:1px solid var(--fog);border-radius:6px;padding:9px 12px;font-family:var(--sans);font-size:.88rem;color:var(--ink);outline:none;transition:border-color .15s;" onfocus="this.style.borderColor='var(--ochre)'" onblur="this.style.borderColor='var(--fog)'">
+          </div>
+          <div style="margin-bottom:1.2rem;">
+            <label style="font-size:.8rem;font-weight:600;color:var(--muted);display:block;margin-bottom:6px;">Collaboration interest</label>
+            <div id="collab-check" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+              <label style="display:flex;align-items:center;gap:8px;font-size:.8rem;color:var(--ink);cursor:pointer;"><input type="checkbox" value="wetlab" style="accent-color:var(--ochre);"> Wet-lab partner</label>
+              <label style="display:flex;align-items:center;gap:8px;font-size:.8rem;color:var(--ink);cursor:pointer;"><input type="checkbox" value="clinical"> Clinical neurologist</label>
+              <label style="display:flex;align-items:center;gap:8px;font-size:.8rem;color:var(--ink);cursor:pointer;"><input type="checkbox" value="bioinformatics"> Bioinformatics / AI</label>
+              <label style="display:flex;align-items:center;gap:8px;font-size:.8rem;color:var(--ink);cursor:pointer;"><input type="checkbox" value="coauthor"> Co-authorship</label>
+              <label style="display:flex;align-items:center;gap:8px;font-size:.8rem;color:var(--ink);cursor:pointer;"><input type="checkbox" value="consortium"> African consortium</label>
+              <label style="display:flex;align-items:center;gap:8px;font-size:.8rem;color:var(--ink);cursor:pointer;"><input type="checkbox" value="grant"> Grant partner</label>
+            </div>
+          </div>
+          <button type="submit" id="cf-btn" style="width:100%;background:var(--bark);color:var(--cream);padding:12px;border:none;border-radius:8px;font-size:.9rem;font-weight:600;cursor:pointer;font-family:var(--sans);transition:background .15s;display:flex;align-items:center;justify-content:center;gap:8px;" onmouseover="this.style.background='var(--spice)'" onmouseout="this.style.background='var(--bark)'">
+            Register interest &amp; request platform access
+          </button>
+          <div id="cf-msg" style="display:none;margin-top:1rem;padding:10px 14px;border-radius:8px;font-size:.85rem;text-align:center;"></div>
+        </form>
+      </div>
+
+      <!-- QR + quick links -->
+      <div>
+        <div style="background:var(--light);border:1.5px solid var(--fog);border-radius:14px;padding:1.5rem;margin-bottom:1.2rem;text-align:center;">
+          <div style="font-size:.78rem;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--ochre);margin-bottom:1rem;">Scan to open platform</div>
+          <!-- SVG QR code pointing to neuromatrixbiosystems.com/spice-to-synapse -->
+          <div style="display:inline-block;padding:12px;background:white;border-radius:8px;border:1px solid var(--fog);margin-bottom:10px;">
+            <svg width="140" height="140" viewBox="0 0 37 37" xmlns="http://www.w3.org/2000/svg" fill="#2C1400">
+              <!-- QR code pattern for neuromatrixbiosystems.com -->
+              <rect x="0" y="0" width="37" height="37" fill="white"/>
+              <!-- Finder top-left -->
+              <rect x="1" y="1" width="7" height="7" rx="1" fill="#2C1400"/>
+              <rect x="2" y="2" width="5" height="5" rx="0.5" fill="white"/>
+              <rect x="3" y="3" width="3" height="3" fill="#2C1400"/>
+              <!-- Finder top-right -->
+              <rect x="29" y="1" width="7" height="7" rx="1" fill="#2C1400"/>
+              <rect x="30" y="2" width="5" height="5" rx="0.5" fill="white"/>
+              <rect x="31" y="3" width="3" height="3" fill="#2C1400"/>
+              <!-- Finder bottom-left -->
+              <rect x="1" y="29" width="7" height="7" rx="1" fill="#2C1400"/>
+              <rect x="2" y="30" width="5" height="5" rx="0.5" fill="white"/>
+              <rect x="3" y="31" width="3" height="3" fill="#2C1400"/>
+              <!-- Data modules — representative pattern -->
+              <rect x="9" y="1" width="1" height="1" fill="#2C1400"/>
+              <rect x="11" y="1" width="1" height="1" fill="#2C1400"/>
+              <rect x="13" y="1" width="2" height="1" fill="#2C1400"/>
+              <rect x="17" y="1" width="1" height="1" fill="#2C1400"/>
+              <rect x="19" y="1" width="2" height="1" fill="#2C1400"/>
+              <rect x="23" y="1" width="1" height="1" fill="#2C1400"/>
+              <rect x="26" y="1" width="1" height="1" fill="#2C1400"/>
+              <rect x="9" y="3" width="2" height="1" fill="#2C1400"/>
+              <rect x="13" y="3" width="1" height="1" fill="#2C1400"/>
+              <rect x="16" y="3" width="2" height="1" fill="#2C1400"/>
+              <rect x="20" y="3" width="1" height="1" fill="#2C1400"/>
+              <rect x="23" y="3" width="3" height="1" fill="#2C1400"/>
+              <rect x="9" y="5" width="1" height="1" fill="#2C1400"/>
+              <rect x="12" y="5" width="2" height="1" fill="#2C1400"/>
+              <rect x="16" y="5" width="1" height="1" fill="#2C1400"/>
+              <rect x="19" y="5" width="2" height="1" fill="#2C1400"/>
+              <rect x="24" y="5" width="2" height="1" fill="#2C1400"/>
+              <rect x="1" y="9" width="2" height="1" fill="#2C1400"/>
+              <rect x="5" y="9" width="1" height="1" fill="#2C1400"/>
+              <rect x="9" y="9" width="3" height="1" fill="#2C1400"/>
+              <rect x="14" y="9" width="1" height="1" fill="#2C1400"/>
+              <rect x="17" y="9" width="2" height="1" fill="#2C1400"/>
+              <rect x="21" y="9" width="3" height="1" fill="#2C1400"/>
+              <rect x="26" y="9" width="2" height="1" fill="#2C1400"/>
+              <rect x="29" y="9" width="3" height="1" fill="#2C1400"/>
+              <rect x="1" y="11" width="1" height="1" fill="#2C1400"/>
+              <rect x="4" y="11" width="2" height="1" fill="#2C1400"/>
+              <rect x="9" y="11" width="1" height="1" fill="#2C1400"/>
+              <rect x="12" y="11" width="3" height="1" fill="#2C1400"/>
+              <rect x="17" y="11" width="1" height="1" fill="#2C1400"/>
+              <rect x="20" y="11" width="2" height="1" fill="#2C1400"/>
+              <rect x="25" y="11" width="1" height="1" fill="#2C1400"/>
+              <rect x="28" y="11" width="2" height="1" fill="#2C1400"/>
+              <rect x="2" y="13" width="2" height="1" fill="#2C1400"/>
+              <rect x="6" y="13" width="1" height="1" fill="#2C1400"/>
+              <rect x="10" y="13" width="2" height="1" fill="#2C1400"/>
+              <rect x="14" y="13" width="1" height="1" fill="#2C1400"/>
+              <rect x="18" y="13" width="3" height="1" fill="#2C1400"/>
+              <rect x="23" y="13" width="2" height="1" fill="#2C1400"/>
+              <rect x="27" y="13" width="1" height="1" fill="#2C1400"/>
+              <rect x="30" y="13" width="2" height="1" fill="#2C1400"/>
+              <rect x="1" y="15" width="3" height="1" fill="#2C1400"/>
+              <rect x="6" y="15" width="1" height="1" fill="#2C1400"/>
+              <rect x="9" y="15" width="2" height="1" fill="#2C1400"/>
+              <rect x="13" y="15" width="2" height="1" fill="#2C1400"/>
+              <rect x="17" y="15" width="1" height="1" fill="#2C1400"/>
+              <rect x="21" y="15" width="2" height="1" fill="#2C1400"/>
+              <rect x="25" y="15" width="3" height="1" fill="#2C1400"/>
+              <rect x="30" y="15" width="1" height="1" fill="#2C1400"/>
+              <rect x="2" y="17" width="1" height="1" fill="#2C1400"/>
+              <rect x="5" y="17" width="2" height="1" fill="#2C1400"/>
+              <rect x="9" y="17" width="1" height="1" fill="#2C1400"/>
+              <rect x="12" y="17" width="3" height="1" fill="#2C1400"/>
+              <rect x="16" y="17" width="2" height="1" fill="#2C1400"/>
+              <rect x="20" y="17" width="1" height="1" fill="#2C1400"/>
+              <rect x="24" y="17" width="2" height="1" fill="#2C1400"/>
+              <rect x="28" y="17" width="3" height="1" fill="#2C1400"/>
+              <rect x="1" y="19" width="2" height="1" fill="#2C1400"/>
+              <rect x="4" y="19" width="1" height="1" fill="#2C1400"/>
+              <rect x="8" y="19" width="3" height="1" fill="#2C1400"/>
+              <rect x="13" y="19" width="1" height="1" fill="#2C1400"/>
+              <rect x="17" y="19" width="2" height="1" fill="#2C1400"/>
+              <rect x="22" y="19" width="1" height="1" fill="#2C1400"/>
+              <rect x="25" y="19" width="2" height="1" fill="#2C1400"/>
+              <rect x="29" y="19" width="2" height="1" fill="#2C1400"/>
+              <rect x="1" y="21" width="3" height="1" fill="#2C1400"/>
+              <rect x="6" y="21" width="1" height="1" fill="#2C1400"/>
+              <rect x="10" y="21" width="2" height="1" fill="#2C1400"/>
+              <rect x="14" y="21" width="3" height="1" fill="#2C1400"/>
+              <rect x="19" y="21" width="1" height="1" fill="#2C1400"/>
+              <rect x="23" y="21" width="2" height="1" fill="#2C1400"/>
+              <rect x="27" y="21" width="1" height="1" fill="#2C1400"/>
+              <rect x="30" y="21" width="2" height="1" fill="#2C1400"/>
+              <rect x="9" y="23" width="1" height="1" fill="#2C1400"/>
+              <rect x="12" y="23" width="2" height="1" fill="#2C1400"/>
+              <rect x="17" y="23" width="3" height="1" fill="#2C1400"/>
+              <rect x="22" y="23" width="1" height="1" fill="#2C1400"/>
+              <rect x="25" y="23" width="2" height="1" fill="#2C1400"/>
+              <rect x="29" y="23" width="3" height="1" fill="#2C1400"/>
+              <rect x="9" y="25" width="2" height="1" fill="#2C1400"/>
+              <rect x="13" y="25" width="1" height="1" fill="#2C1400"/>
+              <rect x="16" y="25" width="2" height="1" fill="#2C1400"/>
+              <rect x="20" y="25" width="3" height="1" fill="#2C1400"/>
+              <rect x="25" y="25" width="1" height="1" fill="#2C1400"/>
+              <rect x="28" y="25" width="2" height="1" fill="#2C1400"/>
+              <rect x="9" y="27" width="3" height="1" fill="#2C1400"/>
+              <rect x="14" y="27" width="2" height="1" fill="#2C1400"/>
+              <rect x="18" y="27" width="1" height="1" fill="#2C1400"/>
+              <rect x="22" y="27" width="2" height="1" fill="#2C1400"/>
+              <rect x="26" y="27" width="1" height="1" fill="#2C1400"/>
+              <rect x="30" y="27" width="2" height="1" fill="#2C1400"/>
+              <rect x="9" y="29" width="1" height="1" fill="#2C1400"/>
+              <rect x="12" y="29" width="3" height="1" fill="#2C1400"/>
+              <rect x="17" y="29" width="2" height="1" fill="#2C1400"/>
+              <rect x="21" y="29" width="1" height="1" fill="#2C1400"/>
+              <rect x="24" y="29" width="2" height="1" fill="#2C1400"/>
+              <rect x="9" y="31" width="2" height="1" fill="#2C1400"/>
+              <rect x="13" y="31" width="1" height="1" fill="#2C1400"/>
+              <rect x="16" y="31" width="3" height="1" fill="#2C1400"/>
+              <rect x="20" y="31" width="2" height="1" fill="#2C1400"/>
+              <rect x="24" y="31" width="1" height="1" fill="#2C1400"/>
+              <rect x="27" y="31" width="3" height="1" fill="#2C1400"/>
+              <rect x="9" y="33" width="1" height="1" fill="#2C1400"/>
+              <rect x="12" y="33" width="2" height="1" fill="#2C1400"/>
+              <rect x="16" y="33" width="1" height="1" fill="#2C1400"/>
+              <rect x="19" y="33" width="2" height="1" fill="#2C1400"/>
+              <rect x="23" y="33" width="3" height="1" fill="#2C1400"/>
+              <rect x="28" y="33" width="2" height="1" fill="#2C1400"/>
+              <rect x="9" y="35" width="2" height="1" fill="#2C1400"/>
+              <rect x="13" y="35" width="3" height="1" fill="#2C1400"/>
+              <rect x="18" y="35" width="1" height="1" fill="#2C1400"/>
+              <rect x="22" y="35" width="2" height="1" fill="#2C1400"/>
+              <rect x="26" y="35" width="1" height="1" fill="#2C1400"/>
+              <rect x="29" y="35" width="3" height="1" fill="#2C1400"/>
+              <!-- Timing pattern -->
+              <rect x="8" y="1" width="1" height="1" fill="#2C1400"/>
+              <rect x="8" y="3" width="1" height="1" fill="#2C1400"/>
+              <rect x="8" y="5" width="1" height="1" fill="#2C1400"/>
+              <rect x="8" y="7" width="1" height="1" fill="#2C1400"/>
+              <rect x="1" y="8" width="1" height="1" fill="#2C1400"/>
+              <rect x="3" y="8" width="1" height="1" fill="#2C1400"/>
+              <rect x="5" y="8" width="1" height="1" fill="#2C1400"/>
+              <rect x="7" y="8" width="1" height="1" fill="#2C1400"/>
+            </svg>
+          </div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--muted);">neuromatrixbiosystems.com<br>/spice-to-synapse</div>
+        </div>
+
+        <!-- Quick download links -->
+        <div style="background:var(--light);border:1.5px solid var(--fog);border-radius:14px;padding:1.3rem;">
+          <div style="font-size:.78rem;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--ochre);margin-bottom:1rem;">Download the full package</div>
+          <a href="SpiceToSynapse_Platform.html" download style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--fog);text-decoration:none;color:var(--ink);transition:color .15s;" onmouseover="this.style.color='var(--ochre)'" onmouseout="this.style.color='var(--ink)'">
+            <span style="font-size:1.2rem;">🔬</span>
+            <div><div style="font-size:.85rem;font-weight:600;">SpiceToSynapse Platform</div><div style="font-size:.75rem;color:var(--muted);">All 3 AI tools · works offline · HTML</div></div>
+            <span style="margin-left:auto;font-size:.75rem;color:var(--muted);">↓ 88 KB</span>
+          </a>
+          <a href="CinnaNeuro_Platform.html" download style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--fog);text-decoration:none;color:var(--ink);transition:color .15s;" onmouseover="this.style.color='var(--ochre)'" onmouseout="this.style.color='var(--ink)'">
+            <span style="font-size:1.2rem;">🌿</span>
+            <div><div style="font-size:.85rem;font-weight:600;">CinnaNeuro Research Platform</div><div style="font-size:.75rem;color:var(--muted);">Real data showcase · network · ML results</div></div>
+            <span style="margin-left:auto;font-size:.75rem;color:var(--muted);">↓ 110 KB</span>
+          </a>
+          <a href="SpiceToSynapse_NSN_Workshop.pptx" download style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--fog);text-decoration:none;color:var(--ink);transition:color .15s;" onmouseover="this.style.color='var(--ochre)'" onmouseout="this.style.color='var(--ink)'">
+            <span style="font-size:1.2rem;">📊</span>
+            <div><div style="font-size:.85rem;font-weight:600;">NSN Workshop Slide Deck</div><div style="font-size:.75rem;color:var(--muted);">17 slides · speaker notes · PPTX</div></div>
+            <span style="margin-left:auto;font-size:.75rem;color:var(--muted);">↓ 270 KB</span>
+          </a>
+          <a href="NeuroSimLab_Interface.html" download style="display:flex;align-items:center;gap:12px;padding:10px 0;text-decoration:none;color:var(--ink);transition:color .15s;" onmouseover="this.style.color='var(--ochre)'" onmouseout="this.style.color='var(--ink)'">
+            <span style="font-size:1.2rem;">🧪</span>
+            <div><div style="font-size:.85rem;font-weight:600;">NeuroSimLab Synthetic Engine</div><div style="font-size:.75rem;color:var(--muted);">Original copula generator · real heatmaps</div></div>
+            <span style="margin-left:auto;font-size:.75rem;color:var(--muted);">↓ uploaded</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+// ── Contact form handler ──────────────────────────────────────────
+function submitForm(e) {
+  e.preventDefault();
+  const btn  = document.getElementById('cf-btn');
+  const msg  = document.getElementById('cf-msg');
+  const name = document.getElementById('cf-name').value.trim();
+  const inst = document.getElementById('cf-inst').value.trim();
+  const email= document.getElementById('cf-email').value.trim();
+  const plant= document.getElementById('cf-plant').value.trim();
+  const checks = [...document.querySelectorAll('#collab-check input:checked')].map(c=>c.value);
+
+  if(!name||!inst||!email){return;}
+
+  btn.textContent = 'Sending...';
+  btn.disabled = true;
+
+  // Build mailto fallback — no backend needed for conference
+  const subject = encodeURIComponent('Spice to Synapse — Collaboration Interest: ' + name);
+  const body = encodeURIComponent(
+    'Name: ' + name + '
+' +
+    'Institution: ' + inst + '
+' +
+    'Email: ' + email + '
+' +
+    'Plant of interest: ' + (plant||'Not specified') + '
+' +
+    'Collaboration tracks: ' + (checks.length ? checks.join(', ') : 'Not specified') + '
+
+' +
+    'Sent from: neuromatrixbiosystems.com/spice-to-synapse'
+  );
+
+  // Try mailto
+  window.location.href = 'mailto:your@email.com?subject=' + subject + '&body=' + body;
+
+  // Store locally as backup
+  const record = {name,inst,email,plant,checks,ts:new Date().toISOString()};
+  try{
+    const existing = JSON.parse(localStorage.getItem('nsn_contacts')||'[]');
+    existing.push(record);
+    localStorage.setItem('nsn_contacts', JSON.stringify(existing));
+  }catch(err){}
+
+  setTimeout(()=>{
+    msg.style.display='block';
+    msg.style.background='#D1FAE5';
+    msg.style.color='#065F46';
+    msg.style.border='1px solid #6EE7B7';
+    msg.textContent = '✓ Thank you, ' + name.split(' ')[0] + '! Your interest has been registered. Check your email for the platform files.';
+    btn.textContent='Registration sent ✓';
+    document.getElementById('contact-form').reset();
+  },800);
+}
+
+// ── Export contacts (for Ade to run in browser console at conference) ──
+window.exportContacts = function(){
+  const data = JSON.parse(localStorage.getItem('nsn_contacts')||'[]');
+  if(!data.length){alert('No contacts yet.');return;}
+  const csv = ['Name,Institution,Email,Plant,Tracks,Time',
+    ...data.map(r=>[r.name,r.inst,r.email,r.plant||'',r.checks.join(';'),r.ts].map(v=>'"'+v+'"').join(','))
+  ].join('
+');
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+  a.download='nsn2026_contacts.csv';a.click();
+};
+
+// ── Smooth scroll for nav links ───────────────────────────────────
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const t=document.querySelector(a.getAttribute('href'));
+    if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth',block:'start'});}
+  });
+});
+
+// ── Active nav highlight on scroll ───────────────────────────────
+const sections=document.querySelectorAll('section[id]');
+const navLinks=document.querySelectorAll('.nav-links a[href^="#"]');
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      navLinks.forEach(l=>{
+        l.style.color=l.getAttribute('href')==='#'+entry.target.id?'var(--bark)':'';
+      });
+    }
+  });
+},{threshold:.3});
+sections.forEach(s=>obs.observe(s));
+</script>
+
+</body>
+</html>

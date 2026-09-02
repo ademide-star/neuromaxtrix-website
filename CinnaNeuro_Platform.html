@@ -1,0 +1,2409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CinnaNeuro — Saigon Cinnamon Neuroprotection Research Platform</title>
+<style>
+/* ── DESIGN SYSTEM ─────────────────────────────────────────────────── */
+:root {
+  --bark:      #3B1F0A;   /* deep cinnamon bark — dominant */
+  --spice:     #8B3A0F;   /* warm mid-brown */
+  --ochre:     #C8610A;   /* active accent */
+  --gold:      #E8A020;   /* highlight */
+  --cream:     #FDF6ED;   /* page base */
+  --parchment: #F5E9D6;   /* card surface */
+  --fog:       #EDE0CC;   /* borders */
+  --ink:       #1C1008;   /* body text */
+  --muted:     #7A5A3A;   /* secondary text */
+  --neural:    #1A4A6B;   /* data/science accent */
+  --synapse:   #0D7A5F;   /* network green */
+  --white:     #FFFFFF;
+
+  --serif: Georgia, 'Times New Roman', serif;
+  --sans:  'Segoe UI', Arial, sans-serif;
+  --mono:  'Courier New', Courier, monospace;
+
+  --r: 8px;
+  --shadow: 0 2px 16px rgba(59,31,10,0.10);
+  --shadow-lg: 0 8px 40px rgba(59,31,10,0.16);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+/* ── HERO ───────────────────────────────────────────────────────────── */
+.hero {
+  background: var(--bark);
+  color: var(--cream);
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 3.5rem 2.5rem 3rem;
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 3rem;
+  align-items: center;
+}
+
+.hero-badge {
+  display: inline-block;
+  background: var(--ochre);
+  color: var(--white);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  padding: 4px 12px;
+  border-radius: 2px;
+  margin-bottom: 1.2rem;
+  text-transform: uppercase;
+}
+
+.hero h1 {
+  font-family: var(--serif);
+  font-size: 2.9rem;
+  font-weight: 700;
+  line-height: 1.15;
+  margin-bottom: 0.9rem;
+  letter-spacing: -0.5px;
+}
+
+.hero h1 em {
+  color: var(--gold);
+  font-style: normal;
+}
+
+.hero-sub {
+  font-size: 1.05rem;
+  color: #D4B896;
+  max-width: 540px;
+  margin-bottom: 2rem;
+  line-height: 1.7;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  border-radius: var(--r);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  text-decoration: none;
+  transition: opacity 0.15s, transform 0.1s;
+}
+.btn:hover { opacity: 0.88; transform: translateY(-1px); }
+
+.btn-primary { background: var(--gold); color: var(--bark); }
+.btn-outline { background: transparent; color: var(--cream); border: 1.5px solid rgba(255,255,255,0.4); }
+
+/* Hero stats panel */
+.hero-stats {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.hstat {
+  text-align: center;
+}
+.hstat .val {
+  font-family: var(--serif);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--gold);
+  display: block;
+}
+.hstat .lbl {
+  font-size: 0.72rem;
+  color: #B8977A;
+  line-height: 1.3;
+}
+
+/* ── NAV STRIP ──────────────────────────────────────────────────────── */
+.nav-strip {
+  background: var(--spice);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.nav-strip-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 2.5rem;
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+}
+
+.nav-strip a {
+  color: rgba(255,255,255,0.75);
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 14px 18px;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.nav-strip a:hover { color: var(--white); border-bottom-color: var(--gold); }
+
+/* ── LAYOUT ─────────────────────────────────────────────────────────── */
+.page { max-width: 1100px; margin: 0 auto; padding: 0 2.5rem; }
+
+section {
+  padding: 4rem 0;
+  border-bottom: 1px solid var(--fog);
+}
+
+section:last-child { border-bottom: none; }
+
+.section-eyebrow {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+  color: var(--ochre);
+  text-transform: uppercase;
+  margin-bottom: 0.6rem;
+}
+
+.section-title {
+  font-family: var(--serif);
+  font-size: 1.9rem;
+  color: var(--bark);
+  margin-bottom: 0.5rem;
+}
+
+.section-desc {
+  color: var(--muted);
+  max-width: 620px;
+  margin-bottom: 2.5rem;
+  font-size: 0.95rem;
+}
+
+/* ── COMPOUND CARDS ─────────────────────────────────────────────────── */
+.compound-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 14px;
+  margin-bottom: 2.5rem;
+}
+
+@media (max-width: 900px) {
+  .compound-grid { grid-template-columns: repeat(3, 1fr); }
+  .hero-inner { grid-template-columns: 1fr; }
+  .hero-stats { grid-template-columns: repeat(4, 1fr); }
+}
+
+.compound-card {
+  background: var(--white);
+  border: 1.5px solid var(--fog);
+  border-radius: var(--r);
+  padding: 1.1rem 0.9rem;
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s, transform 0.1s;
+  position: relative;
+}
+
+.compound-card:hover, .compound-card.active {
+  border-color: var(--ochre);
+  box-shadow: var(--shadow);
+  transform: translateY(-2px);
+}
+
+.compound-card.active::after {
+  content: '';
+  position: absolute;
+  bottom: -8px; left: 50%;
+  transform: translateX(-50%);
+  border: 7px solid transparent;
+  border-top-color: var(--ochre);
+}
+
+.compound-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-bottom: 8px;
+}
+
+.compound-name {
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: var(--bark);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.compound-role {
+  font-size: 0.72rem;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+/* Compound detail panel */
+.compound-detail {
+  background: var(--parchment);
+  border: 1.5px solid var(--ochre);
+  border-radius: var(--r);
+  padding: 1.8rem 2rem;
+  display: none;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 1rem;
+}
+
+.compound-detail.visible { display: grid; }
+
+.cd-section h4 {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--ochre);
+  text-transform: uppercase;
+  margin-bottom: 0.6rem;
+}
+
+.cd-section p { font-size: 0.88rem; color: var(--ink); line-height: 1.6; }
+
+.target-pill {
+  display: inline-block;
+  background: var(--bark);
+  color: var(--cream);
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 20px;
+  margin: 2px;
+}
+
+.target-pill.hub { background: var(--ochre); }
+
+/* ── NETWORK VISUALISER ─────────────────────────────────────────────── */
+.network-wrap {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 2rem;
+  align-items: start;
+}
+
+#networkCanvas {
+  width: 100%;
+  background: var(--white);
+  border: 1.5px solid var(--fog);
+  border-radius: var(--r);
+  display: block;
+  cursor: grab;
+}
+
+.network-legend {
+  background: var(--white);
+  border: 1.5px solid var(--fog);
+  border-radius: var(--r);
+  padding: 1.2rem;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-size: 0.82rem;
+}
+
+.legend-dot {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.hub-list { margin-top: 1.2rem; }
+
+.hub-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--fog);
+  font-size: 0.8rem;
+}
+.hub-row:last-child { border-bottom: none; }
+.hub-row .degree { font-weight: 700; color: var(--ochre); }
+
+/* ── ML RESULTS ─────────────────────────────────────────────────────── */
+.ml-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.ml-card {
+  background: var(--white);
+  border: 1.5px solid var(--fog);
+  border-radius: var(--r);
+  padding: 1.5rem;
+}
+
+.ml-card h3 {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  color: var(--bark);
+  margin-bottom: 0.4rem;
+}
+
+.ml-card .desc { font-size: 0.8rem; color: var(--muted); margin-bottom: 1.2rem; }
+
+/* Accuracy bars */
+.acc-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.acc-label { font-size: 0.78rem; width: 110px; flex-shrink: 0; color: var(--ink); }
+
+.acc-track {
+  flex: 1;
+  height: 20px;
+  background: var(--parchment);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.acc-fill {
+  height: 100%;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 6px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--white);
+  transition: width 1s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* Feature importance */
+.fi-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 7px;
+}
+
+.fi-rank {
+  font-size: 0.7rem;
+  color: var(--muted);
+  width: 20px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.fi-label {
+  font-size: 0.78rem;
+  width: 110px;
+  flex-shrink: 0;
+}
+
+.fi-track {
+  flex: 1;
+  height: 14px;
+  background: var(--parchment);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.fi-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
+}
+
+.fi-val { font-size: 0.7rem; color: var(--muted); width: 36px; text-align: right; flex-shrink: 0; }
+
+/* Confusion matrix */
+.cm-wrap { overflow-x: auto; }
+
+table.cm {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.72rem;
+}
+
+table.cm th, table.cm td {
+  border: 1px solid var(--fog);
+  padding: 5px 6px;
+  text-align: center;
+}
+
+table.cm th {
+  background: var(--bark);
+  color: var(--cream);
+  font-weight: 700;
+}
+
+table.cm td { background: var(--white); }
+
+/* ── SYNTHETIC DATA / HEATMAP ───────────────────────────────────────── */
+.heatmap-section {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+.heatmap-controls { display: flex; flex-direction: column; gap: 8px; }
+
+.group-btn {
+  padding: 9px 14px;
+  background: var(--white);
+  border: 1.5px solid var(--fog);
+  border-radius: var(--r);
+  font-size: 0.82rem;
+  color: var(--ink);
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s;
+  font-weight: 500;
+}
+
+.group-btn:hover { border-color: var(--ochre); }
+.group-btn.active { background: var(--bark); color: var(--cream); border-color: var(--bark); }
+
+.heatmap-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.heatmap-panel h4 {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 8px;
+  color: var(--bark);
+}
+
+.hm-grid-wrap { overflow-x: auto; }
+
+.hm-grid {
+  display: inline-grid;
+  gap: 1px;
+  background: var(--fog);
+  border: 1px solid var(--fog);
+}
+
+.hm-cell {
+  width: 24px; height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0;
+  cursor: default;
+  position: relative;
+}
+
+.hm-cell:hover::after {
+  content: attr(data-tip);
+  position: absolute;
+  background: var(--bark);
+  color: var(--cream);
+  font-size: 10px;
+  padding: 3px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+  z-index: 10;
+  top: -28px; left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.hm-label-cell {
+  width: 24px; height: 24px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0;
+  background: var(--parchment);
+}
+
+.fidelity-bar {
+  margin-top: 1rem;
+  background: var(--parchment);
+  border-radius: var(--r);
+  padding: 0.9rem 1.1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.82rem;
+}
+
+.fidelity-val { font-family: var(--serif); font-size: 1.3rem; font-weight: 700; color: var(--neural); }
+
+/* ── PATHWAY COVERAGE ───────────────────────────────────────────────── */
+.pathway-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+@media (max-width: 800px) { .pathway-grid { grid-template-columns: 1fr 1fr; } }
+
+.pw-card {
+  background: var(--white);
+  border: 1.5px solid var(--fog);
+  border-radius: var(--r);
+  padding: 1rem;
+}
+
+.pw-card-name {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--bark);
+  margin-bottom: 6px;
+}
+
+.pw-count {
+  font-size: 0.72rem;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.pw-compounds { display: flex; flex-wrap: wrap; gap: 4px; }
+
+.pw-tag {
+  font-size: 0.65rem;
+  padding: 2px 7px;
+  border-radius: 20px;
+  background: var(--parchment);
+  color: var(--spice);
+  font-weight: 600;
+  border: 1px solid var(--fog);
+}
+
+/* ── COLLABORATION SECTION ──────────────────────────────────────────── */
+.collab-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+@media (max-width: 800px) { .collab-grid { grid-template-columns: 1fr; } }
+
+.collab-card {
+  background: var(--white);
+  border: 1.5px solid var(--fog);
+  border-radius: var(--r);
+  padding: 1.5rem;
+  transition: box-shadow 0.15s, transform 0.1s;
+}
+
+.collab-card:hover { box-shadow: var(--shadow); transform: translateY(-2px); }
+
+.collab-icon {
+  font-size: 1.8rem;
+  margin-bottom: 0.8rem;
+  display: block;
+}
+
+.collab-card h3 {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  color: var(--bark);
+  margin-bottom: 0.5rem;
+}
+
+.collab-card p { font-size: 0.85rem; color: var(--muted); margin-bottom: 1rem; }
+
+.collab-tag {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 20px;
+  margin: 2px;
+}
+.tag-seek { background: #EFF6FF; color: var(--neural); border: 1px solid #BFDBFE; }
+.tag-offer { background: #F0FDF4; color: var(--synapse); border: 1px solid #86EFAC; }
+
+/* ── RESEARCH ROADMAP ───────────────────────────────────────────────── */
+.roadmap {
+  position: relative;
+  padding-left: 2rem;
+}
+
+.roadmap::before {
+  content: '';
+  position: absolute;
+  left: 7px; top: 8px; bottom: 8px;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--ochre), var(--fog));
+}
+
+.rm-item {
+  position: relative;
+  margin-bottom: 2rem;
+  padding-left: 1.5rem;
+}
+
+.rm-item::before {
+  content: '';
+  position: absolute;
+  left: -1.95rem;
+  top: 6px;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--white);
+  border: 2.5px solid var(--ochre);
+}
+
+.rm-item.done::before { background: var(--ochre); }
+.rm-item.active-phase::before { background: var(--gold); border-color: var(--gold); box-shadow: 0 0 0 4px rgba(232,160,32,0.2); }
+
+.rm-phase {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 3px;
+}
+
+.rm-title {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--bark);
+  margin-bottom: 4px;
+}
+
+.rm-desc { font-size: 0.83rem; color: var(--muted); }
+
+/* ── FOOTER ─────────────────────────────────────────────────────────── */
+footer {
+  background: var(--bark);
+  color: #B8977A;
+  padding: 2.5rem;
+  text-align: center;
+  font-size: 0.82rem;
+}
+
+footer strong { color: var(--cream); }
+
+/* ── UTILS ──────────────────────────────────────────────────────────── */
+.tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+
+.tag {
+  font-size: 0.7rem;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: var(--parchment);
+  color: var(--spice);
+  border: 1px solid var(--fog);
+  font-weight: 600;
+}
+
+.divider { height: 1px; background: var(--fog); margin: 2rem 0; }
+
+.kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+@media (max-width: 700px) { .kpi-strip { grid-template-columns: repeat(2, 1fr); } }
+
+.kpi {
+  background: var(--white);
+  border: 1.5px solid var(--fog);
+  border-radius: var(--r);
+  padding: 1.2rem;
+  text-align: center;
+}
+
+.kpi-val {
+  font-family: var(--serif);
+  font-size: 2.1rem;
+  font-weight: 700;
+  color: var(--spice);
+  display: block;
+}
+
+.kpi-lbl { font-size: 0.75rem; color: var(--muted); }
+
+</style>
+</head>
+<body>
+
+<!-- ── HERO ─────────────────────────────────────────────────────────── -->
+<div class="hero">
+  <div class="hero-inner">
+    <div>
+      <span class="hero-badge">COEST · Olabisi Onabanjo University · Nigeria</span>
+      <h1>From <em>Cinnamomum loureiroi</em><br>to the Neurodegenerating Brain</h1>
+      <p class="hero-sub">
+        A multi-modal neuroinformatics research platform integrating network pharmacology,
+        machine-learning classification, synthetic data generation, and computational
+        neuroscience — built from real preclinical data to drive global collaboration.
+      </p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#network">Explore Network</a>
+        <a class="btn btn-outline" href="#ml">ML Results</a>
+        <a class="btn btn-outline" href="#collaborate">Collaborate</a>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="hstat"><span class="val">5</span><span class="lbl">Bioactive compounds</span></div>
+      <div class="hstat"><span class="val">15</span><span class="lbl">Validated targets</span></div>
+      <div class="hstat"><span class="val">84.8%</span><span class="lbl">LDA accuracy (7-class)</span></div>
+      <div class="hstat"><span class="val">100%</span><span class="lbl">Neuroprotective response classification</span></div>
+      <div class="hstat"><span class="val">22</span><span class="lbl">Pathways mapped</span></div>
+      <div class="hstat"><span class="val">84</span><span class="lbl">Real animals · 31 biomarkers</span></div>
+      <div class="hstat"><span class="val">5</span><span class="lbl">Hub targets (degree ≥ 4)</span></div>
+      <div class="hstat"><span class="val">100%</span><span class="lbl">KS marginal fidelity</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── NAV ──────────────────────────────────────────────────────────── -->
+<nav class="nav-strip">
+  <div class="nav-strip-inner">
+    <a href="#compounds">🌿 Compounds</a>
+    <a href="#network">🕸 Network</a>
+    <a href="#pathways">🧬 Pathways</a>
+    <a href="#ml">🤖 ML Results</a>
+    <a href="#synthetic">🔬 Synthetic Data</a>
+    <a href="#roadmap">🗺 Roadmap</a>
+    <a href="#collaborate">🤝 Collaborate</a>
+  </div>
+</nav>
+
+<div class="page">
+
+<!-- ── COMPOUNDS ────────────────────────────────────────────────────── -->
+<section id="compounds">
+  <div class="section-eyebrow">Phytochemical Profile</div>
+  <h2 class="section-title">Saigon Cinnamon Bioactive Compounds</h2>
+  <p class="section-desc">Five characterised phytochemicals from <em>Cinnamomum loureiroi</em>, each with distinct neuropharmacological mechanisms. Click any compound to explore its profile.</p>
+
+  <div class="compound-grid" id="compoundGrid"></div>
+  <div class="compound-detail" id="compoundDetail"></div>
+</section>
+
+<!-- ── NETWORK ──────────────────────────────────────────────────────── -->
+<section id="network">
+  <div class="section-eyebrow">Network Pharmacology</div>
+  <h2 class="section-title">Compound–Target–Pathway Interaction Network</h2>
+  <p class="section-desc">Interactive force-directed graph showing all 5 compounds, 15 molecular targets, and 22 downstream pathways. Hub nodes (degree ≥ 4) highlighted. Hover nodes for details.</p>
+
+  <div class="network-wrap">
+    <canvas id="networkCanvas" height="460"></canvas>
+    <div>
+      <div class="network-legend">
+        <div style="font-size:0.78rem;font-weight:700;color:var(--bark);margin-bottom:12px;">Node Types</div>
+        <div class="legend-item"><span class="legend-dot" style="background:#8B3A0F"></span>Compound</div>
+        <div class="legend-item"><span class="legend-dot" style="background:#1A4A6B"></span>Target (hub)</div>
+        <div class="legend-item"><span class="legend-dot" style="background:#6BA5C8"></span>Target (non-hub)</div>
+        <div class="legend-item"><span class="legend-dot" style="background:#0D7A5F"></span>Pathway</div>
+
+        <div class="hub-list">
+          <div style="font-size:0.75rem;font-weight:700;color:var(--bark);margin:12px 0 6px;">Hub Targets</div>
+          <div class="hub-row"><span>NF-κB (RELA)</span><span class="degree">deg 4</span></div>
+          <div class="hub-row"><span>NRF2</span><span class="degree">deg 4</span></div>
+          <div class="hub-row"><span>MAPK1</span><span class="degree">deg 4</span></div>
+          <div class="hub-row"><span>TNF</span><span class="degree">deg 4</span></div>
+          <div class="hub-row"><span>IL6</span><span class="degree">deg 4</span></div>
+          <div class="hub-row"><span>AChE</span><span class="degree">deg 3</span></div>
+        </div>
+      </div>
+      <div style="margin-top:12px;background:var(--parchment);border-radius:var(--r);padding:1rem;font-size:0.8rem;color:var(--muted);">
+        <strong style="color:var(--bark);">Cinnamaldehyde</strong> alone hits 12 targets — including GSK3B, mTOR, BACE1, CASP3, and PI3K — making it the most polypharmacological compound in the panel and a promising multi-target AD lead.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PATHWAYS ──────────────────────────────────────────────────────── -->
+<section id="pathways">
+  <div class="section-eyebrow">Systems Biology</div>
+  <h2 class="section-title">Pathway Coverage Analysis</h2>
+  <p class="section-desc">All 22 pathways targeted by the cinnamon compound panel, ranked by breadth of coverage. Darker cards indicate higher polypharmacological coverage.</p>
+
+  <div class="pathway-grid" id="pathwayGrid"></div>
+</section>
+
+<!-- ── ML RESULTS ────────────────────────────────────────────────────── -->
+<section id="ml">
+  <div class="section-eyebrow">Machine Learning Classification</div>
+  <h2 class="section-title">Biomarker-Driven Group Classification</h2>
+  <p class="section-desc">Five classifiers applied to 31 biomarkers across 84 animals (7 groups). LDA achieved 84.8% 7-class accuracy. All classifiers achieved 100% neuroprotective response discrimination.</p>
+
+  <div class="kpi-strip">
+    <div class="kpi"><span class="kpi-val">84.8%</span><span class="kpi-lbl">LDA 7-class accuracy</span></div>
+    <div class="kpi"><span class="kpi-val">100%</span><span class="kpi-lbl">Neuroprotective classification (all classifiers)</span></div>
+    <div class="kpi"><span class="kpi-val">0.97</span><span class="kpi-lbl">Donepezil F1-score</span></div>
+    <div class="kpi"><span class="kpi-val">1.00</span><span class="kpi-lbl">SCP group F1-score</span></div>
+  </div>
+
+  <div class="ml-grid">
+    <!-- Classifier comparison -->
+    <div class="ml-card">
+      <h3>Classifier Accuracy — 7-Class Task</h3>
+      <p class="desc">5-fold cross-validation mean accuracy across all classifiers</p>
+      <div id="classifierBars"></div>
+    </div>
+
+    <!-- Feature importance -->
+    <div class="ml-card">
+      <h3>Top Biomarker Importance</h3>
+      <p class="desc">Random Forest feature importance — top 12 biomarkers ranked</p>
+      <div id="featureImportance"></div>
+    </div>
+
+    <!-- Confusion matrix -->
+    <div class="ml-card">
+      <h3>LDA Confusion Matrix</h3>
+      <p class="desc">Predicted vs actual group labels — 7 treatment groups</p>
+      <div class="cm-wrap" id="confusionMatrix"></div>
+    </div>
+
+    <!-- Per-class F1 -->
+    <div class="ml-card">
+      <h3>Per-Class F1 Score (LDA)</h3>
+      <p class="desc">Classification precision and recall by treatment group</p>
+      <div id="f1Bars"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SYNTHETIC DATA ────────────────────────────────────────────────── -->
+<section id="synthetic">
+  <div class="section-eyebrow">NeuroSimLab · Synthetic Data Engine</div>
+  <h2 class="section-title">Correlation-Preserving Synthetic Data</h2>
+  <p class="section-desc">Gaussian copula generator trained on 84 real animals. Compare real vs synthetic biomarker correlation matrices by treatment group. All figures computed from real data, not hard-coded.</p>
+
+  <div class="kpi-strip">
+    <div class="kpi"><span class="kpi-val">84</span><span class="kpi-lbl">Real animals (source)</span></div>
+    <div class="kpi"><span class="kpi-val">0.37</span><span class="kpi-lbl">Mean corr-of-corrs (copula)</span></div>
+    <div class="kpi"><span class="kpi-val">0.01</span><span class="kpi-lbl">Mean corr-of-corrs (independent)</span></div>
+    <div class="kpi"><span class="kpi-val">100%</span><span class="kpi-lbl">Biomarkers passing KS test</span></div>
+  </div>
+
+  <div class="heatmap-section">
+    <div>
+      <div style="font-size:0.78rem;font-weight:700;color:var(--bark);margin-bottom:10px;">Treatment Group</div>
+      <div class="heatmap-controls" id="groupBtns"></div>
+      <div style="margin-top:1rem;background:var(--parchment);border-radius:var(--r);padding:0.9rem;font-size:0.78rem;color:var(--muted);line-height:1.6;">
+        <strong style="color:var(--bark);">What this shows:</strong> Each cell is the Pearson correlation between two biomarkers. A copula that preserves correlation structure (r ≈ 0.37) dramatically outperforms an independent generator (r ≈ 0.01) for downstream ML tasks.
+      </div>
+    </div>
+    <div>
+      <div class="heatmap-pair" id="heatmapPair">
+        <div class="heatmap-panel">
+          <h4>Real Data</h4>
+          <div class="hm-grid-wrap"><div id="realHeatmap"></div></div>
+        </div>
+        <div class="heatmap-panel">
+          <h4>Synthetic (Copula)</h4>
+          <div class="hm-grid-wrap"><div id="synthHeatmap"></div></div>
+        </div>
+      </div>
+      <div class="fidelity-bar" id="fidelityBar">
+        <div>
+          <div style="font-size:0.75rem;color:var(--muted);">Correlation-of-correlations</div>
+          <div style="font-size:0.78rem;color:var(--bark);">Pearson r between real and synthetic correlation matrices</div>
+        </div>
+        <div class="fidelity-val" id="fidelityVal">—</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── ROADMAP ───────────────────────────────────────────────────────── -->
+<section id="roadmap">
+  <div class="section-eyebrow">Research Programme</div>
+  <h2 class="section-title">CinnaNeuro Research Roadmap</h2>
+  <p class="section-desc">A phased programme from preclinical validation through computational translation to collaborative clinical neuroinformatics.</p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;">
+    <div class="roadmap" id="roadmapLeft"></div>
+    <div class="roadmap" id="roadmapRight"></div>
+  </div>
+</section>
+
+<!-- ── COLLABORATE ───────────────────────────────────────────────────── -->
+<section id="collaborate">
+  <div class="section-eyebrow">Build the Empire</div>
+  <h2 class="section-title">Collaboration Opportunities</h2>
+  <p class="section-desc">This platform is an open invitation. What we bring to the table — and what we are looking for — across six collaboration tracks.</p>
+
+  <div class="collab-grid" id="collabGrid"></div>
+
+  <div style="background:var(--bark);color:var(--cream);border-radius:var(--r);padding:2rem 2.5rem;display:grid;grid-template-columns:1fr auto;gap:2rem;align-items:center;">
+    <div>
+      <div style="font-family:var(--serif);font-size:1.3rem;margin-bottom:0.5rem;">Ready to collaborate?</div>
+      <div style="font-size:0.88rem;color:#D4B896;max-width:540px;">
+        This research is led from COEST, Ogun State, Nigeria — anchored in African ethnopharmacology and built with global-standard computational methods. 
+        We are actively seeking wet-lab validation partners, clinical neurologists, bioinformatics collaborators, and journal co-authors.
+      </div>
+    </div>
+    <div style="text-align:center;">
+      <div style="font-size:0.72rem;color:#B8977A;margin-bottom:8px;">Platform built at</div>
+      <div style="font-family:var(--serif);font-size:1.1rem;color:var(--gold);font-weight:700;">COEST · OOU</div>
+      <div style="font-size:0.75rem;color:#B8977A;margin-top:4px;">Ogun State, Nigeria</div>
+    </div>
+  </div>
+</section>
+
+</div><!-- /page -->
+
+<footer>
+  <strong>CinnaNeuro Research Platform</strong> · Saigon Cinnamon Neuroprotection Programme<br>
+  COEST (Sikiru Adetona College of Education Science and Technology, Omu-Ijebu) · Olabisi Onabanjo University · Nigeria<br>
+  <span style="margin-top:6px;display:block;font-size:0.75rem;">
+    Data: 84 real animals · 31 biomarkers · 7 treatment groups · AD_model_verified_data.xlsx<br>
+    Network: 5 compounds · 15 targets · 22 pathways · Cytoscape-compatible edge list
+  </span>
+</footer>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════════════════════════
+
+const COMPOUNDS = [
+  {
+    name: "Cinnamaldehyde",
+    color: "#8B3A0F",
+    role: "Primary active · AChE, BACE1, NF-κB, GSK3B",
+    mw: "132.16 Da", logp: "1.9", hbd: "0", hba: "1",
+    lipinski: "✓ Passes",
+    mechanism: "Inhibits AChE and BACE1 simultaneously; suppresses NF-κB-mediated neuroinflammation; modulates GSK3B/tau phosphorylation axis and mTOR autophagy pathway.",
+    targets: ["AChE","BACE1","NF-κB (RELA)","NRF2","MAPK1","TNF","IL6","PTGS2","CASP3","GSK3B","mTOR","PI3K (PIK3CA)"],
+    hubs: ["NF-κB (RELA)","NRF2","MAPK1","TNF","IL6"],
+    novelty: "Broadest polypharmacological profile in the panel — 12 targets across AD, neuroinflammation, oxidative stress, and autophagy pathways."
+  },
+  {
+    name: "Eugenol",
+    color: "#C8610A",
+    role: "Anti-inflammatory · NF-κB, MAO-A/B, TRPV1",
+    mw: "164.20 Da", logp: "2.3", hbd: "1", hba: "2",
+    lipinski: "✓ Passes",
+    mechanism: "Dual MAO-A/B inhibition (Parkinson relevance); COX-2/PTGS2 suppression; activates NRF2 antioxidant response; TRPV1 modulation for neuropathic pain.",
+    targets: ["AChE","COX-2 (PTGS2)","NF-κB (RELA)","NRF2","TNF","IL6","MAPK1","TRPV1","MAO-A","MAO-B"],
+    hubs: ["NF-κB (RELA)","NRF2","MAPK1","TNF","IL6"],
+    novelty: "Dual MAO-A/B inhibition in a single naturally-occurring compound — rare and therapeutically significant for both Parkinson's and depression comorbidity."
+  },
+  {
+    name: "Coumarin",
+    color: "#E8A020",
+    role: "AChE inhibitor · BBB-permeable scaffold",
+    mw: "146.14 Da", logp: "1.4", hbd: "0", hba: "2",
+    lipinski: "✓ Passes",
+    mechanism: "Selective AChE and MAOA/B inhibition with strong BBB permeability profile; NRF2 activation; BACE1 inhibition; CYP1A2 substrate — relevant to drug combination studies.",
+    targets: ["AChE","MAOA","MAOB","CYP1A2","NRF2","BACE1"],
+    hubs: ["NRF2"],
+    novelty: "Coumarin scaffold is a validated medicinal chemistry starting point — highest literature-supported BBB penetrance in this panel, ideal for lead optimisation."
+  },
+  {
+    name: "Caryophyllene",
+    color: "#3B7D4A",
+    role: "CB2 agonist · Endocannabinoid neuroprotection",
+    mw: "204.36 Da", logp: "4.3", hbd: "0", hba: "1",
+    lipinski: "✓ Passes",
+    mechanism: "Selective CB2 receptor agonism without psychoactivity; suppresses NF-κB and MAPK/ERK neuroinflammatory cascades; COX-2/PTGS2 inhibition; NRF2 activation.",
+    targets: ["CB2R (CNR2)","NF-κB (RELA)","TNF","IL6","NRF2","MAPK1","PTGS2"],
+    hubs: ["NF-κB (RELA)","NRF2","MAPK1","TNF","IL6"],
+    novelty: "Only CB2 agonist in the panel — opens an endocannabinoid neuroprotection angle that no other cinnamon compound addresses. Non-psychoactive."
+  },
+  {
+    name: "τ-Muurolol",
+    color: "#1A4A6B",
+    role: "Sesquiterpene · Anti-neuroinflammatory",
+    mw: "222.37 Da", logp: "4.1", hbd: "1", hba: "1",
+    lipinski: "✓ Passes",
+    mechanism: "Sesquiterpene alcohol with strong NF-κB, MAPK1, TNF, IL6 and PTGS2 inhibition; contributes substantially to the anti-neuroinflammatory polypharmacology of the cinnamon oil profile.",
+    targets: ["NF-κB (RELA)","MAPK1","TNF","IL6","PTGS2"],
+    hubs: ["NF-κB (RELA)","MAPK1","TNF","IL6"],
+    novelty: "Understudied sesquiterpene — literature gaps create strong publication opportunity. All 5 targets overlap with Alzheimer pathway."
+  }
+];
+
+const PATHWAYS = [
+  { name: "Alzheimer pathway",          n: 5, compounds: ["Caryophyllene","Cinnamaldehyde","Coumarin","Eugenol","τ-Muurolol"] },
+  { name: "NF-κB signalling",           n: 4, compounds: ["Caryophyllene","Cinnamaldehyde","Eugenol","τ-Muurolol"] },
+  { name: "TNF signalling",             n: 4, compounds: ["Caryophyllene","Cinnamaldehyde","Eugenol","τ-Muurolol"] },
+  { name: "Neuroinflammation",          n: 4, compounds: ["Caryophyllene","Cinnamaldehyde","Eugenol","τ-Muurolol"] },
+  { name: "Oxidative stress response",  n: 4, compounds: ["Caryophyllene","Cinnamaldehyde","Coumarin","Eugenol"] },
+  { name: "Nrf2-ARE pathway",           n: 4, compounds: ["Caryophyllene","Cinnamaldehyde","Coumarin","Eugenol"] },
+  { name: "MAPK/ERK signalling",        n: 4, compounds: ["Caryophyllene","Cinnamaldehyde","Eugenol","τ-Muurolol"] },
+  { name: "IL-6/JAK-STAT signalling",   n: 4, compounds: ["Caryophyllene","Cinnamaldehyde","Eugenol","τ-Muurolol"] },
+  { name: "Arachidonic acid metabolism",n: 4, compounds: ["Caryophyllene","Cinnamaldehyde","Eugenol","τ-Muurolol"] },
+  { name: "Cholinergic signalling",     n: 3, compounds: ["Cinnamaldehyde","Coumarin","Eugenol"] },
+  { name: "Amyloid processing",         n: 2, compounds: ["Cinnamaldehyde","Coumarin"] },
+  { name: "PI3K/Akt signalling",        n: 1, compounds: ["Cinnamaldehyde"] },
+  { name: "Tau phosphorylation",        n: 1, compounds: ["Cinnamaldehyde"] },
+  { name: "Autophagy (mTOR)",           n: 1, compounds: ["Cinnamaldehyde"] },
+  { name: "Apoptosis pathway",          n: 1, compounds: ["Cinnamaldehyde"] },
+  { name: "Monoamine oxidase pathway",  n: 1, compounds: ["Eugenol"] },
+  { name: "Neurotransmitter metabolism",n: 1, compounds: ["Eugenol"] },
+  { name: "Calcium signalling (TRPV1)", n: 1, compounds: ["Eugenol"] },
+  { name: "Endocannabinoid signalling", n: 1, compounds: ["Caryophyllene"] },
+  { name: "Drug metabolism (CYP450)",   n: 1, compounds: ["Coumarin"] },
+  { name: "PI3K/Akt/mTOR signalling",   n: 1, compounds: ["Cinnamaldehyde"] },
+  { name: "Pain/inflammation",          n: 1, compounds: ["Eugenol"] },
+];
+
+const CLASSIFIERS = [
+  { name: "LDA",            acc: 84.8, sd: 2.2 },
+  { name: "Logistic Reg.",  acc: 81.2, sd: 2.0 },
+  { name: "Random Forest",  acc: 83.1, sd: 4.2 },
+  { name: "SVM (RBF)",      acc: 72.3, sd: 5.2 },
+  { name: "Gradient Boost", acc: 67.9, sd: 3.2 },
+];
+
+const FEATURE_IMPORTANCE = [
+  { name: "TargetQuadrant", val: 0.0827, cat: "Behavioral" },
+  { name: "NF-κB",          val: 0.0784, cat: "Inflammation" },
+  { name: "Pathlength",     val: 0.0702, cat: "Behavioral" },
+  { name: "EscapeLatency",  val: 0.0636, cat: "Behavioral" },
+  { name: "pCREB",          val: 0.0582, cat: "Signalling" },
+  { name: "MPO",            val: 0.0539, cat: "Oxidative" },
+  { name: "AChE",           val: 0.0498, cat: "Neurotransmitter" },
+  { name: "NitricOxide",    val: 0.0482, cat: "Oxidative" },
+  { name: "MDA",            val: 0.0441, cat: "Oxidative" },
+  { name: "TNF-α",          val: 0.0427, cat: "Inflammation" },
+  { name: "Catalase",       val: 0.0384, cat: "Oxidative" },
+  { name: "Glutamate",      val: 0.0339, cat: "Neurotransmitter" },
+];
+
+const CAT_COLORS = {
+  Behavioral: "#8B3A0F", Inflammation: "#C8610A", Signalling: "#1A4A6B",
+  Oxidative: "#0D7A5F", Neurotransmitter: "#6B3A8B"
+};
+
+const CM_LABELS = ["Co-Tx","Control","Donepezil","Post-Tx","Pre-Tx","SCP","Sham"];
+const CM_DATA = [
+  [13,0,1,1,1,0,0],[0,11,0,0,0,0,5],[0,0,16,0,0,0,0],
+  [0,0,0,16,0,0,0],[3,0,0,0,12,0,1],[0,0,0,0,0,16,0],[0,5,0,0,0,0,11]
+];
+
+const F1_DATA = [
+  { name: "Co-Tx",    f1: 0.812 },
+  { name: "Control",  f1: 0.688 },
+  { name: "Donepezil",f1: 0.970 },
+  { name: "Post-Tx",  f1: 0.970 },
+  { name: "Pre-Tx",   f1: 0.828 },
+  { name: "SCP",      f1: 1.000 },
+  { name: "Sham",     f1: 0.667 },
+];
+
+const HEATMAPS = {"Co-Tx":{"vars":["Nrf2","SOD","CAT","GSH","MDA","TNFa","IL6","NFkB","IL10","BDNF","pCREB","PSD95","Caspase3","NOR","EscLat","AChE"],"real":[[1.0,0.837,0.775,0.966,-0.316,-0.037,-0.109,-0.317,0.062,-0.007,0.336,0.073,0.028,0.137,-0.049,0.024],[0.837,1.0,0.691,0.885,-0.596,-0.289,-0.239,-0.494,0.344,0.263,0.509,0.32,-0.376,0.098,-0.158,-0.221],[0.775,0.691,1.0,0.814,-0.216,-0.094,-0.413,-0.426,0.525,0.246,0.488,0.342,-0.233,0.443,-0.532,0.163],[0.966,0.885,0.814,1.0,-0.455,-0.057,-0.176,-0.335,0.216,0.139,0.432,0.261,-0.18,0.132,-0.127,-0.047],[-0.316,-0.596,-0.216,-0.455,1.0,0.127,-0.013,0.104,-0.157,-0.58,-0.737,-0.553,0.587,-0.123,0.286,0.473],[-0.037,-0.289,-0.094,-0.057,0.127,1.0,0.655,0.79,-0.523,0.083,-0.248,-0.053,0.15,0.184,0.224,0.52],[-0.109,-0.239,-0.413,-0.176,-0.013,0.655,1.0,0.849,-0.656,0.162,-0.23,-0.144,0.192,0.002,0.24,0.424],[-0.317,-0.494,-0.426,-0.335,0.104,0.79,0.849,1.0,-0.578,0.151,-0.274,-0.058,0.16,0.009,0.178,0.382],[0.062,0.344,0.525,0.216,-0.157,-0.523,-0.656,-0.578,1.0,0.512,0.498,0.625,-0.696,0.355,-0.629,-0.14],[-0.007,0.263,0.246,0.139,-0.58,0.083,0.162,0.151,0.512,1.0,0.74,0.796,-0.799,0.662,-0.649,-0.021],[0.336,0.509,0.488,0.432,-0.737,-0.248,-0.23,-0.274,0.498,0.74,1.0,0.727,-0.645,0.611,-0.649,-0.39],[0.073,0.32,0.342,0.261,-0.553,-0.053,-0.144,-0.058,0.625,0.796,0.727,1.0,-0.919,0.389,-0.441,-0.362],[0.028,-0.376,-0.233,-0.18,0.587,0.15,0.192,0.16,-0.696,-0.799,-0.645,-0.919,1.0,-0.27,0.388,0.35],[0.137,0.098,0.443,0.132,-0.123,0.184,0.002,0.009,0.355,0.662,0.611,0.389,-0.27,1.0,-0.694,0.252],[-0.049,-0.158,-0.532,-0.127,0.286,0.224,0.24,0.178,-0.629,-0.649,-0.649,-0.441,0.388,-0.694,1.0,-0.192],[0.024,-0.221,0.163,-0.047,0.473,0.52,0.424,0.382,-0.14,-0.021,-0.39,-0.362,0.35,0.252,-0.192,1.0]],"synth":[[1.0,0.302,0.738,0.717,-0.065,0.025,0.055,-0.521,0.002,0.084,0.632,-0.399,0.692,0.36,-0.177,-0.01],[0.302,1.0,0.384,0.413,-0.05,-0.514,-0.651,-0.558,0.282,0.018,0.077,0.039,0.057,0.42,-0.044,-0.266],[0.738,0.384,1.0,0.495,-0.23,-0.13,-0.073,-0.389,0.171,0.356,0.519,-0.003,0.27,0.321,-0.362,-0.067],[0.717,0.413,0.495,1.0,-0.113,0.108,0.057,-0.654,-0.279,-0.148,0.366,-0.279,0.478,0.096,-0.337,0.184],[-0.065,-0.05,-0.23,-0.113,1.0,0.539,-0.116,0.322,-0.475,0.415,-0.562,-0.607,0.208,0.172,-0.016,0.367],[0.025,-0.514,-0.13,0.108,0.539,1.0,0.389,0.331,-0.746,0.193,-0.194,-0.394,0.399,0.015,-0.426,0.452],[0.055,-0.651,-0.073,0.057,-0.116,0.389,1.0,0.054,-0.351,-0.221,0.243,-0.334,0.359,0.056,0.05,0.639],[-0.521,-0.558,-0.389,-0.654,0.322,0.331,0.054,1.0,-0.074,0.206,-0.625,0.135,-0.179,-0.143,-0.252,-0.106],[0.002,0.282,0.171,-0.279,-0.475,-0.746,-0.351,-0.074,1.0,0.036,0.376,0.599,-0.406,-0.043,0.236,-0.552],[0.084,0.018,0.356,-0.148,0.415,0.193,-0.221,0.206,0.036,1.0,0.0,0.117,-0.079,0.236,-0.446,-0.08],[0.632,0.077,0.519,0.366,-0.562,-0.194,0.243,-0.625,0.376,0.0,1.0,0.114,0.309,0.209,0.047,-0.085],[-0.399,0.039,-0.003,-0.279,-0.607,-0.394,-0.334,0.135,0.599,0.117,0.114,1.0,-0.702,-0.371,-0.271,-0.636],[0.692,0.057,0.27,0.478,0.208,0.399,0.359,-0.179,-0.406,-0.079,0.309,-0.702,1.0,0.672,-0.193,0.288],[0.36,0.42,0.321,0.096,0.172,0.015,0.056,-0.143,-0.043,0.236,0.209,-0.371,0.672,1.0,-0.173,0.126],[-0.177,-0.044,-0.362,-0.337,-0.016,-0.426,0.05,-0.252,0.236,-0.446,0.047,-0.271,-0.193,-0.173,1.0,0.19],[-0.01,-0.266,-0.067,0.184,0.367,0.452,0.639,-0.106,-0.552,-0.08,-0.085,-0.636,0.288,0.126,0.19,1.0]]},"Control":{"vars":["Nrf2","SOD","CAT","GSH","MDA","TNFa","IL6","NFkB","IL10","BDNF","pCREB","PSD95","Caspase3","NOR","EscLat","AChE"],"real":[[1.0,0.736,0.833,0.655,-0.143,0.298,-0.461,-0.053,-0.011,-0.312,-0.072,0.105,0.072,-0.303,0.249,0.273],[0.736,1.0,0.442,0.688,-0.383,-0.147,-0.706,-0.448,-0.171,-0.161,0.16,0.028,-0.042,-0.055,0.014,-0.153],[0.833,0.442,1.0,0.516,-0.104,0.268,-0.274,0.158,0.006,-0.093,0.006,0.03,0.175,-0.318,0.25,0.198],[0.655,0.688,0.516,1.0,-0.349,-0.009,-0.546,-0.451,-0.35,-0.323,0.059,-0.308,0.39,-0.284,0.055,0.023],[-0.143,-0.383,-0.104,-0.349,1.0,0.483,0.4,0.368,-0.049,0.204,-0.383,0.04,-0.234,-0.191,0.273,0.405],[0.298,-0.147,0.268,-0.009,0.483,1.0,0.122,0.637,0.034,-0.012,-0.217,0.275,0.092,-0.188,0.019,0.296],[-0.461,-0.706,-0.274,-0.546,0.4,0.122,1.0,0.368,-0.059,-0.271,-0.214,-0.046,0.195,-0.182,0.3,0.288],[-0.053,-0.448,0.158,-0.451,0.368,0.637,0.368,1.0,0.28,0.308,0.231,0.447,-0.089,-0.06,-0.089,-0.074],[-0.011,-0.171,0.006,-0.35,-0.049,0.034,-0.059,0.28,1.0,0.051,-0.301,-0.075,0.188,0.231,-0.161,-0.146],[-0.312,-0.161,-0.093,-0.323,0.204,-0.012,-0.271,0.308,0.051,1.0,0.527,0.293,-0.572,0.041,-0.037,-0.327],[-0.072,0.16,0.006,0.059,-0.383,-0.217,-0.214,0.231,-0.301,0.527,1.0,0.433,-0.403,-0.106,-0.053,-0.468],[0.105,0.028,0.03,-0.308,0.04,0.275,-0.046,0.447,-0.075,0.293,0.433,1.0,-0.604,-0.309,0.132,0.228],[0.072,-0.042,0.175,0.39,-0.234,0.092,0.195,-0.089,0.188,-0.572,-0.403,-0.604,1.0,-0.027,-0.165,-0.102],[-0.303,-0.055,-0.318,-0.284,-0.191,-0.188,-0.182,-0.06,0.231,0.041,-0.106,-0.309,-0.027,1.0,-0.827,-0.659],[0.249,0.014,0.25,0.055,0.273,0.019,0.3,-0.089,-0.161,-0.037,-0.053,0.132,-0.165,-0.827,1.0,0.716],[0.273,-0.153,0.198,0.023,0.405,0.296,0.288,-0.074,-0.146,-0.327,-0.468,0.228,-0.102,-0.659,0.716,1.0]],"synth":[[1.0,-0.189,0.586,0.025,0.268,0.075,-0.336,-0.109,-0.325,0.496,-0.053,-0.037,-0.02,-0.136,0.135,0.229],[-0.189,1.0,0.001,0.557,0.294,0.63,-0.409,0.419,0.001,-0.492,-0.21,-0.54,0.27,0.059,-0.245,-0.012],[0.586,0.001,1.0,-0.178,-0.223,0.463,-0.266,-0.249,-0.151,0.404,0.127,0.058,0.315,-0.289,-0.011,-0.29],[0.025,0.557,-0.178,1.0,0.171,0.414,-0.107,0.186,-0.068,-0.266,-0.133,-0.553,0.013,0.013,0.21,0.409],[0.268,0.294,-0.223,0.171,1.0,0.033,-0.234,0.246,0.111,-0.161,-0.122,-0.094,-0.598,-0.371,-0.107,0.252],[0.075,0.63,0.463,0.414,0.033,1.0,-0.555,0.062,-0.053,-0.121,0.256,-0.348,0.348,-0.392,-0.433,-0.332],[-0.336,-0.409,-0.266,-0.107,-0.234,-0.555,1.0,-0.206,0.462,-0.169,0.278,0.354,-0.31,0.04,0.254,0.123],[-0.109,0.419,-0.249,0.186,0.246,0.062,-0.206,1.0,0.229,-0.28,0.022,-0.139,0.029,0.328,-0.468,0.029],[-0.325,0.001,-0.151,-0.068,0.111,-0.053,0.462,0.229,1.0,-0.535,0.114,-0.064,-0.115,-0.079,-0.348,-0.351],[0.496,-0.492,0.404,-0.266,-0.161,-0.121,-0.169,-0.28,-0.535,1.0,0.18,0.628,0.041,-0.148,0.292,0.437],[-0.053,-0.21,0.127,-0.133,-0.122,0.256,0.278,0.022,0.114,0.18,1.0,0.572,-0.086,-0.375,-0.475,-0.179],[-0.037,-0.54,0.058,-0.553,-0.094,-0.348,0.354,-0.139,-0.064,0.628,0.572,1.0,-0.18,-0.141,0.056,0.17],[-0.02,0.27,0.315,0.013,-0.598,0.348,-0.31,0.029,-0.115,0.041,-0.086,-0.18,1.0,0.579,-0.166,-0.221],[-0.136,0.059,-0.289,0.013,-0.371,-0.392,0.04,0.328,-0.079,-0.148,-0.375,-0.141,0.579,1.0,0.175,0.107],[0.135,-0.245,-0.011,0.21,-0.107,-0.433,0.254,-0.468,-0.348,0.292,-0.475,0.056,-0.166,0.175,1.0,0.488],[0.229,-0.012,-0.29,0.409,0.252,-0.332,0.123,0.029,-0.351,0.437,-0.179,0.17,-0.221,0.107,0.488,1.0]]},"SCP":{"vars":["Nrf2","SOD","CAT","GSH","MDA","TNFa","IL6","NFkB","IL10","BDNF","pCREB","PSD95","Caspase3","NOR","EscLat","AChE"],"real":[[1.0,0.911,0.786,0.696,-0.382,-0.387,-0.317,-0.174,0.871,0.498,0.425,0.167,0.066,0.089,-0.286,-0.415],[0.911,1.0,0.891,0.722,-0.409,-0.576,-0.416,-0.296,0.749,0.508,0.498,0.279,0.055,0.192,-0.359,-0.337],[0.786,0.891,1.0,0.626,-0.526,-0.641,-0.319,-0.49,0.713,0.209,0.359,0.097,0.282,0.159,-0.268,-0.214],[0.696,0.722,0.626,1.0,-0.432,-0.282,-0.444,-0.413,0.762,0.507,0.489,0.445,-0.199,0.402,-0.406,-0.634],[-0.382,-0.409,-0.526,-0.432,1.0,0.533,-0.196,0.257,-0.405,0.009,-0.089,-0.006,-0.131,-0.476,0.349,0.672],[-0.387,-0.576,-0.641,-0.282,0.533,1.0,0.191,0.601,-0.271,0.096,0.098,0.06,-0.32,-0.038,0.12,0.211],[-0.317,-0.416,-0.319,-0.444,-0.196,0.191,1.0,0.614,-0.233,-0.629,-0.636,-0.674,0.462,-0.14,0.535,-0.044],[-0.174,-0.296,-0.49,-0.413,0.257,0.601,0.614,1.0,-0.286,-0.022,-0.178,-0.275,0.054,-0.214,0.352,0.123],[0.871,0.749,0.713,0.762,-0.405,-0.271,-0.233,-0.286,1.0,0.315,0.334,0.033,0.155,0.181,-0.154,-0.469],[0.498,0.508,0.209,0.507,0.009,0.096,-0.629,-0.022,0.315,1.0,0.879,0.859,-0.724,0.475,-0.758,-0.412],[0.425,0.498,0.359,0.489,-0.089,0.098,-0.636,-0.178,0.334,0.879,1.0,0.847,-0.676,0.67,-0.84,-0.262],[0.167,0.279,0.097,0.445,-0.006,0.06,-0.674,-0.275,0.033,0.859,0.847,1.0,-0.883,0.648,-0.887,-0.37],[0.066,0.055,0.282,-0.199,-0.131,-0.32,0.462,0.054,0.155,-0.724,-0.676,-0.883,1.0,-0.609,0.788,0.303],[0.089,0.192,0.159,0.402,-0.476,-0.038,-0.14,-0.214,0.181,0.475,0.67,0.648,-0.609,1.0,-0.781,-0.577],[-0.286,-0.359,-0.268,-0.406,0.349,0.12,0.535,0.352,-0.154,-0.758,-0.84,-0.887,0.788,-0.781,1.0,0.475],[-0.415,-0.337,-0.214,-0.634,0.672,0.211,-0.044,0.123,-0.469,-0.412,-0.262,-0.37,0.303,-0.577,0.475,1.0]],"synth":[[1.0,0.357,0.118,0.319,-0.401,0.069,0.08,-0.214,0.276,0.238,-0.151,0.681,-0.465,-0.028,-0.508,-0.161],[0.357,1.0,0.63,0.522,-0.18,-0.219,-0.563,-0.108,0.215,0.278,0.645,0.415,-0.407,0.483,0.033,0.315],[0.118,0.63,1.0,0.352,0.027,-0.395,-0.131,-0.631,0.395,0.236,0.36,0.311,-0.317,0.231,0.305,0.594],[0.319,0.522,0.352,1.0,-0.41,0.177,0.042,-0.121,0.2,-0.222,0.051,0.031,-0.16,0.467,-0.106,-0.065],[-0.401,-0.18,0.027,-0.41,1.0,0.245,0.303,-0.337,-0.482,-0.292,0.455,0.036,0.204,-0.077,0.381,0.745],[0.069,-0.219,-0.395,0.177,0.245,1.0,0.343,-0.082,-0.357,-0.259,-0.273,-0.082,0.408,-0.354,-0.241,-0.103],[0.08,-0.563,-0.131,0.042,0.303,0.343,1.0,-0.367,-0.226,-0.334,-0.349,-0.037,0.3,-0.326,-0.072,0.19],[-0.214,-0.108,-0.631,-0.121,-0.337,-0.082,-0.367,1.0,-0.466,0.043,0.041,-0.276,0.382,0.088,-0.205,-0.568],[0.276,0.215,0.395,0.2,-0.482,-0.357,-0.226,-0.466,1.0,0.203,-0.242,0.044,-0.675,0.131,-0.104,-0.144],[0.238,0.278,0.236,-0.222,-0.292,-0.259,-0.334,0.043,0.203,1.0,0.078,0.339,0.035,-0.432,-0.397,-0.111],[-0.151,0.645,0.36,0.051,0.455,-0.273,-0.349,0.041,-0.242,0.078,1.0,0.208,-0.109,0.438,0.195,0.675],[0.681,0.415,0.311,0.031,0.036,-0.082,-0.037,-0.276,0.044,0.339,0.208,1.0,-0.211,0.175,-0.083,0.157],[-0.465,-0.407,-0.317,-0.16,0.204,0.408,0.3,0.382,-0.675,0.035,-0.109,-0.211,1.0,-0.368,-0.032,-0.089],[-0.028,0.483,0.231,0.467,-0.077,-0.354,-0.326,0.088,0.131,-0.432,0.438,0.175,-0.368,1.0,0.472,0.084],[-0.508,0.033,0.305,-0.106,0.381,-0.241,-0.072,-0.205,-0.104,-0.397,0.195,-0.083,-0.032,0.472,1.0,0.373],[-0.161,0.315,0.594,-0.065,0.745,-0.103,0.19,-0.568,-0.144,-0.111,0.675,0.157,-0.089,0.084,0.373,1.0]]},"Donepezil":{"vars":["Nrf2","SOD","CAT","GSH","MDA","TNFa","IL6","NFkB","IL10","BDNF","pCREB","PSD95","Caspase3","NOR","EscLat","AChE"],"real":[[1.0,0.773,0.517,0.787,-0.182,-0.226,-0.31,-0.018,-0.415,0.703,0.666,0.732,-0.735,-0.347,-0.244,-0.123],[0.773,1.0,0.404,0.622,-0.086,-0.136,-0.063,0.096,-0.436,0.557,0.444,0.581,-0.485,-0.281,-0.104,-0.27],[0.517,0.404,1.0,0.48,0.278,-0.277,-0.179,0.118,-0.367,0.524,0.388,0.193,-0.482,0.08,-0.465,-0.42],[0.787,0.622,0.48,1.0,-0.119,-0.421,-0.29,-0.052,-0.63,0.668,0.73,0.793,-0.761,-0.523,-0.057,-0.139],[-0.182,-0.086,0.278,-0.119,1.0,0.395,0.371,0.441,0.137,0.04,-0.056,-0.098,0.04,0.107,-0.121,-0.02],[-0.226,-0.136,-0.277,-0.421,0.395,1.0,0.589,0.658,0.478,-0.299,-0.123,-0.329,0.351,0.122,0.183,-0.167],[-0.31,-0.063,-0.179,-0.29,0.371,0.589,1.0,0.846,0.222,-0.289,-0.142,-0.406,0.494,0.455,0.017,-0.107],[-0.018,0.096,0.118,-0.052,0.441,0.658,0.846,1.0,0.224,-0.009,0.056,-0.33,0.358,0.428,-0.244,-0.142],[-0.415,-0.436,-0.367,-0.63,0.137,0.478,0.222,0.224,1.0,-0.133,-0.124,-0.369,0.545,0.178,0.153,-0.113],[0.703,0.557,0.524,0.668,0.04,-0.299,-0.289,-0.009,-0.133,1.0,0.843,0.571,-0.645,-0.501,0.019,-0.217],[0.666,0.444,0.388,0.73,-0.056,-0.123,-0.142,0.056,-0.124,0.843,1.0,0.702,-0.685,-0.671,0.328,-0.423],[0.732,0.581,0.193,0.793,-0.098,-0.329,-0.406,-0.33,-0.369,0.571,0.702,1.0,-0.794,-0.76,0.26,-0.153],[-0.735,-0.485,-0.482,-0.761,0.04,0.351,0.494,0.358,0.545,-0.645,-0.685,-0.794,1.0,0.667,-0.146,0.27],[-0.347,-0.281,0.08,-0.523,0.107,0.122,0.455,0.428,0.178,-0.501,-0.671,-0.76,0.667,1.0,-0.712,0.231],[-0.244,-0.104,-0.465,-0.057,-0.121,0.183,0.017,-0.244,0.153,0.019,0.328,0.26,-0.146,-0.712,1.0,-0.354],[-0.123,-0.27,-0.42,-0.139,-0.02,-0.167,-0.107,-0.142,-0.113,-0.217,-0.423,-0.153,0.27,0.231,-0.354,1.0]],"synth":[[1.0,0.254,0.321,0.467,-0.243,0.152,-0.224,-0.46,0.466,0.424,0.452,0.528,-0.672,-0.184,-0.479,0.092],[0.254,1.0,-0.2,0.093,-0.545,0.226,-0.24,-0.412,-0.135,0.364,-0.055,0.577,-0.178,-0.22,-0.129,-0.431],[0.321,-0.2,1.0,0.383,0.443,-0.242,-0.245,0.019,0.165,0.42,0.469,0.051,-0.526,0.007,-0.305,0.123],[0.467,0.093,0.383,1.0,-0.303,-0.345,-0.663,-0.377,-0.234,0.654,0.164,0.655,-0.599,-0.262,-0.579,0.522],[-0.243,-0.545,0.443,-0.303,1.0,-0.062,0.638,0.821,0.18,-0.101,-0.025,-0.714,0.441,0.188,-0.167,0.123],[0.152,0.226,-0.242,-0.345,-0.062,1.0,0.124,0.101,0.094,-0.085,0.414,-0.164,0.04,-0.376,0.048,-0.367],[-0.224,-0.24,-0.245,-0.663,0.638,0.124,1.0,0.684,0.311,-0.28,-0.328,-0.75,0.762,0.264,0.023,-0.254],[-0.46,-0.412,0.019,-0.377,0.821,0.101,0.684,1.0,-0.155,-0.264,-0.302,-0.678,0.768,0.081,-0.095,0.127],[0.466,-0.135,0.165,-0.234,0.18,0.094,0.311,-0.155,1.0,-0.154,0.34,-0.175,-0.283,0.408,-0.018,-0.231],[0.424,0.364,0.42,0.654,-0.101,-0.085,-0.28,-0.264,-0.154,1.0,0.367,0.337,-0.395,-0.389,-0.743,0.105],[0.452,-0.055,0.469,0.164,-0.025,0.414,-0.328,-0.302,0.34,0.367,1.0,-0.007,-0.643,-0.071,-0.191,0.075],[0.528,0.577,0.051,0.655,-0.714,-0.164,-0.75,-0.678,-0.175,0.337,-0.007,1.0,-0.62,-0.377,-0.288,0.143],[-0.672,-0.178,-0.526,-0.599,0.441,0.04,0.762,0.768,-0.283,-0.395,-0.643,-0.62,1.0,0.078,0.149,-0.089],[-0.184,-0.22,0.007,-0.262,0.188,-0.376,0.264,0.081,0.408,-0.389,-0.071,-0.377,0.078,1.0,0.489,0.001],[-0.479,-0.129,-0.305,-0.579,-0.167,0.048,0.023,-0.095,-0.018,-0.743,-0.191,-0.288,0.149,0.489,1.0,-0.388],[0.092,-0.431,0.123,0.522,0.123,-0.367,-0.254,0.127,-0.231,0.105,0.075,0.143,-0.089,0.001,-0.388,1.0]]}};
+
+const COLLAB_CARDS = [
+  { icon:"🧫", title:"Wet-Lab Validation Partners",
+    desc:"We have computational predictions — AChE IC₅₀ scores, BACE1 docking affinities, BBB permeability estimates. We need in-vitro confirmation in enzyme assays and cell lines.",
+    seek:["Pharmacology labs","Cell biology partners","Enzyme assay expertise"],
+    offer:["ML-prioritised hit list","Standardised data package","Co-authorship"] },
+  { icon:"🧠", title:"Clinical Neurology Network",
+    desc:"Our biomarker panel (NFkB, AChE, pCREB, Caspase-3) maps directly to clinical AD biomarkers. Seeking clinicians for biomarker correlation studies and patient cohort work.",
+    seek:["Neurologists","Clinical AD researchers","Biomarker clinics"],
+    offer:["Preclinical reference data","Computational modelling","Platform access"] },
+  { icon:"💻", title:"Bioinformatics & AI Collaborators",
+    desc:"Extending our pipeline: GNN-based property prediction, AlphaFold target modelling, PK/PD integration. Seeking computational collaborators with ML and structural biology expertise.",
+    seek:["Graph neural network experts","Structural bioinformatics","AI drug discovery labs"],
+    offer:["Real preclinical dataset","Validated network data","ANHRL student researchers"] },
+  { icon:"📖", title:"Journal Co-Authors",
+    desc:"Three manuscripts in active preparation: network pharmacology, ML classification, and synthetic data generation papers. Seeking co-authors who can contribute wet-lab or clinical data.",
+    seek:["Pharmacology researchers","Neuroscience reviewers","Methodology experts"],
+    offer:["Lead authorship positions","Complete data package","Preprint draft"] },
+  { icon:"🌍", title:"African Research Consortia",
+    desc:"Building the ANHRL (African NeuroHealth Research Lab) network. Seeking African institutions across ethnobotany, neuroscience, and clinical research for cross-institutional studies.",
+    seek:["African universities","Ethnobotany researchers","Pan-African health networks"],
+    offer:["NeuroMatrix LMS access","ANHRL co-investigator status","Ogun State field data"] },
+  { icon:"🏛", title:"Grant & Funding Partners",
+    desc:"Our multi-modal platform spans ethnopharmacology, computational neuroscience, synthetic data, and clinical translation — fundable across multiple NIH/MRC/TETFund call areas.",
+    seek:["TETFund collaborators","NIH/MRC grant partners","Industry pharma partnerships"],
+    offer:["Complete research portfolio","Institutional affiliation","Publication record"] },
+];
+
+const ROADMAP = [
+  { phase:"Phase 1 · Complete", title:"Preclinical In Vivo Study", desc:"84 animals, 7 groups, 31 biomarkers collected. Full behavioural, biochemical, histological dataset secured.", status:"done" },
+  { phase:"Phase 1 · Complete", title:"Network Pharmacology Build", desc:"5-compound, 15-target, 22-pathway Cytoscape network. Hub analysis and pathway coverage complete.", status:"done" },
+  { phase:"Phase 2 · Active", title:"ML Classification Suite", desc:"LDA 84.8% / 100% neuroprotective response. Feature importance ranked. Confusion matrices validated.", status:"active" },
+  { phase:"Phase 2 · Active", title:"NeuroSimLab Synthetic Engine", desc:"Gaussian copula generator. 100% KS fidelity. Corr-of-corrs 0.37 vs 0.01 for independent baseline.", status:"active" },
+  { phase:"Phase 3 · Next", title:"Manuscript Submission", desc:"Three papers: network pharmacology (J. Ethnopharmacology), ML classification, synthetic data (PLOS ONE or Sci. Reports).", status:"" },
+  { phase:"Phase 3 · Next", title:"In-Vitro Validation", desc:"AChE and BACE1 enzyme assays for top-ranked compounds. BBB permeability confirmation via PAMPA or MDCKII assay.", status:"" },
+  { phase:"Phase 4 · Vision", title:"Hodgkin-Huxley Circuit Modelling", desc:"Brian2 simulations of cholinergic neuron rescue under AChE inhibition. Cinnamaldehyde vs donepezil comparison.", status:"" },
+  { phase:"Phase 4 · Vision", title:"ANHRL Pan-African Platform", desc:"Scale this research model to 12+ student researchers across Ogun State. Open-access data portal on neuromatrixbiosystems.com.", status:"" },
+];
+
+// ═══════════════════════════════════════════════════════════════════════
+// RENDER COMPOUNDS
+// ═══════════════════════════════════════════════════════════════════════
+function renderCompounds() {
+  const grid = document.getElementById('compoundGrid');
+  const detail = document.getElementById('compoundDetail');
+  let activeIdx = -1;
+
+  COMPOUNDS.forEach((c, i) => {
+    const card = document.createElement('div');
+    card.className = 'compound-card';
+    card.innerHTML = `
+      <span class="compound-dot" style="background:${c.color}"></span>
+      <span class="compound-name">${c.name}</span>
+      <span class="compound-role">${c.role}</span>`;
+    card.addEventListener('click', () => {
+      if (activeIdx === i) {
+        card.classList.remove('active');
+        detail.classList.remove('visible');
+        activeIdx = -1;
+        return;
+      }
+      document.querySelectorAll('.compound-card').forEach(el => el.classList.remove('active'));
+      card.classList.add('active');
+      activeIdx = i;
+      const hubSet = new Set(c.hubs);
+      detail.innerHTML = `
+        <div class="cd-section">
+          <h4>Pharmacokinetics</h4>
+          <p><strong>MW:</strong> ${c.mw}<br><strong>LogP:</strong> ${c.logp}<br><strong>HBD:</strong> ${c.hbd} &nbsp; <strong>HBA:</strong> ${c.hba}<br><strong>Lipinski RoF:</strong> ${c.lipinski}</p>
+        </div>
+        <div class="cd-section">
+          <h4>Mechanism</h4>
+          <p>${c.mechanism}</p>
+        </div>
+        <div class="cd-section">
+          <h4>Targets (${c.targets.length})</h4>
+          <div>${c.targets.map(t => `<span class="target-pill${hubSet.has(t)?' hub':''}">${t}</span>`).join('')}</div>
+          <p style="margin-top:10px;font-size:0.78rem;color:var(--muted);"><span style="background:var(--ochre);color:#fff;padding:1px 6px;border-radius:10px;font-size:0.65rem;">orange</span> = hub target</p>
+          <p style="margin-top:12px;font-size:0.82rem;"><strong>Novel angle:</strong> ${c.novelty}</p>
+        </div>`;
+      detail.classList.add('visible');
+    });
+    grid.appendChild(card);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// NETWORK CANVAS
+// ═══════════════════════════════════════════════════════════════════════
+function renderNetwork() {
+  const canvas = document.getElementById('networkCanvas');
+  const W = canvas.offsetWidth, H = 460;
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  const nodes = [];
+  const links = [];
+
+  // Compounds
+  const compPos = [
+    { x: W*0.15, y: H*0.35 },
+    { x: W*0.15, y: H*0.55 },
+    { x: W*0.15, y: H*0.75 },
+    { x: W*0.08, y: H*0.15 },
+    { x: W*0.22, y: H*0.15 },
+  ];
+
+  COMPOUNDS.forEach((c, i) => {
+    nodes.push({ id: c.name, type: 'compound', x: compPos[i].x, y: compPos[i].y, color: c.color, r: 18, label: c.name });
+  });
+
+  // Hubs in middle
+  const hubs = ["NF-κB","NRF2","MAPK1","TNF","IL6","AChE","PTGS2","BACE1"];
+  const hubPos = hubs.map((h, i) => ({
+    x: W * 0.45 + (i % 2 === 0 ? -30 : 30),
+    y: H * 0.1 + i * (H * 0.88 / hubs.length)
+  }));
+  hubs.forEach((h, i) => {
+    const isHub = ["NF-κB","NRF2","MAPK1","TNF","IL6"].includes(h);
+    nodes.push({ id: h, type: 'target', x: hubPos[i].x, y: hubPos[i].y, color: isHub ? '#1A4A6B' : '#6BA5C8', r: isHub ? 14 : 10, label: h });
+  });
+
+  // Pathways (right side, simplified)
+  const pws = ["Alzheimer pathway","NF-κB signalling","Neuroinflammation","Nrf2-ARE pathway","MAPK/ERK","Cholinergic","Amyloid processing","Tau phosphorylation"];
+  pws.forEach((p, i) => {
+    nodes.push({ id: p, type: 'pathway', x: W * 0.82, y: H * 0.08 + i * (H * 0.88 / pws.length), color: '#0D7A5F', r: 8, label: p });
+  });
+
+  // Links: compound → hub targets
+  const compTargetMap = {
+    "Cinnamaldehyde": ["NF-κB","NRF2","MAPK1","TNF","IL6","AChE","PTGS2","BACE1"],
+    "Eugenol":        ["AChE","NF-κB","NRF2","TNF","IL6","MAPK1","PTGS2"],
+    "Coumarin":       ["AChE","NRF2","BACE1"],
+    "Caryophyllene":  ["NF-κB","TNF","IL6","NRF2","MAPK1","PTGS2"],
+    "τ-Muurolol":     ["NF-κB","MAPK1","TNF","IL6","PTGS2"],
+  };
+
+  // Hub → pathway map
+  const hubPwMap = {
+    "NF-κB":  ["Alzheimer pathway","NF-κB signalling","Neuroinflammation"],
+    "NRF2":   ["Nrf2-ARE pathway","Alzheimer pathway"],
+    "MAPK1":  ["MAPK/ERK","Neuroinflammation","Alzheimer pathway"],
+    "AChE":   ["Cholinergic","Alzheimer pathway"],
+    "BACE1":  ["Amyloid processing","Alzheimer pathway"],
+    "TNF":    ["NF-κB signalling","Neuroinflammation"],
+    "IL6":    ["Neuroinflammation"],
+    "PTGS2":  ["Neuroinflammation"],
+  };
+
+  Object.entries(compTargetMap).forEach(([comp, targets]) => {
+    targets.forEach(t => links.push({ source: comp, target: t, type: 'ct' }));
+  });
+  Object.entries(hubPwMap).forEach(([hub, pws_]) => {
+    pws_.forEach(p => links.push({ source: hub, target: p, type: 'tp' }));
+  });
+
+  const nodeMap = {};
+  nodes.forEach(n => nodeMap[n.id] = n);
+
+  let tooltip = null;
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+
+    // Links
+    links.forEach(l => {
+      const s = nodeMap[l.source], t = nodeMap[l.target];
+      if (!s || !t) return;
+      ctx.beginPath();
+      ctx.moveTo(s.x, s.y);
+      ctx.lineTo(t.x, t.y);
+      ctx.strokeStyle = l.type === 'ct' ? 'rgba(139,58,15,0.18)' : 'rgba(13,122,95,0.15)';
+      ctx.lineWidth = 1.2;
+      ctx.stroke();
+    });
+
+    // Nodes
+    nodes.forEach(n => {
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+      ctx.fillStyle = n.color;
+      ctx.fill();
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      if (n.type !== 'pathway') {
+        ctx.fillStyle = '#fff';
+        ctx.font = `bold ${Math.max(7, n.r * 0.55)}px sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        const short = n.label.split(' ')[0].slice(0, 5);
+        ctx.fillText(short, n.x, n.y);
+      }
+
+      // Label outside
+      ctx.fillStyle = '#3B1F0A';
+      ctx.font = `${n.type === 'compound' ? 600 : 400} 9px sans-serif`;
+      ctx.textAlign = n.type === 'pathway' ? 'left' : (n.type === 'compound' ? 'right' : 'center');
+      ctx.textBaseline = 'middle';
+      const lx = n.type === 'compound' ? n.x - n.r - 4 : (n.type === 'pathway' ? n.x + n.r + 4 : n.x);
+      const ly = n.type === 'target' ? n.y + n.r + 9 : n.y;
+      ctx.fillText(n.label.length > 14 ? n.label.slice(0, 14) + '…' : n.label, lx, ly);
+    });
+  }
+
+  draw();
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// PATHWAYS
+// ═══════════════════════════════════════════════════════════════════════
+function renderPathways() {
+  const grid = document.getElementById('pathwayGrid');
+  const maxN = 5;
+  PATHWAYS.forEach(pw => {
+    const intensity = pw.n / maxN;
+    const bg = `rgba(139,58,15,${0.04 + intensity * 0.18})`;
+    const border = `rgba(139,58,15,${0.1 + intensity * 0.4})`;
+    const card = document.createElement('div');
+    card.className = 'pw-card';
+    card.style.background = bg;
+    card.style.borderColor = border;
+    card.innerHTML = `
+      <div class="pw-card-name">${pw.name}</div>
+      <div class="pw-count">${pw.n} compound${pw.n > 1 ? 's' : ''}</div>
+      <div class="pw-compounds">${pw.compounds.map(c => `<span class="pw-tag">${c}</span>`).join('')}</div>`;
+    grid.appendChild(card);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// ML RESULTS
+// ═══════════════════════════════════════════════════════════════════════
+function renderML() {
+  // Classifier bars
+  const cbars = document.getElementById('classifierBars');
+  CLASSIFIERS.forEach(cl => {
+    const pct = cl.acc;
+    const color = cl.name === 'LDA' ? '#8B3A0F' : (cl.name === 'Random Forest' ? '#C8610A' : '#6BA5C8');
+    cbars.innerHTML += `
+      <div class="acc-row">
+        <div class="acc-label">${cl.name}</div>
+        <div class="acc-track">
+          <div class="acc-fill" style="width:${pct}%;background:${color};">
+            ${pct.toFixed(1)}%
+          </div>
+        </div>
+      </div>`;
+  });
+
+  // Feature importance
+  const fi = document.getElementById('featureImportance');
+  const maxFI = FEATURE_IMPORTANCE[0].val;
+  FEATURE_IMPORTANCE.forEach((f, i) => {
+    fi.innerHTML += `
+      <div class="fi-row">
+        <div class="fi-rank">${i+1}</div>
+        <div class="fi-label">${f.name}</div>
+        <div class="fi-track"><div class="fi-fill" style="width:${(f.val/maxFI*100).toFixed(0)}%;background:${CAT_COLORS[f.cat]||'#8B3A0F'};"></div></div>
+        <div class="fi-val">${f.val.toFixed(4)}</div>
+      </div>`;
+  });
+
+  // Confusion matrix
+  const cm = document.getElementById('confusionMatrix');
+  let table = '<table class="cm"><tr><th></th>';
+  CM_LABELS.forEach(l => { table += `<th>${l.slice(0,6)}</th>`; });
+  table += '</tr>';
+  CM_DATA.forEach((row, i) => {
+    const total = row.reduce((a,b)=>a+b,0);
+    table += `<tr><th style="text-align:left;font-size:0.7rem;">${CM_LABELS[i].slice(0,7)}</th>`;
+    row.forEach((v, j) => {
+      const hit = i === j;
+      const pct = total > 0 ? v/total : 0;
+      const bg = hit ? `rgba(139,58,15,${0.1+pct*0.8})` : (v > 0 ? `rgba(200,97,10,${pct*0.5})` : '#fff');
+      const textColor = hit && pct > 0.5 ? '#fff' : '#1C1008';
+      table += `<td style="background:${bg};color:${textColor};font-weight:${hit?700:400};">${v}</td>`;
+    });
+    table += '</tr>';
+  });
+  table += '</table>';
+  cm.innerHTML = table;
+
+  // F1 bars
+  const f1el = document.getElementById('f1Bars');
+  F1_DATA.forEach(f => {
+    const color = f.f1 >= 0.97 ? '#8B3A0F' : (f.f1 >= 0.82 ? '#C8610A' : '#6BA5C8');
+    f1el.innerHTML += `
+      <div class="acc-row">
+        <div class="acc-label">${f.name}</div>
+        <div class="acc-track">
+          <div class="acc-fill" style="width:${(f.f1*100).toFixed(0)}%;background:${color};">
+            ${f.f1.toFixed(3)}
+          </div>
+        </div>
+      </div>`;
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// HEATMAPS
+// ═══════════════════════════════════════════════════════════════════════
+function corrColor(v) {
+  if (v > 0) {
+    const t = Math.min(v, 1);
+    return `rgb(${Math.round(139 + (200-139)*(1-t))},${Math.round(58*(1-t))},${Math.round(15*(1-t))})`;
+  } else {
+    const t = Math.min(-v, 1);
+    return `rgb(${Math.round(26*(1-t))},${Math.round(74 + (120-74)*t)},${Math.round(107 + (170-107)*t)})`;
+  }
+}
+
+function upperTriCorr(A, B) {
+  const n = A.length, vals = [];
+  for (let i = 0; i < n; i++) for (let j = i+1; j < n; j++) vals.push([A[i][j], B[i][j]]);
+  const xa = vals.map(v=>v[0]), ya = vals.map(v=>v[1]);
+  const mx = xa.reduce((a,b)=>a+b)/xa.length, my = ya.reduce((a,b)=>a+b)/ya.length;
+  const num = vals.reduce((s,[x,y])=>s+(x-mx)*(y-my),0);
+  const dx = Math.sqrt(xa.reduce((s,x)=>s+(x-mx)**2,0));
+  const dy = Math.sqrt(ya.reduce((s,y)=>s+(y-my)**2,0));
+  return dx && dy ? num/(dx*dy) : 0;
+}
+
+function renderHeatmap(containerId, matrix, vars) {
+  const cont = document.getElementById(containerId);
+  const n = vars.length;
+  const grid = document.createElement('div');
+  grid.className = 'hm-grid';
+  grid.style.gridTemplateColumns = `repeat(${n}, 22px)`;
+
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < n; j++) {
+      const cell = document.createElement('div');
+      cell.className = 'hm-cell';
+      const v = matrix[i][j];
+      cell.style.background = corrColor(v);
+      cell.setAttribute('data-tip', `${vars[i]} × ${vars[j]}: ${v.toFixed(2)}`);
+      cell.style.width = '22px';
+      cell.style.height = '22px';
+      grid.appendChild(cell);
+    }
+  }
+  cont.innerHTML = '';
+  cont.appendChild(grid);
+}
+
+function initHeatmaps() {
+  const groups = Object.keys(HEATMAPS);
+  const btns = document.getElementById('groupBtns');
+  let active = groups[0];
+
+  function showGroup(g) {
+    active = g;
+    document.querySelectorAll('.group-btn').forEach(b => b.classList.toggle('active', b.dataset.g === g));
+    const d = HEATMAPS[g];
+    renderHeatmap('realHeatmap', d.real, d.vars);
+    renderHeatmap('synthHeatmap', d.synth, d.vars);
+    const r = upperTriCorr(d.real, d.synth);
+    document.getElementById('fidelityVal').textContent = 'r = ' + r.toFixed(2);
+  }
+
+  groups.forEach(g => {
+    const btn = document.createElement('button');
+    btn.className = 'group-btn';
+    btn.dataset.g = g;
+    btn.textContent = g;
+    btn.addEventListener('click', () => showGroup(g));
+    btns.appendChild(btn);
+  });
+
+  showGroup(groups[0]);
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// ROADMAP
+// ═══════════════════════════════════════════════════════════════════════
+function renderRoadmap() {
+  const left = document.getElementById('roadmapLeft');
+  const right = document.getElementById('roadmapRight');
+  ROADMAP.forEach((r, i) => {
+    const el = document.createElement('div');
+    el.className = 'rm-item' + (r.status === 'done' ? ' done' : '') + (r.status === 'active' ? ' active-phase' : '');
+    el.innerHTML = `<div class="rm-phase">${r.phase}</div><div class="rm-title">${r.title}</div><div class="rm-desc">${r.desc}</div>`;
+    (i < 4 ? left : right).appendChild(el);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// COLLABORATION
+// ═══════════════════════════════════════════════════════════════════════
+function renderCollab() {
+  const grid = document.getElementById('collabGrid');
+  COLLAB_CARDS.forEach(c => {
+    const card = document.createElement('div');
+    card.className = 'collab-card';
+    card.innerHTML = `
+      <span class="collab-icon">${c.icon}</span>
+      <h3>${c.title}</h3>
+      <p>${c.desc}</p>
+      <div>
+        <div style="font-size:0.72rem;font-weight:700;color:var(--muted);margin-bottom:4px;">SEEKING</div>
+        ${c.seek.map(s=>`<span class="collab-tag tag-seek">${s}</span>`).join('')}
+      </div>
+      <div style="margin-top:8px;">
+        <div style="font-size:0.72rem;font-weight:700;color:var(--muted);margin-bottom:4px;">WE OFFER</div>
+        ${c.offer.map(s=>`<span class="collab-tag tag-offer">${s}</span>`).join('')}
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════════════
+window.addEventListener('DOMContentLoaded', () => {
+  renderCompounds();
+  renderPathways();
+  renderML();
+  initHeatmaps();
+  renderRoadmap();
+  renderCollab();
+  setTimeout(renderNetwork, 100);
+});
+</script>
+</body>
+</html>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     TRANSLATIONAL PIPELINE SECTION — appended
+════════════════════════════════════════════════════════════════════ -->
+<style>
+/* ── TRANSLATIONAL ADDITIONS ──────────────────────────────────────── */
+.tx-hero {
+  background: linear-gradient(135deg, #0D1F2D 0%, #1A3A1A 100%);
+  color: #E8F5E9;
+  padding: 4rem 0 3rem;
+}
+.tx-hero .page { max-width: 1100px; margin: 0 auto; padding: 0 2.5rem; }
+
+.tx-eyebrow {
+  display: inline-block;
+  background: rgba(13,122,95,0.35);
+  border: 1px solid #0D7A5F;
+  color: #52E0B0;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  padding: 4px 14px;
+  border-radius: 2px;
+  margin-bottom: 1.2rem;
+}
+
+.tx-title {
+  font-family: Georgia, serif;
+  font-size: 2.4rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 0.8rem;
+  color: #FFFFFF;
+}
+.tx-title span { color: #52E0B0; }
+
+.tx-sub {
+  font-size: 1rem;
+  color: #A8C4B8;
+  max-width: 640px;
+  line-height: 1.7;
+  margin-bottom: 2.5rem;
+}
+
+/* Pipeline ladder */
+.pipeline-ladder {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0;
+  margin: 2rem 0 1rem;
+  position: relative;
+}
+
+.pl-stage {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-right: none;
+  padding: 1.2rem 0.9rem 1rem;
+  position: relative;
+  transition: background 0.2s;
+  cursor: default;
+}
+.pl-stage:first-child { border-radius: 8px 0 0 8px; }
+.pl-stage:last-child  { border-right: 1px solid rgba(255,255,255,0.1); border-radius: 0 8px 8px 0; }
+
+.pl-stage.complete  { background: rgba(13,122,95,0.18); border-color: #0D7A5F; }
+.pl-stage.active-tx { background: rgba(232,160,32,0.15); border-color: #E8A020; }
+.pl-stage.next-tx   { background: rgba(26,74,107,0.2);  border-color: #1A4A6B; }
+
+.pl-num {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+.pl-stage.complete  .pl-num { color: #52E0B0; }
+.pl-stage.active-tx .pl-num { color: #E8C66A; }
+.pl-stage.next-tx   .pl-num { color: #6BA5C8; }
+
+.pl-stage-name {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-bottom: 4px;
+  line-height: 1.3;
+}
+
+.pl-stage-desc {
+  font-size: 0.7rem;
+  color: #8BA89A;
+  line-height: 1.4;
+}
+
+.pl-arrow {
+  position: absolute;
+  right: -12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0; height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-left: 12px solid rgba(255,255,255,0.08);
+  z-index: 2;
+}
+.pl-stage.complete  .pl-arrow { border-left-color: #0D7A5F; }
+.pl-stage.active-tx .pl-arrow { border-left-color: #E8A020; }
+
+/* Target disease panels */
+.disease-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin: 2.5rem 0;
+}
+
+.disease-card {
+  background: #FFFFFF;
+  border: 1.5px solid #EDE0CC;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 16px rgba(59,31,10,0.07);
+}
+
+.dc-header {
+  padding: 1.2rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.dc-icon {
+  font-size: 2rem;
+  width: 52px; height: 52px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+.dc-title { font-family: Georgia, serif; font-size: 1.15rem; font-weight: 700; color: #1C1008; }
+.dc-burden { font-size: 0.78rem; color: #7A5A3A; margin-top: 2px; }
+
+.dc-body { padding: 0 1.5rem 1.5rem; }
+
+.dc-section-title {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #7A5A3A;
+  margin: 1rem 0 0.5rem;
+}
+
+.target-row {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  border: 1px solid #EDE0CC;
+  border-radius: 7px;
+  overflow: hidden;
+  margin-bottom: 8px;
+  background: #FDF6ED;
+}
+
+.tr-target {
+  background: #3B1F0A;
+  color: #FDF6ED;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 7px 10px;
+  writing-mode: initial;
+  display: flex;
+  align-items: center;
+  min-width: 80px;
+  flex-shrink: 0;
+}
+
+.tr-compound {
+  padding: 6px 10px;
+  flex: 1;
+}
+
+.tr-compound-name {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #8B3A0F;
+  margin-bottom: 2px;
+}
+
+.tr-mechanism {
+  font-size: 0.7rem;
+  color: #7A5A3A;
+  line-height: 1.4;
+}
+
+.tr-score {
+  background: #F5E9D6;
+  padding: 6px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 60px;
+  flex-shrink: 0;
+}
+
+.tr-score-val {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #8B3A0F;
+}
+.tr-score-lbl { font-size: 0.6rem; color: #7A5A3A; }
+
+/* Drug-likeness scorecard */
+.scorecard-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  margin: 2rem 0;
+}
+
+.scorecard {
+  background: #FFFFFF;
+  border: 1.5px solid #EDE0CC;
+  border-radius: 10px;
+  padding: 1.1rem 0.8rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.scorecard::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+
+.scorecard-compound { font-size: 0.78rem; font-weight: 700; color: #3B1F0A; margin-bottom: 0.6rem; }
+
+.sc-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.68rem;
+  margin-bottom: 3px;
+  color: #7A5A3A;
+}
+.sc-val { font-weight: 700; color: #1C1008; }
+
+.sc-grade {
+  margin-top: 10px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  display: inline-block;
+}
+.grade-a { background: #D1FAE5; color: #065F46; }
+.grade-b { background: #FEF3C7; color: #92400E; }
+
+/* Translational steps */
+.tx-steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.2rem;
+  margin: 2rem 0;
+}
+
+.tx-step {
+  background: #FFFFFF;
+  border: 1.5px solid #EDE0CC;
+  border-radius: 10px;
+  padding: 1.3rem 1rem;
+  position: relative;
+}
+
+.txs-num {
+  font-family: Georgia, serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #F5E9D6;
+  position: absolute;
+  top: 8px; right: 12px;
+  line-height: 1;
+}
+
+.txs-icon { font-size: 1.4rem; margin-bottom: 0.6rem; display: block; }
+.txs-title { font-size: 0.88rem; font-weight: 700; color: #3B1F0A; margin-bottom: 4px; }
+.txs-desc { font-size: 0.78rem; color: #7A5A3A; line-height: 1.5; }
+
+.txs-status {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 20px;
+  margin-top: 8px;
+}
+.status-done { background: #D1FAE5; color: #065F46; }
+.status-active { background: #FEF3C7; color: #92400E; }
+.status-next { background: #EFF6FF; color: #1D4ED8; }
+.status-vision { background: #F3E8FF; color: #6B21A8; }
+
+/* Collaboration CTA */
+.collab-cta {
+  background: linear-gradient(135deg, #3B1F0A, #1A3A1A);
+  border-radius: 12px;
+  padding: 2.5rem 3rem;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2.5rem;
+  align-items: center;
+  margin: 2.5rem 0;
+}
+
+.cta-title {
+  font-family: Georgia, serif;
+  font-size: 1.6rem;
+  color: #FFFFFF;
+  margin-bottom: 0.6rem;
+}
+.cta-sub { font-size: 0.9rem; color: #B8C4B0; line-height: 1.7; max-width: 520px; }
+
+.cta-links {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 200px;
+}
+
+.cta-link {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 8px;
+  padding: 12px 16px;
+  color: #FFFFFF;
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background 0.15s;
+}
+.cta-link:hover { background: rgba(255,255,255,0.14); }
+
+/* Publication targets */
+.pub-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.pub-card {
+  background: #FFFFFF;
+  border: 1.5px solid #EDE0CC;
+  border-radius: 10px;
+  padding: 1.2rem;
+}
+
+.pub-journal {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #8B3A0F;
+  margin-bottom: 0.4rem;
+}
+
+.pub-title { font-size: 0.82rem; font-weight: 700; color: #3B1F0A; margin-bottom: 0.5rem; line-height: 1.4; }
+.pub-status { font-size: 0.7rem; color: #7A5A3A; }
+
+.pub-tag {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 20px;
+  margin-top: 8px;
+}
+.pub-ip  { background: #FEF3C7; color: #92400E; }
+.pub-plan{ background: #EFF6FF; color: #1D4ED8; }
+
+/* Impact numbers banner */
+.impact-banner {
+  background: #3B1F0A;
+  color: #FDF6ED;
+  padding: 2rem 2.5rem;
+  border-radius: 10px;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1.5rem;
+  text-align: center;
+  margin: 2.5rem 0;
+}
+.ib-val { font-family: Georgia, serif; font-size: 1.9rem; font-weight: 700; color: #E8A020; display: block; }
+.ib-lbl { font-size: 0.7rem; color: #B89878; line-height: 1.4; }
+
+@media (max-width: 900px) {
+  .pipeline-ladder { grid-template-columns: repeat(3, 1fr); }
+  .disease-grid    { grid-template-columns: 1fr; }
+  .scorecard-grid  { grid-template-columns: repeat(3, 1fr); }
+  .tx-steps        { grid-template-columns: repeat(2, 1fr); }
+  .pub-grid        { grid-template-columns: 1fr 1fr; }
+  .collab-cta      { grid-template-columns: 1fr; }
+  .impact-banner   { grid-template-columns: repeat(3, 1fr); }
+  .tx-title        { font-size: 1.8rem; }
+}
+</style>
+
+<!-- ── TRANSLATIONAL HEADER ──────────────────────────────────────── -->
+<div class="tx-hero">
+  <div class="page">
+    <div class="tx-eyebrow">TRANSLATIONAL DRUG DISCOVERY</div>
+    <h2 class="tx-title">From African Spice to <span>Stroke & Dementia Drug</span></h2>
+    <p class="tx-sub">
+      Every data point on this platform — the docking scores, ML biomarkers, network hubs, synthetic cohorts — is one step in a single translational mission: convert what traditional healers have known for centuries into clinically validated neuroprotective medicines for Africa and the world.
+    </p>
+
+    <!-- Pipeline ladder -->
+    <div class="pipeline-ladder">
+      <div class="pl-stage complete">
+        <div class="pl-num">STAGE 1 ✓</div>
+        <div class="pl-stage-name">Ethnobotany & Target ID</div>
+        <div class="pl-stage-desc">Saigon cinnamon · 5 compounds · 15 targets identified</div>
+        <div class="pl-arrow"></div>
+      </div>
+      <div class="pl-stage complete">
+        <div class="pl-num">STAGE 2 ✓</div>
+        <div class="pl-stage-name">Preclinical In Vivo</div>
+        <div class="pl-stage-desc">84 animals · AD model · 31 biomarkers validated</div>
+        <div class="pl-arrow"></div>
+      </div>
+      <div class="pl-stage active-tx">
+        <div class="pl-num">STAGE 3 ◉</div>
+        <div class="pl-stage-name">Computational Screening</div>
+        <div class="pl-stage-desc">Docking · ADMET · ML classification · Network pharmacology</div>
+        <div class="pl-arrow"></div>
+      </div>
+      <div class="pl-stage next-tx">
+        <div class="pl-num">STAGE 4 →</div>
+        <div class="pl-stage-name">In Vitro Validation</div>
+        <div class="pl-stage-desc">AChE / BACE1 assays · BBB · Cytotoxicity · IC₅₀</div>
+        <div class="pl-arrow"></div>
+      </div>
+      <div class="pl-stage next-tx">
+        <div class="pl-num">STAGE 5 →</div>
+        <div class="pl-stage-name">Lead Optimisation</div>
+        <div class="pl-stage-desc">SAR · analogue synthesis · PK/PD modelling</div>
+        <div class="pl-arrow"></div>
+      </div>
+      <div class="pl-stage next-tx">
+        <div class="pl-num">STAGE 6 →</div>
+        <div class="pl-stage-name">IND & Clinical</div>
+        <div class="pl-stage-desc">NAFDAC filing · Phase I/II trial · African patient cohort</div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:2rem;margin-top:0.8rem;font-size:0.75rem;">
+      <span style="color:#52E0B0;">● Complete</span>
+      <span style="color:#E8C66A;">● Active (this platform)</span>
+      <span style="color:#6BA5C8;">● Next phase — seeking partners</span>
+    </div>
+  </div>
+</div>
+
+<div class="page" style="max-width:1100px;margin:0 auto;padding:0 2.5rem;">
+
+<!-- ── DISEASE TARGETS ────────────────────────────────────────────── -->
+<section style="padding:4rem 0 2rem;border-bottom:1px solid #EDE0CC;" id="diseases">
+  <div class="section-eyebrow">Target Diseases</div>
+  <h2 class="section-title">Dementia & Stroke — The African Burden</h2>
+  <p class="section-desc">Sub-Saharan Africa carries a disproportionate burden of both conditions with almost no locally-developed therapeutics. Our compounds directly address the validated molecular targets of both diseases.</p>
+
+  <div class="impact-banner">
+    <div><span class="ib-val">57M</span><span class="ib-lbl">People with dementia globally — rising fastest in Africa</span></div>
+    <div><span class="ib-val">5.5M</span><span class="ib-lbl">Stroke survivors in Sub-Saharan Africa</span></div>
+    <div><span class="ib-val">0</span><span class="ib-lbl">FDA/NAFDAC-approved drugs developed in Africa for dementia</span></div>
+    <div><span class="ib-val">3</span><span class="ib-lbl">Current AD drugs that work on AChE — the same target Cinnamaldehyde hits</span></div>
+    <div><span class="ib-val">$bn</span><span class="ib-lbl">Global market for neuroprotective drugs — largely inaccessible to Africans</span></div>
+  </div>
+
+  <div class="disease-grid">
+
+    <!-- DEMENTIA -->
+    <div class="disease-card">
+      <div class="dc-header" style="background:linear-gradient(135deg,#FDF0E0,#FDF6ED);">
+        <div class="dc-icon" style="background:#FEE2C8;">🧠</div>
+        <div>
+          <div class="dc-title">Alzheimer's Disease & Dementia</div>
+          <div class="dc-burden">~2M cases in Nigeria alone · largely undiagnosed · zero local drugs</div>
+        </div>
+      </div>
+      <div class="dc-body">
+        <div class="dc-section-title">Cinnamon Compounds → AD Targets</div>
+
+        <div class="target-row">
+          <div class="tr-target">AChE</div>
+          <div class="tr-compound">
+            <div class="tr-compound-name">Cinnamaldehyde + Coumarin + Eugenol</div>
+            <div class="tr-mechanism">Acetylcholinesterase inhibition → raises synaptic ACh → same mechanism as donepezil (Aricept). Our ML data shows AChE is a top-5 discriminant biomarker.</div>
+          </div>
+          <div class="tr-score"><div class="tr-score-val">−10.5</div><div class="tr-score-lbl">kcal/mol</div></div>
+        </div>
+
+        <div class="target-row">
+          <div class="tr-target">BACE1</div>
+          <div class="tr-compound">
+            <div class="tr-compound-name">Cinnamaldehyde + Coumarin</div>
+            <div class="tr-mechanism">β-Secretase inhibition → reduces amyloid-β production → targets the upstream cause of amyloid plaque, not just symptoms.</div>
+          </div>
+          <div class="tr-score"><div class="tr-score-val">−9.8</div><div class="tr-score-lbl">kcal/mol</div></div>
+        </div>
+
+        <div class="target-row">
+          <div class="tr-target">GSK3B / tau</div>
+          <div class="tr-compound">
+            <div class="tr-compound-name">Cinnamaldehyde</div>
+            <div class="tr-mechanism">GSK3β inhibition → reduces tau hyperphosphorylation → prevents neurofibrillary tangle formation. Targets both amyloid AND tau pathology simultaneously.</div>
+          </div>
+          <div class="tr-score"><div class="tr-score-val">−8.9</div><div class="tr-score-lbl">kcal/mol</div></div>
+        </div>
+
+        <div class="target-row">
+          <div class="tr-target">pCREB</div>
+          <div class="tr-compound">
+            <div class="tr-compound-name">Cinnamaldehyde (via PKA/CREB axis)</div>
+            <div class="tr-mechanism">pCREB ranked #5 feature in our ML model. CREB phosphorylation drives BDNF expression → synaptic plasticity → memory consolidation in hippocampus.</div>
+          </div>
+          <div class="tr-score"><div class="tr-score-val">RF top 5</div><div class="tr-score-lbl">importance</div></div>
+        </div>
+
+        <div class="dc-section-title" style="margin-top:1.2rem;">Our ML Signal</div>
+        <p style="font-size:0.82rem;color:#7A5A3A;line-height:1.6;">LDA achieved <strong>84.8%</strong> accuracy distinguishing 7 treatment groups. <strong>100%</strong> of classifiers correctly separated neuroprotective responders from non-responders. Donepezil (reference drug) F1 = 0.97 — our cinnamon groups match this signal.</p>
+      </div>
+    </div>
+
+    <!-- STROKE -->
+    <div class="disease-card">
+      <div class="dc-header" style="background:linear-gradient(135deg,#E8F5E9,#F1F8E9);">
+        <div class="dc-icon" style="background:#C8E6C9;">⚡</div>
+        <div>
+          <div class="dc-title">Stroke & Cerebrovascular Disease</div>
+          <div class="dc-burden">Leading cause of disability in Africa · oxidative burst + neuroinflammation drive damage</div>
+        </div>
+      </div>
+      <div class="dc-body">
+        <div class="dc-section-title">Cinnamon Compounds → Stroke Targets</div>
+
+        <div class="target-row">
+          <div class="tr-target" style="background:#0D7A5F;">NF-κB / RELA</div>
+          <div class="tr-compound">
+            <div class="tr-compound-name">All 5 compounds (hub degree 4)</div>
+            <div class="tr-mechanism">NF-κB is the master switch of post-stroke neuroinflammation. Suppressing it reduces microglial activation, cytokine storm, and secondary neuronal death in the penumbra.</div>
+          </div>
+          <div class="tr-score"><div class="tr-score-val">Hub</div><div class="tr-score-lbl">degree 4</div></div>
+        </div>
+
+        <div class="target-row">
+          <div class="tr-target" style="background:#0D7A5F;">NRF2</div>
+          <div class="tr-compound">
+            <div class="tr-compound-name">Cinnamaldehyde + Eugenol + Coumarin + Caryophyllene</div>
+            <div class="tr-mechanism">NRF2 activation drives antioxidant response (SOD, CAT, GSH upregulation). Our biomarker data confirms Nrf2 ↑ with treatment. Protects ischaemic penumbra from oxidative burst.</div>
+          </div>
+          <div class="tr-score"><div class="tr-score-val">SOD ↑</div><div class="tr-score-lbl">GSH ↑</div></div>
+        </div>
+
+        <div class="target-row">
+          <div class="tr-target" style="background:#0D7A5F;">TNF / IL-6</div>
+          <div class="tr-compound">
+            <div class="tr-compound-name">Caryophyllene + τ-Muurolol + Eugenol</div>
+            <div class="tr-mechanism">TNF-α and IL-6 suppression in our NFkB-ranked biomarkers (#2 feature importance). Anti-cytokine activity reduces blood-brain barrier breakdown and white matter damage post-stroke.</div>
+          </div>
+          <div class="tr-score"><div class="tr-score-val">TNFa ↓</div><div class="tr-score-lbl">IL6 ↓</div></div>
+        </div>
+
+        <div class="target-row">
+          <div class="tr-target" style="background:#0D7A5F;">CASP3</div>
+          <div class="tr-compound">
+            <div class="tr-compound-name">Cinnamaldehyde</div>
+            <div class="tr-mechanism">Caspase-3 inhibition blocks ischaemia-triggered apoptosis in neurons. Our data shows Caspase3 strongly negatively correlated with neuroprotective biomarker clusters (r = −0.92 with PSD95 in SCP group).</div>
+          </div>
+          <div class="tr-score"><div class="tr-score-val">−0.92</div><div class="tr-score-lbl">r with PSD95</div></div>
+        </div>
+
+        <div class="dc-section-title" style="margin-top:1.2rem;">CB2 / Endocannabinoid Angle</div>
+        <p style="font-size:0.82rem;color:#7A5A3A;line-height:1.6;"><strong>Caryophyllene</strong> is the only selective CB2 agonist in the panel — non-psychoactive, anti-inflammatory, and has shown benefit in rodent stroke models. Unique angle that differentiates this research from standard cinnamon pharmacology literature.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── DRUG-LIKENESS SCORECARD ────────────────────────────────────── -->
+<section style="padding:3.5rem 0 2rem;border-bottom:1px solid #EDE0CC;" id="druglikeness">
+  <div class="section-eyebrow">Oral Drug Candidate Assessment</div>
+  <h2 class="section-title">Drug-Likeness & CNS Penetrance Scorecard</h2>
+  <p class="section-desc">All 5 compounds pass Lipinski's Rule of Five — a prerequisite for oral bioavailability. CNS penetrance and toxicity predictions determine which lead to prioritise for synthesis.</p>
+
+  <div class="scorecard-grid">
+
+    <div class="scorecard" style="border-top:3px solid #8B3A0F;">
+      <div class="scorecard-compound">Cinnamaldehyde</div>
+      <div class="sc-row"><span>MW</span><span class="sc-val">132 Da ✓</span></div>
+      <div class="sc-row"><span>LogP</span><span class="sc-val">1.9 ✓</span></div>
+      <div class="sc-row"><span>HBD/HBA</span><span class="sc-val">0 / 1 ✓</span></div>
+      <div class="sc-row"><span>BBB</span><span class="sc-val">Permeable ✓</span></div>
+      <div class="sc-row"><span>Lipinski</span><span class="sc-val">Pass ✓</span></div>
+      <div class="sc-row"><span>Targets</span><span class="sc-val">12 (highest)</span></div>
+      <span class="sc-grade grade-a">Grade A · Lead candidate</span>
+    </div>
+
+    <div class="scorecard" style="border-top:3px solid #C8610A;">
+      <div class="scorecard-compound">Eugenol</div>
+      <div class="sc-row"><span>MW</span><span class="sc-val">164 Da ✓</span></div>
+      <div class="sc-row"><span>LogP</span><span class="sc-val">2.3 ✓</span></div>
+      <div class="sc-row"><span>HBD/HBA</span><span class="sc-val">1 / 2 ✓</span></div>
+      <div class="sc-row"><span>BBB</span><span class="sc-val">Permeable ✓</span></div>
+      <div class="sc-row"><span>Lipinski</span><span class="sc-val">Pass ✓</span></div>
+      <div class="sc-row"><span>MAO A/B</span><span class="sc-val">Dual inhib ✓</span></div>
+      <span class="sc-grade grade-a">Grade A · AD + PD dual</span>
+    </div>
+
+    <div class="scorecard" style="border-top:3px solid #E8A020;">
+      <div class="scorecard-compound">Coumarin</div>
+      <div class="sc-row"><span>MW</span><span class="sc-val">146 Da ✓</span></div>
+      <div class="sc-row"><span>LogP</span><span class="sc-val">1.4 ✓</span></div>
+      <div class="sc-row"><span>HBD/HBA</span><span class="sc-val">0 / 2 ✓</span></div>
+      <div class="sc-row"><span>BBB</span><span class="sc-val">High ✓✓</span></div>
+      <div class="sc-row"><span>Lipinski</span><span class="sc-val">Pass ✓</span></div>
+      <div class="sc-row"><span>Scaffold</span><span class="sc-val">Med-chem ready</span></div>
+      <span class="sc-grade grade-a">Grade A · Best BBB scaffold</span>
+    </div>
+
+    <div class="scorecard" style="border-top:3px solid #3B7D4A;">
+      <div class="scorecard-compound">Caryophyllene</div>
+      <div class="sc-row"><span>MW</span><span class="sc-val">204 Da ✓</span></div>
+      <div class="sc-row"><span>LogP</span><span class="sc-val">4.3 ✓</span></div>
+      <div class="sc-row"><span>HBD/HBA</span><span class="sc-val">0 / 1 ✓</span></div>
+      <div class="sc-row"><span>BBB</span><span class="sc-val">Moderate</span></div>
+      <div class="sc-row"><span>Lipinski</span><span class="sc-val">Pass ✓</span></div>
+      <div class="sc-row"><span>CB2</span><span class="sc-val">Selective ✓</span></div>
+      <span class="sc-grade grade-b">Grade B · Stroke priority</span>
+    </div>
+
+    <div class="scorecard" style="border-top:3px solid #1A4A6B;">
+      <div class="scorecard-compound">τ-Muurolol</div>
+      <div class="sc-row"><span>MW</span><span class="sc-val">222 Da ✓</span></div>
+      <div class="sc-row"><span>LogP</span><span class="sc-val">4.1 ✓</span></div>
+      <div class="sc-row"><span>HBD/HBA</span><span class="sc-val">1 / 1 ✓</span></div>
+      <div class="sc-row"><span>BBB</span><span class="sc-val">Moderate</span></div>
+      <div class="sc-row"><span>Lipinski</span><span class="sc-val">Pass ✓</span></div>
+      <div class="sc-row"><span>Literature</span><span class="sc-val">Understudied</span></div>
+      <span class="sc-grade grade-b">Grade B · Novel opportunity</span>
+    </div>
+
+  </div>
+
+  <div style="background:#FDF6ED;border:1.5px solid #EDE0CC;border-radius:10px;padding:1.2rem 1.5rem;font-size:0.85rem;color:#7A5A3A;line-height:1.7;">
+    <strong style="color:#3B1F0A;">Priority lead: Cinnamaldehyde.</strong> Smallest MW, highest target count (12), confirmed BBB permeability, and the only compound hitting both AChE (dementia) <em>and</em> NF-κB/CASP3 (stroke) simultaneously. A multi-indication lead candidate from a single natural molecule — rare in drug discovery.
+  </div>
+</section>
+
+<!-- ── TRANSLATIONAL ROADMAP STEPS ───────────────────────────────── -->
+<section style="padding:3.5rem 0 2rem;border-bottom:1px solid #EDE0CC;" id="txsteps">
+  <div class="section-eyebrow">What Happens Next</div>
+  <h2 class="section-title">The 8-Step Path to a Drug</h2>
+  <p class="section-desc">Translational research has a defined path. Here is exactly where this platform sits in that path — and what each next step requires.</p>
+
+  <div class="tx-steps">
+
+    <div class="tx-step">
+      <div class="txs-num">1</div>
+      <span class="txs-icon">🌿</span>
+      <div class="txs-title">Ethnobotanical ID & Extract</div>
+      <div class="txs-desc">Saigon cinnamon bark sourced. 5 key phytochemicals identified from GC-MS / HPLC profiling. Ethnopharmacological use in traditional stroke/cognitive medicine documented.</div>
+      <span class="txs-status status-done">Complete</span>
+    </div>
+
+    <div class="tx-step">
+      <div class="txs-num">2</div>
+      <span class="txs-icon">🐀</span>
+      <div class="txs-title">In Vivo Preclinical Study</div>
+      <div class="txs-desc">84 animals in AD model. 31 biochemical + behavioural biomarkers measured across 7 treatment groups including donepezil reference. Full dataset secured.</div>
+      <span class="txs-status status-done">Complete</span>
+    </div>
+
+    <div class="tx-step">
+      <div class="txs-num">3</div>
+      <span class="txs-icon">💻</span>
+      <div class="txs-title">Computational Screening</div>
+      <div class="txs-desc">AutoDock Vina docking vs AChE, BACE1, NF-κB, NRF2, COX-2. Lipinski + ADMET + BBB prediction. Network pharmacology with 15 targets and 22 pathways. ML classification 84.8%.</div>
+      <span class="txs-status status-active">Active — this platform</span>
+    </div>
+
+    <div class="tx-step">
+      <div class="txs-num">4</div>
+      <span class="txs-icon">🧫</span>
+      <div class="txs-title">In Vitro Enzyme Assays</div>
+      <div class="txs-desc">AChE and BACE1 inhibition assays (Ellman / fluorometric). IC₅₀ measurement for top 3 compounds. Cytotoxicity (MTT assay on SH-SY5Y neurons). BBB: PAMPA or MDCK-II.</div>
+      <span class="txs-status status-next">Next — seeking partners</span>
+    </div>
+
+    <div class="tx-step">
+      <div class="txs-num">5</div>
+      <span class="txs-icon">⚗️</span>
+      <div class="txs-title">Structure-Activity Relationships</div>
+      <div class="txs-desc">Medicinal chemistry: systematic modification of Cinnamaldehyde / Coumarin scaffold. Target: improve IC₅₀ and CNS penetrance. ADMET re-screening of analogues.</div>
+      <span class="txs-status status-next">Next — chemistry partner needed</span>
+    </div>
+
+    <div class="tx-step">
+      <div class="txs-num">6</div>
+      <span class="txs-icon">🔬</span>
+      <div class="txs-title">Advanced Preclinical (GLP)</div>
+      <div class="txs-desc">GLP-compliant rodent efficacy studies in validated stroke model (MCAO) and AD transgenic model. PK/PD characterisation. Full toxicology panel. IND-enabling data package.</div>
+      <span class="txs-status status-vision">Future · grant-fundable</span>
+    </div>
+
+    <div class="tx-step">
+      <div class="txs-num">7</div>
+      <span class="txs-icon">📋</span>
+      <div class="txs-title">NAFDAC / IND Filing</div>
+      <div class="txs-desc">Investigational New Drug application to NAFDAC (Nigeria) and parallel IND (FDA/EMA). Herbal medicine regulatory pathway — faster timeline than synthetic drug for well-characterised botanicals.</div>
+      <span class="txs-status status-vision">Future · regulatory expertise needed</span>
+    </div>
+
+    <div class="tx-step">
+      <div class="txs-num">8</div>
+      <span class="txs-icon">🏥</span>
+      <div class="txs-title">Phase I/II Clinical Trial</div>
+      <div class="txs-desc">African patient cohort. Biomarker-guided dosing (our 31-biomarker panel as clinical endpoints). Phase I safety in healthy volunteers → Phase II efficacy in early AD/stroke patients.</div>
+      <span class="txs-status status-vision">The goal · Africa-first trial</span>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── PUBLICATION STRATEGY ───────────────────────────────────────── -->
+<section style="padding:3.5rem 0 2rem;border-bottom:1px solid #EDE0CC;" id="publications">
+  <div class="section-eyebrow">Publication Strategy</div>
+  <h2 class="section-title">The Evidence Trail Needed for a Drug</h2>
+  <p class="section-desc">Drug discovery requires a published evidence chain. These are the manuscripts that build your scientific reputation, attract collaborators, and support grant applications — all from your existing data.</p>
+
+  <div class="pub-grid">
+
+    <div class="pub-card">
+      <div class="pub-journal">J. Ethnopharmacology · Phytomedicine</div>
+      <div class="pub-title">Network Pharmacology of Saigon Cinnamon in Alzheimer's Disease: Multi-Target Neuroprotection via 5 Compounds and 15 Molecular Targets</div>
+      <div class="pub-status">All data ready · Cytoscape network complete · 22 pathways mapped</div>
+      <span class="pub-tag pub-ip">In Preparation</span>
+    </div>
+
+    <div class="pub-card">
+      <div class="pub-journal">PLOS ONE · Scientific Reports</div>
+      <div class="pub-title">Machine Learning Classification of Neuroprotective Response Using 31 Biomarkers: LDA Achieves 84.8% Accuracy Across 7 Treatment Groups in a Saigon Cinnamon AD Model</div>
+      <div class="pub-status">Data complete · ML results validated · Feature importance ranked</div>
+      <span class="pub-tag pub-ip">In Preparation</span>
+    </div>
+
+    <div class="pub-card">
+      <div class="pub-journal">Briefings in Bioinformatics · J. Cheminformatics</div>
+      <div class="pub-title">NeuroSimLab: A Gaussian Copula Framework for Synthetic Preclinical Neuropharmacology Data with 100% KS Fidelity</div>
+      <div class="pub-status">Code complete · Validation metrics strong · Novel methodology</div>
+      <span class="pub-tag pub-ip">In Preparation</span>
+    </div>
+
+    <div class="pub-card">
+      <div class="pub-journal">ACS Chemical Neuroscience · Biomolecules</div>
+      <div class="pub-title">Cinnamaldehyde as a Multi-Target Lead for Stroke and Dementia: AChE, BACE1, NF-κB and CASP3 Simultaneous Modulation</div>
+      <div class="pub-status">Requires in vitro IC₅₀ confirmation · Strongest translational paper</div>
+      <span class="pub-tag pub-plan">Next — needs wet-lab partner</span>
+    </div>
+
+    <div class="pub-card">
+      <div class="pub-journal">Frontiers in Neuroscience · Brain and Behavior</div>
+      <div class="pub-title">Hodgkin-Huxley Modelling of Cholinergic Rescue: Bridging Molecular Docking Scores to Neural Circuit Dynamics in Alzheimer's Disease</div>
+      <div class="pub-status">Brian2 simulation to be developed · Links docking ΔG to firing rate change</div>
+      <span class="pub-tag pub-plan">Next — computational neuroscience</span>
+    </div>
+
+    <div class="pub-card">
+      <div class="pub-journal">Stroke · J. Cerebrovascular Disease</div>
+      <div class="pub-title">Anti-Neuroinflammatory Polypharmacology of β-Caryophyllene: A CB2 Agonist for Ischaemic Stroke Neuroprotection in the African Context</div>
+      <div class="pub-status">Unique angle · CB2/endocannabinoid stroke literature gap · Fundable topic</div>
+      <span class="pub-tag pub-plan">Vision — CB2/stroke collaboration</span>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── COLLABORATION CTA ───────────────────────────────────────────── -->
+<section style="padding:3.5rem 0 3rem;" id="build">
+  <div class="section-eyebrow">Build the Empire</div>
+  <h2 class="section-title">What This Platform Offers Collaborators</h2>
+  <p class="section-desc">This is not a pitch deck. It is a working research infrastructure — data, models, code, and a defined scientific agenda — that collaborators can plug into immediately.</p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.2rem;margin:2rem 0;">
+
+    <div style="background:#FDF6ED;border:1.5px solid #EDE0CC;border-radius:10px;padding:1.5rem;">
+      <div style="font-size:1.5rem;margin-bottom:0.8rem;">📦</div>
+      <div style="font-weight:700;color:#3B1F0A;margin-bottom:0.4rem;font-size:0.95rem;">For Wet-Lab Partners</div>
+      <div style="font-size:0.82rem;color:#7A5A3A;line-height:1.6;">You get: a ranked hit list from our docking scores, predicted IC₅₀ ranges, exact assay conditions we need (AChE Ellman, BACE1 fluorometric, MTT cytotox). We handle all data analysis and write the results section.</div>
+    </div>
+
+    <div style="background:#F0FDF4;border:1.5px solid #BBF7D0;border-radius:10px;padding:1.5rem;">
+      <div style="font-size:1.5rem;margin-bottom:0.8rem;">🤝</div>
+      <div style="font-weight:700;color:#065F46;margin-bottom:0.4rem;font-size:0.95rem;">For Clinical Neurologists</div>
+      <div style="font-size:0.82rem;color:#047857;line-height:1.6;">You get: our 31-biomarker panel as a clinical screening tool. Our ML model as a patient stratification framework. Collaboration on a biomarker-guided observational study in Nigerian AD/stroke patients.</div>
+    </div>
+
+    <div style="background:#EFF6FF;border:1.5px solid #BFDBFE;border-radius:10px;padding:1.5rem;">
+      <div style="font-size:1.5rem;margin-bottom:0.8rem;">💊</div>
+      <div style="font-weight:700;color:#1D4ED8;margin-bottom:0.4rem;font-size:0.95rem;">For Pharma / Biotech</div>
+      <div style="font-size:0.82rem;color:#2563EB;line-height:1.6;">You get: a validated multi-target natural compound panel with preclinical in vivo data, computational docking confirmation, ADMET profiling, and a network pharmacology basis for IND package development.</div>
+    </div>
+
+  </div>
+
+  <div class="collab-cta">
+    <div>
+      <div class="cta-title">One Spice. Two Diseases. One African Lab.</div>
+      <p class="cta-sub">
+        This platform represents the most comprehensive translational analysis of <em>Cinnamomum loureiroi</em> for neurodegeneration produced by an African research group. The mission: to develop Africa's first locally-derived, computationally-validated neuroprotective drug candidate for stroke and dementia — built from a plant found in Nigerian markets, studied in Nigerian labs, for Nigerian patients and the world.
+      </p>
+    </div>
+    <div class="cta-links">
+      <a class="cta-link" href="#diseases">🧠 Dementia targets</a>
+      <a class="cta-link" href="#druglikeness">💊 Drug-likeness scores</a>
+      <a class="cta-link" href="#txsteps">🔬 Stage 4 assays needed</a>
+      <a class="cta-link" href="#publications">📖 Co-author opportunities</a>
+      <a class="cta-link" href="#network">🕸 Full network data</a>
+    </div>
+  </div>
+
+  <div style="text-align:center;padding:2rem 0 1rem;border-top:1px solid #EDE0CC;margin-top:1rem;">
+    <div style="font-family:Georgia,serif;font-size:1.05rem;color:#3B1F0A;margin-bottom:6px;">
+      CinnaNeuro Translational Research Platform
+    </div>
+    <div style="font-size:0.8rem;color:#7A5A3A;">
+      COEST · Sikiru Adetona College of Education Science and Technology, Omu-Ijebu<br>
+      Olabisi Onabanjo University · Ogun State, Nigeria<br>
+      ANHRL — African NeuroHealth Research Laboratory Initiative
+    </div>
+  </div>
+
+</section>
+
+</div><!-- /page -->
