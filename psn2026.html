@@ -1,0 +1,4812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>2026 Digital Poster Exhibition</title>
+
+<style>
+:root {
+    --primary: #16324f;
+    --secondary: #2f6690;
+    --accent: #3fa7d6;
+    --light: #f5f8fb;
+    --white: #ffffff;
+    --text: #17212b;
+    --muted: #667085;
+    --border: #dfe5eb;
+    --success: #2e7d32;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--light);
+    color: var(--text);
+    line-height: 1.6;
+}
+
+/* NAVIGATION */
+
+nav {
+    background: var(--primary);
+    color: white;
+    padding: 15px 6%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.logo {
+    font-size: 20px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo img {
+    height: 40px;
+    width: auto;
+    display: block;
+}
+
+.logo .logo-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.15;
+}
+
+.logo .logo-text small {
+    font-weight: normal;
+    font-size: 11px;
+    color: var(--muted);
+}
+
+.nav-links {
+    display: flex;
+    gap: 25px;
+}
+
+.nav-links button {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.nav-links button:hover {
+    color: #9bd7f5;
+}
+
+/* HERO */
+
+.hero {
+    min-height: 470px;
+    display: flex;
+    align-items: center;
+    padding: 60px 8%;
+    background: linear-gradient(135deg, #16324f, #2f6690, #3fa7d6);
+    color: white;
+}
+
+.hero-content {
+    max-width: 850px;
+}
+
+.hero-badge {
+    display: inline-block;
+    background: rgba(255,255,255,.15);
+    padding: 8px 15px;
+    border-radius: 30px;
+    margin-bottom: 20px;
+}
+
+.hero h1 {
+    font-size: clamp(38px, 6vw, 70px);
+    line-height: 1.05;
+    margin-bottom: 20px;
+}
+
+.hero p {
+    font-size: 20px;
+    max-width: 700px;
+    opacity: .92;
+}
+
+.hero-buttons {
+    margin-top: 30px;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    border: none;
+    border-radius: 8px;
+    padding: 13px 22px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.btn-primary {
+    background: white;
+    color: var(--primary);
+}
+
+.btn-secondary {
+    background: rgba(255,255,255,.15);
+    color: white;
+    border: 1px solid rgba(255,255,255,.4);
+}
+
+/* GENERAL */
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: auto;
+}
+
+section {
+    padding: 60px 0;
+}
+
+.section-title {
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+.section-subtitle {
+    color: var(--muted);
+    margin-bottom: 30px;
+}
+
+/* STATS */
+
+.stats {
+    margin-top: -45px;
+    position: relative;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.stat-card {
+    background: white;
+    padding: 28px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 8px 25px rgba(0,0,0,.08);
+}
+
+.stat-card .icon {
+    font-size: 35px;
+}
+
+.stat-card h3 {
+    margin-top: 8px;
+}
+
+/* HOW IT WORKS */
+
+.steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.step {
+    background: white;
+    border: 1px solid var(--border);
+    padding: 25px;
+    border-radius: 14px;
+}
+
+.step-number {
+    font-weight: bold;
+    color: var(--accent);
+    margin-bottom: 10px;
+}
+
+/* GALLERY */
+
+.gallery-controls {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.search-box,
+.category-select {
+    padding: 13px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: white;
+}
+
+.search-box {
+    flex: 1;
+    min-width: 250px;
+}
+
+.category-select {
+    min-width: 180px;
+}
+
+.poster-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+}
+
+.poster-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 25px;
+    transition: .2s;
+}
+
+.poster-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(0,0,0,.08);
+}
+
+.poster-number {
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.tag {
+    display: inline-block;
+    background: #e9f5fb;
+    color: var(--secondary);
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    margin: 12px 0;
+}
+
+.poster-card h3 {
+    margin-bottom: 10px;
+}
+
+.poster-card p {
+    color: var(--muted);
+}
+
+.poster-meta {
+    margin: 15px 0;
+    font-size: 14px;
+}
+
+/* POSTER PAGE */
+
+.poster-page {
+    display: none;
+}
+
+.back-button {
+    margin-bottom: 25px;
+    background: none;
+    border: none;
+    color: var(--secondary);
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.poster-header {
+    background: var(--primary);
+    color: white;
+    padding: 45px 8%;
+}
+
+.poster-header h1 {
+    font-size: clamp(28px, 4vw, 48px);
+    max-width: 1000px;
+}
+
+.poster-header p {
+    margin-top: 12px;
+    opacity: .85;
+}
+
+.content-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 30px;
+    margin-top: 35px;
+}
+
+/* VIDEO */
+
+.video-box {
+    background: #111;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.video-box video {
+    width: 100%;
+    display: block;
+    min-height: 350px;
+}
+
+/* INFORMATION */
+
+.info-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 20px;
+}
+
+.info-card h2 {
+    margin-bottom: 12px;
+    color: var(--primary);
+}
+
+.finding {
+    padding: 12px;
+    background: #f5f8fb;
+    border-radius: 8px;
+    margin-bottom: 8px;
+}
+
+/* POSTER VIEWER */
+
+.poster-viewer {
+    background: #333;
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    overflow: auto;
+}
+
+.poster-viewer img {
+    max-width: 100%;
+    max-height: 850px;
+    object-fit: contain;
+}
+
+/* QUESTION */
+
+.question-section {
+    background: white;
+    padding: 35px;
+    border-radius: 15px;
+    border: 1px solid var(--border);
+}
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-family: inherit;
+}
+
+.form-group textarea {
+    min-height: 130px;
+}
+
+.submit-btn {
+    background: var(--primary);
+    color: white;
+}
+
+.success-message {
+    display: none;
+    margin-top: 15px;
+    padding: 12px;
+    border-radius: 8px;
+    background: #e8f5e9;
+    color: var(--success);
+}
+
+/* FOOTER */
+
+footer {
+    background: var(--primary);
+    color: white;
+    padding: 40px 8%;
+    margin-top: 60px;
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 30px;
+}
+
+footer p {
+    opacity: .75;
+}
+
+.footer-contact-link {
+    color: white;
+    text-decoration: none;
+    opacity: .85;
+    transition: opacity .2s, padding-left .2s;
+    display: inline-block;
+}
+
+.footer-contact-link:hover {
+    opacity: 1;
+    padding-left: 4px;
+    text-decoration: underline;
+}
+
+/* PORTAL / JUDGING */
+
+.portal-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+    max-width: 800px;
+}
+
+.portal-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 35px 25px;
+    text-align: center;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.portal-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(0,0,0,.08);
+}
+
+.portal-card .icon {
+    font-size: 40px;
+    margin-bottom: 10px;
+}
+
+.login-box {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 35px;
+    max-width: 420px;
+}
+
+.login-box select,
+.login-box input {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-family: inherit;
+    margin-bottom: 15px;
+}
+
+.error-message {
+    display: none;
+    margin-top: 12px;
+    padding: 12px;
+    border-radius: 8px;
+    background: #fdecea;
+    color: #c62828;
+}
+
+.judge-topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.judge-poster-row {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.status-pill {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.status-pending {
+    background: #fff4e5;
+    color: #b25e00;
+}
+
+.status-done {
+    background: #e8f5e9;
+    color: var(--success);
+}
+
+.rubric-group-title {
+    font-weight: bold;
+    color: var(--secondary);
+    margin: 20px 0 10px;
+    letter-spacing: .5px;
+    font-size: 13px;
+    text-transform: uppercase;
+}
+
+.rubric-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    gap: 15px;
+}
+
+.rubric-row label {
+    flex: 1;
+}
+
+.rubric-row input {
+    width: 90px;
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    text-align: center;
+    font-family: inherit;
+}
+
+.total-box {
+    margin-top: 20px;
+    padding: 18px;
+    background: var(--light);
+    border-radius: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: right;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+.data-table th,
+.data-table td {
+    padding: 12px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+}
+
+.data-table th {
+    background: var(--primary);
+    color: white;
+}
+
+.data-table tr:hover td {
+    background: #f9fbfd;
+}
+
+.admin-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 25px;
+}
+
+.btn-danger {
+    background: #c62828;
+    color: white;
+}
+
+.table-scroll {
+    overflow-x: auto;
+    margin-bottom: 40px;
+}
+
+/* MOBILE */
+
+@media(max-width: 800px) {
+
+    .nav-links {
+        display: none;
+    }
+
+    .stats-grid,
+    .steps,
+    .poster-grid,
+    .content-grid,
+    .footer-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero {
+        padding: 50px 6%;
+    }
+
+    .hero h1 {
+        font-size: 42px;
+    }
+
+    .content-grid {
+        gap: 15px;
+    }
+
+    .video-box video {
+        min-height: 230px;
+    }
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+</head>
+
+<body>
+
+<!-- NAVIGATION -->
+
+<nav>
+
+    <div class="logo">
+        <img src="data:image/jpeg;base64,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" alt="Physiological Society of Nigeria logo">
+        <img src="data:image/webp;base64,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" alt="University of Ilorin logo">
+        <div class="logo-text">
+            Digital Poster Hub
+            <small>PSN 2026 Conference</small>
+        </div>
+    </div>
+
+    <div class="nav-links">
+        <button onclick="showHome()">Home</button>
+        <button onclick="showGallery()">Poster Gallery</button>
+        <button onclick="showAbout()">About</button>
+        <button onclick="showPortalChoice()">🔐 Judge / Admin</button>
+    </div>
+
+</nav>
+
+
+<!-- HOME PAGE -->
+
+<div id="homePage">
+
+<section class="hero">
+
+<div class="hero-content">
+
+<div class="hero-badge">
+2026 Conference Digital Exhibition
+</div>
+
+<h1>
+Digital Poster Exhibition
+</h1>
+
+<p>
+Explore research posters, watch five-minute presentations,
+and connect with researchers through an online conference
+poster experience.
+</p>
+
+<div class="hero-buttons">
+
+<button class="btn btn-primary"
+onclick="showGallery()">
+Explore Posters →
+</button>
+
+<button class="btn btn-secondary"
+onclick="showAbout()">
+How It Works
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- STATS -->
+
+<section class="stats">
+
+<div class="container">
+
+<div class="stats-grid">
+
+<div class="stat-card">
+<div class="icon">🖼️</div>
+<h3>Digital Posters</h3>
+<p>Research posters available online.</p>
+</div>
+
+<div class="stat-card">
+<div class="icon">🎤</div>
+<h3>5-Minute Talks</h3>
+<p>Short presentations accompanying each poster.</p>
+</div>
+
+<div class="stat-card">
+<div class="icon">💬</div>
+<h3>Interactive Q&A</h3>
+<p>Participants can submit questions to presenters.</p>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- HOW IT WORKS -->
+
+<section>
+
+<div class="container">
+
+<h2 class="section-title">
+How the Digital Poster Exhibition Works
+</h2>
+
+<p class="section-subtitle">
+A simple alternative when physical poster boards are unavailable.
+</p>
+
+<div class="steps">
+
+<div class="step">
+<div class="step-number">01</div>
+<h3>Choose a Poster</h3>
+<p>Browse the research posters in the digital gallery.</p>
+</div>
+
+<div class="step">
+<div class="step-number">02</div>
+<h3>Watch the Talk</h3>
+<p>Watch a five-minute presentation from the researcher.</p>
+</div>
+
+<div class="step">
+<div class="step-number">03</div>
+<h3>Explore</h3>
+<p>Read the full abstract, covering background, methods, findings and conclusion.</p>
+</div>
+
+<div class="step">
+<div class="step-number">04</div>
+<h3>Ask Questions</h3>
+<p>Send questions directly through the poster page.</p>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- FEATURED -->
+
+<section>
+
+<div class="container">
+
+<h2 class="section-title">
+Featured Posters
+</h2>
+
+<div id="featuredGrid" class="poster-grid"></div>
+
+</div>
+
+</section>
+
+</div>
+
+
+<!-- GALLERY PAGE -->
+
+<div id="galleryPage" style="display:none;">
+
+<section>
+
+<div class="container">
+
+<h1 class="section-title">
+🖼️ Poster Gallery
+</h1>
+
+<p class="section-subtitle">
+Browse research presentations from the conference.
+</p>
+
+
+<div class="gallery-controls">
+
+<input
+type="text"
+id="searchBox"
+class="search-box"
+placeholder="Search poster title, author or institution..."
+oninput="renderGallery()"
+>
+
+<select
+id="categoryFilter"
+class="category-select"
+onchange="renderGallery()">
+
+<option value="All">All Categories</option>
+
+</select>
+
+</div>
+
+
+<div id="galleryGrid" class="poster-grid"></div>
+
+</div>
+
+</section>
+
+</div>
+
+
+<!-- INDIVIDUAL POSTER PAGE -->
+
+<div id="posterPage" class="poster-page">
+
+<div class="poster-header">
+
+<div class="container">
+
+<button
+class="back-button"
+style="color:white;"
+onclick="showGallery()">
+← Back to Poster Gallery
+</button>
+
+<div id="posterHeader"></div>
+
+</div>
+
+</div>
+
+
+<div class="container">
+
+<div class="content-grid">
+
+<!-- VIDEO -->
+
+<div>
+
+<div class="info-card">
+
+<h2>🎤 5-Minute Presentation</h2>
+
+<div class="video-box">
+
+<video
+id="posterVideo"
+controls
+poster="">
+<source id="videoSource" src="" type="video/mp4">
+Your browser does not support video playback.
+</video>
+
+</div>
+
+<p style="margin-top:12px;color:#667085;">
+The presenter should keep the presentation to a maximum of five minutes.
+</p>
+
+</div>
+
+
+<!-- POSTER -->
+
+<div class="info-card">
+
+<h2>🖼️ Digital Poster</h2>
+
+<div class="poster-viewer">
+
+<img
+id="posterImage"
+src=""
+alt="Research poster">
+
+</div>
+
+<p style="margin-top:15px;color:#667085;">
+Replace the demo image with the presenter's actual conference poster.
+</p>
+
+</div>
+
+</div>
+
+
+<!-- INFORMATION -->
+
+<div>
+
+<div class="info-card">
+
+<h2>Abstract</h2>
+
+<p id="posterAbstract" style="white-space:pre-line;"></p>
+
+</div>
+
+
+<div class="info-card">
+
+<h2>👤 Presenter</h2>
+
+<p id="posterPresenter"></p>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- QUESTIONS -->
+
+<div class="question-section">
+
+<h2>
+💬 Live Q&amp;A with the Presenter
+</h2>
+
+<p style="color:#667085;margin-bottom:25px;">
+Ask a question below — no email needed. The presenter can see and answer it, and their reply shows up right here.
+</p>
+
+
+<form onsubmit="submitQuestion(event)">
+
+<div class="form-group">
+
+<label>Your Name</label>
+
+<input
+type="text"
+id="questionName"
+placeholder="Enter your name"
+required>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Your Question</label>
+
+<textarea
+id="questionText"
+placeholder="Type your question..."
+required></textarea>
+
+</div>
+
+
+<button
+class="btn submit-btn"
+type="submit">
+
+Submit Question
+
+</button>
+
+
+<div
+id="successMessage"
+class="success-message">
+
+✓ Thank you. Your question has been submitted.
+
+</div>
+
+</form>
+
+
+<div id="qaThread" style="margin-top:30px;"></div>
+
+<button class="btn btn-secondary" style="color:var(--primary);border:1px solid var(--border);margin-top:10px;" onclick="renderQAThread()">🔄 Refresh</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ABOUT -->
+
+<div id="aboutPage" style="display:none;">
+
+<section>
+
+<div class="container">
+
+<h1 class="section-title">
+About the Digital Poster Exhibition
+</h1>
+
+<p class="section-subtitle">
+A proposed digital alternative to traditional poster boards.
+</p>
+
+<div class="info-card">
+
+<h2>Why Digital Posters?</h2>
+
+<p>
+Instead of relying entirely on physical poster boards,
+researchers can present their work through an online
+conference exhibition.
+</p>
+
+<br>
+
+<p>
+Each presenter receives a dedicated poster page containing
+their research poster, five-minute presentation, abstract,
+and a live question section.
+</p>
+
+</div>
+
+
+<div class="info-card">
+
+<h2>Possible Conference Features</h2>
+
+<ul style="padding-left:25px;">
+
+<li>Digital poster gallery</li>
+<li>Five-minute presentation videos</li>
+<li>Interactive poster pages</li>
+<li>Questions to presenters</li>
+<li>QR codes for individual posters</li>
+<li>People's Choice voting</li>
+<li>Research categories</li>
+<li>Digital conference archive</li>
+
+</ul>
+
+</div>
+
+
+<div class="info-card">
+
+<h2>Future Development</h2>
+
+<p>
+This prototype can later be connected to a database so
+presenters can upload their own posters and videos.
+</p>
+
+<br>
+
+<p>
+It can also include presenter accounts, administrator
+approval, live Q&A, voting, QR codes and automatic
+generation of individual poster links.
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+</div>
+
+
+<!-- PORTAL CHOICE -->
+
+<div id="portalChoicePage" style="display:none;">
+
+<section>
+
+<div class="container">
+
+<h1 class="section-title">🔐 Judge &amp; Admin Portal</h1>
+
+<p class="section-subtitle">
+This area is for conference judges and organizers only.
+</p>
+
+<div class="portal-grid">
+
+<div class="portal-card" onclick="showJudgeLogin()">
+<div class="icon">🧑‍⚖️</div>
+<h3>I'm a Judge</h3>
+<p>Log in to score your assigned posters.</p>
+</div>
+
+<div class="portal-card" onclick="showAdminLogin()">
+<div class="icon">🛠️</div>
+<h3>I'm an Organizer / Admin</h3>
+<p>View scores, rankings and export results.</p>
+</div>
+
+<div class="portal-card" onclick="showPresenterLogin()">
+<div class="icon">🎤</div>
+<h3>I'm Presenting a Poster</h3>
+<p>See live questions from visitors and answer them.</p>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+</div>
+
+
+<!-- JUDGE LOGIN -->
+
+<div id="judgeLoginPage" style="display:none;">
+
+<section>
+
+<div class="container">
+
+<button class="back-button" onclick="showPortalChoice()">← Back</button>
+
+<h1 class="section-title">🧑‍⚖️ Judge Login</h1>
+<p class="section-subtitle">Select your name and enter your PIN.</p>
+
+<div class="login-box">
+
+<form onsubmit="judgeLogin(event)">
+
+<div class="form-group">
+<label>Judge</label>
+<select id="judgeSelect"></select>
+</div>
+
+<div class="form-group">
+<label>PIN</label>
+<input type="password" id="judgePin" placeholder="Enter your PIN" required>
+</div>
+
+<button class="btn submit-btn" type="submit">Log In</button>
+
+<div id="judgeLoginError" class="error-message">
+Incorrect PIN. Please try again.
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+</section>
+
+</div>
+
+
+<!-- JUDGE - ASSIGNED POSTERS -->
+
+<div id="judgePostersPage" style="display:none;">
+
+<section>
+
+<div class="container">
+
+<div class="judge-topbar">
+
+<div>
+<h1 class="section-title" style="margin-bottom:4px;">📋 Your Assigned Posters</h1>
+<p class="section-subtitle" id="judgeWelcome" style="margin-bottom:0;"></p>
+</div>
+
+<div style="display:flex;gap:10px;flex-wrap:wrap;">
+<button class="btn btn-secondary" style="color:var(--primary);border:1px solid var(--border);" onclick="downloadJudgeExport()">⬇️ Export My Scores</button>
+<button class="btn btn-secondary" style="color:var(--primary);border:1px solid var(--border);" onclick="judgeLogout()">Log Out</button>
+</div>
+
+</div>
+
+<div id="judgePosterList"></div>
+
+</div>
+
+</section>
+
+</div>
+
+
+<!-- JUDGE - EVALUATION FORM -->
+
+<div id="judgeEvalPage" style="display:none;">
+
+<section>
+
+<div class="container">
+
+<button class="back-button" onclick="showJudgePosters()">← Back to My Posters</button>
+
+<div id="evalPosterHeader"></div>
+
+<div class="question-section" style="margin-top:20px;">
+
+<form onsubmit="submitEvaluation(event)">
+
+<div class="form-group">
+<label>Poster No.</label>
+<input type="text" id="evalPosterNo" readonly>
+</div>
+
+<div class="form-group">
+<label>Judge Name</label>
+<input type="text" id="evalJudgeName" readonly>
+</div>
+
+<div id="rubricFields"></div>
+
+<div class="total-box">TOTAL: <span id="evalTotal">0</span> / 100</div>
+
+<div class="form-group" style="margin-top:20px;">
+<label>Judge's Comments</label>
+<textarea id="evalComments" placeholder="Optional comments..."></textarea>
+</div>
+
+<button class="btn submit-btn" type="submit">Submit Evaluation</button>
+
+<div id="evalSuccess" class="success-message">
+✓ Evaluation submitted successfully.
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+</section>
+
+</div>
+
+
+<!-- ADMIN LOGIN -->
+
+<div id="adminLoginPage" style="display:none;">
+
+<section>
+
+<div class="container">
+
+<button class="back-button" onclick="showPortalChoice()">← Back</button>
+
+<h1 class="section-title">🛠️ Admin Login</h1>
+<p class="section-subtitle">Organizing committee access only.</p>
+
+<div class="login-box">
+
+<form onsubmit="adminLogin(event)">
+
+<div class="form-group">
+<label>Admin Password</label>
+<input type="password" id="adminPassword" placeholder="Enter admin password" required>
+</div>
+
+<button class="btn submit-btn" type="submit">Log In</button>
+
+<div id="adminLoginError" class="error-message">
+Incorrect password. Please try again.
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+</section>
+
+</div>
+
+
+<!-- ADMIN DASHBOARD -->
+
+<div id="adminPage" style="display:none;">
+
+<section>
+
+<div class="container">
+
+<div class="judge-topbar">
+
+<div>
+<h1 class="section-title" style="margin-bottom:4px;">🏆 Scores &amp; Rankings</h1>
+<p class="section-subtitle" style="margin-bottom:0;">Live results calculated from all submitted judge scores.</p>
+</div>
+
+<button class="btn btn-secondary" style="color:var(--primary);border:1px solid var(--border);" onclick="adminLogout()">Log Out</button>
+
+</div>
+
+<div class="admin-actions">
+
+<button class="btn submit-btn" onclick="exportResultsCSV()">⬇️ Export Results to Excel (CSV)</button>
+<button class="btn btn-danger" onclick="resetAllData()">🗑️ Reset All Scores</button>
+
+</div>
+
+<p class="section-subtitle" id="adminDataNote"></p>
+
+<h2 style="margin-bottom:15px;">Ranking</h2>
+
+<div class="table-scroll">
+<table class="data-table" id="rankingTable"></table>
+</div>
+
+<h2 style="margin-bottom:15px;">All Submitted Evaluations</h2>
+
+<div class="table-scroll">
+<table class="data-table" id="detailTable"></table>
+</div>
+
+</div>
+
+</section>
+
+</div>
+
+
+<!-- PRESENTER LOGIN -->
+
+<div id="presenterLoginPage" style="display:none;">
+
+<section>
+
+<div class="container">
+
+<button class="back-button" onclick="showPortalChoice()">← Back</button>
+
+<h1 class="section-title">🎤 Presenter Login</h1>
+<p class="section-subtitle">Select your poster and enter your PIN to see and answer your live questions.</p>
+
+<div class="login-box">
+
+<form onsubmit="presenterLogin(event)">
+
+<div class="form-group">
+<label>Your Poster</label>
+<select id="presenterSelect"></select>
+</div>
+
+<div class="form-group">
+<label>PIN</label>
+<input type="password" id="presenterPin" placeholder="Enter your PIN" required>
+</div>
+
+<button class="btn submit-btn" type="submit">Log In</button>
+
+<div id="presenterLoginError" class="error-message">
+Incorrect PIN. Please try again.
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+</section>
+
+</div>
+
+
+<!-- PRESENTER - LIVE Q&A -->
+
+<div id="presenterQAPage" style="display:none;">
+
+<section>
+
+<div class="container">
+
+<div class="judge-topbar">
+
+<div>
+<h1 class="section-title" style="margin-bottom:4px;">💬 Live Questions</h1>
+<p class="section-subtitle" id="presenterWelcome" style="margin-bottom:0;"></p>
+</div>
+
+<div style="display:flex;gap:10px;flex-wrap:wrap;">
+<button class="btn btn-secondary" style="color:var(--primary);border:1px solid var(--border);" onclick="renderPresenterQA()">🔄 Refresh</button>
+<button class="btn btn-secondary" style="color:var(--primary);border:1px solid var(--border);" onclick="presenterLogout()">Log Out</button>
+</div>
+
+</div>
+
+<div id="presenterQAList"></div>
+
+</div>
+
+</section>
+
+</div>
+
+
+<!-- FOOTER -->
+
+<footer>
+
+<div class="footer-grid">
+
+<div>
+
+<h2>🎓 Digital Poster Exhibition</h2>
+
+<p>
+A proposed digital platform for modern conference
+poster presentations.
+</p>
+
+</div>
+
+<div>
+
+<h3>Explore</h3>
+
+<p>Poster Gallery</p>
+<p>Research Categories</p>
+<p>Presentations</p>
+
+</div>
+
+<div>
+
+<h3>Contact</h3>
+
+<p><a href="mailto:neuromatrixbiosystem@gmail.com" class="footer-contact-link">✉️ neuromatrixbiosystem@gmail.com</a></p>
+<p><a href="tel:+2348077787679" class="footer-contact-link">📞 0807 778 7679</a></p>
+<p>2026 Conference</p>
+
+</div>
+
+</div>
+
+<div style="border-top:1px solid rgba(255,255,255,.15);margin-top:30px;padding-top:20px;text-align:center;font-size:13px;opacity:.85;">
+
+Powered by <strong>NeuroMatrix BioSystems</strong> ·
+<a href="https://neuromatrixbiosystems.com" class="footer-contact-link" target="_blank" rel="noopener">neuromatrixbiosystems.com</a>
+· <a href="tel:+2348077787679" class="footer-contact-link">0807 778 7679</a>
+
+</div>
+
+</footer>
+
+
+<script>
+
+/* --------------------------------
+   SUPABASE
+   Every judge score and every live
+   question/answer is stored here, so
+   they sync instantly across every
+   device — not just one browser.
+-------------------------------- */
+
+const SUPABASE_URL = "https://xbbyvwqumnjsiwkudofd.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhiYnl2d3F1bW5qc2l3a3Vkb2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1NTE4OTcsImV4cCI6MjEwNDEyNzg5N30.33nuNFVkH3NwMTmbN4qeLbI0j7htWlesOutCCCAFTIo";
+
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+
+/* --------------------------------
+   DEMO POSTER DATA
+-------------------------------- */
+
+const posters = [
+
+{
+id: "001",
+
+title:
+"Effects of Probiotics on High-Fat and High-fructose Diets-Induced Cardiac metabolic dysfunction in male wistar rats",
+
+authors:
+"Abena E",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "002",
+
+title:
+"Variation of Nitric Oxide levels across Clinical Phases of Sickle Cell Anemia In Northern Nigeria",
+
+authors:
+"Abubakar A. B",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "003",
+
+title:
+"Methimazole-Induced Hypothyroidism Disrupts Hypothalamic–Pituitary–Ovarian Axis Signaling, Ovarian Steroidogenesis, And Folliculogenesis In Adult Female Wistar Rats",
+
+authors:
+"Adebayo O. F -2",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "004",
+
+title:
+"Neurosimlab A Correlation-Preserving Synthetic Data Generator For Small-N Preclinical Neurodegeneration Datasets",
+
+authors:
+"Adebimpe-John O. E 2",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "005",
+
+title:
+"Effect Of Lycopene On Reproductive Toxicity Induced By Lead In Male Wistar Rats",
+
+authors:
+"Adebodun G. O",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "006",
+
+title:
+"Comparative Effects Of Neem Leaf Extract And Combined Oral Contraceptives On Cardiac Oxidative Stress In Female Wistar Rats",
+
+authors:
+"Adegoke A. O",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "007",
+
+title:
+"Heavy Metals Exposure And Protective Role Of Ginger (Zingiber Officinale) On Gut Microbiota And Systemic Oxidative Stress In Rats",
+
+authors:
+"Adeleye G. S",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "008",
+
+title:
+"Ethanolic Corchorous Olitorius Leaf Extract Mitigates Monosodium Glutamate-Impaired Sexual Function Via Upregulation Of Steroidogenesis In Male Wistar Rats",
+
+authors:
+"Adeogun A. E 1",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "009",
+
+title:
+"L-Ascorbic acid from sweet orange (Citrus sinensis) protects against Oxidative stress-associated hepatic injury in Diabetic-frmale Wistar rats",
+
+authors:
+"Adepoju M. A",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "010",
+
+title:
+"Activities Of Thaumatococcus Danielli (Benth) Fruit Diets On The Gut-Liver Axis During Crohn’s Colitis In Male Wistar Rats: In-Vivo And In-Silico Studies",
+
+authors:
+"Adetayo A. D",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "011",
+
+title:
+"Gestational Bisphenol-A Exposure Induces Offspring Hippocampal Oxidative Stress And Neuroinflammation In Wistar Rats",
+
+authors:
+"Adio K. O",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "012",
+
+title:
+"Changes In Liver Enzymes And Antioxidant Profile In Household Toxin-Exposed Feed And Water In Male Wistar Rats",
+
+authors:
+"Aduema W.",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "013",
+
+title:
+"Modulation of post haemolytic Leucopenia and white cell indices by oral watermelon (Citrullus lanatus) Juice",
+
+authors:
+"Aikpitanyi-Iduitua R.O.",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "014",
+
+title:
+"NEUROPROTECTIVE MECHANISM OF ETHANOLIC LEAF EXTRACT OF BRASSICA OLERACEA L. VAR ACEPHALA IN ARSENIC-INDUCED FRONTAL CORTICAL DEGENERATION",
+
+authors:
+"AIKPITANYI I",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "015",
+
+title:
+"Preventive Role Of Ethanol Extract Of Theobroma Cacao Seed Against Rotenone-Induced Neuroinflammation In Male Wistar Rats",
+
+authors:
+"Ajani I. B",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "016",
+
+title:
+"Monosaccharide-Induced Metabolic Remodeling Of The Brain Without Overt Cognitive Dysfunction",
+
+authors:
+"Ajayi A. J",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "017",
+
+title:
+"Antioxidant Response And Neurotransmitter Modulation Driven By Oleuropein/Alpha-Lipoic Acid Attenuates Lead-Induced Reproductive Toxicity And Neurotoxicity In Drosophila Melanogaster",
+
+authors:
+"Akande F. E.",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "018",
+
+title:
+"Impact Of Noise-Induced Sleep Fragmentation And Deprivation On Memory In Rat Model",
+
+authors:
+"Aminat-Alabi A",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "019",
+
+title:
+"Soybean Oil Modulates Oxidative Stress And Neuroinflammation Following Sciatic Nerve Ligation In Male Wistar Rats",
+
+authors:
+"Ananias E. N",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "020",
+
+title:
+"Evaluation Of The Anti-Macrosomic Potential Of Aqueous Leaf Extract Of Uvaria Chamae On Pregnant Wistar Rats",
+
+authors:
+"Ani C. O",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "021",
+
+title:
+"Anti-Diarrheal Potential Of Aqueous Guava (Psidium Guajava) Leaf Extract In Castor Oil-Induced Diarrhea Wistar Rats",
+
+authors:
+"Anura A",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "022",
+
+title:
+"Ameliorative Activities Of Clomiphene Citrate On Cadmium-Induced Reproductive Functions And Morphological Impairments In Male Wistar Rats",
+
+authors:
+"Aremu M. M",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "023",
+
+title:
+"Evaluating Montelukast And Prednisolone Combinations In Mitigating Oxidative Stress And Preserving Cardiac Structure In Asthma-Induced Injury",
+
+authors:
+"Atogwe E.A",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "024",
+
+title:
+"Effect Of Caffeine Ingestion On Some Oxidative Stress Markers And Reproductive Parameters In Adults Male Wistar Rats",
+
+authors:
+"Ayeni A. A",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "025",
+
+title:
+"Corneal Toxicity Following Topical Glyphosate Exposure in Male Wistar Rats",
+
+authors:
+"Ayinla Z. O.",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "026",
+
+title:
+"COQ10 Attenuates Bpa-Induced Testicular Toxicity Via Upregulation Of NRF2/HO-1 And Downregulation Of XO/UA In Wistar Rats",
+
+authors:
+"Babalola T. O",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "027",
+
+title:
+"Protective Effects Of Rutin On Potassium Dichromate-Induced Renal Toxicity In Rats",
+
+authors:
+"Bakare O. E",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "028",
+
+title:
+"COMBINED EFFECTS OF SOCIAL ISOLATION AND GUT MICROBIOTA DYSBIOSIS AS A POTENTIAL NOVEL NEURODEVELOPMENTAL RAT MODEL OF SCHIZOPHRENIA",
+
+authors:
+"Bayo-Olugbami A. A",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "029",
+
+title:
+"Prophylactic And Therapeutic Effects Of Sorghum Bicolor On Olfactory Dysfunction And Nigrostriatal Degeneration In Rotenone-Induced Parkinsonian Mice",
+
+authors:
+"Bolaji O.V",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "030",
+
+title:
+"Impact Of Different Intermittent Fasting Regimens On Salivary Secretion And Oxidative Stress In Male Wistar Rats",
+
+authors:
+"Bolarinwa B.",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "031",
+
+title:
+"High-Protein Diet Enhances Reproductive Functions In Nulliparous Female Wistar Rats",
+
+authors:
+"Charles U. V",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "032",
+
+title:
+"Potential Therapeutic Effects Of Curcuma Longa Ethanol Rhizome Extract Against Rotenone-Induced Parkinson’s Disease In Rats",
+
+authors:
+"Daramola E. O",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "033",
+
+title:
+"Neuroprotective Effects Of Ethanolic Beetroot (Beta Vulgaris) Extract Against Heat Stress-Induced Hippocampal Damage In Female Wistar Rats",
+
+authors:
+"Edeha D. O",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "034",
+
+title:
+"Protective Role Of Micronized Purified Flavonoid Fraction In Drosophila Melanogaster Model Of Ferrous Sulphate-Induced Reproductive And Neurotoxicity",
+
+authors:
+"Egbedeyi D",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "035",
+
+title:
+"Effects Of Prolonged Consumption Of Energy Drinks And Caffeine On Selected Cardiovascular Biomarkers In Female Sprague-Dawley Rat",
+
+authors:
+"Eiya B",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "036",
+
+title:
+"Green Synthesized Titanium-Dioxide Nanoparticles Of Heinsia Crinita Leaves (Hc-Tio2nps) Exposure Impairs Haematological System In Male Wistar Rats",
+
+authors:
+"Essiet E. U.",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "037",
+
+title:
+"Mitigating effects of Beetroot fruit Powder on Monosodium Glutamate Induced Disrptions in repreoductive Hormone Regulation in Male Wistar Rats",
+
+authors:
+"Folawiyo M. A",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "038",
+
+title:
+"EFFECT OF METHANOL EXTRACT OF TRECULIA AFRICANA SEEDS ON REPRODUCTIVE HORMONES, OXIDATIVE STRESS MARKERS IN FEMALE WISTAR RATS",
+
+authors:
+"Gbaranor K. B",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "039",
+
+title:
+"Effects of Olive Oil on Memory and Learning Impairments Due to Prenatal Exposure to Alcohol in Mouse Pups",
+
+authors:
+"Hussaini S",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "040",
+
+title:
+"ASSESSMENT OF CARDIOVASCULAR INDICES IN GRAIN MILLERS: A CASE STUDY OF SABON-GARI, KADUNA-NIGERIA",
+
+authors:
+"Idris R. I 2",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "041",
+
+title:
+"COULD FEMALE HORMONES BE THE PREVENTIVE KEY OF PARKINSON’S DISEASE?",
+
+authors:
+"Ifoh N. T. 1",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "042",
+
+title:
+"COMPUTATIONAL EVALUATION OF Aspilia africana PHYTOCHEMICALS AGAINST MULTIPLE DRUG TARGETS IN PEPTIC ULCERATION.",
+
+authors:
+"Ilesanmi Y. O",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "043",
+
+title:
+"NEUROPROTECTIVE EFFECT OF 6-GINGEROL RICH FRACTION OF ZINGIBER OFFICINALE ON CYPERMETHRIN-INDUCED NEUROTOXICITY IN MALE WISTAR RATS",
+
+authors:
+"Issa-Lawal M",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "044",
+
+title:
+"CNIDOSCOLUS ACONITIFOLIUS AMELIORATES BARIUM CHLORIDE-INDUCED CARDIAC DYSFUNCTION IN WISTAR RATS",
+
+authors:
+"Iyiola T. O.",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "045",
+
+title:
+"PHYTOREMEDIATION POTENTIAL OF SUNFLOWER (HELIANTHUS ANNUUS L.) IN GLYPHOSATE-CONTAMINATED SOIL.",
+
+authors:
+"Jamilu M. A.",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "046",
+
+title:
+"EFFECTS OF STARVATION-INDUCED STRESS AND GARCINIA KOLA ETHANOLIC EXTRACTS ON SEX HORMONES IN MALE WISTAR RATS",
+
+authors:
+"Kianen S",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "047",
+
+title:
+"PORTULACA OLERACEA MODULATES HEMODYNAMIC, ELECTROCARDIOGRAPHIC AND MYOCARDIAL ATPase PARAMETERS IN ISOPROTERENOL-INDUCED MYOCARDIAL INFARCTION IN MALE WISTAR RATS",
+
+authors:
+"Kolade S. A",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "048",
+
+title:
+"EFFECT OF PORTULACA OLERACEA ON ISOPROTERENOL-INDUCED CARDIO-HIPPOCAMPAL INJURY IN MALE WISTAR RATS",
+
+authors:
+"Komolafe J.E.",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "049",
+
+title:
+"NEUROPROTECTIVE EFFECTS OF HYDRO-METHANOLIC LEAF EXTRACT OF JATROPHA TANJORENSIS AGAINST LEAD-INDUCED OXIDATIVE STRESS AND INFLAMMATION IN WISTAR RATS",
+
+authors:
+"Krukru, E. E.,",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "050",
+
+title:
+"HIGH-PROTEIN DIET MITIGATES CARBON TETRACHLORIDE-INDUCED HEPATORENAL TOXICITY IN RATS",
+
+authors:
+"Magaji H.D.",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "051",
+
+title:
+"Mosquito Coil Smoke: A Silent Source of Carbon Monoxide Associated with Memory Impairment and Oxidative Stress",
+
+authors:
+"Miko Z. A",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "052",
+
+title:
+"Effect of 6-Gingerol-Rich Fraction of Zingiber offinale on Social Instability Stress-induced Depression in Male Wistar Rats",
+
+authors:
+"Muzzammil S.S",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "053",
+
+title:
+"Evaluation Of The Effect Of Palm Bunch Ash Administration On The Kidney Function Of Male Wistar Rats",
+
+authors:
+"Ndubuisi N. R",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "054",
+
+title:
+"Effect Of Ginger (Zingiber Officinale) Ethanol Extract On Reproductive Function In Male Rats",
+
+authors:
+"Ogbe A.J",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "055",
+
+title:
+"Arginine Improves Reproductive Function Via Maintenance Of Redox Status In A Drosophila Melanogaster Model Of Neurodegenerative Disease",
+
+authors:
+"Okeyinka P.A.",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "056",
+
+title:
+"Ameliorative Effect Of Magnesium Sulphate On Aluminium Sulphate-Induced Reproductive Toxicity In Female Wistar Rats",
+
+authors:
+"Olaosun O.S",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "057",
+
+title:
+"Effect Of Rutin On Redox Status And Reproductive Behaviour In Resorcinol Bis(Diphenyl)-Phospahte-Induced Gonadotoxicity In Male Wistar Rats",
+
+authors:
+"Oloruntade I. P.",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "058",
+
+title:
+"Effect Of Aqueous Stem Extract Of Fadogia Agrestis On Oestrogen Receptor Beta Expression In Hyperlipidaemic Wistar Rats",
+
+authors:
+"Olowomeye O. M.",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "059",
+
+title:
+"Canarium Schweinfurthii Modulated Gut-Brain Axis During Experimental Colon Disease",
+
+authors:
+"Olujimi A.",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "060",
+
+title:
+"Cardiac Functions Of Male Wistar Rats Exposed To High Fructose Diet And Potassium Bromate",
+
+authors:
+"Omotayo E.T.",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "061",
+
+title:
+"Effect Of Chronic Exposure To Sodium Arsenite On Testicular Energy METABOLISM IN WISTAR RATS",
+
+authors:
+"Osawaru P.O",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "062",
+
+title:
+"Pro-Ulcerogenic Effects Of High Fructose Diet And Potassium Bromate In Male Wistar Rats",
+
+authors:
+"OWOLABI A.A",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "063",
+
+title:
+"Chitosan nanoparticle delivery of lantanine suppresses PI3K/AKT/mTOR and NF-κB signalling in vaginal squamous cell carcinoma",
+
+authors:
+"Oyelere A.O",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "064",
+
+title:
+"Effects Of Dietary Palm, Palm Kernel, And Groundnut Cake Oils On Sucrose-Induced Insulin Resistance In Male Wistar Rats",
+
+authors:
+"Mofolorunso A",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "065",
+
+title:
+"IMPACT OF HIGH-FAT DIET ON ARCUATE NUCLEUS: A STEREOLOGICAL STUDY OF ARCUATE NUCLEUS VOLUME AND TOTAL NEURON NUMBER",
+
+authors:
+"Rabiu A.M",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "066",
+
+title:
+"Transfer Factor of Natural Radionuclides in Rice Samples Harvested in Selected Farmlands of Birnin Kebbi, Kebbi State, Nigeria.",
+
+authors:
+"Shehu A. H",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "067",
+
+title:
+"EFFECT OF HIGH-FRUCTOSE DIET DURING POTASSIUM BROMATE EXPOSURE ON BLOOD AND SYSTEMIC INFLAMMATORY INDICES IN MALE WISTAR RATS",
+
+authors:
+"SUNMONU-ADEKUNLE D.A",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "068",
+
+title:
+"ASSESSMENT OF ATHEROGENIC LIPID PROFILE AND PULMONARY FUNCTIONS OF FEMALE COOKS IN PORT HARCOURT",
+
+authors:
+"Tamuno-opubo, Abiye",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "069",
+
+title:
+"A STANDARDIZED Talinum triangulare SOUP PREPARATION CONSUMPTION MODULATES SYMPATHETIC ACTIVITY IN HEALTHY ADULTS DURING MENTAL ARITHMETIC TEST",
+
+authors:
+"Yayah, F. F",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "070",
+
+title:
+"Polyphenol-rich Fraction of Terminalia catappa Prevents Chronic Lead Acetate Induced Oxidative Stress and Cardiorenal Toxicities in Rats",
+
+authors:
+"Ajibade T.O.",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "071",
+
+title:
+"in-silico AND in-vivo STUDY OF BETULINAND CHRYSIN ON SCOPOLAMINE-INDUCED ALZHEIMER’SDISEASE-LIKE CONDITIONS",
+
+authors:
+"Madu E. O.",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "072",
+
+title:
+"MOLECULAR DOCKING INVESTIGATION OF BIOACTIVE COMPOUNDS FROM Aspilia africana AGAINST KEY THERAPEUTIC TARGETS IN DIABETIC CARDIOMYOPATHY",
+
+authors:
+"Akinloye T. O.",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "073",
+
+title:
+"MUSA ACUMINATA POLYSACCHARIDE MITIGATES BPA-INDUCED NEUROTOXICITY AND REPRODUCTIVE TOXICITY IN DROSOPHILA MELANOGASTER THROUGH MITOCHONDRIAL AND GENOMIC PROTECTION",
+
+authors:
+"Owolade G.A.",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "074",
+
+title:
+"ETHANOL ORANGE PEEL EXTRACT AND ZINC MODULATE RENAL FUNCTIONS IN RESORCINOL BIS(DIPHENYL) PHOSPHATE- EXPOSED MALE WISTAR RATS",
+
+authors:
+"Adeyemi D.E.",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "075",
+
+title:
+"Curcuma longa mitigation of cyclosporine-induced nephrotoxicity is associated with improvement of renal clearance and modulation of TLR4-DMT1 axis",
+
+authors:
+"Aboyeji F.D.",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "076",
+
+title:
+"Methionine Methylsulfonium Chloride prevents Obesity-Induced Vascular Injury in Wistar Rats via Antioxidant, Anti-Inflammatory, and Anti-Apoptotic Mechanisms",
+
+authors:
+"Asiwe J.N.",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "077",
+
+title:
+"Chrysin ameliorates valproic acid-induced repetitive behaviors, cognitive deficits, and neuroinflammation by suppressing Corticohippocampal TNF-α/NF-κB levels",
+
+authors:
+"Adeniyi I.A.",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "078",
+
+title:
+"CARDIOPROTECTIVE EFFECTS OF Aspilia africana AND METFORMIN COMBINATION IN EXPERIMENTAL CARDIOMYOPATHY: INVOLVEMENT OF OXIDATIVE STRESS, INFLAMMATION AND APOPTOSIS",
+
+authors:
+"Okikiola O.D.",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "079",
+
+title:
+"MODULATORY EFFECT OF TELFAIRIA OCCIDENTALIS OIL ON CARDIAC HOMEOSTASIS IN HEAT-STRESSED MALE RATS",
+
+authors:
+"Adekunle J.A.",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "080",
+
+title:
+"NEPHROPROTECTIVE EFFECTS OF GALLIC ACID ON GLYCEROL-INDUCED ACUTE KIDNEY INJURY IN RATS",
+
+authors:
+"Bello O.I.",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+}
+
+];
+
+
+/* --------------------------------
+   JUDGING SYSTEM CONFIG
+
+   ⚠️ DEMO CREDENTIALS — CHANGE BEFORE
+   THE REAL CONFERENCE. This is a
+   client-side prototype: PINs/passwords
+   only gate the interface, they are not
+   secure authentication. See the note in
+   the admin dashboard for how scores
+   sync across devices.
+-------------------------------- */
+
+const judges = [
+    { id: "J1", name: "Judge 1", pin: "1111" },
+    { id: "J2", name: "Judge 2", pin: "2222" },
+    { id: "J3", name: "Judge 3", pin: "3333" },
+    { id: "J4", name: "Judge 4", pin: "4444" },
+    { id: "J5", name: "Judge 5", pin: "5555" }
+];
+
+const ADMIN_PASSWORD = "admin2026";
+
+/* Optional: restrict which posters a judge sees.
+   e.g. "J1": ["001","002"]. Leave a judge out
+   (or give an empty array) and they see every poster. */
+const assignments = {};
+
+const rubric = [
+    { key: "background",  label: "Scientific Background & Rationale",     max: 10, group: "Scientific Quality" },
+    { key: "aim",         label: "Research Aim & Objectives",             max: 10, group: "Scientific Quality" },
+    { key: "methodology", label: "Methodology",                          max: 15, group: "Scientific Quality" },
+    { key: "results",     label: "Results & Data Presentation",           max: 20, group: "Scientific Quality" },
+    { key: "discussion",  label: "Discussion & Interpretation",           max: 15, group: "Scientific Quality" },
+    { key: "originality", label: "Scientific Significance / Originality", max: 10, group: "Scientific Quality" },
+    { key: "design",      label: "Poster Design & Clarity",               max: 5,  group: "Presentation" },
+    { key: "oral",        label: "5-Minute Oral Presentation",            max: 10, group: "Presentation" },
+    { key: "qa",          label: "Response to Questions",                 max: 5,  group: "Presentation" }
+];
+
+const RUBRIC_MAX_TOTAL = rubric.reduce((sum, r) => sum + r.max, 0);
+
+let currentJudge = null;
+let currentEvalPosterId = null;
+let adminEvaluations = [];
+let currentPublicPosterId = null;
+let currentPresenterPosterId = null;
+let qaPollInterval = null;
+let presenterPollInterval = null;
+let qaChannel = null;
+let presenterChannel = null;
+let adminChannel = null;
+
+function evalRowToObject(row) {
+    return {
+        posterId: row.poster_id,
+        judgeId: row.judge_id,
+        judgeName: row.judge_name,
+        scores: row.scores,
+        total: row.total,
+        comments: row.comments,
+        timestamp: row.created_at
+    };
+}
+
+async function getEvaluations() {
+    const { data, error } = await sb.from("evaluations").select("*");
+    if (error) {
+        console.error(error);
+        return [];
+    }
+    return data.map(evalRowToObject);
+}
+
+async function saveEvaluation(evalObj) {
+    const { error } = await sb.from("evaluations").upsert({
+        id: `${evalObj.posterId}_${evalObj.judgeId}`,
+        poster_id: evalObj.posterId,
+        judge_id: evalObj.judgeId,
+        judge_name: evalObj.judgeName,
+        scores: evalObj.scores,
+        total: evalObj.total,
+        comments: evalObj.comments,
+        created_at: evalObj.timestamp
+    });
+    if (error) {
+        console.error(error);
+        return false;
+    }
+    return true;
+}
+
+function getAssignedPosters(judge) {
+    const ids = assignments[judge.id];
+    if (!ids || ids.length === 0) return posters;
+    return posters.filter(p => ids.includes(p.id));
+}
+
+
+/* --------------------------------
+   PORTAL CHOICE
+-------------------------------- */
+
+function showPortalChoice() {
+    hideAll();
+    document.getElementById("portalChoicePage").style.display = "block";
+    window.scrollTo(0, 0);
+}
+
+
+/* --------------------------------
+   JUDGE LOGIN
+-------------------------------- */
+
+function showJudgeLogin() {
+    hideAll();
+    const select = document.getElementById("judgeSelect");
+    select.innerHTML = judges.map(j => `<option value="${j.id}">${j.name}</option>`).join("");
+    document.getElementById("judgeLoginError").style.display = "none";
+    document.getElementById("judgePin").value = "";
+    document.getElementById("judgeLoginPage").style.display = "block";
+    window.scrollTo(0, 0);
+}
+
+function judgeLogin(event) {
+    event.preventDefault();
+    const id = document.getElementById("judgeSelect").value;
+    const pin = document.getElementById("judgePin").value.trim();
+    const judge = judges.find(j => j.id === id && j.pin === pin);
+
+    if (!judge) {
+        document.getElementById("judgeLoginError").style.display = "block";
+        return;
+    }
+
+    currentJudge = judge;
+    showJudgePosters();
+}
+
+function judgeLogout() {
+    currentJudge = null;
+    showHome();
+}
+
+
+/* --------------------------------
+   JUDGE - ASSIGNED POSTERS
+-------------------------------- */
+
+async function showJudgePosters() {
+    if (!currentJudge) {
+        showJudgeLogin();
+        return;
+    }
+
+    hideAll();
+    document.getElementById("judgeWelcome").textContent =
+        `Logged in as ${currentJudge.name}. Click a poster to evaluate it.`;
+
+    document.getElementById("judgePostersPage").style.display = "block";
+    document.getElementById("judgePosterList").innerHTML = "<p>Loading your posters…</p>";
+    window.scrollTo(0, 0);
+
+    const evaluations = await getEvaluations();
+    const assigned = getAssignedPosters(currentJudge);
+
+    document.getElementById("judgePosterList").innerHTML = assigned.map(p => {
+        const existing = evaluations.find(e => e.posterId === p.id && e.judgeId === currentJudge.id);
+        const statusHtml = existing
+            ? `<span class="status-pill status-done">✓ Submitted — ${existing.total}/100</span>`
+            : `<span class="status-pill status-pending">Pending</span>`;
+
+        return `
+<div class="judge-poster-row">
+<div>
+<div class="poster-number">POSTER ${p.id}</div>
+<h3 style="margin-top:4px;">${p.title}</h3>
+<p style="color:var(--muted);font-size:14px;margin-top:4px;">${p.authors}</p>
+</div>
+<div style="display:flex;align-items:center;gap:15px;">
+${statusHtml}
+<button class="btn submit-btn" onclick="openEvaluation('${p.id}')">${existing ? "Edit Score" : "Evaluate"} →</button>
+</div>
+</div>
+`;
+    }).join("");
+}
+
+
+/* --------------------------------
+   JUDGE - EVALUATION FORM
+-------------------------------- */
+
+async function openEvaluation(posterId) {
+    if (!currentJudge) {
+        showJudgeLogin();
+        return;
+    }
+
+    const poster = posters.find(p => p.id === posterId);
+    if (!poster) return;
+
+    currentEvalPosterId = posterId;
+
+    hideAll();
+
+    document.getElementById("evalPosterHeader").innerHTML = `
+<h1 class="section-title">POSTER EVALUATION</h1>
+<p class="section-subtitle">${poster.title}</p>
+`;
+
+    document.getElementById("evalPosterNo").value = poster.id;
+    document.getElementById("evalJudgeName").value = currentJudge.name;
+    document.getElementById("judgeEvalPage").style.display = "block";
+    window.scrollTo(0, 0);
+
+    const evaluations = await getEvaluations();
+    const existing = evaluations.find(e => e.posterId === posterId && e.judgeId === currentJudge.id);
+
+    let currentGroup = null;
+    let fieldsHtml = "";
+
+    rubric.forEach(r => {
+        if (r.group !== currentGroup) {
+            currentGroup = r.group;
+            fieldsHtml += `<div class="rubric-group-title">${currentGroup}</div>`;
+        }
+        const value = existing ? existing.scores[r.key] : "";
+        fieldsHtml += `
+<div class="rubric-row">
+<label>${r.label}</label>
+<input type="number" min="0" max="${r.max}" step="1"
+    id="score_${r.key}" data-max="${r.max}" value="${value}"
+    oninput="clampScoreInput(this); updateEvalTotal();" required>
+<span style="color:var(--muted);white-space:nowrap;">/ ${r.max}</span>
+</div>
+`;
+    });
+
+    document.getElementById("rubricFields").innerHTML = fieldsHtml;
+    document.getElementById("evalComments").value = existing ? existing.comments : "";
+    document.getElementById("evalSuccess").style.display = "none";
+
+    updateEvalTotal();
+}
+
+function clampScoreInput(input) {
+    const max = Number(input.dataset.max);
+    let value = Number(input.value);
+    if (isNaN(value)) return;
+    if (value < 0) input.value = 0;
+    if (value > max) input.value = max;
+}
+
+function updateEvalTotal() {
+    let total = 0;
+    rubric.forEach(r => {
+        const el = document.getElementById(`score_${r.key}`);
+        const val = Number(el.value);
+        if (!isNaN(val)) total += val;
+    });
+    document.getElementById("evalTotal").textContent = total;
+}
+
+async function submitEvaluation(event) {
+    event.preventDefault();
+
+    if (!currentJudge || !currentEvalPosterId) return;
+
+    const scores = {};
+    let total = 0;
+    let valid = true;
+
+    rubric.forEach(r => {
+        const el = document.getElementById(`score_${r.key}`);
+        const val = Number(el.value);
+        if (el.value === "" || isNaN(val) || val < 0 || val > r.max) {
+            valid = false;
+        }
+        scores[r.key] = val;
+        total += val;
+    });
+
+    if (!valid) {
+        alert("Please enter a valid score (within range) for every criterion.");
+        return;
+    }
+
+    const submitBtn = event.target.querySelector("button[type=submit]");
+    if (submitBtn) submitBtn.disabled = true;
+
+    const ok = await saveEvaluation({
+        posterId: currentEvalPosterId,
+        judgeId: currentJudge.id,
+        judgeName: currentJudge.name,
+        scores: scores,
+        total: total,
+        comments: document.getElementById("evalComments").value,
+        timestamp: new Date().toISOString()
+    });
+
+    if (submitBtn) submitBtn.disabled = false;
+
+    if (!ok) {
+        alert("Could not save your score — check your connection and try again.");
+        return;
+    }
+
+    document.getElementById("evalSuccess").style.display = "block";
+
+    setTimeout(() => {
+        showJudgePosters();
+    }, 900);
+}
+
+async function downloadJudgeExport() {
+    if (!currentJudge) return;
+    const all = await getEvaluations();
+    const mine = all.filter(e => e.judgeId === currentJudge.id);
+    downloadFile(
+        `${currentJudge.id}_${currentJudge.name.replace(/\s+/g, "_")}_evaluations.json`,
+        JSON.stringify(mine, null, 2),
+        "application/json"
+    );
+}
+
+
+/* --------------------------------
+   ADMIN LOGIN
+-------------------------------- */
+
+function showAdminLogin() {
+    hideAll();
+    document.getElementById("adminLoginError").style.display = "none";
+    document.getElementById("adminPassword").value = "";
+    document.getElementById("adminLoginPage").style.display = "block";
+    window.scrollTo(0, 0);
+}
+
+async function adminLogin(event) {
+    event.preventDefault();
+    const pw = document.getElementById("adminPassword").value;
+
+    if (pw !== ADMIN_PASSWORD) {
+        document.getElementById("adminLoginError").style.display = "block";
+        return;
+    }
+
+    await showAdminPage();
+}
+
+function adminLogout() {
+    adminEvaluations = [];
+    if (adminChannel) {
+        sb.removeChannel(adminChannel);
+        adminChannel = null;
+    }
+    showHome();
+}
+
+
+/* --------------------------------
+   ADMIN DASHBOARD
+-------------------------------- */
+
+async function showAdminPage() {
+    hideAll();
+    document.getElementById("adminPage").style.display = "block";
+    document.getElementById("adminDataNote").textContent = "Loading live results…";
+    window.scrollTo(0, 0);
+
+    adminEvaluations = await getEvaluations();
+    renderAdminTables();
+
+    if (adminChannel) sb.removeChannel(adminChannel);
+    adminChannel = sb
+        .channel("admin-evaluations")
+        .on("postgres_changes", { event: "*", schema: "public", table: "evaluations" }, async () => {
+            adminEvaluations = await getEvaluations();
+            renderAdminTables();
+        })
+        .subscribe();
+}
+
+function computeRankings() {
+    return posters.map(p => {
+        const evals = adminEvaluations.filter(e => e.posterId === p.id);
+        const count = evals.length;
+        const average = count > 0
+            ? Math.round((evals.reduce((s, e) => s + e.total, 0) / count) * 10) / 10
+            : null;
+        return { poster: p, evals, count, average };
+    }).sort((a, b) => {
+        if (a.average === null && b.average === null) return 0;
+        if (a.average === null) return 1;
+        if (b.average === null) return -1;
+        return b.average - a.average;
+    });
+}
+
+function renderAdminTables() {
+    const ranked = computeRankings();
+    const medals = ["🥇", "🥈", "🥉"];
+
+    document.getElementById("adminDataNote").textContent =
+        `${adminEvaluations.length} evaluation(s) live from every judge, on every device — updates automatically.`;
+
+    let rankRank = 0;
+    const rankingRows = ranked.map(r => {
+        let medal = "";
+        if (r.count > 0) {
+            rankRank++;
+            medal = rankRank <= 3 ? medals[rankRank - 1] : String(rankRank);
+        } else {
+            medal = "—";
+        }
+        const judgeScores = r.evals.length
+            ? r.evals.map(e => `${e.judgeName}: ${e.total}`).join(", ")
+            : "No scores yet";
+        return `
+<tr>
+<td>${medal}</td>
+<td>${r.poster.id}</td>
+<td>${r.poster.title}</td>
+<td>${judgeScores}</td>
+<td>${r.count}</td>
+<td><strong>${r.average !== null ? r.average + " / 100" : "—"}</strong></td>
+</tr>`;
+    }).join("");
+
+    document.getElementById("rankingTable").innerHTML = `
+<tr>
+<th>Rank</th>
+<th>Poster No.</th>
+<th>Title</th>
+<th>Judge Scores</th>
+<th># Judges</th>
+<th>Average</th>
+</tr>
+${rankingRows}
+`;
+
+    const detailRows = adminEvaluations
+        .slice()
+        .sort((a, b) => a.posterId.localeCompare(b.posterId))
+        .map(e => {
+            const poster = posters.find(p => p.id === e.posterId);
+            return `
+<tr>
+<td>${e.posterId}</td>
+<td>${poster ? poster.title : "(unknown poster)"}</td>
+<td>${e.judgeName}</td>
+<td>${e.total} / 100</td>
+<td>${e.comments ? e.comments : "—"}</td>
+<td>${new Date(e.timestamp).toLocaleString()}</td>
+</tr>`;
+        }).join("");
+
+    document.getElementById("detailTable").innerHTML = `
+<tr>
+<th>Poster No.</th>
+<th>Title</th>
+<th>Judge</th>
+<th>Total</th>
+<th>Comments</th>
+<th>Submitted</th>
+</tr>
+${detailRows || "<tr><td colspan=\"6\">No evaluations submitted yet.</td></tr>"}
+`;
+}
+
+function exportResultsCSV() {
+    const ranked = computeRankings();
+    const rows = [];
+
+    rows.push(["Conference Poster Judging — Ranking Summary"]);
+    rows.push(["Rank", "Poster No.", "Title", "Judge Scores", "# Judges", "Average"]);
+
+    let rankNum = 0;
+    ranked.forEach(r => {
+        let rankLabel = "—";
+        if (r.count > 0) {
+            rankNum++;
+            rankLabel = String(rankNum);
+        }
+        const judgeScores = r.evals.map(e => `${e.judgeName}: ${e.total}`).join(" | ");
+        rows.push([
+            rankLabel,
+            r.poster.id,
+            r.poster.title,
+            judgeScores,
+            r.count,
+            r.average !== null ? r.average : ""
+        ]);
+    });
+
+    rows.push([]);
+    rows.push(["Detailed Evaluations"]);
+    rows.push(["Poster No.", "Title", "Judge", ...rubric.map(r => r.label), "Total", "Comments", "Submitted"]);
+
+    adminEvaluations
+        .slice()
+        .sort((a, b) => a.posterId.localeCompare(b.posterId))
+        .forEach(e => {
+            const poster = posters.find(p => p.id === e.posterId);
+            rows.push([
+                e.posterId,
+                poster ? poster.title : "",
+                e.judgeName,
+                ...rubric.map(r => e.scores[r.key]),
+                e.total,
+                e.comments || "",
+                new Date(e.timestamp).toLocaleString()
+            ]);
+        });
+
+    const csv = rows.map(row =>
+        row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")
+    ).join("\n");
+
+    downloadFile("psn2026_poster_judging_results.csv", csv, "text/csv");
+}
+
+async function resetAllData() {
+    if (!confirm("This permanently deletes ALL judge scores for ALL posters from the shared database. This cannot be undone. Continue?")) {
+        return;
+    }
+    const { error } = await sb.from("evaluations").delete().not("id", "is", null);
+    if (error) {
+        alert("Could not reset scores — check your connection and try again.");
+        console.error(error);
+        return;
+    }
+    adminEvaluations = [];
+    renderAdminTables();
+}
+
+function downloadFile(filename, content, mimeType) {
+    const blob = new Blob([content], { type: mimeType });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+
+/* --------------------------------
+   HOME
+-------------------------------- */
+
+function hideAll() {
+
+clearInterval(qaPollInterval);
+
+document.getElementById("homePage").style.display = "none";
+
+document.getElementById("galleryPage").style.display = "none";
+
+document.getElementById("posterPage").style.display = "none";
+
+document.getElementById("aboutPage").style.display = "none";
+
+document.getElementById("portalChoicePage").style.display = "none";
+
+document.getElementById("judgeLoginPage").style.display = "none";
+
+document.getElementById("judgePostersPage").style.display = "none";
+
+document.getElementById("judgeEvalPage").style.display = "none";
+
+document.getElementById("adminLoginPage").style.display = "none";
+
+document.getElementById("adminPage").style.display = "none";
+
+document.getElementById("presenterLoginPage").style.display = "none";
+
+document.getElementById("presenterQAPage").style.display = "none";
+
+}
+
+
+function showHome() {
+
+hideAll();
+
+document.getElementById("homePage").style.display = "block";
+
+window.scrollTo(0,0);
+
+}
+
+
+function showGallery() {
+
+hideAll();
+
+document.getElementById("galleryPage").style.display = "block";
+
+renderGallery();
+
+window.scrollTo(0,0);
+
+}
+
+
+function showAbout() {
+
+hideAll();
+
+document.getElementById("aboutPage").style.display = "block";
+
+window.scrollTo(0,0);
+
+}
+
+
+/* --------------------------------
+   POSTER GALLERY
+-------------------------------- */
+
+function renderGallery() {
+
+const grid =
+document.getElementById("galleryGrid");
+
+const featured =
+document.getElementById("featuredGrid");
+
+const search =
+document.getElementById("searchBox")
+?.value.toLowerCase() || "";
+
+const category =
+document.getElementById("categoryFilter")
+?.value || "All";
+
+
+const filtered =
+posters.filter(p => {
+
+const matchesSearch =
+
+p.title.toLowerCase().includes(search) ||
+
+p.authors.toLowerCase().includes(search) ||
+
+p.institution.toLowerCase().includes(search);
+
+const matchesCategory =
+
+category === "All" ||
+
+p.category === category;
+
+return matchesSearch && matchesCategory;
+
+});
+
+
+grid.innerHTML =
+filtered.map(createPosterCard).join("");
+
+
+if(featured) {
+
+featured.innerHTML =
+posters.slice(0,3)
+.map(createPosterCard)
+.join("");
+
+}
+
+}
+
+
+/* --------------------------------
+   POSTER CARD
+-------------------------------- */
+
+function createPosterCard(p) {
+
+return `
+
+<div class="poster-card">
+
+<div class="poster-number">
+
+POSTER ${p.id}
+
+</div>
+
+<div class="tag">
+
+${p.category}
+
+</div>
+
+<h3>
+
+${p.title}
+
+</h3>
+
+<p>
+
+${p.abstract}
+
+</p>
+
+<div class="poster-meta">
+
+<strong>👤</strong> ${p.authors}
+
+<br>
+
+<strong>🏛️</strong> ${p.institution}
+
+</div>
+
+<button
+class="btn submit-btn"
+onclick="openPoster('${p.id}')">
+
+VIEW POSTER →
+
+</button>
+
+</div>
+
+`;
+
+}
+
+
+/* --------------------------------
+   OPEN POSTER
+-------------------------------- */
+
+function openPoster(id) {
+
+const poster =
+posters.find(p => p.id === id);
+
+if(!poster) return;
+
+hideAll();
+
+currentPublicPosterId = id;
+
+document.getElementById("posterPage").style.display =
+"block";
+
+
+document.getElementById("posterHeader").innerHTML = `
+
+<h1>${poster.title}</h1>
+
+<p>
+${poster.authors}
+</p>
+
+<p>
+${poster.institution}
+</p>
+
+`;
+
+
+document.getElementById("posterAbstract").textContent =
+poster.abstract;
+
+
+document.getElementById("posterPresenter").textContent =
+poster.authors;
+
+
+document.getElementById("posterImage").src =
+poster.poster;
+
+
+const video =
+document.getElementById("posterVideo");
+
+const source =
+document.getElementById("videoSource");
+
+source.src =
+poster.video;
+
+video.load();
+
+
+renderQAThread();
+
+clearInterval(qaPollInterval);
+
+qaPollInterval = setInterval(renderQAThread, 8000);
+
+if (qaChannel) sb.removeChannel(qaChannel);
+
+qaChannel = sb
+    .channel(`public-questions-${id}`)
+    .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "questions", filter: `poster_id=eq.${id}` },
+        () => renderQAThread()
+    )
+    .subscribe();
+
+
+window.scrollTo(0,0);
+
+}
+
+
+/* --------------------------------
+   QUESTION FORM / LIVE Q&A
+-------------------------------- */
+
+function questionRowToObject(row) {
+    return {
+        id: row.id,
+        posterId: row.poster_id,
+        name: row.name,
+        question: row.question,
+        answer: row.answer,
+        answeredBy: row.answered_by,
+        timestamp: row.created_at,
+        answeredAt: row.answered_at
+    };
+}
+
+async function getQuestionsForPoster(posterId) {
+    const { data, error } = await sb
+        .from("questions")
+        .select("*")
+        .eq("poster_id", posterId)
+        .order("created_at", { ascending: false });
+
+    if (error) {
+        console.error(error);
+        return [];
+    }
+    return data.map(questionRowToObject);
+}
+
+async function insertQuestion(q) {
+    const { error } = await sb.from("questions").insert({
+        id: q.id,
+        poster_id: q.posterId,
+        name: q.name,
+        question: q.question,
+        answer: q.answer,
+        answered_by: q.answeredBy,
+        created_at: q.timestamp,
+        answered_at: q.answeredAt
+    });
+    if (error) {
+        console.error(error);
+        return false;
+    }
+    return true;
+}
+
+async function updateQuestionAnswer(id, answer, answeredBy) {
+    const { error } = await sb
+        .from("questions")
+        .update({
+            answer: answer,
+            answered_by: answeredBy,
+            answered_at: new Date().toISOString()
+        })
+        .eq("id", id);
+
+    if (error) {
+        console.error(error);
+        return false;
+    }
+    return true;
+}
+
+async function renderQAThread() {
+    if (!currentPublicPosterId) return;
+
+    const el = document.getElementById("qaThread");
+    if (!el) return;
+
+    const items = await getQuestionsForPoster(currentPublicPosterId);
+
+    if (!items.length) {
+        el.innerHTML = `<p style="color:var(--muted);">No questions yet — be the first to ask.</p>`;
+        return;
+    }
+
+    el.innerHTML = items.map(q => `
+<div style="border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin-bottom:12px;">
+<p style="margin-bottom:6px;"><strong>${q.name}</strong> <span style="color:var(--muted);font-size:12px;">${new Date(q.timestamp).toLocaleString()}</span></p>
+<p style="margin-bottom:10px;">${q.question}</p>
+${
+    q.answer
+    ? `<div style="background:var(--light);border-radius:8px;padding:12px 14px;">
+<p style="font-size:12px;color:var(--secondary);font-weight:bold;margin-bottom:4px;">🎤 PRESENTER'S ANSWER</p>
+<p>${q.answer}</p>
+</div>`
+    : `<span class="status-pill status-pending">Awaiting presenter's answer</span>`
+}
+</div>
+`).join("");
+}
+
+async function submitQuestion(event) {
+    event.preventDefault();
+
+    const name = document.getElementById("questionName").value.trim();
+    const question = document.getElementById("questionText").value.trim();
+
+    if (!name || !question || !currentPublicPosterId) {
+        return;
+    }
+
+    const submitBtn = event.target.querySelector("button[type=submit]");
+    if (submitBtn) submitBtn.disabled = true;
+
+    const ok = await insertQuestion({
+        id: `${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+        posterId: currentPublicPosterId,
+        name: name,
+        question: question,
+        answer: null,
+        answeredBy: null,
+        timestamp: new Date().toISOString(),
+        answeredAt: null
+    });
+
+    if (submitBtn) submitBtn.disabled = false;
+
+    if (!ok) {
+        alert("Could not submit your question — check your connection and try again.");
+        return;
+    }
+
+    document.getElementById("successMessage")
+    .style.display = "block";
+
+    document.getElementById("questionName").value = "";
+    document.getElementById("questionText").value = "";
+
+    renderQAThread();
+}
+
+
+/* --------------------------------
+   PRESENTER PORTAL
+-------------------------------- */
+
+function getPresenterPin(posterId) {
+    return "PW" + posterId;
+}
+
+function showPresenterLogin() {
+    hideAll();
+    const select = document.getElementById("presenterSelect");
+    select.innerHTML = posters.map(p => `<option value="${p.id}">${p.id} — ${p.title}</option>`).join("");
+    document.getElementById("presenterLoginError").style.display = "none";
+    document.getElementById("presenterPin").value = "";
+    document.getElementById("presenterLoginPage").style.display = "block";
+    window.scrollTo(0, 0);
+}
+
+function presenterLogin(event) {
+    event.preventDefault();
+    const id = document.getElementById("presenterSelect").value;
+    const pin = document.getElementById("presenterPin").value.trim();
+
+    if (pin !== getPresenterPin(id)) {
+        document.getElementById("presenterLoginError").style.display = "block";
+        return;
+    }
+
+    currentPresenterPosterId = id;
+    showPresenterQA();
+}
+
+function presenterLogout() {
+    currentPresenterPosterId = null;
+    clearInterval(presenterPollInterval);
+    if (presenterChannel) {
+        sb.removeChannel(presenterChannel);
+        presenterChannel = null;
+    }
+    showHome();
+}
+
+async function showPresenterQA() {
+    if (!currentPresenterPosterId) {
+        showPresenterLogin();
+        return;
+    }
+
+    hideAll();
+
+    const poster = posters.find(p => p.id === currentPresenterPosterId);
+    document.getElementById("presenterWelcome").textContent =
+        poster ? `Questions for: ${poster.title}` : "";
+
+    document.getElementById("presenterQAList").innerHTML = "<p>Loading questions…</p>";
+    document.getElementById("presenterQAPage").style.display = "block";
+    window.scrollTo(0, 0);
+
+    await renderPresenterQA();
+
+    if (presenterChannel) sb.removeChannel(presenterChannel);
+    presenterChannel = sb
+        .channel(`presenter-questions-${currentPresenterPosterId}`)
+        .on(
+            "postgres_changes",
+            { event: "*", schema: "public", table: "questions", filter: `poster_id=eq.${currentPresenterPosterId}` },
+            () => renderPresenterQA()
+        )
+        .subscribe();
+
+    clearInterval(presenterPollInterval);
+    presenterPollInterval = setInterval(renderPresenterQA, 8000);
+}
+
+async function renderPresenterQA() {
+    if (!currentPresenterPosterId) return;
+
+    const items = await getQuestionsForPoster(currentPresenterPosterId);
+    const list = document.getElementById("presenterQAList");
+
+    if (!items.length) {
+        list.innerHTML = `<p style="color:var(--muted);">No questions have come in yet. This page updates live.</p>`;
+        return;
+    }
+
+    list.innerHTML = items.map(q => `
+<div class="judge-poster-row" style="align-items:flex-start;flex-direction:column;">
+<p style="margin-bottom:6px;"><strong>${q.name}</strong> <span style="color:var(--muted);font-size:12px;">${new Date(q.timestamp).toLocaleString()}</span></p>
+<p style="margin-bottom:14px;">${q.question}</p>
+<textarea id="reply_${q.id}" placeholder="Type your answer..." style="width:100%;margin-bottom:10px;">${q.answer || ""}</textarea>
+<button class="btn submit-btn" onclick="answerQuestion('${q.id}')">${q.answer ? "Update Answer" : "Submit Answer"}</button>
+</div>
+`).join("");
+}
+
+async function answerQuestion(questionId) {
+    const textarea = document.getElementById(`reply_${questionId}`);
+    const answer = textarea.value.trim();
+    if (!answer) return;
+
+    const button = textarea.nextElementSibling;
+    if (button) button.disabled = true;
+
+    const ok = await updateQuestionAnswer(questionId, answer, currentPresenterPosterId);
+
+    if (!ok) {
+        alert("Could not save your answer — check your connection and try again.");
+        if (button) button.disabled = false;
+        return;
+    }
+
+    renderPresenterQA();
+}
+
+
+/* --------------------------------
+   INITIAL LOAD
+-------------------------------- */
+
+function populateCategoryFilter() {
+    const select = document.getElementById("categoryFilter");
+    if (!select) return;
+
+    const categories = [...new Set(posters.map(p => p.category))].sort();
+
+    select.innerHTML =
+        `<option value="All">All Categories</option>` +
+        categories.map(c => `<option value="${c}">${c}</option>`).join("");
+}
+
+populateCategoryFilter();
+renderGallery();
+
+</script>
+
+</body>
+</html>
