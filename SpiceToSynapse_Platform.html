@@ -908,109 +908,11 @@ async function runCohort() {
 
   const SYSTEM = `You are a biostatistician specialising in synthetic preclinical neuropharmacology data (Gaussian copula). Reference: 84 real animals, 31 biomarkers, 7 groups, scopolamine AD model, LDA 84.8% accuracy. Respond ONLY with valid compact JSON — no markdown, no line breaks inside string values, keep all string fields under 100 chars.`;
 
-  const USER = `Generate a virtual preclinical cohort design and predicted biomarker outputs for:
-- Treatment: "${compound}"
-- Disease model: ${model}
-- Virtual cohort size: ${n} subjects
-- Treatment groups: ${groups}
-- Estimated effect size: ${effectSize}
-- Biomarkers to model: ${biomarkers}
-- Reference drug (positive control): "${refDrug || 'none'}"
-
-Use the validated cinnamon-scopolamine study as your baseline reference: 84 animals, 7 groups (Control, SCP disease, SCP+Donepezil, Pre-treat 400mg, Post-treat 200mg, Co-treat 200mg, Co-treat 400mg), key findings: AChE inhibition 65%, NF-κB reduction 48%, NOR improved, EscapeLatency reduced.
-
-Return JSON:
-{
-  "study_design": {
-    "total_n": 120,
-    "groups": [
-      {"name": "Control", "n": 17, "description": "Naive animals"},
-      {"name": "Disease model", "n": 17, "description": "SCP-induced"},
-      {"name": "Reference drug", "n": 17, "description": "Donepezil 5mg/kg"},
-      {"name": "Low dose", "n": 17, "description": "200mg/kg treatment"},
-      {"name": "High dose", "n": 17, "description": "400mg/kg treatment"},
-      {"name": "Pre-treatment", "n": 18, "description": "Preventive dosing"},
-      {"name": "Post-treatment", "n": 17, "description": "Therapeutic dosing"}
-    ],
-    "model_notes": "brief notes on the disease model",
-    "power_analysis": {
-      "alpha": 0.05,
-      "power": 0.85,
-      "min_detectable_effect": 0.45,
-      "recommended_n_per_group": 15
-    }
-  },
-  "predicted_biomarkers": [
-    {
-      "biomarker": "AChE",
-      "unit": "U/mg protein",
-      "direction_disease": "decrease",
-      "direction_treatment": "increase",
-      "groups": {
-        "Control": {"mean": 45.2, "sd": 4.1},
-        "Disease": {"mean": 18.3, "sd": 3.2},
-        "Reference": {"mean": 38.7, "sd": 3.8},
-        "Low dose": {"mean": 28.4, "sd": 4.2},
-        "High dose": {"mean": 35.1, "sd": 3.9},
-        "Pre-treatment": {"mean": 37.2, "sd": 3.5},
-        "Post-treatment": {"mean": 31.8, "sd": 4.0}
-      },
-      "p_value_treatment_vs_disease": 0.003,
-      "interpretation": "one sentence"
-    },
-    {
-      "biomarker": "NF-κB",
-      "unit": "pg/mL",
-      "direction_disease": "increase",
-      "direction_treatment": "decrease",
-      "groups": {
-        "Control": {"mean": 120.4, "sd": 12.3},
-        "Disease": {"mean": 298.7, "sd": 28.4},
-        "Reference": {"mean": 158.2, "sd": 15.6},
-        "Low dose": {"mean": 210.3, "sd": 22.1},
-        "High dose": {"mean": 165.8, "sd": 18.4},
-        "Pre-treatment": {"mean": 148.9, "sd": 14.2},
-        "Post-treatment": {"mean": 188.4, "sd": 20.3}
-      },
-      "p_value_treatment_vs_disease": 0.001,
-      "interpretation": "one sentence"
-    },
-    {
-      "biomarker": "BDNF",
-      "unit": "pg/mL",
-      "direction_disease": "decrease",
-      "direction_treatment": "increase",
-      "groups": {
-        "Control": {"mean": 850.2, "sd": 72.3},
-        "Disease": {"mean": 412.8, "sd": 48.6},
-        "Reference": {"mean": 698.4, "sd": 65.2},
-        "Low dose": {"mean": 562.1, "sd": 58.4},
-        "High dose": {"mean": 641.8, "sd": 62.3},
-        "Pre-treatment": {"mean": 712.3, "sd": 68.1},
-        "Post-treatment": {"mean": 598.7, "sd": 61.4}
-      },
-      "p_value_treatment_vs_disease": 0.01,
-      "interpretation": "one sentence"
-    }
-  ],
-  "ml_prediction": {
-    "expected_lda_accuracy": "78-86%",
-    "top_discriminant_features": ["AChE", "NF-κB", "BDNF", "MDA", "Escape Latency"],
-    "neuroprotective_classification_accuracy": "95-100%",
-    "notes": "Based on the cinnamon reference model. Actual accuracy depends on real effect magnitude."
-  },
-  "synthetic_data_fidelity": {
-    "method": "Gaussian copula",
-    "corr_of_corrs": 0.35,
-    "ks_pass_rate": "97%",
-    "real_vs_synthetic_summary": "Synthetic data preserves >95% of pairwise correlation structure"
-  },
-  "ethical_benefit": {
-    "animals_replaced": "This virtual cohort design reduces required real animals by 40-60% through power analysis optimisation and synthetic data augmentation",
-    "nc3r_principle": "Replaces exploratory studies; Reduces final cohort size; Refines endpoint selection"
-  },
-  "overall_summary": "3-4 sentence summary of what this virtual cohort predicts and what it means for the drug development pipeline"
-}`;
+  const USER = `Virtual preclinical cohort for:
+Treatment: "${compound}", Model: ${model}, N: ${n}, Groups: ${groups}, Effect size: ${effectSize}, Biomarkers: ${biomarkers}, Ref drug: "${refDrug||'none'}".
+Reference: cinnamon-scopolamine study — 84 animals, 7 groups, key results: AChE inhibition 65%, NF-kB reduction 48%.
+Return compact JSON (strings under 100 chars, NO line breaks inside string values):
+{"study_design":{"total_n":${n},"groups":[{"name":"Control","n":17,"description":"Naive"},{"name":"Disease","n":17,"description":"Model only"},{"name":"Reference","n":17,"description":"Ref drug"},{"name":"Low dose","n":17,"description":"Low dose tx"},{"name":"High dose","n":16,"description":"High dose tx"},{"name":"Pre-tx","n":17,"description":"Preventive"},{"name":"Post-tx","n":17,"description":"Therapeutic"}],"model_notes":"brief note","power_analysis":{"alpha":0.05,"power":0.85,"min_detectable_effect":0.45,"recommended_n_per_group":15}},"predicted_biomarkers":[{"biomarker":"AChE","unit":"U/mg protein","direction_disease":"decrease","direction_treatment":"increase","groups":{"Control":{"mean":45.2,"sd":4.1},"Disease":{"mean":18.3,"sd":3.2},"Reference":{"mean":38.7,"sd":3.8},"Low dose":{"mean":28.4,"sd":4.2},"High dose":{"mean":35.1,"sd":3.9},"Pre-tx":{"mean":37.2,"sd":3.5},"Post-tx":{"mean":31.8,"sd":4.0}},"p_value_treatment_vs_disease":0.003,"interpretation":"brief"},{"biomarker":"NF-kB","unit":"pg/mL","direction_disease":"increase","direction_treatment":"decrease","groups":{"Control":{"mean":120.4,"sd":12.3},"Disease":{"mean":298.7,"sd":28.4},"Reference":{"mean":158.2,"sd":15.6},"Low dose":{"mean":210.3,"sd":22.1},"High dose":{"mean":165.8,"sd":18.4},"Pre-tx":{"mean":148.9,"sd":14.2},"Post-tx":{"mean":188.4,"sd":20.3}},"p_value_treatment_vs_disease":0.001,"interpretation":"brief"},{"biomarker":"BDNF","unit":"pg/mL","direction_disease":"decrease","direction_treatment":"increase","groups":{"Control":{"mean":850.2,"sd":72.3},"Disease":{"mean":412.8,"sd":48.6},"Reference":{"mean":698.4,"sd":65.2},"Low dose":{"mean":562.1,"sd":58.4},"High dose":{"mean":641.8,"sd":62.3},"Pre-tx":{"mean":712.3,"sd":68.1},"Post-tx":{"mean":598.7,"sd":61.4}},"p_value_treatment_vs_disease":0.01,"interpretation":"brief"}],"ml_prediction":{"expected_lda_accuracy":"78-86%","top_discriminant_features":["AChE","NF-kB","BDNF","MDA","Escape Latency"],"neuroprotective_classification_accuracy":"95-100%","notes":"brief"},"synthetic_data_fidelity":{"method":"Gaussian copula","corr_of_corrs":0.35,"ks_pass_rate":"97%","real_vs_synthetic_summary":"brief"},"ethical_benefit":{"animals_replaced":"Reduces real study size 40-60%","nc3r_principle":"Replace, Reduce, Refine"},"overall_summary":"2 sentence summary"}`;
 
   const res = document.getElementById('c-results');
   let data;
@@ -1200,93 +1102,12 @@ async function runSimulator() {
 
   const SYSTEM = `You are a clinical pharmacologist bridging African preclinical plant data to human clinical trials (COEST Nigeria). Simulate allometric scaling, PK/PD, Phase I/II prediction, IND readiness. Reference drug: Donepezil 5mg/day, AChE 40-60% inhibition. Respond ONLY with valid compact JSON — no markdown, keep all string values under 120 chars.`;
 
-  const USER = `Simulate the human clinical translation for:
-- Compound: "${compound}"
-- Preclinical dose: "${dose}"
-- Primary mechanism: ${mech}
-- Preclinical efficacy: "${efficacy}"
-- Target population: ${pop}
-- BBB permeability: ${bbb}
+  const USER = `Human trial simulation for:
+Compound: "${compound}", Dose: "${dose}", Mechanism: ${mech}, Efficacy: "${efficacy}", Population: ${pop}, BBB: ${bbb}.
+Reference: Donepezil 5mg/day oral, AChE 40-60% inhibition, NOAEL ~10mg, well-tolerated. Our cinnamon: 84 animals, 84.8% ML accuracy.
+Return compact JSON (strings under 120 chars, NO line breaks inside strings):
+{"allometric_scaling":{"animal_dose_mg_kg":400,"animal_species":"rat","allometric_exponent":0.67,"human_equivalent_dose_mg_kg":64.6,"human_dose_70kg_mg":4520,"adjusted_for_bioavailability":"x","comparison_to_reference":"x","notes":"x"},"pk_profile":{"route":"Oral","estimated_tmax_h":2.5,"estimated_cmax_ng_ml":120,"estimated_half_life_h":5.2,"volume_of_distribution":"x","protein_binding":"x","metabolism":"x","excretion":"x","drug_interactions_risk":["x"],"bbb_penetration_predicted":"x"},"phase1_simulation":{"starting_dose_mg":50,"dose_escalation":["50mg","100mg","200mg","400mg","600mg"],"predicted_meld":"x","predicted_noael_mg":600,"safety_signals_to_watch":["x"],"predicted_adverse_events":[{"event":"Mild nausea","frequency":"15-20%","severity":"Grade 1","manageable":true},{"event":"Headache","frequency":"10-15%","severity":"Grade 1","manageable":true},{"event":"Cholinergic effects","frequency":"8-12%","severity":"Grade 1-2","manageable":true}],"phase1_duration_months":6,"cohort_size":24,"predicted_outcome":"x"},"phase2_simulation":{"primary_endpoint":"x","secondary_endpoints":["x"],"predicted_effect_size":0.45,"sample_size_needed":120,"duration_months":12,"predicted_response_rate":"x","biomarker_responders":{"AChE_inhibition":"x","NF_kB_suppression":"x","BDNF_increase":"x"},"vs_placebo_prediction":"x","probability_of_success":0.48},"african_population_considerations":{"cyp2d6_frequency":"x","genetic_factors":"x","dietary_interactions":"x","trial_site_recommendation":"x","ethical_advantage":"x"},"ind_readiness":{"overall_score":62,"completed":["Ethnobotanical ID","Preclinical in vivo","Computational ADMET","Network pharmacology","ML biomarker classification"],"needed_before_ind":["In-vitro IC50","GLP toxicology","GMP synthesis","BBB MDCK-II","Formulation"],"estimated_timeline_to_ind":"24-36 months","estimated_cost_usd":"$800K-$1.5M","funding_routes":["TETFund","NIH Fogarty","Wellcome Trust Africa","EDCTP"]},"regulatory_pathway":{"nafdac_route":"x","ema_route":"x","breakthrough_potential":"x","ip_strategy":"x"},"simulation_narrative":"2 sentence summary for grant application"}`;
 
-Reference: Donepezil (Aricept) is the gold standard AChE inhibitor — 5mg/day oral, AChE inhibition 40-60% at therapeutic doses, Phase I NOAEL ~10mg, well-tolerated. Our cinnamon data (84 animals, 31 biomarkers) shows comparable AChE inhibition at 400mg/kg rat dose.
-
-Return JSON:
-{
-  "allometric_scaling": {
-    "animal_dose_mg_kg": 400,
-    "animal_species": "rat",
-    "allometric_exponent": 0.67,
-    "human_equivalent_dose_mg_kg": 64.6,
-    "human_dose_70kg_mg": 4520,
-    "adjusted_for_bioavailability": "650 mg oral (assuming 15% bioavailability)",
-    "comparison_to_reference": "Donepezil equivalent range: 5-23mg. Our estimate needs bioavailability optimisation.",
-    "notes": "Allometric scaling uses FDA guidance for dose translation"
-  },
-  "pk_profile": {
-    "route": "Oral",
-    "estimated_tmax_h": 2.5,
-    "estimated_cmax_ng_ml": 120,
-    "estimated_half_life_h": 5.2,
-    "volume_of_distribution": "Moderate — consistent with CNS penetrance",
-    "protein_binding": "~70% estimated",
-    "metabolism": "Hepatic — CYP3A4 primary",
-    "excretion": "Renal/biliary mixed",
-    "drug_interactions_risk": ["CYP3A4 inhibitors", "anticholinergics"],
-    "bbb_penetration_predicted": "Brain:plasma ratio ~0.3-0.8"
-  },
-  "phase1_simulation": {
-    "starting_dose_mg": 50,
-    "dose_escalation": ["50mg", "100mg", "200mg", "400mg", "600mg"],
-    "predicted_meld": "400mg (maximum efficacious dose)",
-    "predicted_noael_mg": 600,
-    "safety_signals_to_watch": ["LFTs at escalation", "QTc interval", "cholinergic side effects", "CYP3A4 interactions"],
-    "predicted_adverse_events": [
-      {"event": "Mild nausea", "frequency": "15-20%", "severity": "Grade 1", "manageable": true},
-      {"event": "Headache", "frequency": "10-15%", "severity": "Grade 1", "manageable": true},
-      {"event": "Cholinergic effects (diarrhoea)", "frequency": "8-12%", "severity": "Grade 1-2", "manageable": true}
-    ],
-    "phase1_duration_months": 6,
-    "cohort_size": 24,
-    "predicted_outcome": "Favourable safety profile expected based on natural compound precedent and Lipinski compliance"
-  },
-  "phase2_simulation": {
-    "primary_endpoint": "ADAS-Cog 12 (Alzheimer) or NIHSS improvement (Stroke)",
-    "secondary_endpoints": ["MMSE", "CDR-SB", "BDNF plasma levels", "AChE RBC activity", "NF-κB serum levels"],
-    "predicted_effect_size": 0.45,
-    "sample_size_needed": 120,
-    "duration_months": 12,
-    "predicted_response_rate": "38-52%",
-    "biomarker_responders": {
-      "AChE_inhibition": "45-65% reduction predicted at therapeutic dose",
-      "NF-kB_suppression": "30-48% reduction predicted",
-      "BDNF_increase": "25-42% increase predicted"
-    },
-    "vs_placebo_prediction": "Cohen's d ≈ 0.42-0.55 — clinically meaningful effect expected",
-    "probability_of_success": 0.48
-  },
-  "african_population_considerations": {
-    "cyp2d6_frequency": "CYP2D6 poor metaboliser frequency higher in West African populations (~8%) — dose adjustment may be needed",
-    "genetic_factors": "APOE4 frequency varies; Nigerian cohorts show different AD risk genetics vs Caucasian trials",
-    "dietary_interactions": "Cinnamon a familiar dietary component in West Africa — baseline exposure may affect pharmacokinetics",
-    "trial_site_recommendation": "LUTH Lagos, UCH Ibadan, and OOUTH Sagamu as ideal Phase II sites",
-    "ethical_advantage": "African-origin compound tested in African patients — strong ethical and IP position"
-  },
-  "ind_readiness": {
-    "overall_score": 62,
-    "completed": ["Ethnobotanical identification", "Preclinical in vivo (84 animals)", "Computational ADMET", "Network pharmacology", "ML biomarker classification"],
-    "needed_before_ind": ["In-vitro AChE/BACE1 IC50 confirmation", "GLP 28-day toxicology (rat + dog)", "GMP synthesis and characterisation", "Formal BBB permeability (MDCK-II)", "Formulation development"],
-    "estimated_timeline_to_ind": "24-36 months with funding",
-    "estimated_cost_usd": "$800K - $1.5M (IND package)",
-    "funding_routes": ["TETFund Research Grants", "NIH Fogarty International", "Wellcome Trust Africa", "EDCTP (European & Developing Countries Clinical Trials Partnership)"]
-  },
-  "regulatory_pathway": {
-    "nafdac_route": "Herbal Medicine regulatory pathway — faster than synthetic drug for well-characterised botanicals",
-    "ema_route": "Traditional Herbal Medicinal Products Directive (THMPD) — 30 years use documentation needed",
-    "breakthrough_potential": "If Phase II positive: Breakthrough Therapy designation possible given unmet need in African AD/stroke",
-    "ip_strategy": "File patent on specific extraction method and formulation — compound itself not patentable as natural product"
-  },
-  "simulation_narrative": "4-5 sentence expert summary of what this human simulation predicts for this compound's clinical future, written for a grant application or investor briefing"
-}`;
 
   const res = document.getElementById('sim-results');
   let data;
