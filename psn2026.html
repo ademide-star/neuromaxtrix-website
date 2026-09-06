@@ -344,10 +344,12 @@ section {
     overflow: hidden;
 }
 
-.video-box video {
+.video-box video,
+.video-box iframe {
     width: 100%;
     display: block;
     min-height: 350px;
+    border: none;
 }
 
 /* INFORMATION */
@@ -674,7 +676,8 @@ footer p {
         gap: 15px;
     }
 
-    .video-box video {
+    .video-box video,
+    .video-box iframe {
         min-height: 230px;
     }
 }
@@ -931,15 +934,9 @@ onclick="showGallery()">
 
 <h2>🎤 5-Minute Presentation</h2>
 
-<div class="video-box">
+<div class="video-box" id="videoContainer">
 
-<video
-id="posterVideo"
-controls
-poster="">
-<source id="videoSource" src="" type="video/mp4">
-Your browser does not support video playback.
-</video>
+<p style="color:#aaa;padding:40px 0;">Video not uploaded yet.</p>
 
 </div>
 
@@ -1465,15 +1462,64 @@ Incorrect PIN. Please try again.
 <div class="judge-topbar">
 
 <div>
-<h1 class="section-title" style="margin-bottom:4px;">💬 Live Questions</h1>
+<h1 class="section-title" style="margin-bottom:4px;">🎤 Presenter Dashboard</h1>
 <p class="section-subtitle" id="presenterWelcome" style="margin-bottom:0;"></p>
 </div>
 
-<div style="display:flex;gap:10px;flex-wrap:wrap;">
-<button class="btn btn-secondary" style="color:var(--primary);border:1px solid var(--border);" onclick="renderPresenterQA()">🔄 Refresh</button>
 <button class="btn btn-secondary" style="color:var(--primary);border:1px solid var(--border);" onclick="presenterLogout()">Log Out</button>
+
 </div>
 
+
+<div class="info-card" style="margin-bottom:30px;">
+
+<h2>🖼️ Your Poster Details</h2>
+<p style="color:var(--muted);margin-bottom:20px;">Fill this in yourself — it goes live on your poster page immediately, no need to send it to the organizers separately.</p>
+
+<form onsubmit="savePresenterPosterDetails(event)">
+
+<div class="form-group">
+<label>Specialty / Cluster</label>
+<select id="posterCategoryInput" required></select>
+</div>
+
+<div class="form-group">
+<label>Institution / Affiliation</label>
+<input type="text" id="posterInstitutionInput" placeholder="e.g. Department of Physiology, University of Ilorin" required>
+</div>
+
+<div class="form-group">
+<label>Full Abstract</label>
+<textarea id="posterAbstractInput" placeholder="Paste your full abstract here..." style="min-height:140px;" required></textarea>
+</div>
+
+<div class="form-group">
+<label>Poster Image — PNG or JPG, max 5MB, 2000–3000px on the longest side</label>
+<input type="file" id="posterImageInput" accept="image/png,image/jpeg">
+</div>
+
+<div class="form-group">
+<label>5-Minute Video — upload as <strong>Unlisted</strong> on YouTube, then paste the link here</label>
+<input type="url" id="posterVideoInput" placeholder="https://youtube.com/watch?v=...">
+<p style="color:var(--muted);font-size:13px;margin-top:6px;">
+Unlisted means only people with the link can view it — it won't show up in searches or on your channel.
+On YouTube: Upload → set visibility to "Unlisted" → copy the link once it's done processing.
+</p>
+</div>
+
+<button class="btn submit-btn" type="submit">Save Poster Details</button>
+
+<p id="posterDetailsStatus" style="display:none;margin-top:12px;color:var(--secondary);font-weight:bold;"></p>
+
+</form>
+
+</div>
+
+
+<h2 style="margin-bottom:15px;">💬 Live Questions</h2>
+
+<div style="display:flex;justify-content:flex-end;margin-bottom:15px;">
+<button class="btn btn-secondary" style="color:var(--primary);border:1px solid var(--border);" onclick="renderPresenterQA()">🔄 Refresh</button>
 </div>
 
 <div id="presenterQAList"></div>
@@ -1550,12 +1596,24 @@ const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+const POSTER_BUCKET = "poster-media";
+const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
+const MAX_VIDEO_BYTES = 50 * 1024 * 1024;
+
+const SPECIALTIES = [
+    "Cluster 1: Neuro I (Sensory Neuroscience)",
+    "Cluster 2: Neuro II (Behavioral Neuroscience & Others)",
+    "Cluster 3: Cardiovascular Physiology",
+    "Cluster 4: Endocrinology & Metabolism",
+    "Cluster 5: Respiratory/GIT/Others"
+];
+
 
 /* --------------------------------
    DEMO POSTER DATA
 -------------------------------- */
 
-const posters = [
+let posters = [
 
 {
 id: "001",
@@ -1646,33 +1704,6 @@ title:
 
 authors:
 "Adebimpe-John O. E 2",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "005",
-
-title:
-"Effect Of Lycopene On Reproductive Toxicity Induced By Lead In Male Wistar Rats",
-
-authors:
-"Adebodun G. O",
 
 institution:
 "Institution to be confirmed",
@@ -2105,33 +2136,6 @@ title:
 
 authors:
 "Anura A",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "022",
-
-title:
-"Ameliorative Activities Of Clomiphene Citrate On Cadmium-Induced Reproductive Functions And Morphological Impairments In Male Wistar Rats",
-
-authors:
-"Aremu M. M",
 
 institution:
 "Institution to be confirmed",
@@ -2591,33 +2595,6 @@ title:
 
 authors:
 "Hussaini S",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "040",
-
-title:
-"ASSESSMENT OF CARDIOVASCULAR INDICES IN GRAIN MILLERS: A CASE STUDY OF SABON-GARI, KADUNA-NIGERIA",
-
-authors:
-"Idris R. I 2",
 
 institution:
 "Institution to be confirmed",
@@ -3124,33 +3101,6 @@ video:
 
 
 {
-id: "059",
-
-title:
-"Canarium Schweinfurthii Modulated Gut-Brain Axis During Experimental Colon Disease",
-
-authors:
-"Olujimi A.",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
 id: "060",
 
 title:
@@ -3212,33 +3162,6 @@ title:
 
 authors:
 "OWOLABI A.A",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "063",
-
-title:
-"Chitosan nanoparticle delivery of lantanine suppresses PI3K/AKT/mTOR and NF-κB signalling in vaginal squamous cell carcinoma",
-
-authors:
-"Oyelere A.O",
 
 institution:
 "Institution to be confirmed",
@@ -3448,60 +3371,6 @@ video:
 
 
 {
-id: "071",
-
-title:
-"in-silico AND in-vivo STUDY OF BETULINAND CHRYSIN ON SCOPOLAMINE-INDUCED ALZHEIMER’SDISEASE-LIKE CONDITIONS",
-
-authors:
-"Madu E. O.",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "072",
-
-title:
-"MOLECULAR DOCKING INVESTIGATION OF BIOACTIVE COMPOUNDS FROM Aspilia africana AGAINST KEY THERAPEUTIC TARGETS IN DIABETIC CARDIOMYOPATHY",
-
-authors:
-"Akinloye T. O.",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
 id: "073",
 
 title:
@@ -3536,33 +3405,6 @@ title:
 
 authors:
 "Adeyemi D.E.",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "075",
-
-title:
-"Curcuma longa mitigation of cyclosporine-induced nephrotoxicity is associated with improvement of renal clearance and modulation of TLR4-DMT1 axis",
-
-authors:
-"Aboyeji F.D.",
 
 institution:
 "Institution to be confirmed",
@@ -3637,33 +3479,6 @@ video:
 
 
 {
-id: "078",
-
-title:
-"CARDIOPROTECTIVE EFFECTS OF Aspilia africana AND METFORMIN COMBINATION IN EXPERIMENTAL CARDIOMYOPATHY: INVOLVEMENT OF OXIDATIVE STRESS, INFLAMMATION AND APOPTOSIS",
-
-authors:
-"Okikiola O.D.",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
 id: "079",
 
 title:
@@ -3714,9 +3529,768 @@ poster:
 video:
 ""
 
+},
+
+
+{
+id: "081",
+
+title:
+"Neuroprotective Effect Of Betulin And Chrysin On Reserpine-Induced Parkinsonism In Rats",
+
+authors:
+"Adesuyi M. O",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "082",
+
+title:
+"Ameliorative Activities Of Clomiphene Citrate On Cadmium-Induced Reproductive Functions And Morphological Impairments In Male Wistar Rats",
+
+authors:
+"Akinola A.O.",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "083",
+
+title:
+"The Effect Of High Protein Diet On Hepato-Striatal Axis In 1-Methyl-4-Phenyl-1,2,3,6-Tetrahydropyridine-Induced Parkinsonism In Male And Female Swiss Mice",
+
+authors:
+"Chimezie J.",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "084",
+
+title:
+"Sex-specific effects of Intermittent Fasting on Lipid Profile and Hepatic Injury in High-fat diet fed Wistar rats",
+
+authors:
+"Francis H.O",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "085",
+
+title:
+"Reduced Urinary 5-HIAA Is Associated with a High Burden of Neuropathic Pain among Charcoal Sellers in Kano, Nigeria",
+
+authors:
+"Muhammad A. U",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "086",
+
+title:
+"Aqueous Extract Of Aspilia Africana Protects Against Heat Stress-Induced Oxidative Damage In The Brain And Cardiac Tissues Of Rats.",
+
+authors:
+"Olabode",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "087",
+
+title:
+"Neuroendocrine And NO/CGMP-Mediated Mechanisms Underlying Orange Peel Protection Against Resorcinol Bis(Diphenyl Phosphate)-Induced Sexual Dysfunction In Wistar Rats",
+
+authors:
+"Olatunji, T",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "088",
+
+title:
+"Canarium Schweinfurthii Modulated Gut-Brain Axis During Experimental Colon Disease",
+
+authors:
+"Olujimi A. O.",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "089",
+
+title:
+"Acetone Ginger Extract Improved Renal Clearance and Ameliorated KBrO3-induced Nephrotoxicity via Inflammatory Cytokine Suppression and MATE1 Modulation",
+
+authors:
+"Ossai A.G",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "090",
+
+title:
+"Chitosan nanoparticle delivery of lantanine suppresses PI3K/AKT/mTOR and NF-κB signalling in vaginal squamous cell carcinoma",
+
+authors:
+"Oyedokun P. A",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "091",
+
+title:
+"PROTECTIVE EFFECTS OF L-ARGININE AGAINST OXIDATIVE STRESS, INFLAMMATION, AND APOPTOSIS IN CISPLATIN-INDUCED CARDIOTOXIC WISTAR RATS",
+
+authors:
+"Oyelere A.O",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "092",
+
+title:
+"Selective Cardiovascular Impact of Circuit Training: Changes in Heart Rate and Systolic Blood Pressure in Young Adults",
+
+authors:
+"Edokpollor J.O.",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "093",
+
+title:
+"Abortifacient Activity of the N-Hexane Fruit Extract of Xylopia aethiopica: An In-vitro, Molecular Docking and ADME Studies",
+
+authors:
+"Azekhumen G.N._2",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "094",
+
+title:
+"Effect of Methanolic Extract of Phoenix dactylifera Fruit on Reserpine-induced Depression in Male Swiss Mice",
+
+authors:
+"Fayemi A.G.",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "095",
+
+title:
+"Kolaviron Attenuated Diet-induced Cardiovascular Alterations by Targeting Oxidative Stress and Pro-inflammatory Pathways in Rats",
+
+authors:
+"Iyomo K.W.",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "096",
+
+title:
+"Antioxidants Cardio-protection Against REM Sleep Deprivation in Female Rats",
+
+authors:
+"Mustapha R.A.",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "097",
+
+title:
+"Electrolytes and Antioxidant Status of Copper-Induced Toxicity in Wistar Rats Treated With Methionine",
+
+authors:
+"Akinlade E.T.",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "098",
+
+title:
+"Effect of Rutin and Zinc on Haematological Parameters in RDP-Exposed Male Wistar Rats",
+
+authors:
+"Abdul-Azeez M.O.",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "099",
+
+title:
+"DIFFERENTIAL CARDIOVASCULAR ALTERATIONS FOLLOWING ORAL CANNABIS EDIBLE CONSUMPTION IN MALE AND FEMALE SPRAGUE-DAWLEY RATS",
+
+authors:
+"Adejare A.A.",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "100",
+
+title:
+"APPLE CIDER VINEGAR ALTERS IMMUNE RESPONSE, LIPID PROFILE, AND PLATELET INDICES BUT NOT GLUCOREGULATION IN PREGNANT WISTAR RATS",
+
+authors:
+"Ugorji M.M.",
+
+institution:
+"Institution to be confirmed",
+
+category:
+"Uncategorized",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
 }
 
 ];
+
+
+/* --------------------------------
+   POSTERS <-> SUPABASE SYNC
+   The array above is the fallback/
+   default data. Once a presenter
+   saves their details, the "posters"
+   table becomes the live source and
+   overrides these defaults, in real
+   time, on every device.
+-------------------------------- */
+
+let postersChannel = null;
+
+function posterRowToPatch(row) {
+    return {
+        title: row.title,
+        authors: row.authors,
+        institution: row.institution,
+        category: row.category,
+        abstract: row.abstract,
+        poster: row.poster_url || undefined,
+        video: row.video_url || undefined
+    };
+}
+
+async function loadPostersFromSupabase() {
+    const { data, error } = await sb.from("posters").select("*");
+    if (error) {
+        console.error(error);
+        return;
+    }
+
+    data.forEach(row => {
+        const local = posters.find(p => p.id === row.id);
+        if (!local) return;
+        const patch = posterRowToPatch(row);
+        Object.keys(patch).forEach(key => {
+            if (patch[key] !== undefined && patch[key] !== null && patch[key] !== "") {
+                local[key] = patch[key];
+            }
+        });
+    });
+}
+
+async function refreshPostersAndUI() {
+    await loadPostersFromSupabase();
+    populateCategoryFilter();
+    renderGallery();
+    if (currentPublicPosterId) {
+        const poster = posters.find(p => p.id === currentPublicPosterId);
+        if (poster) {
+            document.getElementById("posterAbstract").textContent = poster.abstract;
+            document.getElementById("posterPresenter").textContent = poster.authors;
+            document.getElementById("posterImage").src = poster.poster;
+            if (poster.video) {
+                renderVideoContainer(poster.video);
+            }
+        }
+    }
+}
+
+function subscribeToPosterUpdates() {
+    if (postersChannel) sb.removeChannel(postersChannel);
+    postersChannel = sb
+        .channel("posters-live")
+        .on("postgres_changes", { event: "*", schema: "public", table: "posters" }, () => {
+            refreshPostersAndUI();
+        })
+        .subscribe();
+}
+
+function getYouTubeEmbedUrl(url) {
+    if (!url) return null;
+    const patterns = [
+        /youtu\.be\/([a-zA-Z0-9_-]{6,})/,
+        /youtube\.com\/watch\?v=([a-zA-Z0-9_-]{6,})/,
+        /youtube\.com\/embed\/([a-zA-Z0-9_-]{6,})/,
+        /youtube\.com\/shorts\/([a-zA-Z0-9_-]{6,})/
+    ];
+    for (const re of patterns) {
+        const match = url.match(re);
+        if (match) return `https://www.youtube.com/embed/${match[1]}`;
+    }
+    return null;
+}
+
+function renderVideoContainer(videoUrl) {
+    const container = document.getElementById("videoContainer");
+    if (!container) return;
+
+    if (!videoUrl) {
+        container.innerHTML = `<p style="color:#aaa;padding:40px 0;text-align:center;">Video not uploaded yet.</p>`;
+        return;
+    }
+
+    const embedUrl = getYouTubeEmbedUrl(videoUrl);
+
+    if (embedUrl) {
+        container.innerHTML = `<iframe src="${embedUrl}" title="Presentation video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+    } else {
+        container.innerHTML = `<video controls style="width:100%;display:block;min-height:350px;"><source src="${videoUrl}" type="video/mp4">Your browser does not support video playback.</video>`;
+    }
+}
+
+function fileExtension(filename) {
+    const parts = filename.split(".");
+    return parts.length > 1 ? parts.pop().toLowerCase() : "";
+}
+
+async function uploadPosterFile(file, posterId, kind) {
+    const maxBytes = kind === "video" ? MAX_VIDEO_BYTES : MAX_IMAGE_BYTES;
+    if (file.size > maxBytes) {
+        alert(`That ${kind} is too large (${(file.size / (1024 * 1024)).toFixed(1)}MB). Max allowed: ${(maxBytes / (1024 * 1024)).toFixed(0)}MB.`);
+        return null;
+    }
+
+    const ext = fileExtension(file.name) || (kind === "video" ? "mp4" : "jpg");
+    const path = `${kind}/${posterId}.${ext}`;
+
+    const { error: uploadError } = await sb.storage
+        .from(POSTER_BUCKET)
+        .upload(path, file, { upsert: true, contentType: file.type });
+
+    if (uploadError) {
+        console.error(uploadError);
+        alert(`Could not upload the ${kind}. Check your connection and try again.`);
+        return null;
+    }
+
+    const { data } = sb.storage.from(POSTER_BUCKET).getPublicUrl(path);
+    return data.publicUrl + `?v=${Date.now()}`;
+}
+
+async function savePresenterPosterDetails(event) {
+    event.preventDefault();
+
+    if (!currentPresenterPosterId) return;
+
+    const poster = posters.find(p => p.id === currentPresenterPosterId);
+    if (!poster) return;
+
+    const submitBtn = event.target.querySelector("button[type=submit]");
+    if (submitBtn) submitBtn.disabled = true;
+
+    const statusEl = document.getElementById("posterDetailsStatus");
+    statusEl.textContent = "Saving…";
+    statusEl.style.display = "block";
+
+    const institution = document.getElementById("posterInstitutionInput").value.trim();
+    const category = document.getElementById("posterCategoryInput").value;
+    const abstractText = document.getElementById("posterAbstractInput").value.trim();
+    const imageFile = document.getElementById("posterImageInput").files[0];
+    const videoLink = document.getElementById("posterVideoInput").value.trim();
+
+    if (videoLink && !getYouTubeEmbedUrl(videoLink)) {
+        alert("That doesn't look like a YouTube link. Please paste the full video URL (e.g. https://youtube.com/watch?v=...).");
+        if (submitBtn) submitBtn.disabled = false;
+        statusEl.style.display = "none";
+        return;
+    }
+
+    let posterUrl = poster.poster;
+    let videoUrl = videoLink || poster.video;
+
+    if (imageFile) {
+        const url = await uploadPosterFile(imageFile, currentPresenterPosterId, "posters");
+        if (url) posterUrl = url;
+    }
+
+    const { error } = await sb.from("posters").upsert({
+        id: currentPresenterPosterId,
+        title: poster.title,
+        authors: poster.authors,
+        institution: institution,
+        category: category,
+        abstract: abstractText,
+        poster_url: posterUrl,
+        video_url: videoUrl,
+        updated_at: new Date().toISOString()
+    });
+
+    if (submitBtn) submitBtn.disabled = false;
+
+    if (error) {
+        console.error(error);
+        statusEl.textContent = "Could not save — check your connection and try again.";
+        return;
+    }
+
+    poster.institution = institution;
+    poster.category = category;
+    poster.abstract = abstractText;
+    poster.poster = posterUrl;
+    poster.video = videoUrl;
+
+    statusEl.textContent = "✓ Saved. Your poster page is now live with these details.";
+    populateCategoryFilter();
+}
+
+function populatePresenterPosterForm() {
+    const poster = posters.find(p => p.id === currentPresenterPosterId);
+    if (!poster) return;
+
+    document.getElementById("posterInstitutionInput").value =
+        poster.institution === "Institution to be confirmed" ? "" : poster.institution;
+
+    document.getElementById("posterAbstractInput").value =
+        poster.abstract === "Full abstract to be provided by the presenter." ? "" : poster.abstract;
+
+    const categorySelect = document.getElementById("posterCategoryInput");
+    categorySelect.innerHTML = SPECIALTIES.map(c =>
+        `<option value="${c}" ${poster.category === c ? "selected" : ""}>${c}</option>`
+    ).join("");
+
+    document.getElementById("posterDetailsStatus").style.display = "none";
+    document.getElementById("posterImageInput").value = "";
+    document.getElementById("posterVideoInput").value = poster.video || "";
+}
 
 
 /* --------------------------------
@@ -4502,16 +5076,7 @@ document.getElementById("posterImage").src =
 poster.poster;
 
 
-const video =
-document.getElementById("posterVideo");
-
-const source =
-document.getElementById("videoSource");
-
-source.src =
-poster.video;
-
-video.load();
+renderVideoContainer(poster.video);
 
 
 renderQAThread();
@@ -4723,13 +5288,18 @@ async function showPresenterQA() {
 
     hideAll();
 
-    const poster = posters.find(p => p.id === currentPresenterPosterId);
-    document.getElementById("presenterWelcome").textContent =
-        poster ? `Questions for: ${poster.title}` : "";
-
+    document.getElementById("presenterWelcome").textContent = "Loading your poster…";
     document.getElementById("presenterQAList").innerHTML = "<p>Loading questions…</p>";
     document.getElementById("presenterQAPage").style.display = "block";
     window.scrollTo(0, 0);
+
+    await loadPostersFromSupabase();
+
+    const poster = posters.find(p => p.id === currentPresenterPosterId);
+    document.getElementById("presenterWelcome").textContent =
+        poster ? `Poster ${poster.id}: ${poster.title}` : "";
+
+    populatePresenterPosterForm();
 
     await renderPresenterQA();
 
@@ -4805,6 +5375,9 @@ function populateCategoryFilter() {
 
 populateCategoryFilter();
 renderGallery();
+
+refreshPostersAndUI();
+subscribeToPosterUpdates();
 
 </script>
 
