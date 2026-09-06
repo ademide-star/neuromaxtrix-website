@@ -534,13 +534,18 @@ svg.mini-chart{width:100%;height:60px;}
 // CORE API FUNCTION
 // ══════════════════════════════════════════════════════════════════
 async function callClaude(systemPrompt, userPrompt) {
-  const fetchPromise = fetch("https://api.anthropic.com/v1/messages", {
+  // ── Proxy URL routing ──────────────────────────────────────────
+  // localhost   → your Windows laptop proxy (start-proxy.bat)
+  // live site   → Railway proxy (update RAILWAY_URL below after deploying)
+  const RAILWAY_URL = "https://spice-to-synapse-proxy.up.railway.app/api/claude";
+  const PROXY_URL =
+    (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
+      ? "http://localhost:3001/api/claude"
+      : RAILWAY_URL;
+
+  const fetchPromise = fetch(PROXY_URL, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "anthropic-version": "2023-06-01",
-      "anthropic-dangerous-direct-browser-access": "true"
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       model: "claude-sonnet-4-6",
       max_tokens: 2000,
