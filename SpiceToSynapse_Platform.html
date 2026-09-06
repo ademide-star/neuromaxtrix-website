@@ -537,7 +537,7 @@ async function callClaude(systemPrompt, userPrompt) {
   // ── Proxy URL routing ──────────────────────────────────────────
   // localhost   → your Windows laptop proxy (start-proxy.bat)
   // live site   → Railway proxy (update RAILWAY_URL below after deploying)
-  const RAILWAY_URL = "https://spice-to-synapse-proxy.up.railway.app/api/claude";
+  const RAILWAY_URL = "https://spice-to-synapse-proxy-production.up.railway.app";
   const PROXY_URL =
     (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
       ? "http://localhost:3001/api/claude"
