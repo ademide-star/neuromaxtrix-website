@@ -533,7 +533,6 @@ svg.mini-chart{width:100%;height:60px;}
 // ══════════════════════════════════════════════════════════════════
 // CORE API FUNCTION
 // ══════════════════════════════════════════════════════════════════
-async function callClaude(systemPrompt, userPrompt) {
 // ══════════════════════════════════════════════════════════════════
 // RULE-BASED NEUROINFORMATICS ENGINE
 // Built from real data: 84 animals · 31 biomarkers · 5 cinnamon compounds
@@ -1071,11 +1070,6 @@ async function runScreener() {
   document.getElementById('s-cards').innerHTML = '';
 
   // ── Rule-based engine — instant, free, offline ─────────────────
-  const compound  = document.getElementById('s-compound').value.trim();
-  const plant     = document.getElementById('s-plant').value.trim();
-  const notes     = document.getElementById('s-notes').value.trim();
-  const disease   = document.getElementById('s-disease').value;
-
   setStep(1, 'running');
   await new Promise(r => setTimeout(r, 300));
   setStep(2, 'running');
@@ -1307,11 +1301,6 @@ async function runCohort() {
     data = generateVirtualCohort(compound_c, model_c, n_c, groups_c, es_c, bm_c, ref_c);
   } catch(err) {
     showError('c-results', 'Cohort error: ' + err.message);
-    btn.disabled = false;
-    btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg> Generate Virtual Cohort';
-    return;
-  } catch(err) {
-    showError('c-results', err.message);
     btn.disabled = false;
     btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg> Generate Virtual Cohort';
     return;
