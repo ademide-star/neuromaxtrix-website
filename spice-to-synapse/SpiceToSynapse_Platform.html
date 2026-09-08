@@ -1740,6 +1740,23 @@ async function runSimulator() {
   btn.disabled = false;
   btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg> Run Human Simulation';
 }
+
+// ══════════════════════════════════════════════════════════════════
+// DEEP-LINK: open a specific module tab when arriving via ?tab=... or #...
+// e.g. SpiceToSynapse_Platform.html?tab=cohort  or  SpiceToSynapse_Platform.html#simulator
+// ══════════════════════════════════════════════════════════════════
+(function initTabFromURL() {
+  const validTabs = ['screener', 'cohort', 'simulator'];
+  const params = new URLSearchParams(window.location.search);
+  let requestedTab = params.get('tab');
+  if (!requestedTab && window.location.hash) {
+    requestedTab = window.location.hash.replace('#', '');
+  }
+  if (requestedTab && validTabs.includes(requestedTab)) {
+    const btn = document.querySelector(`.tab-btn[onclick*="'${requestedTab}'"]`);
+    switchTab(requestedTab, btn);
+  }
+})();
 </script>
 </body>
 </html>
