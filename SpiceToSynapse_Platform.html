@@ -279,6 +279,8 @@ svg.mini-chart{width:100%;height:60px;}
         <span class="ref-pill" onclick="loadRef('Coumarin','Cinnamomum loureiroi','AChE, BACE1, BBB scaffold')">Coumarin</span>
         <span class="ref-pill" onclick="loadRef('Caryophyllene','Cinnamomum loureiroi','CB2 agonist, NF-κB, stroke')">Caryophyllene</span>
         <span class="ref-pill" onclick="loadRef('Huperzine A','Huperzia serrata','AChE reference inhibitor')">Huperzine A ✓ref</span>
+        <span class="ref-pill" onclick="loadRef('Garcinia kola','Garcinia kola','Bitter kola, kolaviron, NF-κB, NRF2')">Garcinia kola</span>
+        <span class="ref-pill" onclick="loadRef('Ocimum gratissimum','Ocimum gratissimum','Scent leaf, eugenol-rich, AChE')">Scent leaf</span>
       </div>
 
       <div class="field-group">
@@ -328,6 +330,11 @@ svg.mini-chart{width:100%;height:60px;}
       <hr class="section-divider">
       <div style="font-size:10px;color:var(--text3);line-height:1.7;">
         <strong style="color:var(--text2);">How it works:</strong> The AI engine simulates a full neuroinformatics pipeline — compound profiling, molecular docking prediction, ADMET scoring, network target mapping, and translational assessment — the same methodology applied to the Saigon cinnamon dataset (84 animals, 31 biomarkers, 7 groups).
+      </div>
+
+      <hr class="section-divider">
+      <div style="font-size:10px;color:var(--text3);line-height:1.7;">
+        <strong style="color:var(--text2);">Should this be trusted?</strong> This tool generates computational predictions to help prioritize which plants are worth lab investigation — it does not replace wet-lab assays, animal studies, or clinical trials. Compounds in the reference panel are calibrated against the validated Saigon cinnamon dataset; other inputs are estimated from compound-class pharmacology and should be treated as a hypothesis-generation starting point, not a confirmed result. Runs entirely in your browser — no data is transmitted, stored, or shared.
       </div>
     </div>
 
@@ -584,13 +591,41 @@ const PLANT_DB = {
   "aframomum melegueta":{ mw:295.38, logp:3.8,  hbd:1, hba:3, cls:"Piperidine alkaloid", bbb:"Moderate", family:"zingiberaceae", ache:-8.1, bace1:-7.3,  nfkb:-8.2, nrf2:-7.6, cox2:-7.9, gsk3b:-7.0, casp3:-7.1, mapk1:-7.8, hubs:["NF-κB","AChE"],                     paths:["Neuroinflammation","Alzheimer","Stroke"],             grade:"B" },
   "neem":               { mw:596.73, logp:4.2,  hbd:1, hba:8, cls:"Limonoid",            bbb:"Low",      family:"meliaceae",    ache:-7.4,  bace1:-7.0,  nfkb:-8.3, nrf2:-7.5, cox2:-7.6, gsk3b:-6.5, casp3:-7.0, mapk1:-7.4, hubs:["NF-κB","COX-2"],                     paths:["Neuroinflammation","Stroke"],                         grade:"B" },
   "azadirachta indica": { mw:596.73, logp:4.2,  hbd:1, hba:8, cls:"Limonoid",            bbb:"Low",      family:"meliaceae",    ache:-7.4,  bace1:-7.0,  nfkb:-8.3, nrf2:-7.5, cox2:-7.6, gsk3b:-6.5, casp3:-7.0, mapk1:-7.4, hubs:["NF-κB","COX-2"],                     paths:["Neuroinflammation","Stroke"],                         grade:"B" },
+
+  // ── Expanded African medicinal plant panel (Sept 2026 update) ──
+  "garcinia kola":      { mw:570.60, logp:5.2,  hbd:4, hba:8, cls:"Biflavonoid (Kolaviron)", bbb:"Low",  family:"clusiaceae",   ache:-8.3,  bace1:-8.0,  nfkb:-8.9, nrf2:-9.0, cox2:-8.4, gsk3b:-7.6, casp3:-7.8, mapk1:-8.1, hubs:["NF-κB","NRF2","COX-2"],               paths:["Neuroinflammation","Nrf2-ARE","Stroke"],              grade:"A" },
+  "kolaviron":          { mw:570.60, logp:5.2,  hbd:4, hba:8, cls:"Biflavonoid",         bbb:"Low",      family:"clusiaceae",   ache:-8.3,  bace1:-8.0,  nfkb:-8.9, nrf2:-9.0, cox2:-8.4, gsk3b:-7.6, casp3:-7.8, mapk1:-8.1, hubs:["NF-κB","NRF2","COX-2"],               paths:["Neuroinflammation","Nrf2-ARE","Stroke"],              grade:"A" },
+  "cola nitida":        { mw:194.19, logp:-0.1, hbd:0, hba:6, cls:"Xanthine alkaloid (Caffeine-type)", bbb:"High", family:"malvaceae", ache:-6.8, bace1:-6.2, nfkb:-6.5, nrf2:-6.0, cox2:-6.1, gsk3b:-5.8, casp3:-5.9, mapk1:-6.3, hubs:["AChE","Adenosine-A2A"],       paths:["Cholinergic"],                                        grade:"C" },
+  "hibiscus sabdariffa":{ mw:449.38, logp:-1.2, hbd:6, hba:11,cls:"Anthocyanin (Delphinidin-type)",     bbb:"Low", family:"malvaceae", ache:-7.0, bace1:-7.4, nfkb:-8.6, nrf2:-8.9, cox2:-8.0, gsk3b:-7.0, casp3:-7.2, mapk1:-7.6, hubs:["NRF2","NF-κB"],                paths:["Nrf2-ARE","Neuroinflammation","Stroke"],              grade:"B" },
+  "nauclea latifolia":  { mw:368.50, logp:3.0,  hbd:1, hba:4, cls:"Indole alkaloid",     bbb:"High",     family:"rubiaceae",    ache:-8.4,  bace1:-7.6,  nfkb:-7.3, nrf2:-6.9, cox2:-7.1, gsk3b:-6.6, casp3:-6.9, mapk1:-7.5, hubs:["AChE","MAO-B"],                       paths:["Alzheimer"],                                          grade:"B" },
+  "picralima nitida":   { mw:396.50, logp:2.7,  hbd:1, hba:4, cls:"Indole alkaloid (Akuammine)",bbb:"High",family:"apocynaceae",  ache:-8.6,  bace1:-7.8,  nfkb:-7.0, nrf2:-6.7, cox2:-7.3, gsk3b:-6.5, casp3:-6.8, mapk1:-7.2, hubs:["AChE"],                               paths:["Alzheimer"],                                          grade:"B" },
+  "alstonia boonei":    { mw:354.40, logp:3.3,  hbd:1, hba:3, cls:"Indole alkaloid (Echitamine)",bbb:"Moderate",family:"apocynaceae",ache:-7.6, bace1:-7.0,  nfkb:-8.1, nrf2:-7.4, cox2:-8.2, gsk3b:-6.4, casp3:-6.9, mapk1:-7.6, hubs:["NF-κB","COX-2"],                     paths:["Neuroinflammation","Stroke"],                         grade:"B" },
+  "enantia chlorantha": { mw:336.40, logp:3.5,  hbd:0, hba:4, cls:"Protoberberine alkaloid (Berberine-type)",bbb:"Moderate",family:"annonaceae",ache:-9.4, bace1:-8.0, nfkb:-8.3, nrf2:-8.1, cox2:-7.5, gsk3b:-7.9, casp3:-7.4, mapk1:-7.8, hubs:["AChE","NF-κB","GSK3B"],  paths:["Alzheimer","Neuroinflammation","Tau"],                grade:"A" },
+  "khaya senegalensis": { mw:602.70, logp:4.4,  hbd:1, hba:8, cls:"Limonoid",            bbb:"Low",      family:"meliaceae",    ache:-7.3,  bace1:-6.9,  nfkb:-8.0, nrf2:-7.3, cox2:-7.5, gsk3b:-6.3, casp3:-6.8, mapk1:-7.2, hubs:["NF-κB","COX-2"],                     paths:["Neuroinflammation","Stroke"],                         grade:"B" },
+  "parkia biglobosa":   { mw:180.16, logp:1.2,  hbd:3, hba:4, cls:"Phenolic (Gallic acid-type)",bbb:"Low",family:"fabaceae",     ache:-6.9,  bace1:-7.1,  nfkb:-8.2, nrf2:-8.4, cox2:-7.8, gsk3b:-6.6, casp3:-6.9, mapk1:-7.3, hubs:["NRF2","NF-κB"],                       paths:["Nrf2-ARE","Neuroinflammation"],                       grade:"B" },
+  "xylopia aethiopica": { mw:262.40, logp:4.5,  hbd:0, hba:2, cls:"Diterpene",           bbb:"Moderate", family:"annonaceae",   ache:-7.4,  bace1:-7.0,  nfkb:-8.0, nrf2:-7.6, cox2:-8.3, gsk3b:-6.5, casp3:-6.9, mapk1:-7.5, hubs:["COX-2","NF-κB"],                     paths:["Neuroinflammation","Stroke"],                         grade:"B" },
+  "piper guineense":    { mw:263.40, logp:3.9,  hbd:0, hba:2, cls:"Alkylamide (Piperine-type)",bbb:"High",family:"piperaceae",   ache:-7.8,  bace1:-7.2,  nfkb:-8.1, nrf2:-7.5, cox2:-8.0, gsk3b:-6.7, casp3:-7.0, mapk1:-7.7, hubs:["NF-κB","COX-2","AChE"],               paths:["Neuroinflammation","Alzheimer","Stroke"],             grade:"B" },
+  "tetrapleura tetraptera":{ mw:650.80, logp:2.0, hbd:5, hba:10, cls:"Saponin",          bbb:"Low",      family:"fabaceae",     ache:-6.8,  bace1:-6.5,  nfkb:-7.9, nrf2:-7.3, cox2:-7.6, gsk3b:-6.1, casp3:-6.6, mapk1:-7.0, hubs:["NF-κB"],                              paths:["Neuroinflammation"],                                  grade:"B" },
+  "ocimum gratissimum": { mw:164.20, logp:2.3,  hbd:1, hba:2, cls:"Phenylpropanoid (Eugenol-rich)",bbb:"High",family:"lamiaceae", ache:-9.0,  bace1:-7.7,  nfkb:-8.2, nrf2:-8.0, cox2:-8.4, gsk3b:-6.7, casp3:-6.9, mapk1:-7.9, hubs:["AChE","NF-κB","COX-2"],               paths:["Alzheimer","Neuroinflammation","Stroke"],             grade:"A" },
+  "artemisinin":        { mw:282.33, logp:2.9,  hbd:0, hba:5, cls:"Sesquiterpene lactone",bbb:"Moderate",family:"asteraceae",   ache:-6.9,  bace1:-7.0,  nfkb:-8.5, nrf2:-8.2, cox2:-7.4, gsk3b:-6.8, casp3:-8.0, mapk1:-7.6, hubs:["NF-κB","CASP3"],                      paths:["Neuroinflammation","Apoptosis","Stroke"],             grade:"B" },
+  "artemisia annua":    { mw:282.33, logp:2.9,  hbd:0, hba:5, cls:"Sesquiterpene lactone",bbb:"Moderate",family:"asteraceae",   ache:-6.9,  bace1:-7.0,  nfkb:-8.5, nrf2:-8.2, cox2:-7.4, gsk3b:-6.8, casp3:-8.0, mapk1:-7.6, hubs:["NF-κB","CASP3"],                      paths:["Neuroinflammation","Apoptosis","Stroke"],             grade:"B" },
+  "andrographolide":    { mw:350.45, logp:2.5,  hbd:3, hba:5, cls:"Diterpene lactone",   bbb:"Moderate", family:"acanthaceae",  ache:-7.6,  bace1:-7.9,  nfkb:-9.0, nrf2:-8.5, cox2:-8.2, gsk3b:-7.3, casp3:-7.5, mapk1:-8.0, hubs:["NF-κB","NRF2"],                       paths:["Neuroinflammation","Nrf2-ARE","Stroke"],              grade:"A" },
+  "andrographis paniculata":{ mw:350.45, logp:2.5, hbd:3, hba:5, cls:"Diterpene lactone",bbb:"Moderate", family:"acanthaceae",  ache:-7.6,  bace1:-7.9,  nfkb:-9.0, nrf2:-8.5, cox2:-8.2, gsk3b:-7.3, casp3:-7.5, mapk1:-8.0, hubs:["NF-κB","NRF2"],                       paths:["Neuroinflammation","Nrf2-ARE","Stroke"],              grade:"A" },
+  "senna occidentalis": { mw:270.24, logp:1.9,  hbd:2, hba:5, cls:"Anthraquinone (Emodin-type)",bbb:"Low",family:"fabaceae",     ache:-6.7,  bace1:-6.9,  nfkb:-7.8, nrf2:-7.6, cox2:-7.3, gsk3b:-6.2, casp3:-6.9, mapk1:-6.9, hubs:["NF-κB"],                              paths:["Neuroinflammation"],                                  grade:"C" },
+  "bryophyllum pinnatum":{ mw:286.24, logp:1.9,  hbd:4, hba:6, cls:"Flavonol (Kaempferol-type)",bbb:"Low",family:"crassulaceae", ache:-7.4,  bace1:-7.6,  nfkb:-8.4, nrf2:-8.2, cox2:-7.8, gsk3b:-7.0, casp3:-7.2, mapk1:-7.7, hubs:["NF-κB","NRF2"],                       paths:["Neuroinflammation","Nrf2-ARE"],                       grade:"B" },
+  "carica papaya":      { mw:309.40, logp:2.1,  hbd:1, hba:3, cls:"Alkaloid (Carpaine)", bbb:"Moderate", family:"caricaceae",   ache:-7.7,  bace1:-7.1,  nfkb:-7.6, nrf2:-7.2, cox2:-7.4, gsk3b:-6.5, casp3:-7.0, mapk1:-7.3, hubs:["AChE","NF-κB"],                       paths:["Alzheimer","Neuroinflammation"],                      grade:"B" },
+  "citrus aurantifolia":{ mw:610.56, logp:-1.0, hbd:8, hba:15,cls:"Flavanone glycoside (Hesperidin-type)",bbb:"Low",family:"rutaceae",ache:-6.9, bace1:-7.3, nfkb:-8.0, nrf2:-8.1, cox2:-7.6, gsk3b:-6.6, casp3:-6.9, mapk1:-7.4, hubs:["NRF2","NF-κB"],                paths:["Nrf2-ARE","Neuroinflammation"],                       grade:"B" },
+  "allium sativum":     { mw:162.27, logp:1.9,  hbd:0, hba:0, cls:"Organosulfur (Allicin)",bbb:"Moderate",family:"amaryllidaceae",ache:-6.5, bace1:-6.4,  nfkb:-8.3, nrf2:-8.6, cox2:-7.9, gsk3b:-6.3, casp3:-7.0, mapk1:-7.2, hubs:["NRF2","NF-κB"],                       paths:["Nrf2-ARE","Neuroinflammation","Stroke"],              grade:"B" },
+  "terminalia catappa": { mw:302.19, logp:1.2,  hbd:4, hba:7, cls:"Tannin (Ellagic acid-type)",bbb:"Low", family:"combretaceae", ache:-7.1,  bace1:-7.5,  nfkb:-8.2, nrf2:-8.5, cox2:-7.7, gsk3b:-6.7, casp3:-7.1, mapk1:-7.4, hubs:["NRF2","NF-κB"],                       paths:["Nrf2-ARE","Neuroinflammation","Stroke"],              grade:"B" },
+  "newbouldia laevis":  { mw:390.40, logp:2.4,  hbd:2, hba:6, cls:"Iridoid glycoside",   bbb:"Moderate", family:"bignoniaceae", ache:-7.3,  bace1:-7.0,  nfkb:-7.9, nrf2:-7.5, cox2:-7.6, gsk3b:-6.4, casp3:-6.8, mapk1:-7.2, hubs:["NF-κB"],                              paths:["Neuroinflammation"],                                  grade:"B" },
 };
 
 // ── KEYWORD-TO-COMPOUND MAP ────────────────────────────────────────
 const KEYWORD_MAP = {
   "saigon cinnamon":"cinnamaldehyde","cinnamon bark":"cinnamaldehyde",
   "cinnamomum loureiroi":"cinnamaldehyde","cinnamomum":"cinnamaldehyde",
-  "wormwood":"artemisinin","moringa leaf":"moringa oleifera",
+  "wormwood":"artemisinin","sweet wormwood":"artemisinin",
+  "moringa leaf":"moringa oleifera",
   "drumstick tree":"moringa oleifera","miracle tree":"moringa oleifera",
   "withanolide a":"withania somnifera","withanolide b":"withania somnifera",
   "withaferin a":"withania somnifera",
@@ -598,6 +633,27 @@ const KEYWORD_MAP = {
   "aframomum":"alligator pepper","grains of paradise":"alligator pepper",
   "andrographis":"andrographolide","bitter kola":"garcinia kola",
   "obi abata":"alligator pepper",
+  // ── Expanded panel aliases (common Nigerian/West African names) ──
+  "kola nut":"cola nitida","goro":"cola nitida",
+  "zobo":"hibiscus sabdariffa","roselle":"hibiscus sabdariffa",
+  "african peach":"nauclea latifolia","pin cushion tree":"nauclea latifolia",
+  "akuamma":"picralima nitida","akuamma seed":"picralima nitida",
+  "awun":"alstonia boonei","stool wood":"alstonia boonei",
+  "awopa":"enantia chlorantha","african whitewood":"enantia chlorantha",
+  "berberine":"enantia chlorantha",
+  "african mahogany":"khaya senegalensis","oganwo":"khaya senegalensis",
+  "locust bean":"parkia biglobosa","iru":"parkia biglobosa","dawadawa":"parkia biglobosa",
+  "negro pepper":"xylopia aethiopica","uda":"xylopia aethiopica","eeru":"xylopia aethiopica",
+  "uziza":"piper guineense","african pepper":"piper guineense",
+  "aidan fruit":"tetrapleura tetraptera","prekese":"tetrapleura tetraptera","dawo":"tetrapleura tetraptera",
+  "scent leaf":"ocimum gratissimum","nchanwu":"ocimum gratissimum","efinrin":"ocimum gratissimum",
+  "cassia occidentalis":"senna occidentalis","coffee senna":"senna occidentalis",
+  "never die":"bryophyllum pinnatum","air plant":"bryophyllum pinnatum",
+  "pawpaw":"carica papaya","paw paw leaf":"carica papaya",
+  "lime":"citrus aurantifolia","key lime":"citrus aurantifolia",
+  "garlic":"allium sativum",
+  "tropical almond":"terminalia catappa","indian almond":"terminalia catappa",
+  "african border tree":"newbouldia laevis","ogilisi":"newbouldia laevis",
 };
 
 // ── GENERIC CLASS SCORES (fallback) ─────────────────────────────────
