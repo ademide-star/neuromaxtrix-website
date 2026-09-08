@@ -879,15 +879,6 @@ placeholder="Search poster title, author or institution..."
 oninput="renderGallery()"
 >
 
-<select
-id="categoryFilter"
-class="category-select"
-onchange="renderGallery()">
-
-<option value="All">All Categories</option>
-
-</select>
-
 </div>
 
 
@@ -1479,11 +1470,6 @@ Incorrect PIN. Please try again.
 <form onsubmit="savePresenterPosterDetails(event)">
 
 <div class="form-group">
-<label>Specialty / Cluster</label>
-<select id="posterCategoryInput" required></select>
-</div>
-
-<div class="form-group">
 <label>Institution / Affiliation</label>
 <input type="text" id="posterInstitutionInput" placeholder="e.g. Department of Physiology, University of Ilorin" required>
 </div>
@@ -1600,14 +1586,6 @@ const POSTER_BUCKET = "poster-media";
 const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
 const MAX_VIDEO_BYTES = 50 * 1024 * 1024;
 
-const SPECIALTIES = [
-    "Cluster 1: Neuro I (Sensory Neuroscience)",
-    "Cluster 2: Neuro II (Behavioral Neuroscience & Others)",
-    "Cluster 3: Cardiovascular Physiology",
-    "Cluster 4: Endocrinology & Metabolism",
-    "Cluster 5: Respiratory/GIT/Others"
-];
-
 
 /* --------------------------------
    DEMO POSTER DATA
@@ -1616,2059 +1594,7 @@ const SPECIALTIES = [
 let posters = [
 
 {
-id: "001",
-
-title:
-"Effects of Probiotics on High-Fat and High-fructose Diets-Induced Cardiac metabolic dysfunction in male wistar rats",
-
-authors:
-"Abena E",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "002",
-
-title:
-"Variation of Nitric Oxide levels across Clinical Phases of Sickle Cell Anemia In Northern Nigeria",
-
-authors:
-"Abubakar A. B",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "003",
-
-title:
-"Methimazole-Induced Hypothyroidism Disrupts Hypothalamic–Pituitary–Ovarian Axis Signaling, Ovarian Steroidogenesis, And Folliculogenesis In Adult Female Wistar Rats",
-
-authors:
-"Adebayo O. F -2",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "004",
-
-title:
-"Neurosimlab A Correlation-Preserving Synthetic Data Generator For Small-N Preclinical Neurodegeneration Datasets",
-
-authors:
-"Adebimpe-John O. E 2",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "006",
-
-title:
-"Comparative Effects Of Neem Leaf Extract And Combined Oral Contraceptives On Cardiac Oxidative Stress In Female Wistar Rats",
-
-authors:
-"Adegoke A. O",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "007",
-
-title:
-"Heavy Metals Exposure And Protective Role Of Ginger (Zingiber Officinale) On Gut Microbiota And Systemic Oxidative Stress In Rats",
-
-authors:
-"Adeleye G. S",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "008",
-
-title:
-"Ethanolic Corchorous Olitorius Leaf Extract Mitigates Monosodium Glutamate-Impaired Sexual Function Via Upregulation Of Steroidogenesis In Male Wistar Rats",
-
-authors:
-"Adeogun A. E 1",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "009",
-
-title:
-"L-Ascorbic acid from sweet orange (Citrus sinensis) protects against Oxidative stress-associated hepatic injury in Diabetic-frmale Wistar rats",
-
-authors:
-"Adepoju M. A",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "010",
-
-title:
-"Activities Of Thaumatococcus Danielli (Benth) Fruit Diets On The Gut-Liver Axis During Crohn’s Colitis In Male Wistar Rats: In-Vivo And In-Silico Studies",
-
-authors:
-"Adetayo A. D",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "011",
-
-title:
-"Gestational Bisphenol-A Exposure Induces Offspring Hippocampal Oxidative Stress And Neuroinflammation In Wistar Rats",
-
-authors:
-"Adio K. O",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "012",
-
-title:
-"Changes In Liver Enzymes And Antioxidant Profile In Household Toxin-Exposed Feed And Water In Male Wistar Rats",
-
-authors:
-"Aduema W.",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "013",
-
-title:
-"Modulation of post haemolytic Leucopenia and white cell indices by oral watermelon (Citrullus lanatus) Juice",
-
-authors:
-"Aikpitanyi-Iduitua R.O.",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "014",
-
-title:
-"NEUROPROTECTIVE MECHANISM OF ETHANOLIC LEAF EXTRACT OF BRASSICA OLERACEA L. VAR ACEPHALA IN ARSENIC-INDUCED FRONTAL CORTICAL DEGENERATION",
-
-authors:
-"AIKPITANYI I",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "015",
-
-title:
-"Preventive Role Of Ethanol Extract Of Theobroma Cacao Seed Against Rotenone-Induced Neuroinflammation In Male Wistar Rats",
-
-authors:
-"Ajani I. B",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "016",
-
-title:
-"Monosaccharide-Induced Metabolic Remodeling Of The Brain Without Overt Cognitive Dysfunction",
-
-authors:
-"Ajayi A. J",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "017",
-
-title:
-"Antioxidant Response And Neurotransmitter Modulation Driven By Oleuropein/Alpha-Lipoic Acid Attenuates Lead-Induced Reproductive Toxicity And Neurotoxicity In Drosophila Melanogaster",
-
-authors:
-"Akande F. E.",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "018",
-
-title:
-"Impact Of Noise-Induced Sleep Fragmentation And Deprivation On Memory In Rat Model",
-
-authors:
-"Aminat-Alabi A",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "019",
-
-title:
-"Soybean Oil Modulates Oxidative Stress And Neuroinflammation Following Sciatic Nerve Ligation In Male Wistar Rats",
-
-authors:
-"Ananias E. N",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "020",
-
-title:
-"Evaluation Of The Anti-Macrosomic Potential Of Aqueous Leaf Extract Of Uvaria Chamae On Pregnant Wistar Rats",
-
-authors:
-"Ani C. O",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "021",
-
-title:
-"Anti-Diarrheal Potential Of Aqueous Guava (Psidium Guajava) Leaf Extract In Castor Oil-Induced Diarrhea Wistar Rats",
-
-authors:
-"Anura A",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "023",
-
-title:
-"Evaluating Montelukast And Prednisolone Combinations In Mitigating Oxidative Stress And Preserving Cardiac Structure In Asthma-Induced Injury",
-
-authors:
-"Atogwe E.A",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "024",
-
-title:
-"Effect Of Caffeine Ingestion On Some Oxidative Stress Markers And Reproductive Parameters In Adults Male Wistar Rats",
-
-authors:
-"Ayeni A. A",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "025",
-
-title:
-"Corneal Toxicity Following Topical Glyphosate Exposure in Male Wistar Rats",
-
-authors:
-"Ayinla Z. O.",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "026",
-
-title:
-"COQ10 Attenuates Bpa-Induced Testicular Toxicity Via Upregulation Of NRF2/HO-1 And Downregulation Of XO/UA In Wistar Rats",
-
-authors:
-"Babalola T. O",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "027",
-
-title:
-"Protective Effects Of Rutin On Potassium Dichromate-Induced Renal Toxicity In Rats",
-
-authors:
-"Bakare O. E",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "028",
-
-title:
-"COMBINED EFFECTS OF SOCIAL ISOLATION AND GUT MICROBIOTA DYSBIOSIS AS A POTENTIAL NOVEL NEURODEVELOPMENTAL RAT MODEL OF SCHIZOPHRENIA",
-
-authors:
-"Bayo-Olugbami A. A",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "029",
-
-title:
-"Prophylactic And Therapeutic Effects Of Sorghum Bicolor On Olfactory Dysfunction And Nigrostriatal Degeneration In Rotenone-Induced Parkinsonian Mice",
-
-authors:
-"Bolaji O.V",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "030",
-
-title:
-"Impact Of Different Intermittent Fasting Regimens On Salivary Secretion And Oxidative Stress In Male Wistar Rats",
-
-authors:
-"Bolarinwa B.",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "031",
-
-title:
-"High-Protein Diet Enhances Reproductive Functions In Nulliparous Female Wistar Rats",
-
-authors:
-"Charles U. V",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "032",
-
-title:
-"Potential Therapeutic Effects Of Curcuma Longa Ethanol Rhizome Extract Against Rotenone-Induced Parkinson’s Disease In Rats",
-
-authors:
-"Daramola E. O",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "033",
-
-title:
-"Neuroprotective Effects Of Ethanolic Beetroot (Beta Vulgaris) Extract Against Heat Stress-Induced Hippocampal Damage In Female Wistar Rats",
-
-authors:
-"Edeha D. O",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "034",
-
-title:
-"Protective Role Of Micronized Purified Flavonoid Fraction In Drosophila Melanogaster Model Of Ferrous Sulphate-Induced Reproductive And Neurotoxicity",
-
-authors:
-"Egbedeyi D",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "035",
-
-title:
-"Effects Of Prolonged Consumption Of Energy Drinks And Caffeine On Selected Cardiovascular Biomarkers In Female Sprague-Dawley Rat",
-
-authors:
-"Eiya B",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "036",
-
-title:
-"Green Synthesized Titanium-Dioxide Nanoparticles Of Heinsia Crinita Leaves (Hc-Tio2nps) Exposure Impairs Haematological System In Male Wistar Rats",
-
-authors:
-"Essiet E. U.",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "037",
-
-title:
-"Mitigating effects of Beetroot fruit Powder on Monosodium Glutamate Induced Disrptions in repreoductive Hormone Regulation in Male Wistar Rats",
-
-authors:
-"Folawiyo M. A",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "038",
-
-title:
-"EFFECT OF METHANOL EXTRACT OF TRECULIA AFRICANA SEEDS ON REPRODUCTIVE HORMONES, OXIDATIVE STRESS MARKERS IN FEMALE WISTAR RATS",
-
-authors:
-"Gbaranor K. B",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "039",
-
-title:
-"Effects of Olive Oil on Memory and Learning Impairments Due to Prenatal Exposure to Alcohol in Mouse Pups",
-
-authors:
-"Hussaini S",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "041",
-
-title:
-"COULD FEMALE HORMONES BE THE PREVENTIVE KEY OF PARKINSON’S DISEASE?",
-
-authors:
-"Ifoh N. T. 1",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "042",
-
-title:
-"COMPUTATIONAL EVALUATION OF Aspilia africana PHYTOCHEMICALS AGAINST MULTIPLE DRUG TARGETS IN PEPTIC ULCERATION.",
-
-authors:
-"Ilesanmi Y. O",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "043",
-
-title:
-"NEUROPROTECTIVE EFFECT OF 6-GINGEROL RICH FRACTION OF ZINGIBER OFFICINALE ON CYPERMETHRIN-INDUCED NEUROTOXICITY IN MALE WISTAR RATS",
-
-authors:
-"Issa-Lawal M",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "044",
-
-title:
-"CNIDOSCOLUS ACONITIFOLIUS AMELIORATES BARIUM CHLORIDE-INDUCED CARDIAC DYSFUNCTION IN WISTAR RATS",
-
-authors:
-"Iyiola T. O.",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "045",
-
-title:
-"PHYTOREMEDIATION POTENTIAL OF SUNFLOWER (HELIANTHUS ANNUUS L.) IN GLYPHOSATE-CONTAMINATED SOIL.",
-
-authors:
-"Jamilu M. A.",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "046",
-
-title:
-"EFFECTS OF STARVATION-INDUCED STRESS AND GARCINIA KOLA ETHANOLIC EXTRACTS ON SEX HORMONES IN MALE WISTAR RATS",
-
-authors:
-"Kianen S",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "047",
-
-title:
-"PORTULACA OLERACEA MODULATES HEMODYNAMIC, ELECTROCARDIOGRAPHIC AND MYOCARDIAL ATPase PARAMETERS IN ISOPROTERENOL-INDUCED MYOCARDIAL INFARCTION IN MALE WISTAR RATS",
-
-authors:
-"Kolade S. A",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "048",
-
-title:
-"EFFECT OF PORTULACA OLERACEA ON ISOPROTERENOL-INDUCED CARDIO-HIPPOCAMPAL INJURY IN MALE WISTAR RATS",
-
-authors:
-"Komolafe J.E.",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "049",
-
-title:
-"NEUROPROTECTIVE EFFECTS OF HYDRO-METHANOLIC LEAF EXTRACT OF JATROPHA TANJORENSIS AGAINST LEAD-INDUCED OXIDATIVE STRESS AND INFLAMMATION IN WISTAR RATS",
-
-authors:
-"Krukru, E. E.,",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "050",
-
-title:
-"HIGH-PROTEIN DIET MITIGATES CARBON TETRACHLORIDE-INDUCED HEPATORENAL TOXICITY IN RATS",
-
-authors:
-"Magaji H.D.",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "051",
-
-title:
-"Mosquito Coil Smoke: A Silent Source of Carbon Monoxide Associated with Memory Impairment and Oxidative Stress",
-
-authors:
-"Miko Z. A",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "052",
-
-title:
-"Effect of 6-Gingerol-Rich Fraction of Zingiber offinale on Social Instability Stress-induced Depression in Male Wistar Rats",
-
-authors:
-"Muzzammil S.S",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "053",
-
-title:
-"Evaluation Of The Effect Of Palm Bunch Ash Administration On The Kidney Function Of Male Wistar Rats",
-
-authors:
-"Ndubuisi N. R",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "054",
-
-title:
-"Effect Of Ginger (Zingiber Officinale) Ethanol Extract On Reproductive Function In Male Rats",
-
-authors:
-"Ogbe A.J",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "055",
-
-title:
-"Arginine Improves Reproductive Function Via Maintenance Of Redox Status In A Drosophila Melanogaster Model Of Neurodegenerative Disease",
-
-authors:
-"Okeyinka P.A.",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "056",
-
-title:
-"Ameliorative Effect Of Magnesium Sulphate On Aluminium Sulphate-Induced Reproductive Toxicity In Female Wistar Rats",
-
-authors:
-"Olaosun O.S",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "057",
-
-title:
-"Effect Of Rutin On Redox Status And Reproductive Behaviour In Resorcinol Bis(Diphenyl)-Phospahte-Induced Gonadotoxicity In Male Wistar Rats",
-
-authors:
-"Oloruntade I. P.",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "058",
-
-title:
-"Effect Of Aqueous Stem Extract Of Fadogia Agrestis On Oestrogen Receptor Beta Expression In Hyperlipidaemic Wistar Rats",
-
-authors:
-"Olowomeye O. M.",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "060",
-
-title:
-"Cardiac Functions Of Male Wistar Rats Exposed To High Fructose Diet And Potassium Bromate",
-
-authors:
-"Omotayo E.T.",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "061",
-
-title:
-"Effect Of Chronic Exposure To Sodium Arsenite On Testicular Energy METABOLISM IN WISTAR RATS",
-
-authors:
-"Osawaru P.O",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "062",
-
-title:
-"Pro-Ulcerogenic Effects Of High Fructose Diet And Potassium Bromate In Male Wistar Rats",
-
-authors:
-"OWOLABI A.A",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "064",
-
-title:
-"Effects Of Dietary Palm, Palm Kernel, And Groundnut Cake Oils On Sucrose-Induced Insulin Resistance In Male Wistar Rats",
-
-authors:
-"Mofolorunso A",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "065",
-
-title:
-"IMPACT OF HIGH-FAT DIET ON ARCUATE NUCLEUS: A STEREOLOGICAL STUDY OF ARCUATE NUCLEUS VOLUME AND TOTAL NEURON NUMBER",
-
-authors:
-"Rabiu A.M",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "066",
-
-title:
-"Transfer Factor of Natural Radionuclides in Rice Samples Harvested in Selected Farmlands of Birnin Kebbi, Kebbi State, Nigeria.",
-
-authors:
-"Shehu A. H",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "067",
-
-title:
-"EFFECT OF HIGH-FRUCTOSE DIET DURING POTASSIUM BROMATE EXPOSURE ON BLOOD AND SYSTEMIC INFLAMMATORY INDICES IN MALE WISTAR RATS",
-
-authors:
-"SUNMONU-ADEKUNLE D.A",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "068",
-
-title:
-"ASSESSMENT OF ATHEROGENIC LIPID PROFILE AND PULMONARY FUNCTIONS OF FEMALE COOKS IN PORT HARCOURT",
-
-authors:
-"Tamuno-opubo, Abiye",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "069",
-
-title:
-"A STANDARDIZED Talinum triangulare SOUP PREPARATION CONSUMPTION MODULATES SYMPATHETIC ACTIVITY IN HEALTHY ADULTS DURING MENTAL ARITHMETIC TEST",
-
-authors:
-"Yayah, F. F",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "070",
-
-title:
-"Polyphenol-rich Fraction of Terminalia catappa Prevents Chronic Lead Acetate Induced Oxidative Stress and Cardiorenal Toxicities in Rats",
-
-authors:
-"Ajibade T.O.",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "073",
-
-title:
-"MUSA ACUMINATA POLYSACCHARIDE MITIGATES BPA-INDUCED NEUROTOXICITY AND REPRODUCTIVE TOXICITY IN DROSOPHILA MELANOGASTER THROUGH MITOCHONDRIAL AND GENOMIC PROTECTION",
-
-authors:
-"Owolade G.A.",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "074",
-
-title:
-"ETHANOL ORANGE PEEL EXTRACT AND ZINC MODULATE RENAL FUNCTIONS IN RESORCINOL BIS(DIPHENYL) PHOSPHATE- EXPOSED MALE WISTAR RATS",
-
-authors:
-"Adeyemi D.E.",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "076",
-
-title:
-"Methionine Methylsulfonium Chloride prevents Obesity-Induced Vascular Injury in Wistar Rats via Antioxidant, Anti-Inflammatory, and Anti-Apoptotic Mechanisms",
-
-authors:
-"Asiwe J.N.",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "077",
-
-title:
-"Chrysin ameliorates valproic acid-induced repetitive behaviors, cognitive deficits, and neuroinflammation by suppressing Corticohippocampal TNF-α/NF-κB levels",
-
-authors:
-"Adeniyi I.A.",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "079",
-
-title:
-"MODULATORY EFFECT OF TELFAIRIA OCCIDENTALIS OIL ON CARDIAC HOMEOSTASIS IN HEAT-STRESSED MALE RATS",
-
-authors:
-"Adekunle J.A.",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "080",
-
-title:
-"NEPHROPROTECTIVE EFFECTS OF GALLIC ACID ON GLYCEROL-INDUCED ACUTE KIDNEY INJURY IN RATS",
-
-authors:
-"Bello O.I.",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "081",
-
-title:
-"Neuroprotective Effect Of Betulin And Chrysin On Reserpine-Induced Parkinsonism In Rats",
-
-authors:
-"Adesuyi M. O",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "082",
-
-title:
-"Ameliorative Activities Of Clomiphene Citrate On Cadmium-Induced Reproductive Functions And Morphological Impairments In Male Wistar Rats",
-
-authors:
-"Akinola A.O.",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "083",
-
-title:
-"The Effect Of High Protein Diet On Hepato-Striatal Axis In 1-Methyl-4-Phenyl-1,2,3,6-Tetrahydropyridine-Induced Parkinsonism In Male And Female Swiss Mice",
-
-authors:
-"Chimezie J.",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "084",
-
-title:
-"Sex-specific effects of Intermittent Fasting on Lipid Profile and Hepatic Injury in High-fat diet fed Wistar rats",
-
-authors:
-"Francis H.O",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "085",
-
-title:
-"Reduced Urinary 5-HIAA Is Associated with a High Burden of Neuropathic Pain among Charcoal Sellers in Kano, Nigeria",
-
-authors:
-"Muhammad A. U",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "086",
+id: "ILO14",
 
 title:
 "Aqueous Extract Of Aspilia Africana Protects Against Heat Stress-Induced Oxidative Damage In The Brain And Cardiac Tissues Of Rats.",
@@ -3679,9 +1605,6 @@ authors:
 institution:
 "Institution to be confirmed",
 
-category:
-"Uncategorized",
-
 abstract:
 "Full abstract to be provided by the presenter.",
 
@@ -3695,20 +1618,17 @@ video:
 
 
 {
-id: "087",
+id: "ILP115",
 
 title:
-"Neuroendocrine And NO/CGMP-Mediated Mechanisms Underlying Orange Peel Protection Against Resorcinol Bis(Diphenyl Phosphate)-Induced Sexual Dysfunction In Wistar Rats",
+"Effects of Probiotics on High-Fat and High-fructose Diets-Induced Cardiac metabolic dysfunction in male wistar rats",
 
 authors:
-"Olatunji, T",
+"Abena E",
 
 institution:
 "Institution to be confirmed",
 
-category:
-"Uncategorized",
-
 abstract:
 "Full abstract to be provided by the presenter.",
 
@@ -3722,19 +1642,40 @@ video:
 
 
 {
-id: "088",
+id: "ILP116",
 
 title:
-"Canarium Schweinfurthii Modulated Gut-Brain Axis During Experimental Colon Disease",
+"Comparative Effects Of Neem Leaf Extract And Combined Oral Contraceptives On Cardiac Oxidative Stress In Female Wistar Rats",
 
 authors:
-"Olujimi A. O.",
+"Adegoke A. O",
 
 institution:
 "Institution to be confirmed",
 
-category:
-"Uncategorized",
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP117",
+
+title:
+"MODULATORY EFFECT OF TELFAIRIA OCCIDENTALIS OIL ON CARDIAC HOMEOSTASIS IN HEAT-STRESSED MALE RATS",
+
+authors:
+"Adekunle J.A.",
+
+institution:
+"Institution to be confirmed",
 
 abstract:
 "Full abstract to be provided by the presenter.",
@@ -3749,7 +1690,199 @@ video:
 
 
 {
-id: "089",
+id: "ILP118",
+
+title:
+"Polyphenol-rich Fraction of Terminalia catappa Prevents Chronic Lead Acetate Induced Oxidative Stress and Cardiorenal Toxicities in Rats",
+
+authors:
+"Ajibade T.O.",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP119",
+
+title:
+"Evaluating Montelukast And Prednisolone Combinations In Mitigating Oxidative Stress And Preserving Cardiac Structure In Asthma-Induced Injury",
+
+authors:
+"Atogwe E.A",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP120",
+
+title:
+"Effects Of Prolonged Consumption Of Energy Drinks And Caffeine On Selected Cardiovascular Biomarkers In Female Sprague-Dawley Rat",
+
+authors:
+"Eiya B",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP121",
+
+title:
+"CNIDOSCOLUS ACONITIFOLIUS AMELIORATES BARIUM CHLORIDE-INDUCED CARDIAC DYSFUNCTION IN WISTAR RATS",
+
+authors:
+"Iyiola T. O.",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP122",
+
+title:
+"PORTULACA OLERACEA MODULATES HEMODYNAMIC, ELECTROCARDIOGRAPHIC AND MYOCARDIAL ATPase PARAMETERS IN ISOPROTERENOL-INDUCED MYOCARDIAL INFARCTION IN MALE WISTAR RATS",
+
+authors:
+"Kolade S. A",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP123",
+
+title:
+"EFFECT OF PORTULACA OLERACEA ON ISOPROTERENOL-INDUCED CARDIO-HIPPOCAMPAL INJURY IN MALE WISTAR RATS",
+
+authors:
+"Komolafe J.E.",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP124",
+
+title:
+"Evaluation Of The Effect Of Palm Bunch Ash Administration On The Kidney Function Of Male Wistar Rats",
+
+authors:
+"Ndubuisi N. R",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP125",
+
+title:
+"Cardiac Functions Of Male Wistar Rats Exposed To High Fructose Diet And Potassium Bromate",
+
+authors:
+"Omotayo E.T.",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP126",
 
 title:
 "Acetone Ginger Extract Improved Renal Clearance and Ameliorated KBrO3-induced Nephrotoxicity via Inflammatory Cytokine Suppression and MATE1 Modulation",
@@ -3760,8 +1893,29 @@ authors:
 institution:
 "Institution to be confirmed",
 
-category:
-"Uncategorized",
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP127",
+
+title:
+"ASSESSMENT OF ATHEROGENIC LIPID PROFILE AND PULMONARY FUNCTIONS OF FEMALE COOKS IN PORT HARCOURT",
+
+authors:
+"Tamuno-opubo, Abiye",
+
+institution:
+"Institution to be confirmed",
 
 abstract:
 "Full abstract to be provided by the presenter.",
@@ -3776,7 +1930,1471 @@ video:
 
 
 {
-id: "090",
+id: "ILP128",
+
+title:
+"Ethanolic Corchorous Olitorius Leaf Extract Mitigates Monosodium Glutamate-Impaired Sexual Function Via Upregulation Of Steroidogenesis In Male Wistar Rats",
+
+authors:
+"Adeogun A. E 1",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP129",
+
+title:
+"L-Ascorbic acid from sweet orange (Citrus sinensis) protects against Oxidative stress-associated hepatic injury in Diabetic-frmale Wistar rats",
+
+authors:
+"Adepoju M. A",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP130",
+
+title:
+"Activities Of Thaumatococcus Danielli (Benth) Fruit Diets On The Gut-Liver Axis During Crohn’s Colitis In Male Wistar Rats: In-Vivo And In-Silico Studies",
+
+authors:
+"Adetayo A. D",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP131",
+
+title:
+"Changes In Liver Enzymes And Antioxidant Profile In Household Toxin-Exposed Feed And Water In Male Wistar Rats",
+
+authors:
+"Aduema W.",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP132",
+
+title:
+"Antioxidant Response And Neurotransmitter Modulation Driven By Oleuropein/Alpha-Lipoic Acid Attenuates Lead-Induced Reproductive Toxicity And Neurotoxicity In Drosophila Melanogaster",
+
+authors:
+"Akande F. E.",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP133",
+
+title:
+"Effect Of Caffeine Ingestion On Some Oxidative Stress Markers And Reproductive Parameters In Adults Male Wistar Rats",
+
+authors:
+"Ayeni A. A",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP134",
+
+title:
+"COQ10 Attenuates Bpa-Induced Testicular Toxicity Via Upregulation Of NRF2/HO-1 And Downregulation Of XO/UA In Wistar Rats",
+
+authors:
+"Babalola T. O",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP135",
+
+title:
+"Impact Of Different Intermittent Fasting Regimens On Salivary Secretion And Oxidative Stress In Male Wistar Rats",
+
+authors:
+"Bolarinwa B.",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP136",
+
+title:
+"High-Protein Diet Enhances Reproductive Functions In Nulliparous Female Wistar Rats",
+
+authors:
+"Charles U. V",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP137",
+
+title:
+"Protective Role Of Micronized Purified Flavonoid Fraction In Drosophila Melanogaster Model Of Ferrous Sulphate-Induced Reproductive And Neurotoxicity",
+
+authors:
+"Egbedeyi D",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP138",
+
+title:
+"Mitigating effects of Beetroot fruit Powder on Monosodium Glutamate Induced Disrptions in repreoductive Hormone Regulation in Male Wistar Rats",
+
+authors:
+"Folawiyo M. A",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP139",
+
+title:
+"Sex-specific effects of Intermittent Fasting on Lipid Profile and Hepatic Injury in High-fat diet fed Wistar rats",
+
+authors:
+"Francis H.O",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP140",
+
+title:
+"EFFECTS OF STARVATION-INDUCED STRESS AND GARCINIA KOLA ETHANOLIC EXTRACTS ON SEX HORMONES IN MALE WISTAR RATS",
+
+authors:
+"Kianen S",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP141",
+
+title:
+"Effects Of Dietary Palm, Palm Kernel, And Groundnut Cake Oils On Sucrose-Induced Insulin Resistance In Male Wistar Rats",
+
+authors:
+"Mofolorunso A",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP142",
+
+title:
+"Effect Of Ginger (Zingiber Officinale) Ethanol Extract On Reproductive Function In Male Rats",
+
+authors:
+"Ogbe A.J",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP143",
+
+title:
+"Arginine Improves Reproductive Function Via Maintenance Of Redox Status In A Drosophila Melanogaster Model Of Neurodegenerative Disease",
+
+authors:
+"Okeyinka P.A.",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP144",
+
+title:
+"Ameliorative Effect Of Magnesium Sulphate On Aluminium Sulphate-Induced Reproductive Toxicity In Female Wistar Rats",
+
+authors:
+"Olaosun O.S",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP145",
+
+title:
+"Neuroendocrine And NO/CGMP-Mediated Mechanisms Underlying Orange Peel Protection Against Resorcinol Bis(Diphenyl Phosphate)-Induced Sexual Dysfunction In Wistar Rats",
+
+authors:
+"Olatunji, T",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP146",
+
+title:
+"Effect Of Rutin On Redox Status And Reproductive Behaviour In Resorcinol Bis(Diphenyl)-Phospahte-Induced Gonadotoxicity In Male Wistar Rats",
+
+authors:
+"Oloruntade I. P.",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP147",
+
+title:
+"Effect Of Aqueous Stem Extract Of Fadogia Agrestis On Oestrogen Receptor Beta Expression In Hyperlipidaemic Wistar Rats",
+
+authors:
+"Olowomeye O. M.",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP148",
+
+title:
+"Effect Of Chronic Exposure To Sodium Arsenite On Testicular Energy METABOLISM IN WISTAR RATS",
+
+authors:
+"Osawaru P.O",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP149",
+
+title:
+"EFFECT OF HIGH-FRUCTOSE DIET DURING POTASSIUM BROMATE EXPOSURE ON BLOOD AND SYSTEMIC INFLAMMATORY INDICES IN MALE WISTAR RATS",
+
+authors:
+"SUNMONU-ADEKUNLE D.A",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP150",
+
+title:
+"Methimazole-Induced Hypothyroidism Disrupts Hypothalamic–Pituitary–Ovarian Axis Signaling, Ovarian Steroidogenesis, And Folliculogenesis In Adult Female Wistar Rats",
+
+authors:
+"Adebayo O. F -2",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP151",
+
+title:
+"Impact Of Noise-Induced Sleep Fragmentation And Deprivation On Memory In Rat Model",
+
+authors:
+"Aminat-Alabi A",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP152",
+
+title:
+"Corneal Toxicity Following Topical Glyphosate Exposure in Male Wistar Rats",
+
+authors:
+"Ayinla Z. O.",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP153",
+
+title:
+"COULD FEMALE HORMONES BE THE PREVENTIVE KEY OF PARKINSON’S DISEASE?",
+
+authors:
+"Azeez A.A._ 2",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP154",
+
+title:
+"Reduced Urinary 5-HIAA Is Associated with a High Burden of Neuropathic Pain among Charcoal Sellers in Kano, Nigeria",
+
+authors:
+"Muhammad A. U",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP155",
+
+title:
+"MUSA ACUMINATA POLYSACCHARIDE MITIGATES BPA-INDUCED NEUROTOXICITY AND REPRODUCTIVE TOXICITY IN DROSOPHILA MELANOGASTER THROUGH MITOCHONDRIAL AND GENOMIC PROTECTION",
+
+authors:
+"Owolade G.A.",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP156",
+
+title:
+"A STANDARDIZED Talinum triangulare SOUP PREPARATION CONSUMPTION MODULATES SYMPATHETIC ACTIVITY IN HEALTHY ADULTS DURING MENTAL ARITHMETIC TEST",
+
+authors:
+"Yayah, F. F",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP157",
+
+title:
+"Neurosimlab A Correlation-Preserving Synthetic Data Generator For Small-N Preclinical Neurodegeneration Datasets",
+
+authors:
+"Adebimpe-John O. E 2",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP158",
+
+title:
+"Gestational Bisphenol-A Exposure Induces Offspring Hippocampal Oxidative Stress And Neuroinflammation In Wistar Rats",
+
+authors:
+"Adio K. O",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP159",
+
+title:
+"NEUROPROTECTIVE MECHANISM OF ETHANOLIC LEAF EXTRACT OF BRASSICA OLERACEA L. VAR ACEPHALA IN ARSENIC-INDUCED FRONTAL CORTICAL DEGENERATION",
+
+authors:
+"AIKPITANYI I",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP160",
+
+title:
+"Preventive Role Of Ethanol Extract Of Theobroma Cacao Seed Against Rotenone-Induced Neuroinflammation In Male Wistar Rats",
+
+authors:
+"Ajani I. B",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP161",
+
+title:
+"Monosaccharide-Induced Metabolic Remodeling Of The Brain Without Overt Cognitive Dysfunction",
+
+authors:
+"Ajayi A. J",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP162",
+
+title:
+"Soybean Oil Modulates Oxidative Stress And Neuroinflammation Following Sciatic Nerve Ligation In Male Wistar Rats",
+
+authors:
+"Ananias E. N",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP163",
+
+title:
+"COMBINED EFFECTS OF SOCIAL ISOLATION AND GUT MICROBIOTA DYSBIOSIS AS A POTENTIAL NOVEL NEURODEVELOPMENTAL RAT MODEL OF SCHIZOPHRENIA",
+
+authors:
+"Bayo-Olugbami A. A",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP164",
+
+title:
+"The Effect Of High Protein Diet On Hepato-Striatal Axis In 1-Methyl-4-Phenyl-1,2,3,6-Tetrahydropyridine-Induced Parkinsonism In Male And Female Swiss Mice",
+
+authors:
+"Chimezie J.",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP165",
+
+title:
+"Potential Therapeutic Effects Of Curcuma Longa Ethanol Rhizome Extract Against Rotenone-Induced Parkinson’s Disease In Rats",
+
+authors:
+"Daramola E. O",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP166",
+
+title:
+"Neuroprotective Effects Of Ethanolic Beetroot (Beta Vulgaris) Extract Against Heat Stress-Induced Hippocampal Damage In Female Wistar Rats",
+
+authors:
+"Edeha D. O",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP167",
+
+title:
+"Effects of Olive Oil on Memory and Learning Impairments Due to Prenatal Exposure to Alcohol in Mouse Pups",
+
+authors:
+"Hussaini S",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP168",
+
+title:
+"NEUROPROTECTIVE EFFECT OF 6-GINGEROL RICH FRACTION OF ZINGIBER OFFICINALE ON CYPERMETHRIN-INDUCED NEUROTOXICITY IN MALE WISTAR RATS",
+
+authors:
+"Issa-Lawal M",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP169",
+
+title:
+"NEUROPROTECTIVE EFFECTS OF HYDRO-METHANOLIC LEAF EXTRACT OF JATROPHA TANJORENSIS AGAINST LEAD-INDUCED OXIDATIVE STRESS AND INFLAMMATION IN WISTAR RATS",
+
+authors:
+"Krukru, E. E.,",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP170",
+
+title:
+"Mosquito Coil Smoke: A Silent Source of Carbon Monoxide Associated with Memory Impairment and Oxidative Stress",
+
+authors:
+"Miko Z. A",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP171",
+
+title:
+"Effect of 6-Gingerol-Rich Fraction of Zingiber offinale on Social Instability Stress-induced Depression in Male Wistar Rats",
+
+authors:
+"Muzzammil S.S",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP172",
+
+title:
+"IMPACT OF HIGH-FAT DIET ON ARCUATE NUCLEUS: A STEREOLOGICAL STUDY OF ARCUATE NUCLEUS VOLUME AND TOTAL NEURON NUMBER",
+
+authors:
+"Rabiu A.M",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP173",
+
+title:
+"Variation of Nitric Oxide levels across Clinical Phases of Sickle Cell Anemia In Northern Nigeria",
+
+authors:
+"Abubakar A. B",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP174",
+
+title:
+"Heavy Metals Exposure And Protective Role Of Ginger (Zingiber Officinale) On Gut Microbiota And Systemic Oxidative Stress In Rats",
+
+authors:
+"Adeleye G. S",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP175",
+
+title:
+"ETHANOL ORANGE PEEL EXTRACT AND ZINC MODULATE RENAL FUNCTIONS IN RESORCINOL BIS(DIPHENYL) PHOSPHATE- EXPOSED MALE WISTAR RATS",
+
+authors:
+"Adeyemi D.E.",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP176",
+
+title:
+"Modulation of post haemolytic Leucopenia and white cell indices by oral watermelon (Citrullus lanatus) Juice",
+
+authors:
+"Aikpitanyi-Iduitua R.O.",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP177",
+
+title:
+"Evaluation Of The Anti-Macrosomic Potential Of Aqueous Leaf Extract Of Uvaria Chamae On Pregnant Wistar Rats",
+
+authors:
+"Ani C. O",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP178",
+
+title:
+"Anti-Diarrheal Potential Of Aqueous Guava (Psidium Guajava) Leaf Extract In Castor Oil-Induced Diarrhea Wistar Rats",
+
+authors:
+"Anura A",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP179",
+
+title:
+"Methionine Methylsulfonium Chloride prevents Obesity-Induced Vascular Injury in Wistar Rats via Antioxidant, Anti-Inflammatory, and Anti-Apoptotic Mechanisms",
+
+authors:
+"Asiwe J.N.",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP180",
+
+title:
+"Protective Effects Of Rutin On Potassium Dichromate-Induced Renal Toxicity In Rats",
+
+authors:
+"Bakare O. E",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP181",
+
+title:
+"NEPHROPROTECTIVE EFFECTS OF GALLIC ACID ON GLYCEROL-INDUCED ACUTE KIDNEY INJURY IN RATS",
+
+authors:
+"Bello O.I.",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP182",
+
+title:
+"Green Synthesized Titanium-Dioxide Nanoparticles Of Heinsia Crinita Leaves (Hc-Tio2nps) Exposure Impairs Haematological System In Male Wistar Rats",
+
+authors:
+"Essiet E. U.",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP183",
+
+title:
+"EFFECT OF METHANOL EXTRACT OF TRECULIA AFRICANA SEEDS ON REPRODUCTIVE HORMONES, OXIDATIVE STRESS MARKERS IN FEMALE WISTAR RATS",
+
+authors:
+"Gbaranor K. B",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP184",
+
+title:
+"COMPUTATIONAL EVALUATION OF Aspilia africana PHYTOCHEMICALS AGAINST MULTIPLE DRUG TARGETS IN PEPTIC ULCERATION.",
+
+authors:
+"Ilesanmi Y. O",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP185",
+
+title:
+"PHYTOREMEDIATION POTENTIAL OF SUNFLOWER (HELIANTHUS ANNUUS L.) IN GLYPHOSATE-CONTAMINATED SOIL.",
+
+authors:
+"Jamilu M. A.",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP186",
+
+title:
+"HIGH-PROTEIN DIET MITIGATES CARBON TETRACHLORIDE-INDUCED HEPATORENAL TOXICITY IN RATS",
+
+authors:
+"Magaji H.D.",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP187",
+
+title:
+"Canarium Schweinfurthii Modulated Gut-Brain Axis During Experimental Colon Disease",
+
+authors:
+"Olujimi A. O.",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP188",
+
+title:
+"Pro-Ulcerogenic Effects Of High Fructose Diet And Potassium Bromate In Male Wistar Rats",
+
+authors:
+"OWOLABI A.A",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP189",
 
 title:
 "Chitosan nanoparticle delivery of lantanine suppresses PI3K/AKT/mTOR and NF-κB signalling in vaginal squamous cell carcinoma",
@@ -3787,9 +3405,6 @@ authors:
 institution:
 "Institution to be confirmed",
 
-category:
-"Uncategorized",
-
 abstract:
 "Full abstract to be provided by the presenter.",
 
@@ -3803,7 +3418,7 @@ video:
 
 
 {
-id: "091",
+id: "ILP190",
 
 title:
 "PROTECTIVE EFFECTS OF L-ARGININE AGAINST OXIDATIVE STRESS, INFLAMMATION, AND APOPTOSIS IN CISPLATIN-INDUCED CARDIOTOXIC WISTAR RATS",
@@ -3814,9 +3429,6 @@ authors:
 institution:
 "Institution to be confirmed",
 
-category:
-"Uncategorized",
-
 abstract:
 "Full abstract to be provided by the presenter.",
 
@@ -3830,20 +3442,17 @@ video:
 
 
 {
-id: "092",
+id: "ILP191",
 
 title:
-"Selective Cardiovascular Impact of Circuit Training: Changes in Heart Rate and Systolic Blood Pressure in Young Adults",
+"Neuroprotective Effect Of Betulin And Chrysin On Reserpine-Induced Parkinsonism In Rats",
 
 authors:
-"Edokpollor J.O.",
+"Adesuyi M. O",
 
 institution:
 "Institution to be confirmed",
 
-category:
-"Uncategorized",
-
 abstract:
 "Full abstract to be provided by the presenter.",
 
@@ -3857,142 +3466,7 @@ video:
 
 
 {
-id: "093",
-
-title:
-"Abortifacient Activity of the N-Hexane Fruit Extract of Xylopia aethiopica: An In-vitro, Molecular Docking and ADME Studies",
-
-authors:
-"Azekhumen G.N._2",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "094",
-
-title:
-"Effect of Methanolic Extract of Phoenix dactylifera Fruit on Reserpine-induced Depression in Male Swiss Mice",
-
-authors:
-"Fayemi A.G.",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "095",
-
-title:
-"Kolaviron Attenuated Diet-induced Cardiovascular Alterations by Targeting Oxidative Stress and Pro-inflammatory Pathways in Rats",
-
-authors:
-"Iyomo K.W.",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "096",
-
-title:
-"Antioxidants Cardio-protection Against REM Sleep Deprivation in Female Rats",
-
-authors:
-"Mustapha R.A.",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "097",
-
-title:
-"Electrolytes and Antioxidant Status of Copper-Induced Toxicity in Wistar Rats Treated With Methionine",
-
-authors:
-"Akinlade E.T.",
-
-institution:
-"Institution to be confirmed",
-
-category:
-"Uncategorized",
-
-abstract:
-"Full abstract to be provided by the presenter.",
-
-poster:
-"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
-
-video:
-""
-
-},
-
-
-{
-id: "098",
+id: "ILP193",
 
 title:
 "Effect of Rutin and Zinc on Haematological Parameters in RDP-Exposed Male Wistar Rats",
@@ -4003,9 +3477,6 @@ authors:
 institution:
 "Institution to be confirmed",
 
-category:
-"Uncategorized",
-
 abstract:
 "Full abstract to be provided by the presenter.",
 
@@ -4019,7 +3490,7 @@ video:
 
 
 {
-id: "099",
+id: "ILP194",
 
 title:
 "DIFFERENTIAL CARDIOVASCULAR ALTERATIONS FOLLOWING ORAL CANNABIS EDIBLE CONSUMPTION IN MALE AND FEMALE SPRAGUE-DAWLEY RATS",
@@ -4030,8 +3501,29 @@ authors:
 institution:
 "Institution to be confirmed",
 
-category:
-"Uncategorized",
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP195",
+
+title:
+"Abortifacient Activity of the N-Hexane Fruit Extract of Xylopia aethiopica: An In-vitro, Molecular Docking and ADME Studies",
+
+authors:
+"Azekhumen G.N._2",
+
+institution:
+"Institution to be confirmed",
 
 abstract:
 "Full abstract to be provided by the presenter.",
@@ -4046,7 +3538,103 @@ video:
 
 
 {
-id: "100",
+id: "ILP196",
+
+title:
+"Selective Cardiovascular Impact of Circuit Training: Changes in Heart Rate and Systolic Blood Pressure in Young Adults",
+
+authors:
+"Edokpollor J.O.",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP197",
+
+title:
+"Effect of Methanolic Extract of Phoenix dactylifera Fruit on Reserpine-induced Depression in Male Swiss Mice",
+
+authors:
+"Fayemi A.G.",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP198",
+
+title:
+"Kolaviron Attenuated Diet-induced Cardiovascular Alterations by Targeting Oxidative Stress and Pro-inflammatory Pathways in Rats",
+
+authors:
+"Iyomo K.W.",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP199",
+
+title:
+"Antioxidants Cardio-protection Against REM Sleep Deprivation in Female Rats",
+
+authors:
+"Mustapha R.A.",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP200",
 
 title:
 "APPLE CIDER VINEGAR ALTERS IMMUNE RESPONSE, LIPID PROFILE, AND PLATELET INDICES BUT NOT GLUCOREGULATION IN PREGNANT WISTAR RATS",
@@ -4057,8 +3645,317 @@ authors:
 institution:
 "Institution to be confirmed",
 
-category:
-"Uncategorized",
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP201",
+
+title:
+"Electrolytes and Antioxidant Status of Copper-Induced Toxicity in Wistar Rats Treated With Methionine",
+
+authors:
+"Akinlade E.T.",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP202",
+
+title:
+"Chrysin ameliorates valproic acid-induced repetitive behaviors, cognitive deficits, and neuroinflammation by suppressing Corticohippocampal TNF-α/NF-κB levels",
+
+authors:
+"Adeniyi I.A.",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP203",
+
+title:
+"Prophylactic And Therapeutic Effects Of Sorghum Bicolor On Olfactory Dysfunction And Nigrostriatal Degeneration In Rotenone-Induced Parkinsonian Mice",
+
+authors:
+"Bolaji O.V",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP204",
+
+title:
+"Association Between Dietary Pattern and Anthropometric Parameters among Adults Attending Fitness Centres in Port Harcourt.",
+
+authors:
+"Reuben E.",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP205",
+
+title:
+"Caffeine and Vernonia amygdalina leaf extract modulate cognitive dysfunction and neurochemical alterations in streptozotocin-induced diabetic male Wistar rats",
+
+authors:
+"Robinson B.C.",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP206",
+
+title:
+"ASSESSMENT OF CARDIO-RESPIRATORY, ANTHROPOMETRY, AND ENDURANCE INDICES AMONG FOOTBALLERS IN KADUNA METROPOLIS",
+
+authors:
+"Lawal A.A.",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP207",
+
+title:
+"SYNERGISTIC NEPHROPROTECTIVE POTENTIAL OF PSIDIUM GUAJAVA LEAF EXTRACT AND METFORMIN IN HIGH-FAT DIET STREPTOZOTOCIN-INDUCED DIABETIC RATS",
+
+authors:
+"Balogun D.A.",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP208",
+
+title:
+"Oestrogenic, insulin-enhancing and hepatoprotective effects of genistein in female Wistar rats challenged with streptozotocin-nicotinamide type 2 diabetes",
+
+authors:
+"Adam",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP209",
+
+title:
+"EFFECTS OF CALCIUM CARBIDE RIPENED FRUITS ON FASTING BLOOD GLUCOSE, MUSCLE GLYCOGEN AND LACTATE DEHYDROGENASE IN MALE WISTAR RATS.",
+
+authors:
+"Ige O.E.",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP210",
+
+title:
+"Effects of Pleurotus tuber-regium Sclerotium Polysaccharides on Metabolic, Oxidative, Inflammatory and Lipid Alterations in High-Fructose-Fed Pregnant Wistar Rats",
+
+authors:
+"Orizu I.A.",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP211",
+
+title:
+"METHANOLIC LEAF EXTRACTS OF RICINUS COMMUNIS AMELIORATED CARDIOVASCULAR DYSFUNCTION IN DICHLORVOS-EXPOSED RATS",
+
+authors:
+"Moronkeji F.M._2",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP212",
+
+title:
+"EFFECT OF MEDIUM-CHAIN TRIGLYCERIDE KETOGENIC DIET ON DEPRESSION, ANXIETY AND OXIDATIVE CHANGES IN PARAQUAT-INDUCED PARKINSONISM IN WISTAR RATS",
+
+authors:
+"Umar H.A.",
+
+institution:
+"Institution to be confirmed",
+
+abstract:
+"Full abstract to be provided by the presenter.",
+
+poster:
+"data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1000'%3E%3Crect width='100%25' height='100%25' fill='%23eef1f5'/%3E%3Ctext x='50%25' y='47%25' font-family='Arial' font-size='30' fill='%237a8699' text-anchor='middle'%3EPoster Coming Soon%3C/text%3E%3Ctext x='50%25' y='55%25' font-family='Arial' font-size='18' fill='%239aa5b3' text-anchor='middle'%3EPresenter upload pending%3C/text%3E%3C/svg%3E",
+
+video:
+""
+
+},
+
+
+{
+id: "ILP213",
+
+title:
+"Ameliorative Activities Of Clomiphene Citrate On Cadmium-Induced Reproductive Functions And Morphological Impairments In Male Wistar Rats",
+
+authors:
+"Akinola A.O.",
+
+institution:
+"Institution to be confirmed",
 
 abstract:
 "Full abstract to be provided by the presenter.",
@@ -4091,7 +3988,6 @@ function posterRowToPatch(row) {
         title: row.title,
         authors: row.authors,
         institution: row.institution,
-        category: row.category,
         abstract: row.abstract,
         poster: row.poster_url || undefined,
         video: row.video_url || undefined
@@ -4119,7 +4015,6 @@ async function loadPostersFromSupabase() {
 
 async function refreshPostersAndUI() {
     await loadPostersFromSupabase();
-    populateCategoryFilter();
     renderGallery();
     if (currentPublicPosterId) {
         const poster = posters.find(p => p.id === currentPublicPosterId);
@@ -4222,7 +4117,6 @@ async function savePresenterPosterDetails(event) {
     statusEl.style.display = "block";
 
     const institution = document.getElementById("posterInstitutionInput").value.trim();
-    const category = document.getElementById("posterCategoryInput").value;
     const abstractText = document.getElementById("posterAbstractInput").value.trim();
     const imageFile = document.getElementById("posterImageInput").files[0];
     const videoLink = document.getElementById("posterVideoInput").value.trim();
@@ -4247,7 +4141,6 @@ async function savePresenterPosterDetails(event) {
         title: poster.title,
         authors: poster.authors,
         institution: institution,
-        category: category,
         abstract: abstractText,
         poster_url: posterUrl,
         video_url: videoUrl,
@@ -4263,13 +4156,11 @@ async function savePresenterPosterDetails(event) {
     }
 
     poster.institution = institution;
-    poster.category = category;
     poster.abstract = abstractText;
     poster.poster = posterUrl;
     poster.video = videoUrl;
 
     statusEl.textContent = "✓ Saved. Your poster page is now live with these details.";
-    populateCategoryFilter();
 }
 
 function populatePresenterPosterForm() {
@@ -4281,11 +4172,6 @@ function populatePresenterPosterForm() {
 
     document.getElementById("posterAbstractInput").value =
         poster.abstract === "Full abstract to be provided by the presenter." ? "" : poster.abstract;
-
-    const categorySelect = document.getElementById("posterCategoryInput");
-    categorySelect.innerHTML = SPECIALTIES.map(c =>
-        `<option value="${c}" ${poster.category === c ? "selected" : ""}>${c}</option>`
-    ).join("");
 
     document.getElementById("posterDetailsStatus").style.display = "none";
     document.getElementById("posterImageInput").value = "";
@@ -4928,10 +4814,6 @@ const search =
 document.getElementById("searchBox")
 ?.value.toLowerCase() || "";
 
-const category =
-document.getElementById("categoryFilter")
-?.value || "All";
-
 
 const filtered =
 posters.filter(p => {
@@ -4944,13 +4826,7 @@ p.authors.toLowerCase().includes(search) ||
 
 p.institution.toLowerCase().includes(search);
 
-const matchesCategory =
-
-category === "All" ||
-
-p.category === category;
-
-return matchesSearch && matchesCategory;
+return matchesSearch;
 
 });
 
@@ -4984,12 +4860,6 @@ return `
 <div class="poster-number">
 
 POSTER ${p.id}
-
-</div>
-
-<div class="tag">
-
-${p.category}
 
 </div>
 
@@ -5362,18 +5232,6 @@ async function answerQuestion(questionId) {
    INITIAL LOAD
 -------------------------------- */
 
-function populateCategoryFilter() {
-    const select = document.getElementById("categoryFilter");
-    if (!select) return;
-
-    const categories = [...new Set(posters.map(p => p.category))].sort();
-
-    select.innerHTML =
-        `<option value="All">All Categories</option>` +
-        categories.map(c => `<option value="${c}">${c}</option>`).join("");
-}
-
-populateCategoryFilter();
 renderGallery();
 
 refreshPostersAndUI();
