@@ -18,8 +18,8 @@ import { createClient } from '@supabase/supabase-js';
 import './FastestFingerQuiz.css';
 
 // ---------- SUPABASE CLIENT ----------
-const SUPABASE_URL = 'https://YOUR-PROJECT.supabase.co';
-const SUPABASE_ANON_KEY = 'YOUR-ANON-KEY';
+const SUPABASE_URL = 'https://sb_publishable_DxJHpIzuw_b1BKQy-ljQwQ_hWI5bRgY';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVqZGNoaWtva3JxdGV6aGFiaWdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NTcxMjUsImV4cCI6MjA2NDQzMzEyNX0.h2mt7HkKGcwCL1no9GJHhLnb5wm_mhCbYR2Bb4MzUWI';
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 // --------------------------------------
 
